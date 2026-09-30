@@ -1,0 +1,40 @@
+.wp-block-profotograaf-client-galleries {
+	box-sizing: border-box;
+	padding: 1.5rem;
+	border: 1px solid currentcolor;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.wp-block-profotograaf-client-galleries__heading {
+	margin: 0 0 0.5rem;
+	font-size: 1.5em;
+}
+
+.wp-block-profotograaf-client-galleries__text {
+	margin: 0 0 1rem;
+}
+
+.wp-block-profotograaf-client-galleries__button {
+	display: inline-block;
+	padding: 0.6em 1.4em;
+	border-radius: 4px;
+	background: #1d2327;
+	color: #fff;
+	text-decoration: none;
+}
+
+.wp-block-profotograaf-client-galleries__button:hover,
+.wp-block-profotograaf-client-galleries__button:focus {
+	background: #000;
+	color: #fff;
+}
+
+.wp-block-profotograaf-client-galleries__notice {
+	margin: 0;
+	padding: 0.75rem 1rem;
+	border-left: 4px solid #dba617;
+	background: #fcf9e8;
+	color: #1d2327;
+	text-align: left;
+}

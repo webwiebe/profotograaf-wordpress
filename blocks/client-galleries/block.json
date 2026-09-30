@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "profotograaf/client-galleries",
+	"version": "0.1.0",
+	"title": "Find your gallery",
+	"category": "widgets",
+	"icon": "id",
+	"description": "A button that takes your clients to their private galleries in the Profotograaf client portal.",
+	"keywords": [ "client", "gallery", "login", "photography", "profotograaf" ],
+	"textdomain": "profotograaf",
+	"attributes": {
+		"portal": {
+			"type": "string",
+			"default": ""
+		},
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"description": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"openInNewTab": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"style": "file:./style-index.css"
+}
