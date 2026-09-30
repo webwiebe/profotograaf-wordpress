@@ -1,0 +1,78 @@
+.profotograaf-gallery-picker {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 12px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.profotograaf-gallery-picker__item {
+	margin: 0;
+}
+
+.profotograaf-gallery-picker__button {
+	display: block;
+	width: 100%;
+	height: auto;
+	padding: 0;
+	overflow: hidden;
+	text-align: left;
+	white-space: normal;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	background: #fff;
+}
+
+.profotograaf-gallery-picker__thumb {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	background: #f0f0f0;
+}
+
+.profotograaf-gallery-picker__meta {
+	display: block;
+	padding: 8px;
+}
+
+.profotograaf-gallery-picker__title {
+	display: block;
+	font-weight: 600;
+}
+
+.profotograaf-gallery-picker__count {
+	display: block;
+	color: #757575;
+	font-size: 12px;
+}
+
+.profotograaf-gallery-preview {
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	padding: 12px;
+	border: 1px solid #ddd;
+	background: #fafafa;
+}
+
+.profotograaf-gallery-preview__thumb {
+	flex: 0 0 120px;
+	width: 120px;
+	height: 90px;
+	object-fit: cover;
+	background: #f0f0f0;
+}
+
+.profotograaf-gallery-preview__title {
+	margin: 0 0 4px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.profotograaf-gallery-preview__line {
+	margin: 0;
+	color: #555;
+}

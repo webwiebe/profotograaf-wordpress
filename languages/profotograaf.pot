@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T10:36:40+00:00\n"
+"POT-Creation-Date: 2026-09-30T10:55:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -42,7 +42,115 @@ msgstr ""
 msgid "https://profotograaf.nl"
 msgstr ""
 
+#: includes/admin/class-leads-settings.php:96
+#: includes/admin/class-leads-settings.php:156
+msgid "Profotograaf enquiries"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:97
+msgid "Enquiry forms"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:150
+#: includes/admin/class-leads-settings.php:345
+#: includes/modules/class-settings-page.php:182
+#: includes/modules/class-settings-page.php:209
+#: includes/modules/class-settings-page.php:399
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:159
+msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:164
+msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:165
+msgid "Connect this site"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:171
+msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:179
+msgid "Save changes"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:183
+msgid "Delivery"
+msgstr ""
+
+#. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
+#: includes/admin/class-leads-settings.php:189
+#, php-format
+msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:214
+msgid "Name"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:215
+msgid "Email address"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:216
+msgid "Phone"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:217
+msgid "Event date"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:218
+msgid "Message"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:228
+msgid "Send submissions of this form to Profotograaf"
+msgstr ""
+
+#. translators: %s: name of the form field that is picked automatically.
+#: includes/admin/class-leads-settings.php:247
+#, php-format
+msgid "Automatic (%s)"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:248
+msgid "Automatic (no field found)"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:252
+msgid "Do not send"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:261
+msgid "Every other field is sent along as a label and value."
+msgstr ""
+
+#. translators: 1: form name, 2: error message.
+#: includes/admin/class-leads-settings.php:283
+#, php-format
+msgid "%1$s: %2$s"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:295
+msgid "Try again"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:306
+msgid "Changes saved."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:308
+msgid "The enquiries are queued again."
+msgstr ""
+
 #: includes/class-api-client.php:142
+#: includes/class-gallery-rest.php:123
 msgid "A gallery id is required."
 msgstr ""
 
@@ -79,6 +187,10 @@ msgstr ""
 
 #: includes/class-api-client.php:445
 msgid "This site is not connected to Profotograaf."
+msgstr ""
+
+#: includes/class-gallery-renderer.php:122
+msgid "View the gallery"
 msgstr ""
 
 #: includes/class-pairing.php:92
@@ -137,12 +249,6 @@ msgstr ""
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:182
-#: includes/modules/class-settings-page.php:209
-#: includes/modules/class-settings-page.php:399
-msgid "You do not have permission to do this."
-msgstr ""
-
 #: includes/modules/class-settings-page.php:192
 msgid "Connected to Profotograaf."
 msgstr ""
@@ -194,14 +300,17 @@ msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:277
+#: blocks/gallery/edit.js:27
 msgid "Grid"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:278
+#: blocks/gallery/edit.js:28
 msgid "Masonry"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:279
+#: blocks/gallery/edit.js:29
 msgid "Slideshow"
 msgstr ""
 
@@ -274,6 +383,61 @@ msgstr ""
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr ""
 
+#. translators: %d: number of photos in a gallery.
+#: blocks/gallery/edit.js:19
+#, js-format
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: blocks/gallery/edit.js:26
+msgid "Site default"
+msgstr ""
+
+#: blocks/gallery/edit.js:35
+msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
+msgstr ""
+
+#: blocks/gallery/edit.js:42
+msgid "The galleries could not be loaded."
+msgstr ""
+
+#: blocks/gallery/edit.js:73
+msgid "There are no galleries in your Profotograaf account yet."
+msgstr ""
+
+#: blocks/gallery/edit.js:136
+msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
+msgstr ""
+
+#: blocks/gallery/edit.js:158
+msgid "Gallery"
+msgstr ""
+
+#: blocks/gallery/edit.js:160
+msgid "Layout"
+msgstr ""
+
+#: blocks/gallery/edit.js:179
+msgid "Choose another gallery"
+msgstr ""
+
+#: blocks/gallery/edit.js:188
+#: blocks/gallery/edit.js:208
+msgid "Profotograaf gallery"
+msgstr ""
+
+#: blocks/gallery/edit.js:189
+msgid "Choose one of your galleries."
+msgstr ""
+
+#. translators: %s: layout name such as grid.
+#: blocks/gallery/edit.js:219
+#, js-format
+msgid "layout: %s"
+msgstr ""
+
 #: blocks/client-galleries/block.json
 msgctxt "block title"
 msgid "Find your gallery"
@@ -290,6 +454,7 @@ msgid "client"
 msgstr ""
 
 #: blocks/client-galleries/block.json
+#: blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "gallery"
 msgstr ""
@@ -305,6 +470,27 @@ msgid "photography"
 msgstr ""
 
 #: blocks/client-galleries/block.json
+#: blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "profotograaf"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block title"
+msgid "Profotograaf gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block description"
+msgid "Show one of your Profotograaf galleries as a grid, masonry or slideshow."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "portfolio"
 msgstr ""

@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Profotograaf for WordPress 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/profotograaf\n"
+"POT-Creation-Date: 2026-09-30T10:55:41+00:00\n"
+"PO-Revision-Date: 2026-09-30 12:00+0000\n"
 "Last-Translator: Profotograaf\n"
 "Language-Team: Dutch\n"
+"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T10:12:16+00:00\n"
-"PO-Revision-Date: 2026-09-30 12:00+0000\n"
-"Language: nl_NL\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: profotograaf\n"
@@ -28,12 +28,15 @@ msgstr ""
 
 #. Description of the plugin
 #: profotograaf.php
-msgid "Show your Profotograaf galleries on your own site, offer clients a way in, and send form enquiries to your Profotograaf inbox."
-msgstr "Toon je Profotograaf-galerijen op je eigen site, geef klanten een ingang en stuur aanvragen uit formulieren naar je Profotograaf-inbox."
+msgid ""
+"Show your Profotograaf galleries on your own site, offer clients a way in, "
+"and send form enquiries to your Profotograaf inbox."
+msgstr ""
+"Toon je Profotograaf-galerijen op je eigen site, geef klanten een ingang en "
+"stuur aanvragen uit formulieren naar je Profotograaf-inbox."
 
 #. Author of the plugin
-#: profotograaf.php
-#: includes/modules/class-settings-page.php:66
+#: profotograaf.php includes/modules/class-settings-page.php:66
 #: includes/modules/class-settings-page.php:67
 #: includes/modules/class-settings-page.php:216
 msgid "Profotograaf"
@@ -44,13 +47,137 @@ msgstr ""
 msgid "https://profotograaf.nl"
 msgstr ""
 
-#: includes/class-api-client.php:142
+#: includes/admin/class-leads-settings.php:96
+#: includes/admin/class-leads-settings.php:156
+msgid "Profotograaf enquiries"
+msgstr "Profotograaf-aanvragen"
+
+#: includes/admin/class-leads-settings.php:97
+msgid "Enquiry forms"
+msgstr "Aanvraagformulieren"
+
+#: includes/admin/class-leads-settings.php:150
+#: includes/admin/class-leads-settings.php:345
+#: includes/modules/class-settings-page.php:182
+#: includes/modules/class-settings-page.php:209
+#: includes/modules/class-settings-page.php:399
+msgid "You do not have permission to do this."
+msgstr "Je hebt hier geen toestemming voor."
+
+#: includes/admin/class-leads-settings.php:159
+msgid ""
+"Send the enquiries from your contact forms to your Profotograaf inbox. "
+"Switch a form on and check which field feeds which part of the enquiry. "
+"Nothing is sent for a form you leave off."
+msgstr ""
+"Stuur de aanvragen uit je contactformulieren naar je Profotograaf-inbox. Zet "
+"een formulier aan en controleer welk veld welk deel van de aanvraag vult. "
+"Voor een formulier dat uit staat wordt niets verstuurd."
+
+#: includes/admin/class-leads-settings.php:164
+msgid ""
+"This site is not connected to Profotograaf, so enquiries wait in a queue."
+msgstr ""
+"Deze site is niet verbonden met Profotograaf, dus aanvragen wachten in een "
+"wachtrij."
+
+#: includes/admin/class-leads-settings.php:165
+msgid "Connect this site"
+msgstr "Verbind deze site"
+
+#: includes/admin/class-leads-settings.php:171
+msgid ""
+"No supported form plugin was found. Install Contact Form 7, WPForms or "
+"Gravity Forms and create a form."
+msgstr ""
+"Er is geen ondersteunde formulierplugin gevonden. Installeer Contact Form 7, "
+"WPForms of Gravity Forms en maak een formulier."
+
+#: includes/admin/class-leads-settings.php:179
+msgid "Save changes"
+msgstr "Wijzigingen opslaan"
+
+#: includes/admin/class-leads-settings.php:183
+msgid "Delivery"
+msgstr "Bezorging"
+
+#. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
+#: includes/admin/class-leads-settings.php:189
+#, php-format
+msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
+msgstr "Wacht op verzending: %1$d. Kon niet worden verstuurd: %2$d."
+
+#: includes/admin/class-leads-settings.php:214
+msgid "Name"
+msgstr "Naam"
+
+#: includes/admin/class-leads-settings.php:215
+msgid "Email address"
+msgstr "E-mailadres"
+
+#: includes/admin/class-leads-settings.php:216
+msgid "Phone"
+msgstr "Telefoon"
+
+#: includes/admin/class-leads-settings.php:217
+msgid "Event date"
+msgstr "Datum van de gelegenheid"
+
+#: includes/admin/class-leads-settings.php:218
+msgid "Message"
+msgstr "Bericht"
+
+#: includes/admin/class-leads-settings.php:228
+msgid "Send submissions of this form to Profotograaf"
+msgstr "Stuur inzendingen van dit formulier naar Profotograaf"
+
+#. translators: %s: name of the form field that is picked automatically.
+#: includes/admin/class-leads-settings.php:247
+#, php-format
+msgid "Automatic (%s)"
+msgstr "Automatisch (%s)"
+
+#: includes/admin/class-leads-settings.php:248
+msgid "Automatic (no field found)"
+msgstr "Automatisch (geen veld gevonden)"
+
+#: includes/admin/class-leads-settings.php:252
+msgid "Do not send"
+msgstr "Niet versturen"
+
+#: includes/admin/class-leads-settings.php:261
+msgid "Every other field is sent along as a label and value."
+msgstr "Alle andere velden gaan mee als label en waarde."
+
+#. translators: 1: form name, 2: error message.
+#: includes/admin/class-leads-settings.php:283
+#, php-format
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: includes/admin/class-leads-settings.php:295
+msgid "Try again"
+msgstr "Opnieuw proberen"
+
+#: includes/admin/class-leads-settings.php:306
+msgid "Changes saved."
+msgstr "Wijzigingen opgeslagen."
+
+#: includes/admin/class-leads-settings.php:308
+msgid "The enquiries are queued again."
+msgstr "De aanvragen staan weer in de wachtrij."
+
+#: includes/class-api-client.php:142 includes/class-gallery-rest.php:123
 msgid "A gallery id is required."
 msgstr "Een galerij-id is verplicht."
 
 #: includes/class-api-client.php:155
-msgid "Turn on \"Allow embedding on other websites\" in the gallery settings in Profotograaf."
-msgstr "Zet \"Insluiten op andere websites toestaan\" aan in de galerij-instellingen in Profotograaf."
+msgid ""
+"Turn on \"Allow embedding on other websites\" in the gallery settings in "
+"Profotograaf."
+msgstr ""
+"Zet \"Insluiten op andere websites toestaan\" aan in de galerij-instellingen "
+"in Profotograaf."
 
 #: includes/class-api-client.php:192
 msgid "A lead needs a name and an email address."
@@ -68,8 +195,7 @@ msgstr "De verbinding is beëindigd in je Profotograaf-account."
 msgid "The request could not be encoded."
 msgstr "Het verzoek kon niet worden gecodeerd."
 
-#: includes/class-api-client.php:383
-#: includes/class-api-client.php:387
+#: includes/class-api-client.php:383 includes/class-api-client.php:387
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf is niet bereikbaar."
 
@@ -83,6 +209,10 @@ msgstr "Profotograaf antwoordde met HTTP %d."
 msgid "This site is not connected to Profotograaf."
 msgstr "Deze site is niet verbonden met Profotograaf."
 
+#: includes/class-gallery-renderer.php:122
+msgid "View the gallery"
+msgstr "Bekijk de galerij"
+
 #: includes/class-pairing.php:92
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr "Profotograaf heeft de verbinding niet gestart. Probeer het zo opnieuw."
@@ -93,7 +223,34 @@ msgstr "De verbinding kon niet worden gecontroleerd. Nieuwe poging."
 
 #: includes/class-pairing.php:206
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
-msgstr "Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin opnieuw."
+msgstr ""
+"Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin "
+"opnieuw."
+
+#: includes/modules/class-client-galleries.php:171
+#: blocks/client-galleries/index.js:54 blocks/client-galleries/index.js:88
+msgid "Find your gallery"
+msgstr "Vind je galerij"
+
+#: includes/modules/class-client-galleries.php:172
+#: blocks/client-galleries/index.js:66 blocks/client-galleries/index.js:92
+msgid "Sign in to the client portal to see your photos."
+msgstr "Log in op het klantportaal om je foto's te bekijken."
+
+#: includes/modules/class-client-galleries.php:173
+#: blocks/client-galleries/index.js:79 blocks/client-galleries/index.js:98
+msgid "Open my gallery"
+msgstr "Open mijn galerij"
+
+#: includes/modules/class-client-galleries.php:200
+msgid ""
+"Only editors see this note. The \"Find your gallery\" block has no "
+"Profotograaf address yet. Enter it in the block settings. Until then "
+"visitors do not see this block."
+msgstr ""
+"Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog "
+"geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd "
+"zien bezoekers dit blok niet."
 
 #: includes/modules/class-settings-page.php:99
 #: includes/modules/class-settings-page.php:244
@@ -107,21 +264,22 @@ msgstr "Wachten tot je de verbinding goedkeurt in Profotograaf."
 
 #: includes/modules/class-settings-page.php:123
 msgid "Could not check the connection. Reload this page to try again."
-msgstr "De verbinding kon niet worden gecontroleerd. Laad deze pagina opnieuw om het nog eens te proberen."
+msgstr ""
+"De verbinding kon niet worden gecontroleerd. Laad deze pagina opnieuw om het "
+"nog eens te proberen."
 
 #: includes/modules/class-settings-page.php:157
 msgid "Disconnected from Profotograaf."
 msgstr "Verbinding met Profotograaf verbroken."
 
 #: includes/modules/class-settings-page.php:161
-msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
-msgstr "Verbinding verbroken. Deze site heeft geen toegang meer. Om de site ook uit je account te verwijderen, open je Gekoppelde apps in de instellingen van je Profotograaf-account."
-
-#: includes/modules/class-settings-page.php:182
-#: includes/modules/class-settings-page.php:209
-#: includes/modules/class-settings-page.php:399
-msgid "You do not have permission to do this."
-msgstr "Je hebt hier geen toestemming voor."
+msgid ""
+"Disconnected. This site no longer has access. To also remove it from your "
+"account, open Connected apps in your Profotograaf account settings."
+msgstr ""
+"Verbinding verbroken. Deze site heeft geen toegang meer. Om de site ook uit "
+"je account te verwijderen, open je Gekoppelde apps in de instellingen van je "
+"Profotograaf-account."
 
 #: includes/modules/class-settings-page.php:192
 msgid "Connected to Profotograaf."
@@ -158,8 +316,14 @@ msgid "Not connected"
 msgstr "Niet verbonden"
 
 #: includes/modules/class-settings-page.php:240
-msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
-msgstr "Verbind deze site met je Profotograaf-account om galerijen te plaatsen en aanvragen te ontvangen. Je keurt de verbinding goed in Profotograaf, dus je wachtwoord komt nooit op deze site."
+msgid ""
+"Connect this site to your Profotograaf account to place galleries and "
+"receive enquiries. You approve the connection in Profotograaf, so your "
+"password never reaches this site."
+msgstr ""
+"Verbind deze site met je Profotograaf-account om galerijen te plaatsen en "
+"aanvragen te ontvangen. Je keurt de verbinding goed in Profotograaf, dus je "
+"wachtwoord komt nooit op deze site."
 
 #: includes/modules/class-settings-page.php:241
 msgid "Connect to Profotograaf"
@@ -173,15 +337,15 @@ msgstr "Standaardindeling van galerijen"
 msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr "Wordt gebruikt als een galerijblok of shortcode geen indeling kiest."
 
-#: includes/modules/class-settings-page.php:277
+#: includes/modules/class-settings-page.php:277 blocks/gallery/edit.js:27
 msgid "Grid"
 msgstr "Raster"
 
-#: includes/modules/class-settings-page.php:278
+#: includes/modules/class-settings-page.php:278 blocks/gallery/edit.js:28
 msgid "Masonry"
 msgstr "Metselwerk"
 
-#: includes/modules/class-settings-page.php:279
+#: includes/modules/class-settings-page.php:279 blocks/gallery/edit.js:29
 msgid "Slideshow"
 msgstr "Diavoorstelling"
 
@@ -208,40 +372,28 @@ msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s mag je Profotograaf-pagina's in een frame tonen."
 
 #: includes/modules/class-settings-page.php:317
-msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
-msgstr "Profotograaf staat insluiten alleen toe op sites die via https worden aangeboden. Bied deze site aan via https om je pagina's in een frame in te sluiten."
+msgid ""
+"Profotograaf only allows embedding on sites served over https. Serve this "
+"site over https to embed your pages in a frame."
+msgstr ""
+"Profotograaf staat insluiten alleen toe op sites die via https worden "
+"aangeboden. Bied deze site aan via https om je pagina's in een frame in te "
+"sluiten."
 
 #. translators: %s: site address, for example https://example.com.
 #: includes/modules/class-settings-page.php:322
 #, php-format
-msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
-msgstr "Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je %s toe onder \"Sites die mijn pagina's mogen insluiten\" in de instellingen van je Profotograaf-account."
+msgid ""
+"To show your Profotograaf pages in a frame on this site, add %s under "
+"\"Sites allowed to embed my pages\" in your Profotograaf account settings."
+msgstr ""
+"Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je %s "
+"toe onder \"Sites die mijn pagina's mogen insluiten\" in de instellingen van "
+"je Profotograaf-account."
 
 #: includes/modules/class-settings-page.php:330
 msgid "Check again"
 msgstr "Opnieuw controleren"
-
-#: includes/modules/class-client-galleries.php:171
-#: blocks/client-galleries/index.js:54
-#: blocks/client-galleries/index.js:88
-msgid "Find your gallery"
-msgstr "Vind je galerij"
-
-#: includes/modules/class-client-galleries.php:172
-#: blocks/client-galleries/index.js:66
-#: blocks/client-galleries/index.js:92
-msgid "Sign in to the client portal to see your photos."
-msgstr "Log in op het klantportaal om je foto's te bekijken."
-
-#: includes/modules/class-client-galleries.php:173
-#: blocks/client-galleries/index.js:79
-#: blocks/client-galleries/index.js:98
-msgid "Open my gallery"
-msgstr "Open mijn galerij"
-
-#: includes/modules/class-client-galleries.php:200
-msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
-msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
 #: blocks/client-galleries/index.js:22
 msgid "Client portal"
@@ -252,15 +404,17 @@ msgid "Portal address"
 msgstr "Portaaladres"
 
 #: blocks/client-galleries/index.js:27
-msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
-msgstr "Je Profotograaf-adres (bijvoorbeeld studio), je subdomein of je eigen domein."
+msgid ""
+"Your Profotograaf address (for example studio), your subdomain or your own "
+"domain."
+msgstr ""
+"Je Profotograaf-adres (bijvoorbeeld studio), je subdomein of je eigen domein."
 
 #: blocks/client-galleries/index.js:38
 msgid "Open in a new tab"
 msgstr "Openen in een nieuw tabblad"
 
-#: blocks/client-galleries/index.js:46
-#: blocks/client-galleries/index.js:64
+#: blocks/client-galleries/index.js:46 blocks/client-galleries/index.js:64
 msgid "Text"
 msgstr "Tekst"
 
@@ -273,8 +427,73 @@ msgid "Button label"
 msgstr "Knoptekst"
 
 #: blocks/client-galleries/index.js:102
-msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
-msgstr "Alleen redacteuren zien deze notitie. Vul je Profotograaf-adres in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
+msgid ""
+"Only editors see this note. Enter your Profotograaf address in the block "
+"settings. Until then visitors do not see this block."
+msgstr ""
+"Alleen redacteuren zien deze notitie. Vul je Profotograaf-adres in bij de "
+"blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
+
+#. translators: %d: number of photos in a gallery.
+#: blocks/gallery/edit.js:19
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] "%d foto"
+msgstr[1] "%d foto's"
+
+#: blocks/gallery/edit.js:26
+msgid "Site default"
+msgstr "Standaard van de site"
+
+#: blocks/gallery/edit.js:35
+msgid ""
+"Connect this site to Profotograaf under Settings > Profotograaf to pick a "
+"gallery."
+msgstr ""
+"Verbind deze site met Profotograaf onder Instellingen > Profotograaf om een "
+"galerij te kiezen."
+
+#: blocks/gallery/edit.js:42
+msgid "The galleries could not be loaded."
+msgstr "De galerijen konden niet worden geladen."
+
+#: blocks/gallery/edit.js:73
+msgid "There are no galleries in your Profotograaf account yet."
+msgstr "Er staan nog geen galerijen in je Profotograaf-account."
+
+#: blocks/gallery/edit.js:136
+msgid ""
+"This gallery cannot be shown on other sites right now. A password, an expiry "
+"date, proofing mode or a client-only setting stops embedding."
+msgstr ""
+"Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord, een "
+"vervaldatum, keuzemodus of een instelling alleen voor de klant staat "
+"insluiten niet toe."
+
+#: blocks/gallery/edit.js:158
+msgid "Gallery"
+msgstr "Galerij"
+
+#: blocks/gallery/edit.js:160
+msgid "Layout"
+msgstr "Indeling"
+
+#: blocks/gallery/edit.js:179
+msgid "Choose another gallery"
+msgstr "Kies een andere galerij"
+
+#: blocks/gallery/edit.js:188 blocks/gallery/edit.js:208
+msgid "Profotograaf gallery"
+msgstr "Profotograaf-galerij"
+
+#: blocks/gallery/edit.js:189
+msgid "Choose one of your galleries."
+msgstr "Kies een van je galerijen."
+
+#. translators: %s: layout name such as grid.
+#: blocks/gallery/edit.js:219
+msgid "layout: %s"
+msgstr "indeling: %s"
 
 #: blocks/client-galleries/block.json
 msgctxt "block title"
@@ -283,15 +502,19 @@ msgstr "Vind je galerij"
 
 #: blocks/client-galleries/block.json
 msgctxt "block description"
-msgid "A button that takes your clients to their private galleries in the Profotograaf client portal."
-msgstr "Een knop die je klanten naar hun besloten galerijen in het Profotograaf-klantportaal brengt."
+msgid ""
+"A button that takes your clients to their private galleries in the "
+"Profotograaf client portal."
+msgstr ""
+"Een knop die je klanten naar hun besloten galerijen in het Profotograaf-"
+"klantportaal brengt."
 
 #: blocks/client-galleries/block.json
 msgctxt "block keyword"
 msgid "client"
 msgstr "klant"
 
-#: blocks/client-galleries/block.json
+#: blocks/client-galleries/block.json blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "gallery"
 msgstr "galerij"
@@ -306,7 +529,30 @@ msgctxt "block keyword"
 msgid "photography"
 msgstr "fotografie"
 
-#: blocks/client-galleries/block.json
+#: blocks/client-galleries/block.json blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "profotograaf"
 msgstr "profotograaf"
+
+#: blocks/gallery/block.json
+msgctxt "block title"
+msgid "Profotograaf gallery"
+msgstr "Profotograaf-galerij"
+
+#: blocks/gallery/block.json
+msgctxt "block description"
+msgid ""
+"Show one of your Profotograaf galleries as a grid, masonry or slideshow."
+msgstr ""
+"Toon een van je Profotograaf-galerijen als raster, metselwerk of "
+"diavoorstelling."
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "foto's"
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "portfolio"
+msgstr "portfolio"
