@@ -99,9 +99,38 @@ const server = createServer( async ( req, res ) => {
 				embeddable: true,
 				available: true,
 				photo_count: 3,
+				cover_url: 'http://localhost:8090/cover.jpg',
 				updated_at: '2026-09-01T10:00:00Z',
 			},
 		] );
+	}
+	if ( ( req.method === 'GET' || req.method === 'HEAD' ) && url.pathname === '/share/embed/embed.js' ) {
+		// The current script. The ETag is its content hash, the version in the versioned URL.
+		res.writeHead( 200, { 'content-type': 'text/javascript', etag: '"0123456789ab"' } );
+		return res.end( req.method === 'HEAD' ? undefined : '/* embed */' );
+	}
+	if ( req.method === 'GET' && url.pathname === '/oembed' ) {
+		const match = /\/share\/g\/([^/?#]+)/.exec( url.searchParams.get( 'url' ) || '' );
+		if ( ! match || match[ 1 ] !== 'spring-wedding' ) {
+			return json( res, 404, { error: 'not found' } );
+		}
+		const origin = `http://${ req.headers.host }`;
+		return json( res, 200, {
+			version: '1.0',
+			type: 'rich',
+			provider_name: 'Profotograaf',
+			provider_url: origin,
+			title: 'Spring wedding',
+			html:
+				'<div data-profotograaf-gallery="g-e2e"><a href="' +
+				origin +
+				'/share/g/spring-wedding">Spring wedding</a></div><script async src="' +
+				origin +
+				'/share/embed/embed.0123456789ab.js"></script>',
+			width: 720,
+			height: 540,
+			cache_age: 300,
+		} );
 	}
 	if ( req.method === 'POST' && url.pathname === '/api/v1/leads' ) {
 		if ( ! bearer ) {

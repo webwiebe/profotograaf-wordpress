@@ -60,6 +60,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      # The release copy holds the built blocks, so Plugin Check reviews them too.
+      - run: npm run build
       - run: tests/e2e/up.sh
       - run: tests/e2e/plugin-check.sh
       - if: always()
@@ -83,6 +90,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      # The E2E site runs the release copy, which holds the built blocks.
+      - run: npm run build
       - run: tests/e2e/up.sh
       - run: npx playwright test
       - uses: actions/upload-artifact@v4
