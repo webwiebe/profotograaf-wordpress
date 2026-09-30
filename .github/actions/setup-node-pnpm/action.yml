@@ -1,0 +1,16 @@
+name: Node and pnpm
+description: Node, the pnpm version package.json pins (corepack shims inside the checkout), and a frozen install.
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+    - name: pnpm
+      shell: bash
+      run: |
+        . scripts/use-pnpm.sh
+        echo "$PWD/.tools/corepack-bin" >> "$GITHUB_PATH"
+    - name: Install
+      shell: bash
+      run: pnpm install --frozen-lockfile

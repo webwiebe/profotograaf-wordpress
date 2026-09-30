@@ -14,3 +14,7 @@ composer.phar
 /playwright-report/
 /test-results/
 .DS_Store
+/.phpstan.cache/
+/coverage/
+/.tools/
+/.pnpm-store/

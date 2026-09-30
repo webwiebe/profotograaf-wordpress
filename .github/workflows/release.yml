@@ -8,20 +8,20 @@ permissions:
   contents: write
 
 jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
   release:
+    needs: ci
     runs-on: ubuntu-latest
     env:
       SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
       SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
       - run: bin/check-version.sh "${GITHUB_REF_NAME}"
-      - run: npm ci
-      - run: npm run build
+      - run: pnpm build
       - run: bin/build-release.sh --zip
       - name: Create GitHub release
         env:
@@ -31,7 +31,7 @@ jobs:
             --title "${GITHUB_REF_NAME}" --generate-notes
       - name: Deploy to wordpress.org
         if: env.SVN_USERNAME != '' && env.SVN_PASSWORD != ''
-        uses: 10up/action-wordpress-plugin-deploy@stable
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}

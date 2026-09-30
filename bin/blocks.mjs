@@ -7,6 +7,10 @@
  * source directory) and writes build/<name>/. This wrapper only makes an empty
  * blocks/ folder a successful no-op, which wp-scripts is not, and pins the
  * source and output directories in one place.
+ *
+ * wp-scripts is only the bundler here. Type checking is `tsc` and linting is
+ * oxlint, because wp-scripts' own lint (eslint + typescript-eslint) cannot load
+ * TypeScript 7.
  */
 import { existsSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -30,14 +34,7 @@ if ( ! hasBlocks ) {
 	process.exit( 0 );
 }
 
-const args =
-	command === 'lint-js'
-		? [ 'lint-js', 'blocks' ]
-		: [
-				command,
-				'--webpack-src-dir=blocks',
-				'--output-path=build',
-		  ];
+const args = [ command, '--webpack-src-dir=blocks', '--output-path=build' ];
 
 const result = spawnSync(
 	process.execPath,

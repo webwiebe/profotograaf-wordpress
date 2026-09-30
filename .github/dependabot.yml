@@ -1,0 +1,45 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 3
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    groups:
+      typescript-oxlint:
+        patterns: ['typescript', 'oxlint', 'oxlint-tsgolint', 'knip']
+      wp-scripts:
+        patterns: ['@wordpress/*']
+      test-tooling:
+        patterns: ['vitest', '@vitest/*', '@testing-library/*', 'jsdom', '@playwright/*']
+      dev-dependencies:
+        dependency-type: development
+        exclude-patterns: ['typescript', 'oxlint', 'oxlint-tsgolint', 'knip', '@wordpress/*', 'vitest', '@vitest/*', '@testing-library/*', 'jsdom', '@playwright/*']
+
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    groups:
+      phpcs-wpcs:
+        patterns: ['squizlabs/*', 'wp-coding-standards/*', 'phpcsstandards/*', 'dealerdirect/*']
+      phpstan:
+        patterns: ['phpstan/*', 'szepeviktor/phpstan-wordpress']
+      dev-dependencies:
+        dependency-type: development

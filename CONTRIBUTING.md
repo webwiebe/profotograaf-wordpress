@@ -6,7 +6,7 @@
 profotograaf.php          plugin header and bootstrap, rarely edited
 includes/                 classes, autoloaded
 includes/modules/         one file per feature module, discovered automatically
-blocks/<name>/            one folder per block, discovered automatically
+blocks/<name>/            one folder per block, discovered automatically (TypeScript)
 build/                    block build output (generated, not committed)
 assets/admin/             plain CSS and JS the plugin ships as is
 assets/wporg/             directory banner, icon and screenshots (not in the zip)
@@ -14,6 +14,8 @@ languages/                .pot, .po and .mo files
 tests/unit/               PHPUnit with Brain Monkey, no WordPress needed
 tests/e2e/                Playwright against a real WordPress in Docker
 bin/                      release and build helpers
+scripts/                  quality gates and their tests (see docs/quality.md)
+docs/quality.md           every gate, its threshold, how to update a baseline
 ```
 
 ## Adding a feature without touching shared files
@@ -52,7 +54,7 @@ The `profotograaf_modules` filter receives the class list, so a module that live
 
 ### Blocks
 
-Add `blocks/<name>/block.json` with its `index.js`, `render.php` and styles. `npm run build` (`@wordpress/scripts`) writes `build/<name>/`. `Modules\Blocks` registers every `blocks/*/block.json`, from `build/<name>` when it exists. Nothing else changes. Blocks use the text domain `profotograaf`.
+Add `blocks/<name>/block.json` with its `index.tsx` (or `index.ts`), `render.php` and styles. Block and editor code is TypeScript. `pnpm build` (`@wordpress/scripts`, used only as the bundler) writes `build/<name>/`. `Modules\Blocks` registers every `blocks/*/block.json`, from `build/<name>` when it exists. Nothing else changes. Blocks use the text domain `profotograaf`.
 
 ### Hooks other code can use
 
@@ -97,16 +99,29 @@ Front-end requests never wait on the platform. Do slow or fallible work in WP-Cr
 
 ## Checks
 
-The unit and lint tools run in Docker, so nothing needs installing except Docker and Node.
+pnpm is the only package manager (the version is pinned in `packageManager`; `. scripts/use-pnpm.sh` puts it on PATH through corepack, inside the checkout). PHP tools run in Docker, so nothing needs installing except Docker and Node.
 
 ```sh
-make install     # composer and npm dependencies
+make install     # composer and pnpm dependencies
+make quality     # everything CI runs before a merge, except the Docker E2E
 make lint        # PHPCS with the WordPress Coding Standards
+make phpstan     # PHPStan level 8 against its baseline
 make test        # PHPUnit
 make build       # blocks
 make e2e         # release copy in WordPress on Docker, Playwright, Plugin Check
 make pot         # regenerate languages/profotograaf.pot
 ```
+
+Standards a change has to meet:
+
+- TypeScript is strict, with `noUncheckedIndexedAccess`; `pnpm typecheck` runs `tsc --noEmit`.
+- oxlint: complexity 12, at most 60 lines per function, depth 4, 4 parameters. A ratchet baseline holds the existing count at zero, so any new finding fails.
+- Files stay under 500 lines (TS and PHP).
+- New and changed lines need 80% test coverage (diffs under 10 changed lines are exempt), for both TypeScript (vitest) and PHP (PHPUnit with pcov). Write real tests: they must fail when the code is wrong.
+- No dead code (knip), no high or critical advisories (`pnpm audit`, `composer audit`).
+- No `continue-on-error`, every action pinned to a version tag, and every release job needs the quality and test jobs.
+
+`docs/quality.md` lists each gate with its threshold and how to update a baseline. Never edit a baseline by hand; each gate has its refresh command that says so when it fails.
 
 Do not run `phpcbf` and commit the result unread. It rewrites string values it considers misspellings, for example `'wordpress'` to `'WordPress'`, and the platform's client id is the lowercase one.
 
@@ -116,9 +131,10 @@ Do not run `phpcbf` and commit the result unread. It rewrites string values it c
 
 GitHub Actions on GitHub-hosted runners:
 
-- `ci.yml`: PHPCS, PHPUnit on PHP 8.1 to 8.4, block build, Plugin Check, and the E2E tests on the current and previous two WordPress versions.
-- `release.yml`: a `v*` tag builds the zip, attaches it to a GitHub release and deploys to the wordpress.org SVN when the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist.
+- `ci.yml`: gate script tests first, then oxlint, tsc, knip, file length, workflow rules, vitest and `pnpm audit`; PHPCS, PHPStan and `composer audit`; PHPUnit on PHP 8.1 to 8.4; coverage gates; block build; Plugin Check; and the E2E tests on the current and previous two WordPress versions. It runs on pull requests, pushes to main, and as a reusable workflow.
+- `release.yml`: a `v*` tag runs `ci.yml` first, then builds the zip, attaches it to a GitHub release and deploys to the wordpress.org SVN when the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist.
 - `wp-tested-up-to.yml`: weekly, installs a newer WordPress release, runs the tests and opens a pull request that raises "Tested up to".
+- `dependabot.yml`: weekly, grouped updates for actions, npm and composer.
 
 ## Releasing
 
