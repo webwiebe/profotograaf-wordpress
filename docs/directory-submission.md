@@ -27,7 +27,7 @@ as far as we can tell but a reviewer may ask about it. **Open** needs work befor
 | 14 | Avoid frequent commits | Process | Release with the tag workflow only for real releases. Do not deploy every commit. |
 | 15 | Increment the version for each release | Met | `bin/check-version.sh` fails a release when the tag, header and `Stable tag` differ. |
 | 16 | A complete plugin at submission | Open | Submit when the gallery block, shortcode, oEmbed and lead bridges of the epic are merged. Each is named in the readme. |
-| 17 | Respect trademarks | Open | Plugin Check warns that the name "Profotograaf for WordPress" contains the restricted term "wordpress". `readme.txt` is renamed to "Profotograaf". Rename `Plugin Name` in `profotograaf.php` (and the `Project-Id-Version` of the language files) to match before submitting. The slug `profotograaf` is fine. |
+| 17 | Respect trademarks | Met | The restricted term "wordpress" is out of the name: `Plugin Name` in `profotograaf.php`, the `readme.txt` title and the `Project-Id-Version` of the language files all read "Profotograaf". The slug `profotograaf` is fine. |
 | 18 | Directory rights | Met | Nothing to do. |
 
 Other requirements from the review team:
@@ -42,6 +42,21 @@ Other requirements from the review team:
 | Clean uninstall | Met | `uninstall.php` removes every `profotograaf_` option, transient and cron event. |
 | Plugin URI and Author URI resolve | Open | Check both headers point at pages that exist on the day of submission. |
 | `Contributors` are wordpress.org usernames | Open | `readme.txt` lists `profotograaf`. Replace it with the wordpress.org username of the account that submits, or create that account under this name. |
+
+
+## Permissions and reconnecting
+
+The plugin asks for three scopes when it connects: `galleries:read`, `leads:write`
+and `galleries:embed` (`Config::SCOPES`). The platform decides the grant from the
+`wordpress` client registration, so the request is what the approval page shows.
+`galleries:embed` lets the gallery block switch "Allow embedding on other websites" on
+for the one gallery a photographer picks, through
+`PUT /api/v1/embed/galleries/{id}/embeddable`. It is named in the External services
+section of `readme.txt`. The plugin never widens the grant on its own: a connection
+made before the scope existed answers 403 to that call, the plugin says so, and the
+settings page and an admin notice ask the photographer to connect again. A reviewer
+can test this by connecting, then switching a gallery off in Profotograaf and picking
+it in the block.
 
 ## Plugin Check
 

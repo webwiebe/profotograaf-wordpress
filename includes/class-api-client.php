@@ -26,7 +26,8 @@ defined( 'ABSPATH' ) || exit;
  *  - profotograaf_network: the request did not complete (timeout, DNS, TLS).
  *  - profotograaf_http: the platform answered 400 or above.
  *  - profotograaf_invalid: the payload was rejected before sending.
- *  - profotograaf_unsupported: the platform offers no such call to this plugin.
+ *  - profotograaf_reconnect: the platform refused a call because the token lacks a
+ *    permission the plugin now asks for; connecting again grants it.
  *  - profotograaf_refresh_busy: another request is refreshing the token.
  *
  * The error data is always an array with `status` (HTTP status, 0 when no
@@ -125,44 +126,61 @@ class Api_Client {
 	/**
 	 * Marks a gallery as embeddable on other sites.
 	 *
-	 * The platform does not let the plugin's token do this yet: turning a
-	 * gallery on is a write and the token only holds galleries:read (see
-	 * docs/embed-api.md in the platform repository). Until it does this returns
-	 * a profotograaf_unsupported error without any request, and the photographer
-	 * switches "Allow embedding on other websites" on in the gallery settings.
+	 * Calls `PUT /api/v1/embed/galleries/{id}/embeddable`, which needs the
+	 * galleries:embed scope. The answer is `id`, `embeddable` and `available`.
+	 * `available` is false when a password, an expiry date, proofing mode or a
+	 * client-only setting keeps the gallery off other sites even though the
+	 * setting is on; callers tell the photographer.
 	 *
-	 * When the platform gains a call, a site or a later release supplies it
-	 * with the `profotograaf_mark_embeddable_request` filter.
+	 * A 403 means the token was paired before the scope existed. The result is
+	 * then a profotograaf_reconnect error and the connection remembers it, so
+	 * the settings page asks the photographer to connect again.
 	 *
 	 * @param string $gallery_id Gallery id.
-	 * @return array<string,mixed>|WP_Error
+	 * @return array{id:string,embeddable:bool,available:bool}|WP_Error
 	 */
 	public function mark_embeddable( string $gallery_id ) {
 		if ( '' === trim( $gallery_id ) ) {
 			return $this->error( 'profotograaf_invalid', __( 'A gallery id is required.', 'profotograaf' ), 0, false );
 		}
 
+		$request = array(
+			'method' => 'PUT',
+			'path'   => '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/embeddable',
+			'body'   => array( 'embeddable' => true ),
+		);
+
 		/**
-		 * Supplies the request that marks a gallery embeddable.
+		 * Overrides the request that marks a gallery embeddable.
 		 *
-		 * @param array{method:string,path:string,body:array<string,mixed>}|null $request    Null while the platform offers no such call.
-		 * @param string                                                          $gallery_id Gallery id.
+		 * @param array{method:string,path:string,body:array<string,mixed>} $request    The default request.
+		 * @param string                                                    $gallery_id Gallery id.
 		 */
-		$request = apply_filters( 'profotograaf_mark_embeddable_request', null, $gallery_id );
+		$request = apply_filters( 'profotograaf_mark_embeddable_request', $request, $gallery_id );
 		if ( ! is_array( $request ) || empty( $request['method'] ) || empty( $request['path'] ) ) {
-			return $this->error(
-				'profotograaf_unsupported',
-				__( 'Turn on "Allow embedding on other websites" in the gallery settings in Profotograaf.', 'profotograaf' ),
-				0,
-				false
-			);
+			return $this->error( 'profotograaf_invalid', __( 'The request to switch embedding on is not valid.', 'profotograaf' ), 0, false );
 		}
 
 		$result = $this->request( (string) $request['method'], (string) $request['path'], isset( $request['body'] ) && is_array( $request['body'] ) ? $request['body'] : null );
 		if ( is_wp_error( $result ) ) {
+			$data = $result->get_error_data();
+			if ( 'profotograaf_http' === $result->get_error_code() && is_array( $data ) && 403 === ( $data['status'] ?? 0 ) ) {
+				$this->connection->flag_embed_denied();
+				return $this->error(
+					'profotograaf_reconnect',
+					__( 'This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission.', 'profotograaf' ),
+					403,
+					false
+				);
+			}
 			return $result;
 		}
-		return is_array( $result ) ? $result : array();
+		$result = is_array( $result ) ? $result : array();
+		return array(
+			'id'         => (string) ( $result['id'] ?? $gallery_id ),
+			'embeddable' => ! empty( $result['embeddable'] ),
+			'available'  => ! empty( $result['available'] ),
+		);
 	}
 
 	/**

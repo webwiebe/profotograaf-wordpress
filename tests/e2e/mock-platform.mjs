@@ -104,6 +104,12 @@ const server = createServer( async ( req, res ) => {
 			},
 		] );
 	}
+	if ( req.method === 'PUT' && /^\/api\/v1\/embed\/galleries\/[^/]+\/embeddable$/.test( url.pathname ) ) {
+		if ( ! bearer ) {
+			return json( res, 401, { error: 'device token required' } );
+		}
+		return json( res, 200, { id: url.pathname.split( '/' )[ 5 ], embeddable: true, available: true } );
+	}
 	if ( ( req.method === 'GET' || req.method === 'HEAD' ) && url.pathname === '/share/embed/embed.js' ) {
 		// The current script. The ETag is its content hash, the version in the versioned URL.
 		res.writeHead( 200, { 'content-type': 'text/javascript', etag: '"0123456789ab"' } );

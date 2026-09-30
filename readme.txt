@@ -37,11 +37,13 @@ Privacy policy: https://profotograaf.nl/privacy
 
 = Connecting your site =
 
-When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. These calls carry the access token the plugin stores for your account.
+When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
 
 = Your galleries =
 
 In the block editor and on the settings page, the plugin asks `https://profotograaf.nl/api/v1/embed/galleries` for the list of your galleries (title, link, photo count and a cover picture). Only you, signed in to WordPress with an administrator or editor account, can see this list.
+
+When you pick a gallery in the gallery block that does not allow embedding yet, the plugin sends `PUT https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/embeddable` to switch "Allow embedding on other websites" on for that one gallery. Nothing else about the gallery changes. If your connection was made before this permission existed, Profotograaf refuses the call and the plugin asks you to connect again.
 
 = Showing a gallery on your site =
 

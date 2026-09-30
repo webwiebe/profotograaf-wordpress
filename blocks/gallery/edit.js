@@ -113,6 +113,12 @@ function Picker( { onPick } ) {
 	);
 }
 
+const notEligible = () =>
+	__(
+		'This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding.',
+		'profotograaf'
+	);
+
 export default function Edit( { attributes, setAttributes } ) {
 	const { galleryId, galleryTitle, layout } = attributes;
 	const [ notice, setNotice ] = useState( '' );
@@ -132,12 +138,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			return;
 		}
 		if ( gallery.embeddable ) {
-			setNotice(
-				__(
-					'This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding.',
-					'profotograaf'
-				)
-			);
+			setNotice( notEligible() );
 			return;
 		}
 		apiFetch( {
@@ -145,7 +146,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				gallery.id
 			) }/embeddable`,
 			method: 'POST',
-		} ).catch( ( e ) => setNotice( errorMessage( e ) ) );
+		} )
+			.then( ( result ) => {
+				if ( result && result.available === false ) {
+					setNotice( notEligible() );
+				}
+			} )
+			.catch( ( e ) => setNotice( errorMessage( e ) ) );
 	};
 
 	// The preview card uses the cover thumbnail from the picker. It is only known

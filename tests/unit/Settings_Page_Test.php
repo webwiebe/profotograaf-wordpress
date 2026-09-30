@@ -98,6 +98,30 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->assertSame( array(), $this->http->requests );
 	}
 
+	public function test_the_reconnect_notice_shows_for_a_connection_without_the_embed_scope(): void {
+		$this->allow( true );
+		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://example.com/wp-admin/' . $path );
+		$this->connect();
+
+		ob_start();
+		$this->page->reconnect_notice();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'notice-warning', $html );
+		$this->assertStringContainsString( 'Connect this site again', $html );
+	}
+
+	public function test_no_reconnect_notice_after_a_current_pairing(): void {
+		$this->allow( true );
+		$this->connect();
+		$this->options['profotograaf_connection']['scope_revision'] = \Profotograaf\Config::SCOPE_REVISION;
+
+		ob_start();
+		$this->page->reconnect_notice();
+
+		$this->assertSame( '', (string) ob_get_clean() );
+	}
+
 	/**
 	 * @return array<string,array{string}>
 	 */

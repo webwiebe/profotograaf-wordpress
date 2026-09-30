@@ -260,21 +260,56 @@ class Api_Client_Test extends Wp_Test_Case {
 		);
 	}
 
-	public function test_mark_embeddable_is_unsupported_until_the_platform_offers_it(): void {
+	public function test_mark_embeddable_puts_the_flag_and_returns_availability(): void {
 		$this->connect();
+		$this->http->reply(
+			200,
+			array(
+				'id'         => 'g1',
+				'embeddable' => true,
+				'available'  => false,
+			)
+		);
 
 		$result = $this->api->mark_embeddable( 'g1' );
 
-		$this->assertWPError( $result, 'profotograaf_unsupported' );
-		$this->assertSame( array(), $this->http->requests );
+		$this->assertSame(
+			array(
+				'id'         => 'g1',
+				'embeddable' => true,
+				'available'  => false,
+			),
+			$result
+		);
+		$this->assertSame( 'PUT', $this->http->requests[0]['method'] );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries/g1/embeddable', $this->http->requests[0]['url'] );
+		$this->assertSame( array( 'embeddable' => true ), $this->http->body( 0 ) );
 	}
 
-	public function test_mark_embeddable_uses_the_request_a_filter_supplies(): void {
+	public function test_mark_embeddable_403_asks_the_photographer_to_reconnect(): void {
+		$this->connect();
+		$this->http->reply( 403, array( 'error' => 'this app is not allowed to use this endpoint' ) );
+
+		$result = $this->api->mark_embeddable( 'g1' );
+
+		$this->assertWPError( $result, 'profotograaf_reconnect' );
+		$this->assertStringContainsString( 'Connect this site again', $result->get_error_message() );
+		$this->assertTrue( ( new Connection() )->needs_reconnect() );
+	}
+
+	public function test_mark_embeddable_other_failures_stay_http_errors(): void {
+		$this->connect();
+		$this->http->reply( 404, array( 'error' => 'gallery not found' ) );
+
+		$this->assertWPError( $this->api->mark_embeddable( 'g1' ), 'profotograaf_http' );
+	}
+
+	public function test_mark_embeddable_request_can_be_overridden_by_a_filter(): void {
 		$this->connect();
 		Filters\expectApplied( 'profotograaf_mark_embeddable_request' )->once()->andReturn(
 			array(
 				'method' => 'PUT',
-				'path'   => '/api/v1/embed/galleries/g1',
+				'path'   => '/api/v1/galleries/g1',
 				'body'   => array( 'embeddable' => true ),
 			)
 		);
@@ -282,8 +317,8 @@ class Api_Client_Test extends Wp_Test_Case {
 
 		$result = $this->api->mark_embeddable( 'g1' );
 
-		$this->assertSame( array( 'embeddable' => true ), $result );
-		$this->assertSame( 'PUT', $this->http->requests[0]['method'] );
+		$this->assertTrue( $result['embeddable'] );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/galleries/g1', $this->http->requests[0]['url'] );
 	}
 
 	public function test_sign_out_reports_whether_the_platform_confirmed(): void {

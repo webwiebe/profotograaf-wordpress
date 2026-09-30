@@ -79,6 +79,7 @@ class Pairing {
 				'platform'    => Config::CLIENT_ID,
 				'app_version' => defined( 'PROFOTOGRAAF_VERSION' ) ? PROFOTOGRAAF_VERSION : '',
 				'hostname'    => $host,
+				'scope'       => implode( ' ', Config::SCOPES ),
 			)
 		);
 		if ( is_wp_error( $result ) ) {
@@ -211,6 +212,7 @@ class Pairing {
 					);
 				}
 				$this->connection->save_tokens( $body, $this->now() );
+				$this->connection->record_grant( Config::SCOPE_REVISION );
 				$this->connection->clear_pairing();
 
 				/**

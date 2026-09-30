@@ -43,6 +43,7 @@ class Settings_Page implements Module {
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
+		add_action( 'admin_notices', array( $this, 'reconnect_notice' ) );
 		add_action( 'admin_post_profotograaf_connect', array( $this, 'handle_connect' ) );
 		add_action( 'admin_post_profotograaf_cancel', array( $this, 'handle_cancel' ) );
 		add_action( 'admin_post_profotograaf_disconnect', array( $this, 'handle_disconnect' ) );
@@ -123,6 +124,27 @@ class Settings_Page implements Module {
 					'error'   => __( 'Could not check the connection. Reload this page to try again.', 'profotograaf' ),
 				),
 			)
+		);
+	}
+
+	/**
+	 * Asks the photographer to connect again when the stored token lacks the
+	 * permission to switch galleries on. Shown on every admin screen except
+	 * the settings page, which carries the same prompt with a button.
+	 */
+	public function reconnect_notice(): void {
+		if ( ! current_user_can( self::CAPABILITY ) || ! $this->plugin()->connection()->needs_reconnect() ) {
+			return;
+		}
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( $screen && 'settings_page_' . self::SLUG === $screen->id ) {
+			return;
+		}
+		printf(
+			'<div class="notice notice-warning"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
+			esc_html__( 'Profotograaf needs a new permission to switch galleries on for embedding.', 'profotograaf' ),
+			esc_url( self::url() ),
+			esc_html__( 'Connect this site again', 'profotograaf' )
 		);
 	}
 
@@ -217,7 +239,9 @@ class Settings_Page implements Module {
 			<?php $this->render_notice(); ?>
 
 			<h2><?php esc_html_e( 'Connection', 'profotograaf' ); ?></h2>
-			<?php if ( 'connected' === $status['state'] ) : ?>
+			<?php if ( null !== $pairing ) : ?>
+				<?php $this->render_pairing( $pairing ); ?>
+			<?php elseif ( 'connected' === $status['state'] ) : ?>
 				<p class="profotograaf-status profotograaf-status--connected">
 					<strong><?php esc_html_e( 'Connected', 'profotograaf' ); ?></strong>
 					<?php if ( $status['connected_at'] > 0 ) : ?>
@@ -227,9 +251,13 @@ class Settings_Page implements Module {
 						?>
 					<?php endif; ?>
 				</p>
+				<?php if ( $connection->needs_reconnect() ) : ?>
+					<div class="notice notice-warning inline">
+						<p><?php esc_html_e( 'This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are.', 'profotograaf' ); ?></p>
+					</div>
+					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary' ); ?>
+				<?php endif; ?>
 				<?php $this->render_action_form( 'profotograaf_disconnect', __( 'Disconnect', 'profotograaf' ), 'secondary' ); ?>
-			<?php elseif ( null !== $pairing ) : ?>
-				<?php $this->render_pairing( $pairing ); ?>
 			<?php else : ?>
 				<p class="profotograaf-status">
 					<strong><?php esc_html_e( 'Not connected', 'profotograaf' ); ?></strong>

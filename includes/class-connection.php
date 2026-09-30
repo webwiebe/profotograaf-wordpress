@@ -56,7 +56,7 @@ class Connection {
 	/**
 	 * Summary for the settings page.
 	 *
-	 * @return array{state:string,connected_at:int,last_error:string}
+	 * @return array{state:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool}
 	 */
 	public function status(): array {
 		$data = $this->data();
@@ -78,14 +78,54 @@ class Connection {
 		$ttl      = isset( $response['expires_in'] ) ? max( 1, (int) $response['expires_in'] ) : 900;
 		$this->write(
 			array(
-				'access_token'  => (string) ( $response['access_token'] ?? '' ),
-				'refresh_token' => (string) ( $response['refresh_token'] ?? '' ),
-				'expires_at'    => $now + $ttl,
-				'device_id'     => (string) ( $response['device_id'] ?? $previous['device_id'] ),
-				'connected_at'  => $previous['connected_at'] > 0 ? $previous['connected_at'] : $now,
-				'last_error'    => '',
+				'access_token'   => (string) ( $response['access_token'] ?? '' ),
+				'refresh_token'  => (string) ( $response['refresh_token'] ?? '' ),
+				'expires_at'     => $now + $ttl,
+				'device_id'      => (string) ( $response['device_id'] ?? $previous['device_id'] ),
+				'connected_at'   => $previous['connected_at'] > 0 ? $previous['connected_at'] : $now,
+				'last_error'     => '',
+				'scope_revision' => $previous['scope_revision'],
+				'embed_denied'   => $previous['embed_denied'],
 			)
 		);
+	}
+
+	/**
+	 * Records that a fresh pairing was approved under a scope revision.
+	 *
+	 * @param int $revision Config::SCOPE_REVISION at the time of pairing.
+	 */
+	public function record_grant( int $revision ): void {
+		$data                   = $this->data();
+		$data['scope_revision'] = $revision;
+		$data['embed_denied']   = false;
+		$this->write( $data );
+	}
+
+	/**
+	 * Remembers that the platform refused the embed permission (a 403).
+	 */
+	public function flag_embed_denied(): void {
+		$data = $this->data();
+		if ( $data['embed_denied'] ) {
+			return;
+		}
+		$data['embed_denied'] = true;
+		$this->write( $data );
+	}
+
+	/**
+	 * Whether the stored token lacks the permission to switch galleries on.
+	 *
+	 * True for a connection paired before the plugin asked for
+	 * galleries:embed, and after the platform answered 403 to that call.
+	 */
+	public function needs_reconnect(): bool {
+		if ( ! $this->is_connected() ) {
+			return false;
+		}
+		$data = $this->data();
+		return $data['embed_denied'] || $data['scope_revision'] < Config::SCOPE_REVISION;
 	}
 
 	/**
@@ -188,23 +228,25 @@ class Connection {
 	/**
 	 * Default stored shape.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool}
 	 */
 	private function defaults(): array {
 		return array(
-			'access_token'  => '',
-			'refresh_token' => '',
-			'expires_at'    => 0,
-			'device_id'     => '',
-			'connected_at'  => 0,
-			'last_error'    => '',
+			'access_token'   => '',
+			'refresh_token'  => '',
+			'expires_at'     => 0,
+			'device_id'      => '',
+			'connected_at'   => 0,
+			'last_error'     => '',
+			'scope_revision' => 0,
+			'embed_denied'   => false,
 		);
 	}
 
 	/**
 	 * Stored data merged over the defaults.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool}
 	 */
 	private function data(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -215,7 +257,8 @@ class Connection {
 		foreach ( array( 'access_token', 'refresh_token', 'device_id', 'last_error' ) as $key ) {
 			$data[ $key ] = isset( $stored[ $key ] ) ? (string) $stored[ $key ] : '';
 		}
-		foreach ( array( 'expires_at', 'connected_at' ) as $key ) {
+		$data['embed_denied'] = ! empty( $stored['embed_denied'] );
+		foreach ( array( 'expires_at', 'connected_at', 'scope_revision' ) as $key ) {
 			$data[ $key ] = isset( $stored[ $key ] ) ? (int) $stored[ $key ] : 0;
 		}
 		return $data;

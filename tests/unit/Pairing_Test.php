@@ -74,6 +74,7 @@ class Pairing_Test extends Wp_Test_Case {
 				'platform'    => 'wordpress',
 				'app_version' => '0.0.0-test',
 				'hostname'    => 'photos.example.com',
+				'scope'       => 'galleries:read leads:write galleries:embed',
 			),
 			$this->http->body( 0 )
 		);
@@ -152,6 +153,27 @@ class Pairing_Test extends Wp_Test_Case {
 		$this->assertNull( $this->connection->pairing() );
 		$this->assertFalse( $this->autoload['profotograaf_connection'], 'tokens must not autoload' );
 		$this->assertSame( 'connected', $this->connection->status()['state'] );
+		$this->assertFalse( $this->connection->needs_reconnect(), 'a fresh pairing asked for the embed scope' );
+	}
+
+	public function test_a_connection_paired_before_the_embed_scope_asks_to_reconnect(): void {
+		$this->connect();
+
+		$this->assertTrue( $this->connection->needs_reconnect() );
+
+		$this->start();
+		$this->http->reply(
+			200,
+			array(
+				'status'        => 'approved',
+				'access_token'  => 'access-2',
+				'refresh_token' => 'refresh-2',
+				'expires_in'    => 900,
+			)
+		);
+		$this->pairing->poll();
+
+		$this->assertFalse( $this->connection->needs_reconnect() );
 	}
 
 	public function test_approval_without_tokens_is_an_error_not_a_connection(): void {

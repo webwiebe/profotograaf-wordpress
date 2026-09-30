@@ -126,10 +126,7 @@ class Gallery_Rest {
 		if ( is_wp_error( $result ) ) {
 			return $this->as_rest_error( $result );
 		}
-		return array(
-			'id'         => $id,
-			'embeddable' => true,
-		);
+		return $result;
 	}
 
 	/**
@@ -140,7 +137,7 @@ class Gallery_Rest {
 	private function as_rest_error( \WP_Error $error ): \WP_Error {
 		$statuses = array(
 			'profotograaf_not_connected' => 409,
-			'profotograaf_unsupported'   => 501,
+			'profotograaf_reconnect'     => 403,
 			'profotograaf_invalid'       => 400,
 		);
 		$code     = (string) $error->get_error_code();
