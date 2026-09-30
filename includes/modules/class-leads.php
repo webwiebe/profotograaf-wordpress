@@ -40,7 +40,6 @@ class Leads implements Module {
 	 * @param Plugin $plugin Service container.
 	 */
 	public function register( Plugin $plugin ): void {
-		add_action( 'init', array( $this, 'load_translations' ) );
 
 		$queue      = new Queue( new Option_Job_Store() );
 		$settings   = new Form_Settings();
@@ -75,18 +74,6 @@ class Leads implements Module {
 
 		if ( is_admin() ) {
 			( new Leads_Settings( $settings, $queue, $bridges, $plugin ) )->register();
-		}
-	}
-
-	/**
-	 * Loads the Dutch strings of the lead settings.
-	 *
-	 * They live in languages/leads so the lead bridges change no shared file.
-	 * WordPress merges a second file into the `profotograaf` text domain.
-	 */
-	public function load_translations(): void {
-		if ( 0 === strpos( determine_locale(), 'nl' ) ) {
-			load_textdomain( 'profotograaf', PROFOTOGRAAF_DIR . 'languages/leads/profotograaf-nl_NL.mo' );
 		}
 	}
 }

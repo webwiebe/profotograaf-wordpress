@@ -21,6 +21,7 @@ jobs:
           cache: npm
       - run: bin/check-version.sh "${GITHUB_REF_NAME}"
       - run: npm ci
+      - run: npm run build
       - run: bin/build-release.sh --zip
       - name: Create GitHub release
         env:

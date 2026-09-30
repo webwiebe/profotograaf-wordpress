@@ -1,4 +1,4 @@
-# Profotograaf for WordPress
+# Profotograaf
 
 Show your [Profotograaf](https://profotograaf.nl) galleries on your own WordPress site, give clients a way in, and send form enquiries to your Profotograaf inbox.
 

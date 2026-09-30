@@ -1,4 +1,4 @@
-=== Profotograaf for WordPress ===
+=== Profotograaf ===
 Contributors: profotograaf
 Tags: photography, gallery, client gallery, portfolio, contact form
 Requires at least: 6.9
@@ -12,15 +12,17 @@ Show your Profotograaf galleries on your own site, give clients a way in, and se
 
 == Description ==
 
-Profotograaf for WordPress connects your WordPress site to your [Profotograaf](https://profotograaf.nl) account, the portfolio, client gallery and enquiry platform for photographers.
+Profotograaf connects your WordPress site to your [Profotograaf](https://profotograaf.nl) account, the portfolio, client gallery and enquiry platform for photographers.
 
 * **Connect in one step.** Approve the connection in Profotograaf. Your password never reaches your WordPress site.
 * **Gallery block and shortcode.** Pick one of your galleries and place it on any page, in a grid, masonry or slideshow layout.
 * **Paste a link.** A pasted gallery link turns into an embedded gallery.
-* **Client galleries entry.** A "Find your gallery" block that leads clients to their gallery.
+* **Client galleries entry.** A "Find your gallery" block that leads clients to the client portal, on your Profotograaf address or on your own domain.
 * **Lead capture.** Send enquiries from Contact Form 7, WPForms and Gravity Forms to your Profotograaf inbox. The form never waits on Profotograaf.
 
 You need a Profotograaf account. The plugin does nothing until you connect it.
+
+The block editor scripts are built from the source in the `blocks` folder of the public repository: https://github.com/webwiebe/profotograaf-wordpress. Run `npm ci && npm run build` to build them.
 
 = Privacy =
 
@@ -35,17 +37,23 @@ Privacy policy: https://profotograaf.nl/privacy
 
 = Connecting your site =
 
-When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. These calls carry the access token the plugin stores for your account.
+When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
 
 = Your galleries =
 
 In the block editor and on the settings page, the plugin asks `https://profotograaf.nl/api/v1/embed/galleries` for the list of your galleries (title, link, photo count and a cover picture). Only you, signed in to WordPress with an administrator or editor account, can see this list.
+
+When you pick a gallery in the gallery block that does not allow embedding yet, the plugin sends `PUT https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/embeddable` to switch "Allow embedding on other websites" on for that one gallery. Nothing else about the gallery changes. If your connection was made before this permission existed, Profotograaf refuses the call and the plugin asks you to connect again.
 
 = Showing a gallery on your site =
 
 A page that contains a Profotograaf gallery makes the visitor's browser load the embed script from `https://profotograaf.nl/share/embed/` and the gallery data and photos from `https://profotograaf.nl`. Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the script also reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
 
 Pasting a gallery link into the editor makes WordPress ask `https://profotograaf.nl/oembed` for the embed code of that gallery.
+
+= Client galleries block =
+
+The "Find your gallery" block is a plain link. It sends nothing to Profotograaf and asks for nothing while a visitor views your page. When a visitor clicks the button, their browser opens your client portal on profotograaf.nl (`https://profotograaf.nl/<your address>/client`), or on your own domain or Profotograaf subdomain when you entered one. The portal is where clients sign in, and the Profotograaf privacy policy covers that visit.
 
 = Sending enquiries =
 
@@ -60,6 +68,14 @@ When you switch on a form in the lead settings, every submission of that form is
 
 == Frequently Asked Questions ==
 
+= How do I add the "Find your gallery" block? =
+
+Add the block "Find your gallery" to a page. In the block settings, enter your Profotograaf address (for example `studio`), your Profotograaf subdomain (`studio.profotograaf.nl`) or your own domain (`photos.example.com`). The block works on a site that is not connected to your account. Until you enter an address, only editors see a note and visitors see nothing.
+
+= Which address do I enter for a custom domain? =
+
+The domain you connected in Profotograaf, for example `photos.example.com`. The button then opens `https://photos.example.com/client`, so your clients never leave your own domain.
+
 = Do I need a Profotograaf account? =
 
 Yes. Create one at https://profotograaf.nl.
@@ -72,7 +88,21 @@ No. You approve the connection on profotograaf.nl. The plugin stores an access t
 
 Click Disconnect on the settings page. To also remove this site from your account, open Connected apps in your Profotograaf account settings.
 
+== Screenshots ==
+
+1. Connect your site to Profotograaf from Settings > Profotograaf.
+2. Place a gallery with the gallery block.
+3. Send clients to their galleries with the "Find your gallery" block.
+4. Forward form enquiries to your Profotograaf inbox.
+
 == Changelog ==
 
 = 0.1.0 =
 * First version: connect to Profotograaf, settings page and the API client other features build on.
+* New: "Find your gallery" block that links clients to the client portal.
+* Dutch (nl_NL) and English.
+
+== Upgrade Notice ==
+
+= 0.1.0 =
+First release.

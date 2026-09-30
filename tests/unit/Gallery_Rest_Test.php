@@ -103,15 +103,15 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->assertSame( 502, $error->data['status'] );
 	}
 
-	public function test_marking_a_gallery_goes_through_the_api_client_filter(): void {
-		\Brain\Monkey\Filters\expectApplied( 'profotograaf_mark_embeddable_request' )->andReturn(
+	public function test_marking_a_gallery_returns_the_platform_answer(): void {
+		$this->http->reply(
+			200,
 			array(
-				'method' => 'PUT',
-				'path'   => '/api/v1/galleries/g-1',
-				'body'   => array( 'embeddable' => true ),
+				'id'         => 'g-1',
+				'embeddable' => true,
+				'available'  => false,
 			)
 		);
-		$this->http->reply( 200, array( 'id' => 'g-1' ) );
 
 		$result = $this->rest->mark_embeddable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
 
@@ -119,6 +119,7 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 			array(
 				'id'         => 'g-1',
 				'embeddable' => true,
+				'available'  => false,
 			),
 			$result
 		);
@@ -126,13 +127,14 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->assertSame( array( 'embeddable' => true ), $this->http->body( 0 ) );
 	}
 
-	public function test_marking_is_a_501_with_the_instruction_until_the_platform_offers_it(): void {
+	public function test_marking_is_a_403_that_asks_for_a_reconnect_when_the_scope_is_missing(): void {
+		$this->http->reply( 403, array( 'error' => 'forbidden' ) );
+
 		$error = $this->rest->mark_embeddable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
 
-		$this->assertSame( 'profotograaf_unsupported', $error->get_error_code() );
-		$this->assertSame( 501, $error->data['status'] );
-		$this->assertStringContainsString( 'Allow embedding on other websites', $error->get_error_message() );
-		$this->assertCount( 0, $this->http->requests );
+		$this->assertSame( 'profotograaf_reconnect', $error->get_error_code() );
+		$this->assertSame( 403, $error->data['status'] );
+		$this->assertStringContainsString( 'Connect this site again', $error->get_error_message() );
 	}
 
 	public function test_a_bad_id_is_a_400_without_a_request(): void {

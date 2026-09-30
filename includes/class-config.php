@@ -24,6 +24,20 @@ final class Config {
 	 */
 	public const CLIENT_ID = 'wordpress';
 
+	/**
+	 * The permissions this plugin asks for when it connects. The platform
+	 * grants the scopes registered for the client id, so this is the request
+	 * the approval page shows, not a way to widen the grant.
+	 */
+	public const SCOPES = array( 'galleries:read', 'leads:write', 'galleries:embed' );
+
+	/**
+	 * Bumped when the plugin starts asking for a scope it did not ask for
+	 * before. A connection paired under an older revision holds a token
+	 * without the newer scope and has to be paired again.
+	 */
+	public const SCOPE_REVISION = 2;
+
 	public const DEFAULT_TIMEOUT = 10;
 
 	/**

@@ -42,6 +42,7 @@ jobs:
           composer install --no-interaction --no-progress
           vendor/bin/phpunit
           npm ci
+          npm run build
           npx playwright install --with-deps chromium
           tests/e2e/up.sh
           npx playwright test
