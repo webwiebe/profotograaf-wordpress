@@ -221,58 +221,58 @@ msgstr "Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je 
 msgid "Check again"
 msgstr "Opnieuw controleren"
 
-#: includes/modules/class-client-galleries.php:151
-#: blocks/client-galleries/index.js:41
-#: blocks/client-galleries/index.js:63
+#: includes/modules/class-client-galleries.php:171
+#: blocks/client-galleries/index.js:54
+#: blocks/client-galleries/index.js:88
 msgid "Find your gallery"
 msgstr "Vind je galerij"
 
-#: includes/modules/class-client-galleries.php:152
-#: blocks/client-galleries/index.js:48
+#: includes/modules/class-client-galleries.php:172
 #: blocks/client-galleries/index.js:66
+#: blocks/client-galleries/index.js:92
 msgid "Sign in to the client portal to see your photos."
 msgstr "Log in op het klantportaal om je foto's te bekijken."
 
-#: includes/modules/class-client-galleries.php:153
-#: blocks/client-galleries/index.js:56
-#: blocks/client-galleries/index.js:69
+#: includes/modules/class-client-galleries.php:173
+#: blocks/client-galleries/index.js:79
+#: blocks/client-galleries/index.js:98
 msgid "Open my gallery"
 msgstr "Open mijn galerij"
 
-#: includes/modules/class-client-galleries.php:180
+#: includes/modules/class-client-galleries.php:200
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
-#: blocks/client-galleries/index.js:16
+#: blocks/client-galleries/index.js:22
 msgid "Client portal"
 msgstr "Klantportaal"
 
-#: blocks/client-galleries/index.js:20
+#: blocks/client-galleries/index.js:26
 msgid "Portal address"
 msgstr "Portaaladres"
 
-#: blocks/client-galleries/index.js:21
+#: blocks/client-galleries/index.js:27
 msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
 msgstr "Je Profotograaf-adres (bijvoorbeeld studio), je subdomein of je eigen domein."
 
-#: blocks/client-galleries/index.js:30
+#: blocks/client-galleries/index.js:38
 msgid "Open in a new tab"
 msgstr "Openen in een nieuw tabblad"
 
-#: blocks/client-galleries/index.js:35
 #: blocks/client-galleries/index.js:46
+#: blocks/client-galleries/index.js:64
 msgid "Text"
 msgstr "Tekst"
 
-#: blocks/client-galleries/index.js:39
+#: blocks/client-galleries/index.js:52
 msgid "Heading"
 msgstr "Kop"
 
-#: blocks/client-galleries/index.js:54
+#: blocks/client-galleries/index.js:77
 msgid "Button label"
 msgstr "Knoptekst"
 
-#: blocks/client-galleries/index.js:73
+#: blocks/client-galleries/index.js:102
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Vul je Profotograaf-adres in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 

@@ -1,13 +1,19 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, TextControl, TextareaControl, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	TextControl,
+	TextareaControl,
+	ToggleControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import './style.css';
 import metadata from './block.json';
 
 function Edit( { attributes, setAttributes } ) {
-	const { portal, heading, description, buttonLabel, openInNewTab } = attributes;
+	const { portal, heading, description, buttonLabel, openInNewTab } =
+		attributes;
 	const blockProps = useBlockProps();
 
 	return (
@@ -23,30 +29,47 @@ function Edit( { attributes, setAttributes } ) {
 							'profotograaf'
 						) }
 						value={ portal }
-						onChange={ ( value ) => setAttributes( { portal: value } ) }
+						onChange={ ( value ) =>
+							setAttributes( { portal: value } )
+						}
 					/>
 					<ToggleControl
 						__nextHasNoMarginBottom
 						label={ __( 'Open in a new tab', 'profotograaf' ) }
 						checked={ openInNewTab }
-						onChange={ ( value ) => setAttributes( { openInNewTab: value } ) }
+						onChange={ ( value ) =>
+							setAttributes( { openInNewTab: value } )
+						}
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Text', 'profotograaf' ) } initialOpen={ false }>
+				<PanelBody
+					title={ __( 'Text', 'profotograaf' ) }
+					initialOpen={ false }
+				>
 					<TextControl
 						__nextHasNoMarginBottom
 						__next40pxDefaultSize
 						label={ __( 'Heading', 'profotograaf' ) }
 						value={ heading }
-						placeholder={ __( 'Find your gallery', 'profotograaf' ) }
-						onChange={ ( value ) => setAttributes( { heading: value } ) }
+						placeholder={ __(
+							'Find your gallery',
+							'profotograaf'
+						) }
+						onChange={ ( value ) =>
+							setAttributes( { heading: value } )
+						}
 					/>
 					<TextareaControl
 						__nextHasNoMarginBottom
 						label={ __( 'Text', 'profotograaf' ) }
 						value={ description }
-						placeholder={ __( 'Sign in to the client portal to see your photos.', 'profotograaf' ) }
-						onChange={ ( value ) => setAttributes( { description: value } ) }
+						placeholder={ __(
+							'Sign in to the client portal to see your photos.',
+							'profotograaf'
+						) }
+						onChange={ ( value ) =>
+							setAttributes( { description: value } )
+						}
 					/>
 					<TextControl
 						__nextHasNoMarginBottom
@@ -54,7 +77,9 @@ function Edit( { attributes, setAttributes } ) {
 						label={ __( 'Button label', 'profotograaf' ) }
 						value={ buttonLabel }
 						placeholder={ __( 'Open my gallery', 'profotograaf' ) }
-						onChange={ ( value ) => setAttributes( { buttonLabel: value } ) }
+						onChange={ ( value ) =>
+							setAttributes( { buttonLabel: value } )
+						}
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -63,7 +88,11 @@ function Edit( { attributes, setAttributes } ) {
 					{ heading || __( 'Find your gallery', 'profotograaf' ) }
 				</h3>
 				<p className="wp-block-profotograaf-client-galleries__text">
-					{ description || __( 'Sign in to the client portal to see your photos.', 'profotograaf' ) }
+					{ description ||
+						__(
+							'Sign in to the client portal to see your photos.',
+							'profotograaf'
+						) }
 				</p>
 				<span className="wp-block-profotograaf-client-galleries__button">
 					{ buttonLabel || __( 'Open my gallery', 'profotograaf' ) }
