@@ -1,0 +1,32 @@
+.profotograaf-leads-form {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	margin: 0 0 16px;
+	max-width: 720px;
+	padding: 8px 16px 12px;
+}
+
+.profotograaf-leads-form legend {
+	font-weight: 600;
+	padding: 0 6px;
+}
+
+.profotograaf-leads-map th {
+	font-weight: 400;
+	padding: 6px 16px 6px 0;
+	text-align: left;
+	width: 160px;
+}
+
+.profotograaf-leads-map select {
+	min-width: 260px;
+}
+
+.profotograaf-leads-map[hidden] {
+	display: none;
+}
+
+.profotograaf-leads-failures {
+	list-style: disc;
+	margin-left: 20px;
+}
