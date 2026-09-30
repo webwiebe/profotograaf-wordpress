@@ -1,0 +1,68 @@
+# WordPress for the E2E tests and Plugin Check.
+#
+#   WP_VERSION=7.1 PHP_VERSION=8.3 docker compose -f tests/e2e/docker-compose.yml up -d
+#
+# The plugin under test is the built copy in dist/profotograaf (bin/build-release.sh),
+# so the tests run against what a release contains.
+name: profotograaf-e2e
+
+x-wordpress-env: &wordpress-env
+  WORDPRESS_DB_HOST: db
+  WORDPRESS_DB_USER: wordpress
+  WORDPRESS_DB_PASSWORD: wordpress
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DEBUG: "1"
+  WORDPRESS_CONFIG_EXTRA: |
+    define( 'WP_DEBUG_LOG', true );
+    define( 'WP_DEBUG_DISPLAY', false );
+    define( 'WP_ENVIRONMENT_TYPE', 'local' );
+    define( 'PROFOTOGRAAF_PLATFORM_URL', 'http://mock-platform:8090' );
+
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+  wordpress:
+    image: wordpress:${WP_VERSION:-7.1}-php${PHP_VERSION:-8.3}-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *wordpress-env
+    ports:
+      - "${WP_PORT:-8080}:80"
+    volumes:
+      - wordpress:/var/www/html
+      - ${PLUGIN_DIR:-../../dist/profotograaf}:/var/www/html/wp-content/plugins/profotograaf:ro
+
+  cli:
+    image: wordpress:cli-php${PHP_VERSION:-8.3}
+    profiles: ["tools"]
+    user: "33:33"
+    depends_on:
+      - wordpress
+    environment: *wordpress-env
+    volumes:
+      - wordpress:/var/www/html
+      - ${PLUGIN_DIR:-../../dist/profotograaf}:/var/www/html/wp-content/plugins/profotograaf:ro
+    working_dir: /var/www/html
+
+  mock-platform:
+    image: node:22-alpine
+    command: ["node", "/mock/mock-platform.mjs"]
+    ports:
+      - "${MOCK_PORT:-8090}:8090"
+    volumes:
+      - ./mock-platform.mjs:/mock/mock-platform.mjs:ro
+
+volumes:
+  wordpress:

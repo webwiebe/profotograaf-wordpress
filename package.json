@@ -1,0 +1,22 @@
+{
+  "name": "profotograaf-wordpress",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Profotograaf for WordPress: client galleries, embeds and lead capture.",
+  "license": "GPL-2.0-or-later",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node bin/blocks.mjs build",
+    "start": "node bin/blocks.mjs start",
+    "lint:js": "node bin/blocks.mjs lint-js",
+    "test:e2e": "playwright test",
+    "e2e:up": "bash tests/e2e/up.sh",
+    "e2e:down": "docker compose -f tests/e2e/docker-compose.yml down -v"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@wordpress/scripts": "^30.0.0"
+  }
+}

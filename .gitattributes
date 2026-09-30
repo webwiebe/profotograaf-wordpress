@@ -1,0 +1,23 @@
+* text=auto eol=lf
+
+# Not part of the release archive produced by `git archive`.
+/.github export-ignore
+/.wordpress-org export-ignore
+/assets/wporg export-ignore
+/bin export-ignore
+/tests export-ignore
+/blocks export-ignore
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.distignore export-ignore
+/composer.json export-ignore
+/composer.lock export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/phpcs.xml.dist export-ignore
+/phpunit.xml.dist export-ignore
+/playwright.config.js export-ignore
+/Makefile export-ignore
+/CONTRIBUTING.md export-ignore
+/README.md export-ignore

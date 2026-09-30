@@ -1,0 +1,16 @@
+.profotograaf-code {
+	display: inline-block;
+	padding: 0.4em 0.8em;
+	font-size: 2em;
+	letter-spacing: 0.15em;
+	user-select: all;
+}
+
+.profotograaf-action {
+	margin: 1em 0;
+}
+
+.profotograaf-pairing .profotograaf-action {
+	display: inline-block;
+	margin: 0;
+}

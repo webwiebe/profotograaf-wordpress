@@ -1,0 +1,67 @@
+name: WordPress tested-up-to
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find the latest WordPress release
+        id: wp
+        run: |
+          latest="$(curl -fsS 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].current')"
+          major="$(echo "$latest" | cut -d. -f1,2)"
+          tested="$(sed -n 's/^Tested up to: *//p' readme.txt | head -1)"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          echo "major=$major" >> "$GITHUB_OUTPUT"
+          echo "tested=$tested" >> "$GITHUB_OUTPUT"
+          if [ "$major" != "$tested" ]; then echo "newer=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: shivammathur/setup-php@v2
+        if: steps.wp.outputs.newer == 'true'
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+      - uses: actions/setup-node@v4
+        if: steps.wp.outputs.newer == 'true'
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Test against the new release
+        if: steps.wp.outputs.newer == 'true'
+        env:
+          WP_VERSION: ${{ steps.wp.outputs.latest }}
+        run: |
+          composer install --no-interaction --no-progress
+          vendor/bin/phpunit
+          npm ci
+          npx playwright install --with-deps chromium
+          tests/e2e/up.sh
+          npx playwright test
+          tests/e2e/plugin-check.sh
+      - name: Open a pull request
+        if: steps.wp.outputs.newer == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MAJOR: ${{ steps.wp.outputs.major }}
+        run: |
+          branch="tested-up-to-${MAJOR}"
+          sed -i "s/^Tested up to:.*/Tested up to: ${MAJOR}/" readme.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git commit -am "Tested up to WordPress ${MAJOR}"
+          git push --force origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Tested up to WordPress ${MAJOR}" \
+            --body "PHPUnit, the E2E tests and Plugin Check passed against WordPress ${MAJOR}." \
+            || echo "A pull request for ${branch} already exists."
+      - if: always()
+        run: docker compose -f tests/e2e/docker-compose.yml down -v

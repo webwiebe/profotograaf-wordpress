@@ -1,0 +1,124 @@
+<?php
+/**
+ * Config, settings, autoloader and origin tests.
+ *
+ * @package Profotograaf
+ */
+
+namespace Profotograaf\Tests;
+
+use Brain\Monkey\Filters;
+use Brain\Monkey\Functions;
+use Profotograaf\Autoloader;
+use Profotograaf\Config;
+use Profotograaf\Modules\Origin_Sync;
+use Profotograaf\Settings;
+
+class Config_And_Settings_Test extends Wp_Test_Case {
+
+	public function test_the_platform_defaults_to_production(): void {
+		$this->assertSame( 'https://profotograaf.nl', Config::platform_url() );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/leads', Config::platform_endpoint( '/api/v1/leads' ) );
+	}
+
+	public function test_a_broken_override_falls_back_to_production(): void {
+		Filters\expectApplied( 'profotograaf_platform_url' )->andReturn( 'javascript:alert(1)' );
+
+		$this->assertSame( 'https://profotograaf.nl', Config::platform_url() );
+	}
+
+	public function test_the_timeout_is_clamped(): void {
+		Filters\expectApplied( 'profotograaf_http_timeout' )->andReturn( 900 );
+
+		$this->assertSame( 30, Config::http_timeout() );
+	}
+
+	public function test_the_site_origin_has_scheme_host_and_port_only(): void {
+		Functions\when( 'home_url' )->justReturn( 'https://Photos.Example.com:8443/blog' );
+
+		$this->assertSame( 'https://photos.example.com:8443', Config::site_origin() );
+	}
+
+	public function test_the_default_layout_is_grid_and_junk_is_ignored(): void {
+		$settings = new Settings();
+		$this->assertSame( 'grid', $settings->default_layout() );
+
+		$this->options['profotograaf_settings'] = array( 'default_layout' => 'carousel' );
+		$this->assertSame( 'grid', $settings->default_layout() );
+
+		$this->options['profotograaf_settings'] = array( 'default_layout' => 'masonry' );
+		$this->assertSame( 'masonry', $settings->default_layout() );
+	}
+
+	public function test_sanitize_only_accepts_known_layouts(): void {
+		$settings = new Settings();
+
+		$this->assertSame( array( 'default_layout' => 'slideshow' ), $settings->sanitize( array( 'default_layout' => 'slideshow' ) ) );
+		$this->assertSame( array( 'default_layout' => 'grid' ), $settings->sanitize( array( 'default_layout' => '<script>' ) ) );
+		$this->assertSame( array( 'default_layout' => 'grid' ), $settings->sanitize( 'nonsense' ) );
+	}
+
+	public function test_the_autoloader_maps_names_to_wordpress_file_names(): void {
+		$this->assertSame( 'api-client', Autoloader::slug( 'Api_Client' ) );
+		$this->assertTrue( class_exists( \Profotograaf\Api_Client::class ) );
+		$this->assertTrue( interface_exists( \Profotograaf\Transport::class ) );
+	}
+
+	public function test_origin_sync_asks_the_photographer_when_the_platform_has_no_write(): void {
+		( new Origin_Sync() )->sync();
+
+		$this->assertSame(
+			array(
+				'state'   => 'manual',
+				'origin'  => 'https://photos.example.com',
+				'message' => '',
+			),
+			Origin_Sync::status()
+		);
+		$this->assertFalse( $this->autoload['profotograaf_origin_sync'] );
+	}
+
+	public function test_origin_sync_refuses_an_insecure_site(): void {
+		Functions\when( 'home_url' )->justReturn( 'http://photos.example.com' );
+
+		( new Origin_Sync() )->sync();
+
+		$this->assertSame( 'insecure', Origin_Sync::status()['state'] );
+	}
+
+	public function test_origin_sync_adds_the_origin_once_a_write_endpoint_exists(): void {
+		$http       = new Fake_Transport();
+		$connection = new \Profotograaf\Connection();
+		$this->connect();
+		$plugin = new \Profotograaf\Plugin( $connection, new \Profotograaf\Api_Client( $connection, $http, $this->clock() ), $this->clock() );
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( '/api/v1/account/embed-origins' );
+		$http->reply( 200, array( 'origins' => array( 'https://other.example.com' ) ) );
+		$http->reply( 200, array( 'origins' => array( 'https://other.example.com', 'https://photos.example.com' ) ) );
+
+		$module = new Origin_Sync();
+		$module->register( $plugin );
+		$module->sync();
+
+		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
+		$this->assertSame( 'PUT', $http->requests[1]['method'] );
+		$this->assertSame(
+			array( 'origins' => array( 'https://other.example.com', 'https://photos.example.com' ) ),
+			$http->body( 1 )
+		);
+	}
+
+	public function test_origin_sync_records_a_platform_refusal(): void {
+		$http       = new Fake_Transport();
+		$connection = new \Profotograaf\Connection();
+		$this->connect();
+		$plugin = new \Profotograaf\Plugin( $connection, new \Profotograaf\Api_Client( $connection, $http, $this->clock() ), $this->clock() );
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( '/api/v1/account/embed-origins' );
+		$http->reply( 403, array( 'error' => 'this app is not allowed to use this endpoint' ) );
+
+		$module = new Origin_Sync();
+		$module->register( $plugin );
+		$module->sync();
+
+		$this->assertSame( 'error', Origin_Sync::status()['state'] );
+	}
+}

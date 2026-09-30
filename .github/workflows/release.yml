@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: bin/check-version.sh "${GITHUB_REF_NAME}"
+      - run: npm ci
+      - run: bin/build-release.sh --zip
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/profotograaf.zip \
+            --title "${GITHUB_REF_NAME}" --generate-notes
+      - name: Deploy to wordpress.org
+        if: env.SVN_USERNAME != '' && env.SVN_PASSWORD != ''
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: profotograaf
+          BUILD_DIR: dist/profotograaf
+          ASSETS_DIR: assets/wporg
+          VERSION: ${{ github.ref_name }}
