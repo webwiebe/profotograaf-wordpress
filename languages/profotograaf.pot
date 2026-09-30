@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T10:12:16+00:00\n"
+"POT-Creation-Date: 2026-09-30T10:31:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -91,6 +91,28 @@ msgstr ""
 
 #: includes/class-pairing.php:206
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
+msgstr ""
+
+#: includes/modules/class-client-galleries.php:151
+#: blocks/client-galleries/index.js:41
+#: blocks/client-galleries/index.js:63
+msgid "Find your gallery"
+msgstr ""
+
+#: includes/modules/class-client-galleries.php:152
+#: blocks/client-galleries/index.js:48
+#: blocks/client-galleries/index.js:66
+msgid "Sign in to the client portal to see your photos."
+msgstr ""
+
+#: includes/modules/class-client-galleries.php:153
+#: blocks/client-galleries/index.js:56
+#: blocks/client-galleries/index.js:69
+msgid "Open my gallery"
+msgstr ""
+
+#: includes/modules/class-client-galleries.php:180
+msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:99
@@ -217,4 +239,72 @@ msgstr ""
 
 #: includes/modules/class-settings-page.php:330
 msgid "Check again"
+msgstr ""
+
+#: blocks/client-galleries/index.js:16
+msgid "Client portal"
+msgstr ""
+
+#: blocks/client-galleries/index.js:20
+msgid "Portal address"
+msgstr ""
+
+#: blocks/client-galleries/index.js:21
+msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
+msgstr ""
+
+#: blocks/client-galleries/index.js:30
+msgid "Open in a new tab"
+msgstr ""
+
+#: blocks/client-galleries/index.js:35
+#: blocks/client-galleries/index.js:46
+msgid "Text"
+msgstr ""
+
+#: blocks/client-galleries/index.js:39
+msgid "Heading"
+msgstr ""
+
+#: blocks/client-galleries/index.js:54
+msgid "Button label"
+msgstr ""
+
+#: blocks/client-galleries/index.js:73
+msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block title"
+msgid "Find your gallery"
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block description"
+msgid "A button that takes your clients to their private galleries in the Profotograaf client portal."
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "client"
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "gallery"
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "login"
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "photography"
+msgstr ""
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "profotograaf"
 msgstr ""

@@ -136,6 +136,12 @@ class Client_Galleries_Test extends Wp_Test_Case {
 		$this->assertArrayNotHasKey( 'render_callback', $other );
 	}
 
+	public function test_editor_translations_are_found_under_the_source_path(): void {
+		$this->assertSame( 'blocks/client-galleries/index.js', $this->block->source_script_path( 'build/client-galleries/index.js', '' ) );
+		$this->assertSame( 'build/other/index.js', $this->block->source_script_path( 'build/other/index.js', '' ) );
+		$this->assertFalse( $this->block->source_script_path( false, '' ) );
+	}
+
 	public function test_block_json_matches_the_render_attributes(): void {
 		$json = json_decode( (string) file_get_contents( PROFOTOGRAAF_DIR . 'blocks/client-galleries/block.json' ), true );
 
