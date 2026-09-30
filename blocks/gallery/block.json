@@ -1,0 +1,40 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "profotograaf/gallery",
+	"version": "0.1.0",
+	"title": "Profotograaf gallery",
+	"category": "media",
+	"icon": "format-gallery",
+	"description": "Show one of your Profotograaf galleries as a grid, masonry or slideshow.",
+	"keywords": [ "gallery", "photos", "profotograaf", "portfolio" ],
+	"textdomain": "profotograaf",
+	"attributes": {
+		"galleryId": {
+			"type": "string",
+			"default": ""
+		},
+		"galleryTitle": {
+			"type": "string",
+			"default": ""
+		},
+		"galleryUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"layout": {
+			"type": "string",
+			"enum": [ "", "grid", "masonry", "slideshow" ],
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css"
+}

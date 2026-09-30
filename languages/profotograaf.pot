@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T10:12:16+00:00\n"
+"POT-Creation-Date: 2026-09-30T10:34:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -43,6 +43,7 @@ msgid "https://profotograaf.nl"
 msgstr ""
 
 #: includes/class-api-client.php:142
+#: includes/class-gallery-rest.php:123
 msgid "A gallery id is required."
 msgstr ""
 
@@ -79,6 +80,10 @@ msgstr ""
 
 #: includes/class-api-client.php:445
 msgid "This site is not connected to Profotograaf."
+msgstr ""
+
+#: includes/class-gallery-renderer.php:122
+msgid "View the gallery"
 msgstr ""
 
 #: includes/class-pairing.php:92
@@ -172,14 +177,17 @@ msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:277
+#: blocks/gallery/edit.js:27
 msgid "Grid"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:278
+#: blocks/gallery/edit.js:28
 msgid "Masonry"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:279
+#: blocks/gallery/edit.js:29
 msgid "Slideshow"
 msgstr ""
 
@@ -217,4 +225,89 @@ msgstr ""
 
 #: includes/modules/class-settings-page.php:330
 msgid "Check again"
+msgstr ""
+
+#. translators: %d: number of photos in a gallery.
+#: blocks/gallery/edit.js:19
+#, js-format
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: blocks/gallery/edit.js:26
+msgid "Site default"
+msgstr ""
+
+#: blocks/gallery/edit.js:35
+msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
+msgstr ""
+
+#: blocks/gallery/edit.js:42
+msgid "The galleries could not be loaded."
+msgstr ""
+
+#: blocks/gallery/edit.js:73
+msgid "There are no galleries in your Profotograaf account yet."
+msgstr ""
+
+#: blocks/gallery/edit.js:136
+msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
+msgstr ""
+
+#: blocks/gallery/edit.js:158
+msgid "Gallery"
+msgstr ""
+
+#: blocks/gallery/edit.js:160
+msgid "Layout"
+msgstr ""
+
+#: blocks/gallery/edit.js:179
+msgid "Choose another gallery"
+msgstr ""
+
+#: blocks/gallery/edit.js:188
+#: blocks/gallery/edit.js:208
+msgid "Profotograaf gallery"
+msgstr ""
+
+#: blocks/gallery/edit.js:189
+msgid "Choose one of your galleries."
+msgstr ""
+
+#. translators: %s: layout name such as grid.
+#: blocks/gallery/edit.js:219
+#, js-format
+msgid "layout: %s"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block title"
+msgid "Profotograaf gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block description"
+msgid "Show one of your Profotograaf galleries as a grid, masonry or slideshow."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "profotograaf"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "portfolio"
 msgstr ""
