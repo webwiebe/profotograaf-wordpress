@@ -1,0 +1,5 @@
+# Files that already exceeded the 500-line limit when the gate landed.
+# This list may only SHRINK. Regenerate with:
+#   node scripts/check-file-length.mjs --update-baseline
+#
+# <lines> <path>

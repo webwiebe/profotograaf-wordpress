@@ -1,0 +1,193 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to function is_array\(\) with array\{method\: string, path\: string, body\: array\<string, mixed\>\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-api-client.php
+
+		-
+			message: '#^Offset ''body'' on array\{method\: non\-falsy\-string, path\: non\-falsy\-string, body\: array\<string, mixed\>\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: includes/class-api-client.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: includes/class-api-client.php
+
+		-
+			message: '#^Method Profotograaf\\Connection\:\:status\(\) should return array\{state\: string, connected_at\: int, last_error\: string, scope_revision\: int, embed_denied\: bool\} but returns array\{state\: ''connected''\|''disconnected''\|''revoked'', connected_at\: int, last_error\: string\}\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/class-connection.php
+
+		-
+			message: '#^Cannot cast array\|string to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: includes/class-embed-script.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-module-loader.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-module-loader.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/class-oembed.php
+
+		-
+			message: '#^Cannot cast array\|string to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: includes/class-wp-transport.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$basetype\.$#'
+			identifier: property.notFound
+			count: 3
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 4
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to an undefined method object\:\:get_meta\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to an undefined method object\:\:get_posted_data\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to an undefined method object\:\:id\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to an undefined method object\:\:scan_form_tags\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to an undefined method object\:\:title\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Call to static method find\(\) on an unknown class WPCF7_ContactForm\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/leads/class-contact-form-7.php
+
+		-
+			message: '#^Action callback returns array\{sent\: int, retry\: int, failed\: int\} but should not return anything\.$#'
+			identifier: return.void
+			count: 2
+			path: includes/leads/class-delivery.php
+
+		-
+			message: '#^Action callback returns bool but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: includes/leads/class-delivery.php
+
+		-
+			message: '#^Method Profotograaf\\Leads\\Delivery\:\:run\(\) should return array\{sent\: int, retry\: int, failed\: int\} but returns non\-empty\-array\<string, int\<0, max\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: includes/leads/class-delivery.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: includes/leads/class-gravity-forms.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 5
+			path: includes/leads/class-gravity-forms.php
+
+		-
+			message: '#^Call to static method get_forms\(\) on an unknown class GFAPI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: includes/leads/class-gravity-forms.php
+
+		-
+			message: '#^Offset ''value'' on array\{id\: string, label\: string, type\: string, value\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: includes/leads/class-mapping.php
+
+		-
+			message: '#^Function wpforms not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: includes/leads/class-wpforms.php
+
+		-
+			message: '#^Function wpforms_decode not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: includes/leads/class-wpforms.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/modules/class-blocks.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<Profotograaf\\Leads\\Bridge\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: includes/modules/class-leads.php
+
+		-
+			message: '#^Instanceof between Profotograaf\\Leads\\Bridge and Profotograaf\\Leads\\Bridge will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: includes/modules/class-leads.php
+
+		-
+			message: '#^Cannot call method api\(\) on Profotograaf\\Plugin\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: includes/modules/class-origin-sync.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<int, array\<string, array\<string, array\{schedule\: string\|false, args\: array\<mixed\>, interval\?\: int\<0, max\>\}\>\>\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: uninstall.php

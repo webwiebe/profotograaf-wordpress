@@ -1,0 +1,19 @@
+# This repo is one flat package. The file makes pnpm treat it as the project
+# root: without it pnpm walks up the tree and adopts any pnpm-workspace.yaml it
+# finds above the checkout (the self-hosted runners have one in $HOME).
+
+# pnpm runs no dependency install scripts unless they are listed here. None of
+# the build tools needs one: esbuild ships its binary as a platform package, and
+# the wp-scripts transitive scripts (core-js banner, native file watcher,
+# unrs-resolver) only optimise or print.
+allowBuilds:
+  "@parcel/watcher": false
+  core-js: false
+  core-js-pure: false
+  unrs-resolver: false
+
+# copy-webpack-plugin (inside @wordpress/scripts) pins serialize-javascript
+# below the fix for a high advisory. Drop this once wp-scripts ships a copy of
+# copy-webpack-plugin that allows >=7.0.3.
+overrides:
+  serialize-javascript: ">=7.0.3"

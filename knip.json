@@ -1,0 +1,6 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema.json",
+	"entry": ["blocks/*/index.{ts,tsx}", "scripts/*.mjs", "tests/e2e/**/*.{js,mjs}"],
+	"project": ["blocks/**/*.{ts,tsx}", "scripts/**/*.mjs", "bin/**/*.mjs", "tests/e2e/**/*.{js,mjs}"],
+	"ignoreDependencies": ["@wordpress/scripts", "@wordpress/browserslist-config"]
+}

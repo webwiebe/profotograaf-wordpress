@@ -1,0 +1,58 @@
+{
+	"$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+	"ignorePatterns": ["build", "dist", "node_modules", "vendor", "coverage", ".tools"],
+	"plugins": ["typescript", "unicorn", "oxc", "react"],
+	"categories": {
+		"correctness": "warn"
+	},
+	"rules": {
+		"react/rules-of-hooks": "error",
+		"react/exhaustive-deps": "warn",
+		"typescript/no-explicit-any": "error",
+		"no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+
+		// Estate quality standard: cyclomatic complexity 12.
+		"complexity": ["error", 12],
+
+		// Shape limits. They resist the one way a complexity cap is gamed:
+		// extracting helper1/helper2 moves the number without removing it, and
+		// the extracted helper is measured too.
+		"max-depth": ["error", 4],
+		"max-params": ["error", 4],
+		"max-lines-per-function": [
+			"error",
+			{ "max": 60, "skipBlankLines": true, "skipComments": true }
+		],
+
+		// Rules outside oxlint's correctness bundle that the recommended
+		// eslint set enforced.
+		"no-var": "error",
+		"prefer-const": "error",
+		"prefer-rest-params": "error",
+		"prefer-spread": "error",
+		"no-fallthrough": "error",
+		"no-empty": "error",
+		"no-case-declarations": "error",
+		"no-prototype-builtins": "error",
+		"no-regex-spaces": "error",
+		"no-useless-assignment": "error",
+		"preserve-caught-error": "error",
+
+		// Type-aware rules. They run only under `--type-aware` (oxlint-tsgolint),
+		// which the ratchet does in its own second pass with its own baseline.
+		"typescript/no-floating-promises": "error",
+		"typescript/no-misused-promises": "error",
+		"typescript/await-thenable": "error",
+		"typescript/no-unnecessary-condition": "error",
+		"typescript/no-unnecessary-type-assertion": "error"
+	},
+	"overrides": [
+		{
+			"files": ["**/*.test.ts", "**/*.test.tsx", "**/*.test.mjs", "tests/e2e/**"],
+			"rules": {
+				"max-lines-per-function": "off",
+				"max-params": "off"
+			}
+		}
+	]
+}

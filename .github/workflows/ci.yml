@@ -4,27 +4,66 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_call:
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  lint:
-    name: PHPCS
+  js-quality:
+    name: JS quality (gate tests, oxlint, tsc, knip, file length, workflows, vitest, audit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      # Every gate script has a test. It runs first: a gate that quietly stopped
+      # failing looks exactly like a clean repo.
+      - name: Gate script tests
+        run: pnpm test:gates
+      - name: oxlint ratchet
+        run: node scripts/oxlint-ratchet.mjs
+      - name: oxlint ratchet (type-aware)
+        run: node scripts/oxlint-ratchet.mjs --type-aware
+      - name: tsc
+        run: pnpm typecheck
+      - name: knip
+        run: pnpm knip
+      - name: File length
+        run: pnpm check:file-length
+      - name: Workflow rules and deploy graph
+        run: node scripts/check-workflows.mjs
+      - name: vitest
+        run: pnpm test
+      - name: pnpm audit (high and critical block)
+        run: pnpm audit --audit-level high
+
+  php-quality:
+    name: PHP quality (PHPCS, PHPStan, composer audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          tools: composer:v2
+          tools: composer:2.9
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
       - run: composer install --no-interaction --no-progress
       - run: vendor/bin/phpcs
       - run: bin/check-version.sh
+      - name: PHPStan config guard
+        run: node --test scripts/phpstan-config.test.mjs
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+      - name: Composer audit gate tests
+        run: node --test scripts/composer-audit-gate.test.mjs
+      - name: Composer audit (high and critical block)
+        run: composer audit --format=json --locked | node scripts/composer-audit-gate.mjs
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }})
@@ -34,39 +73,70 @@ jobs:
       matrix:
         php: ['8.1', '8.2', '8.3', '8.4']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          tools: composer:v2
+          tools: composer:2.9
       - run: composer install --no-interaction --no-progress
       - run: vendor/bin/phpunit
+
+  coverage:
+    name: Coverage (diff gate, cliff guard)
+    needs: js-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:2.9
+          coverage: pcov
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: composer install --no-interaction --no-progress
+      - name: vitest coverage
+        run: pnpm test:coverage
+      - name: PHPUnit coverage
+        run: vendor/bin/phpunit --coverage-clover coverage/php/clover.xml
+        env:
+          XDEBUG_MODE: off
+      - name: Diff coverage, TypeScript (blocking, 80% of changed lines)
+        run: >
+          node scripts/diff-coverage.mjs
+          --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+          --format istanbul --coverage coverage/coverage-final.json
+          --include '^blocks/.*\.tsx?$'
+          --exclude '\.test\.|/test-support/|\.d\.ts$'
+          --label TypeScript
+      - name: Diff coverage, PHP (blocking, 80% of changed lines)
+        run: >
+          node scripts/diff-coverage.mjs
+          --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+          --format clover --coverage coverage/php/clover.xml
+          --include '^(includes/.*|profotograaf|uninstall)\.php$'
+          --label PHP
+      # Warns and exits 0 by design: a cliff guard, not a gate.
+      - name: Total coverage cliff guard (non-blocking)
+        run: node scripts/coverage-floor.mjs --ts coverage/coverage-summary.json --php coverage/php/clover.xml
 
   blocks:
     name: Block build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint:js
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm build
 
   plugin-check:
     name: Plugin Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - run: npm ci
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
       # The release copy holds the built blocks, so Plugin Check reviews them too.
-      - run: npm run build
+      - run: pnpm build
       - run: tests/e2e/up.sh
       - run: tests/e2e/plugin-check.sh
       - if: always()
@@ -83,18 +153,14 @@ jobs:
     env:
       WP_VERSION: ${{ matrix.wp }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm exec playwright install --with-deps chromium
       # The E2E site runs the release copy, which holds the built blocks.
-      - run: npm run build
+      - run: pnpm build
       - run: tests/e2e/up.sh
-      - run: npx playwright test
-      - uses: actions/upload-artifact@v4
+      - run: pnpm exec playwright test
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: e2e-${{ matrix.wp }}

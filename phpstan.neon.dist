@@ -1,0 +1,17 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+	- phpstan-baseline.neon
+
+parameters:
+	level: 8
+	paths:
+		- profotograaf.php
+		- uninstall.php
+		- includes
+	bootstrapFiles:
+		- tests/phpstan-bootstrap.php
+	phpVersion: 80100
+	# A baseline entry that no longer matches an error is itself an error, so the
+	# baseline can only shrink.
+	reportUnmatchedIgnoredErrors: true
+	tmpDir: .phpstan.cache
