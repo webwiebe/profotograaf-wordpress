@@ -11,6 +11,6 @@ wp plugin install plugin-check --activate
 report="$(wp plugin check profotograaf --format=json 2>&1 || true)"
 echo "$report" | tail -n 200
 
-errors="$(echo "$report" | grep -o '"type":"ERROR"' | wc -l | tr -d ' ')"
+errors="$(echo "$report" | { grep -o '"type":"ERROR"' || true; } | wc -l | tr -d ' ')"
 echo "Plugin Check errors: $errors"
 [[ "$errors" == "0" ]]
