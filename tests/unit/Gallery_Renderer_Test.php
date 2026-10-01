@@ -291,4 +291,51 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 		$this->assertStringContainsString( 'class="profotograaf-gallery wp-block-profotograaf-gallery alignwide"', $html );
 	}
+
+	/**
+	 * The audit for #41 found no triangle in the plugin markup. These elements
+	 * draw one in a browser or a theme (a disclosure marker or a list bullet),
+	 * so the markup must never contain them.
+	 */
+	public function test_the_markup_has_no_element_that_could_draw_a_marker(): void {
+		$this->as_editor( true );
+		$html = $this->renderer->render(
+			array(
+				'id'    => 'g-1',
+				'title' => 'One photo',
+				'url'   => 'https://profotograaf.nl/share/g/one',
+				'class' => 'wp-block-profotograaf-gallery alignfull',
+			)
+		);
+
+		foreach ( array( '<details', '<summary', '<ul', '<ol', '<li', '<img', '<svg', 'list-style' ) as $needle ) {
+			$this->assertStringNotContainsString( $needle, $html, $needle );
+		}
+	}
+
+	public function test_the_fallback_content_is_one_link_and_one_noscript_inside_the_host(): void {
+		$html = $this->renderer->render(
+			array(
+				'id'  => 'g-1',
+				'url' => 'https://profotograaf.nl/share/g/x',
+			)
+		);
+
+		$this->assertSame( 1, substr_count( $html, '<a ' ) );
+		$this->assertSame( 1, substr_count( $html, '<noscript>' ) );
+		$this->assertSame( 1, substr_count( $html, '<div ' ) );
+		$this->assertStringEndsWith( '</noscript></div>', $html );
+	}
+
+	public function test_alignment_classes_reach_the_host_div_for_wide_and_full_galleries(): void {
+		foreach ( array( 'alignwide', 'alignfull' ) as $align ) {
+			$html = $this->renderer->render(
+				array(
+					'id'    => 'g-1',
+					'class' => 'wp-block-profotograaf-gallery ' . $align,
+				)
+			);
+			$this->assertStringContainsString( 'class="profotograaf-gallery wp-block-profotograaf-gallery ' . $align . '"', $html );
+		}
+	}
 }
