@@ -7,10 +7,11 @@ import {
 	Placeholder,
 	SelectControl,
 } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Picker } from './picker';
 import {
+	LIST_PATH,
 	clearedAttributes,
 	countLabel,
 	layoutLabel,
@@ -92,10 +93,37 @@ function InspectorPanel( { attributes, setAttributes }: EditProps ) {
 	);
 }
 
+/** Whether the account's gallery list leaves this gallery out (deleted or unknown). */
+function useMissingGallery( galleryId: string ): boolean {
+	const [ missing, setMissing ] = useState( false );
+	useEffect( () => {
+		setMissing( false );
+		if ( ! galleryId ) {
+			return undefined;
+		}
+		const state = { active: true };
+		void ( async () => {
+			try {
+				const rows = await apiFetch< GalleryRow[] >( { path: LIST_PATH } );
+				if ( state.active ) {
+					setMissing( ! rows.some( ( row ) => row.id === galleryId ) );
+				}
+			} catch {
+				// The picker reports list errors. The notice only needs a clear answer.
+			}
+		} )();
+		return () => {
+			state.active = false;
+		};
+	}, [ galleryId ] );
+	return missing;
+}
+
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const { galleryId } = attributes;
 	const [ notice, setNotice ] = useState( '' );
 	const [ preview, setPreview ] = useState< GalleryRow | null >( null );
+	const missing = useMissingGallery( galleryId );
 	const blockProps = useBlockProps();
 
 	const pick = ( gallery: GalleryRow ) => {
@@ -138,7 +166,15 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<Preview
 						attributes={ attributes }
 						shown={ shown }
-						notice={ notice }
+						notice={
+							notice ||
+							( missing
+								? __(
+										'This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery.',
+										'profotograaf'
+								  )
+								: '' )
+						}
 					/>
 				) }
 			</div>

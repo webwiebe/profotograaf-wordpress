@@ -86,7 +86,7 @@ class Embed_Script {
 		if ( did_action( 'wp_print_footer_scripts' ) ) {
 			if ( ! $this->printed ) {
 				$this->printed = true;
-				printf( '<script async src="%s"></script>', esc_url( $this->url() ) ); // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- the footer already ran, so the queue can no longer print it.
+				printf( '<script async src="%1$s" onerror="%2$s"></script>', esc_url( $this->url() ), esc_attr( $this->error_handler() ) ); // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- the footer already ran, so the queue can no longer print it.
 			}
 			return;
 		}
@@ -102,6 +102,37 @@ class Embed_Script {
 				'strategy'  => 'async',
 			)
 		);
+	}
+
+	/**
+	 * Adds the failure handler to the script tag the queue prints.
+	 *
+	 * Hooked to script_loader_tag.
+	 *
+	 * @param string $tag    Script tag.
+	 * @param string $handle Script handle.
+	 */
+	public function add_error_handler( string $tag, string $handle ): string {
+		if ( self::HANDLE !== $handle || str_contains( $tag, ' onerror=' ) ) {
+			return $tag;
+		}
+		return (string) preg_replace( '/<script\b/', '<script onerror="' . esc_attr( $this->error_handler() ) . '"', $tag, 1 );
+	}
+
+	/**
+	 * JavaScript that runs when embed.js cannot be loaded: it logs what to
+	 * check to the console and replaces the empty boxes (galleries without a
+	 * fallback link) with a plain message.
+	 */
+	public function error_handler(): string {
+		$flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES;
+		$console = 'Profotograaf: the gallery script could not be loaded from ' . $this->url() . '. Galleries show their fallback link instead. Check that this site and the visitor can reach that address, and that no ad blocker, firewall or Content-Security-Policy script-src rule blocks it.';
+		$message = __( 'This gallery could not be loaded. Please try again later.', 'profotograaf' );
+
+		return 'console.error(' . wp_json_encode( $console, $flags ) . ');'
+			. 'document.querySelectorAll("[data-profotograaf-gallery]").forEach(function(e){'
+			. 'e.setAttribute("data-profotograaf-failed","");'
+			. 'if(!e.querySelector("a")){e.textContent=' . wp_json_encode( $message, $flags ) . '}})';
 	}
 
 	/**

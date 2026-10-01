@@ -12,6 +12,73 @@ use Profotograaf\Gallery_Index;
 
 class Gallery_Renderer_Test extends Gallery_Test_Case {
 
+	protected function setUp(): void {
+		parent::setUp();
+		Functions\when( 'current_user_can' )->justReturn( false );
+	}
+
+	private const NOSCRIPT = '<noscript>This gallery needs JavaScript to be shown here.</noscript>';
+
+	private function as_editor( bool $can ): void {
+		Functions\when( 'current_user_can' )->alias( fn( $cap ) => $can && 'edit_posts' === $cap );
+	}
+
+	public function test_an_invalid_id_shows_editors_a_notice_and_visitors_nothing(): void {
+		$this->as_editor( true );
+		$html = $this->renderer->render( array( 'id' => 'with space' ) );
+		$this->assertStringContainsString( 'class="profotograaf-gallery-notice"', $html );
+		$this->assertStringContainsString( 'gallery ID is missing or not valid', $html );
+		$this->assertStringNotContainsString( 'data-profotograaf-gallery', $html );
+		$this->assertSame( array(), $this->enqueued );
+
+		$this->as_editor( false );
+		$this->assertSame( '', $this->renderer->render( array( 'id' => '' ) ) );
+	}
+
+	public function test_editors_are_told_when_the_gallery_is_gone_from_the_platform_list(): void {
+		$this->options['profotograaf_gallery_index'] = array(
+			'g-other' => array(
+				'title' => 'Other',
+				'url'   => 'https://profotograaf.nl/share/g/other',
+			),
+		);
+		$args                                        = array(
+			'id'  => 'g-gone',
+			'url' => 'https://profotograaf.nl/share/g/gone',
+		);
+
+		$this->as_editor( true );
+		$editor = $this->renderer->render( $args );
+		$this->as_editor( false );
+		$visitor = $this->renderer->render( $args );
+
+		$this->assertStringStartsWith( '<p class="profotograaf-gallery-notice"', $editor );
+		$this->assertStringContainsString( 'may have been deleted', $editor );
+		$this->assertStringStartsWith( '<div class="profotograaf-gallery"', $visitor );
+		$this->assertStringContainsString( '<a href="https://profotograaf.nl/share/g/gone"', $visitor );
+	}
+
+	public function test_a_listed_gallery_or_an_empty_list_gives_no_notice(): void {
+		$this->as_editor( true );
+		$this->options['profotograaf_gallery_index'] = array();
+		$this->assertStringNotContainsString( 'notice', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+
+		$this->options['profotograaf_gallery_index'] = array(
+			'g-1' => array(
+				'title' => 'A',
+				'url'   => 'https://profotograaf.nl/share/g/a',
+			),
+		);
+		$this->assertStringNotContainsString( 'notice', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+	}
+
+	public function test_every_gallery_has_noscript_text_and_reserved_space(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringContainsString( 'style="min-height:8em"', $html );
+		$this->assertStringContainsString( self::NOSCRIPT, $html );
+	}
+
 	public function test_it_writes_the_embed_div_with_the_fallback_link(): void {
 		$html = $this->renderer->render(
 			array(
@@ -23,8 +90,9 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			'<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry">'
-			. '<a href="https://profotograaf.nl/share/g/spring-wedding">Spring wedding</a></div>',
+			'<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
+			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
 		);
 		$this->assertCount( 0, $this->http->requests, 'A known link needs no lookup.' );
@@ -75,10 +143,11 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		$this->assertStringContainsString( '>View the gallery</a>', $html );
+		$this->assertStringContainsString( '>View this gallery on Profotograaf</a>', $html );
 	}
 
 	public function test_an_invalid_id_renders_nothing_and_loads_no_script(): void {
+		$this->as_editor( false );
 		foreach ( array( '', '   ', 'a"><script>', 'with space', str_repeat( 'a', 65 ) ) as $id ) {
 			$this->assertSame( '', $this->renderer->render( array( 'id' => $id ) ), 'id: ' . $id );
 		}
@@ -168,7 +237,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$html = $this->renderer->render( array( 'id' => 'g-2' ) );
 		$this->renderer->render( array( 'id' => 'g-2' ) );
 
-		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid"></div>', $html );
+		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $html );
 		$this->assertCount( 0, $this->http->requests, 'A render path must not call the platform.' );
 		$this->assertSame( array( Gallery_Index::LOOKUP_HOOK ), $scheduled->getArrayCopy() );
 	}
@@ -184,7 +253,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
 		$this->assertStringNotContainsString( '<a ', $before );
-		$this->assertStringContainsString( '<a href="https://profotograaf.nl/share/g/spring-wedding">Autumn portraits</a>', $first );
+		$this->assertStringContainsString( 'href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Autumn portraits</a>', $first );
 		$this->assertStringContainsString( '>Spring wedding</a>', $second );
 		$this->assertCount( 1, $this->http->requests );
 		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries', $this->http->requests[0]['url'] );
@@ -200,7 +269,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		( new Gallery_Index( $this->api ) )->lookup();
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
-		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid"></div>', $first );
+		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $first );
 		$this->assertSame( $first, $second );
 		$this->assertCount( 1, $scheduled );
 	}

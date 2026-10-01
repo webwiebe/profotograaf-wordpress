@@ -72,12 +72,15 @@ class Gallery_Renderer {
 	 * classes for the div).
 	 *
 	 * @param array<string,mixed> $args Arguments.
-	 * @return string HTML, empty without a valid id.
+	 * @return string HTML. Without a valid id, editors get a notice and visitors
+	 *                get nothing.
 	 */
 	public function render( array $args ): string {
 		$id = isset( $args['id'] ) ? trim( (string) $args['id'] ) : '';
 		if ( ! self::valid_id( $id ) ) {
-			return '';
+			return $this->notice(
+				__( 'The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again.', 'profotograaf' )
+			);
 		}
 
 		$layout = (string) $this->settings->resolve( 'default_layout', array( 'default_layout' => $args['layout'] ?? '' ) );
@@ -86,13 +89,53 @@ class Gallery_Renderer {
 
 		$classes = trim( 'profotograaf-gallery ' . ( isset( $args['class'] ) ? (string) $args['class'] : '' ) );
 
-		return sprintf(
-			'<div class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s">%4$s</div>',
+		$notice = $this->missing_from_index( $id )
+			? $this->notice( __( 'This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery.', 'profotograaf' ) )
+			: '';
+
+		return $notice . sprintf(
+			'<div class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s" style="min-height:8em">%4$s<noscript>%5$s</noscript></div>',
 			esc_attr( $classes ),
 			esc_attr( $id ),
 			esc_attr( $layout ),
-			$this->fallback_link( $id, $args )
+			$this->fallback_link( $id, $args ),
+			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
 		);
+	}
+
+	/**
+	 * A notice for editors. Visitors get nothing.
+	 *
+	 * @param string $message Translated message.
+	 */
+	private function notice( string $message ): string {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return '';
+		}
+		return sprintf(
+			'<p class="profotograaf-gallery-notice" role="note" style="padding:.75em 1em;border:1px solid #dba617;border-inline-start-width:4px;background:#fcf9e8;color:#1d2327">%s</p>',
+			esc_html( $message )
+		);
+	}
+
+	/**
+	 * Whether the stored gallery list is known and leaves this id out. The list
+	 * comes from the platform, so a deleted gallery is absent from it. Reads the
+	 * option only, and asks for a fresh list in the background so a gallery that
+	 * is new since the last lookup stops being reported.
+	 *
+	 * @param string $id Gallery id.
+	 */
+	private function missing_from_index( string $id ): bool {
+		$stored = get_option( Gallery_Index::OPTION, array() );
+		if ( ! is_array( $stored ) || array() === $stored || isset( $stored[ $id ] ) ) {
+			return false;
+		}
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return false;
+		}
+		$this->index->find( $id );
+		return true;
 	}
 
 	/**
@@ -117,8 +160,8 @@ class Gallery_Renderer {
 		}
 
 		$site_label = (string) $this->settings->resolve( 'fallback_link_label' );
-		$label      = '' !== $title ? $title : ( '' !== $site_label ? $site_label : __( 'View the gallery', 'profotograaf' ) );
-		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( $label ) );
+		$label      = '' !== $title ? $title : ( '' !== $site_label ? $site_label : __( 'View this gallery on Profotograaf', 'profotograaf' ) );
+		return sprintf( '<a href="%1$s" style="display:inline-block;padding:.5em 0">%2$s</a>', esc_url( $url ), esc_html( $label ) );
 	}
 
 	/**

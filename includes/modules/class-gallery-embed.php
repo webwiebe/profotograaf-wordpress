@@ -56,6 +56,7 @@ class Gallery_Embed implements Module {
 
 		add_action( Gallery_Index::LOOKUP_HOOK, array( $index, 'lookup' ) );
 		add_action( Embed_Script::REFRESH_HOOK, array( $script, 'refresh' ) );
+		add_filter( 'script_loader_tag', array( $script, 'add_error_handler' ), 10, 2 );
 		add_filter( 'register_block_type_args', array( $this, 'block_args' ), 10, 2 );
 		add_action( 'init', array( $this, 'load_script_translations' ), 20 );
 	}

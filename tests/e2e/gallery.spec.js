@@ -143,6 +143,43 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await visitor.close();
 	} );
 
+	test( 'a blocked embed.js leaves the fallback link and logs what to check', async ( { browser } ) => {
+		const url = publishPost( 'Blocked script E2E', '[profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext();
+		const page = await visitor.newPage();
+		const errors = [];
+		page.on( 'console', ( message ) => {
+			if ( message.type() === 'error' ) {
+				errors.push( message.text() );
+			}
+		} );
+		await page.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js/, ( route ) => route.abort() );
+		await page.goto( url );
+
+		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		await expect( embed ).toHaveAttribute( 'data-profotograaf-failed', '' );
+		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
+		expect( ( await embed.boundingBox() ).height ).toBeGreaterThan( 100 );
+		expect( errors.some( ( text ) => text.includes( 'Profotograaf: the gallery script could not be loaded' ) ) ).toBe( true );
+		await visitor.close();
+	} );
+
+	test( 'an unknown gallery id shows editors a notice and visitors the plain fallback', async ( { page, browser } ) => {
+		const url = publishPost( 'Unknown gallery E2E', '[profotograaf_gallery id="g-removed" url="https://profotograaf.nl/share/g/removed"]' );
+
+		await login( page );
+		await page.goto( url );
+		await expect( page.locator( '.profotograaf-gallery-notice' ) ).toContainText( 'was not found in your account' );
+
+		const visitor = await browser.newContext();
+		const anonymous = await visitor.newPage();
+		await anonymous.goto( url );
+		await expect( anonymous.locator( '.profotograaf-gallery-notice' ) ).toHaveCount( 0 );
+		await expect( anonymous.locator( 'div[data-profotograaf-gallery="g-removed"]' ).getByRole( 'link' ) ).toBeVisible();
+		await visitor.close();
+	} );
+
 	test( 'the picker route refuses visitors', async ( { request } ) => {
 		const response = await request.get( '/?rest_route=/profotograaf/v1/galleries' );
 

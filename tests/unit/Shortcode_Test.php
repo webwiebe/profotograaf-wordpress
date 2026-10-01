@@ -12,6 +12,11 @@ use Profotograaf\Shortcode;
 
 class Shortcode_Test extends Gallery_Test_Case {
 
+	protected function setUp(): void {
+		parent::setUp();
+		Functions\when( 'current_user_can' )->justReturn( false );
+	}
+
 	public function test_it_registers_the_tag(): void {
 		Functions\expect( 'add_shortcode' )->once()->with( 'profotograaf_gallery', \Mockery::type( 'array' ) );
 
