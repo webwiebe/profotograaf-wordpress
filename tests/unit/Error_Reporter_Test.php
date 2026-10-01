@@ -15,6 +15,7 @@ use Profotograaf\Logger;
 use Profotograaf\Modules\Error_Reporting;
 use Profotograaf\Plugin;
 use Profotograaf\Settings;
+use Profotograaf\Telemetry_Payload;
 use Profotograaf\Telemetry_Sender;
 
 class Located_Error_Reporter extends Error_Reporter {
@@ -56,13 +57,7 @@ class Error_Reporter_Test extends Wp_Test_Case {
 	 * @return array<int,array<string,mixed>>
 	 */
 	private function events(): array {
-		$events = array();
-		foreach ( $this->sender->queue() as $batch ) {
-			foreach ( $batch['errors'] as $event ) {
-				$events[] = $event;
-			}
-		}
-		return $events;
+		return $this->sender->pending_errors();
 	}
 
 	private function error( string $code = 'profotograaf_http_error', int $status = 502 ): \WP_Error {
@@ -123,7 +118,7 @@ class Error_Reporter_Test extends Wp_Test_Case {
 			),
 			$this->events()[0]
 		);
-		$this->assertSame( 'error', $this->sender->queue()[0]['type'] );
+		$this->assertSame( array(), $this->sender->queue(), 'events wait for the daily batch' );
 	}
 
 	public function test_no_token_email_or_url_reaches_the_queue(): void {
@@ -131,7 +126,7 @@ class Error_Reporter_Test extends Wp_Test_Case {
 		$this->reporter->on_refresh_failed( new \WP_Error( 'bad jane@example.com https://x.example.com Bearer abc123', 'm', array( 'status' => 401 ) ) );
 		$this->reporter->on_log( Logger::ERROR, 'm', array( 'error' => 'pft_9f8a7b6c5d4e3f2a1b0c9d8e7f' ) );
 
-		$json = (string) wp_json_encode( $this->sender->queue() );
+		$json = (string) wp_json_encode( $this->sender->pending_errors() );
 		$this->assertStringNotContainsString( '@', $json );
 		$this->assertStringNotContainsString( 'example.com', $json );
 		$this->assertStringNotContainsString( 'pft_9f8a', $json );
@@ -162,6 +157,33 @@ class Error_Reporter_Test extends Wp_Test_Case {
 		$this->reporter->time += HOUR_IN_SECONDS + 1;
 		$this->reporter->on_lead_failed( array(), $this->error( 'later' ) );
 		$this->assertCount( Error_Reporter::MAX_PER_HOUR + 1, $this->events() );
+	}
+
+	public function test_the_daily_batch_carries_the_events_and_empties_them(): void {
+		$this->opt_in();
+		Functions\when( 'get_locale' )->justReturn( 'en_US' );
+		Functions\when( 'wp_remote_post' )->justReturn( array() );
+		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		$this->reporter->on_lead_failed( array(), $this->error() );
+		$payload = $this->sender->payload();
+
+		$this->assertCount( 1, $payload['errors'] );
+		$this->assertSame( 'profotograaf_http_error', $payload['errors'][0]['error_code'] );
+		$this->assertSame( 'includes/leads/class-delivery.php:154', $payload['errors'][0]['error_location'] );
+
+		$this->sender->run();
+		$this->assertSame( array(), $this->sender->pending_errors() );
+	}
+
+	public function test_events_per_batch_are_capped_to_the_newest(): void {
+		$this->opt_in();
+		for ( $i = 0; $i < Telemetry_Payload::MAX_ERRORS + 3; $i++ ) {
+			$this->sender->add_error( array( 'error_code' => 'code_' . $i ) );
+		}
+		$events = $this->sender->pending_errors();
+
+		$this->assertCount( Telemetry_Payload::MAX_ERRORS, $events );
+		$this->assertSame( 'code_3', $events[0]['error_code'] );
 	}
 
 	public function test_logger_errors_are_reported_and_lower_levels_are_not(): void {

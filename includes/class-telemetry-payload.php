@@ -43,7 +43,20 @@ final class Telemetry_Payload {
 		'delivery_success',
 		'delivery_failed',
 		'error_codes',
+		'errors',
 	);
+
+	public const EVENT_FIELDS = array(
+		'error_code',
+		'http_status',
+		'error_location',
+		'plugin_version',
+		'wordpress_version',
+		'php_version',
+		'timestamp',
+	);
+
+	public const MAX_ERRORS = 50;
 
 	private const MAX_MODULES     = 30;
 	private const MAX_ERROR_CODES = 20;
@@ -68,6 +81,7 @@ final class Telemetry_Payload {
 			$payload[ $counter ] = max( 0, (int) ( $input[ $counter ] ?? 0 ) );
 		}
 		$payload['error_codes'] = self::error_codes( $input['error_codes'] ?? array() );
+		$payload['errors']      = self::errors( $input['errors'] ?? array() );
 
 		return array_intersect_key( $payload, array_flip( self::FIELDS ) );
 	}
@@ -128,5 +142,53 @@ final class Telemetry_Payload {
 		}
 		ksort( $clean );
 		return array_slice( $clean, 0, self::MAX_ERROR_CODES, true );
+	}
+
+	/**
+	 * Error events, at most MAX_ERRORS. Each keeps only EVENT_FIELDS.
+	 *
+	 * @param mixed $events Raw list of events.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function errors( $events ): array {
+		$clean = array();
+		foreach ( is_array( $events ) ? $events : array() as $event ) {
+			if ( ! is_array( $event ) ) {
+				continue;
+			}
+			$code = strtolower( self::token( $event['error_code'] ?? '', 64 ) );
+			if ( '' === $code ) {
+				continue;
+			}
+			$clean[] = array(
+				'error_code'        => $code,
+				'http_status'       => max( 0, min( 599, (int) ( $event['http_status'] ?? 0 ) ) ),
+				'error_location'    => self::location( $event['error_location'] ?? '' ),
+				'plugin_version'    => self::token( $event['plugin_version'] ?? '', 32 ),
+				'wordpress_version' => self::major_minor( $event['wordpress_version'] ?? '' ),
+				'php_version'       => self::major_minor( $event['php_version'] ?? '' ),
+				'timestamp'         => self::timestamp( $event['timestamp'] ?? '' ),
+			);
+		}
+		return array_slice( $clean, -self::MAX_ERRORS );
+	}
+
+	/**
+	 * A plugin location such as `includes/x.php:9`, or `unknown`.
+	 *
+	 * @param mixed $value Raw value.
+	 */
+	private static function location( $value ): string {
+		$location = is_string( $value ) ? substr( (string) preg_replace( '/[^A-Za-z0-9._\/:-]/', '', $value ), 0, 120 ) : '';
+		return '' === $location ? 'unknown' : $location;
+	}
+
+	/**
+	 * A UTC timestamp such as `2024-10-01T09:30:00Z`, or an empty string.
+	 *
+	 * @param mixed $value Raw value.
+	 */
+	private static function timestamp( $value ): string {
+		return is_string( $value ) && 1 === preg_match( '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/', $value ) ? $value : '';
 	}
 }

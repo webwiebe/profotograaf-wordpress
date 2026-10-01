@@ -115,6 +115,53 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertStringNotContainsString( 'secret', (string) json_encode( $payload ) );
 	}
 
+	public function test_error_events_are_allow_listed_and_capped(): void {
+		$events = array(
+			'junk' => 'x',
+			array(
+				'error_code'        => 'Api Timeout',
+				'http_status'       => 999,
+				'error_location'    => 'includes/x.php:9 jane@example.com',
+				'plugin_version'    => '0.1.0',
+				'wordpress_version' => '6.9.1',
+				'php_version'       => '8.3.1',
+				'timestamp'         => '2024-10-01T09:30:00Z',
+				'email'             => 'jane@example.com',
+			),
+			array(
+				'error_code'     => '',
+				'error_location' => 5,
+			),
+			array(
+				'error_code' => 'b',
+				'timestamp'  => 'yesterday',
+			),
+		);
+		$errors = Telemetry_Payload::build( array( 'errors' => $events ) )['errors'];
+
+		$this->assertCount( 2, $errors );
+		$this->assertSame( Telemetry_Payload::EVENT_FIELDS, array_keys( $errors[0] ) );
+		$this->assertSame( 'apitimeout', $errors[0]['error_code'] );
+		$this->assertSame( 599, $errors[0]['http_status'] );
+		$this->assertSame( 'includes/x.php:9janeexample.com', $errors[0]['error_location'] );
+		$this->assertSame( '6.9', $errors[0]['wordpress_version'] );
+		$this->assertSame( 'unknown', $errors[1]['error_location'] );
+		$this->assertSame( '', $errors[1]['timestamp'] );
+		$this->assertStringNotContainsString( '@', (string) json_encode( $errors ) );
+	}
+
+	public function test_error_events_ride_in_the_daily_batch_and_need_consent(): void {
+		$this->assertFalse( $this->sender()->add_error( array( 'error_code' => 'a' ) ) );
+
+		$sender = $this->opt_in();
+		$this->assertTrue( $sender->add_error( array( 'error_code' => 'a_code' ) ) );
+		$sender->run();
+
+		$body = json_decode( (string) $this->posts[0]['args']['body'], true );
+		$this->assertSame( 'a_code', $body['errors'][0]['error_code'] );
+		$this->assertSame( array(), $sender->pending_errors() );
+	}
+
 	public function test_free_text_in_module_and_error_fields_is_stripped(): void {
 		$payload = Telemetry_Payload::build(
 			array(
@@ -259,6 +306,7 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$sender                                  = $this->opt_in();
 		$sender->on_lead_delivered();
 		$sender->enqueue( array( 'type' => 'usage' ) );
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
 		Functions\when( 'wp_generate_uuid4' )->justReturn( 'new-id' );
 
 		$consent = new Telemetry_Consent();
@@ -268,6 +316,7 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( 'new-id', $this->options[ Connection::INSTALL_ID ] );
 		$this->assertSame( array(), $sender->queue() );
 		$this->assertArrayNotHasKey( Telemetry_Sender::COUNTER_OPTION, $this->options );
+		$this->assertArrayNotHasKey( Telemetry_Sender::ERRORS_OPTION, $this->options );
 	}
 
 	public function test_the_daily_event_is_scheduled_only_while_opted_in(): void {

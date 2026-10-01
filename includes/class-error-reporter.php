@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Nothing happens without consent: each entry point asks the sender first, so
  * no event is built, no state is stored and nothing is queued for a site that
- * did not opt in. Events go to the sender's queue. The daily batch sends them.
+ * did not opt in. The sender keeps the events and the daily batch carries them in its `errors` array.
  *
  * Rate limit: a fingerprint of (code, location, status) is reported once per
  * 24 hours, and at most MAX_PER_HOUR new fingerprints are reported per hour.
@@ -229,12 +229,7 @@ class Error_Reporter {
 					'timestamp'         => gmdate( 'Y-m-d\TH:i:s\Z', $this->now() ),
 				)
 			);
-			$this->sender->enqueue(
-				array(
-					'type'   => 'error',
-					'errors' => array( $event ),
-				)
-			);
+			$this->sender->add_error( $event );
 		} catch ( \Throwable $e ) {
 			// Reporting never breaks the request it describes.
 			unset( $e );
