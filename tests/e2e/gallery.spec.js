@@ -165,6 +165,49 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await visitor.close();
 	} );
 
+	test( 'with JavaScript off a visitor sees the link and no list or disclosure markup', async ( { browser } ) => {
+		const url = publishPost( 'No script E2E', '[profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext( { javaScriptEnabled: false } );
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
+		await expect( embed.locator( 'details, summary, ul, li, img' ) ).toHaveCount( 0 );
+		await visitor.close();
+	} );
+
+	test( 'a narrow screen keeps the gallery inside the page width', async ( { browser } ) => {
+		const url = publishPost( 'Narrow E2E', '[profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext( { viewport: { width: 320, height: 640 } } );
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		await expect( embed ).toBeVisible();
+		const box = await embed.boundingBox();
+		expect( box.x + box.width ).toBeLessThanOrEqual( 320 );
+		expect( await page.evaluate( () => document.documentElement.scrollWidth ) ).toBeLessThanOrEqual( 320 );
+		await visitor.close();
+	} );
+
+	test( 'wide and full alignment classes reach the embed div', async ( { browser } ) => {
+		const url = publishPost(
+			'Alignment E2E',
+			'<!-- wp:profotograaf/gallery {"galleryId":"g-e2e","align":"wide"} /--><!-- wp:profotograaf/gallery {"galleryId":"g-e2e","align":"full"} /-->'
+		);
+
+		const visitor = await browser.newContext();
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"].alignwide' ) ).toHaveCount( 1 );
+		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"].alignfull' ) ).toHaveCount( 1 );
+		await visitor.close();
+	} );
+
 	test( 'an unknown gallery id shows editors a notice and visitors the plain fallback', async ( { page, browser } ) => {
 		const url = publishPost( 'Unknown gallery E2E', '[profotograaf_gallery id="g-removed" url="https://profotograaf.nl/share/g/removed"]' );
 
