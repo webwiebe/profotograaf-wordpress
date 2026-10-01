@@ -55,4 +55,29 @@ class Shortcode_Test extends Gallery_Test_Case {
 		$this->assertSame( '', $shortcode->render( '' ) );
 		$this->assertSame( array(), $this->enqueued );
 	}
+
+	public function test_display_attributes_override_the_site_default(): void {
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns'  => 5,
+			'gallery_captions' => 'below',
+		);
+
+		$html = ( new Shortcode( $this->renderer ) )->render(
+			array(
+				'id'             => 'g-1',
+				'columns'        => '3',
+				'columns_mobile' => '1',
+				'per_page'       => '12',
+				'load_more'      => 'on',
+				'lightbox'       => 'off',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-columns="3"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="1"', $html );
+		$this->assertStringContainsString( ' data-per-page="12"', $html );
+		$this->assertStringContainsString( ' data-load-more="on"', $html );
+		$this->assertStringContainsString( ' data-lightbox="off"', $html );
+		$this->assertStringContainsString( ' data-captions="below"', $html );
+	}
 }

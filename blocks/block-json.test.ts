@@ -2,6 +2,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { layoutOptions } from './gallery/helpers';
+import { DISPLAY_DEFAULTS } from './gallery/display-options';
 import { previewCopy } from './client-galleries/helpers';
 import type { ClientGalleriesAttributes } from './client-galleries/helpers';
 
@@ -49,6 +50,15 @@ describe( 'gallery layout attribute', () => {
 	it( 'allows exactly the layouts the editor offers', () => {
 		const json = load( 'gallery' );
 		expect( json.attributes.layout?.enum ).toEqual( layoutOptions().map( ( o ) => o.value ) );
+	} );
+} );
+
+describe( 'gallery display attributes', () => {
+	it( 'match the editor defaults and are empty, meaning the site default', () => {
+		const json = load( 'gallery' );
+		for ( const key of Object.keys( DISPLAY_DEFAULTS ) ) {
+			expect( json.attributes[ key ], key ).toEqual( { type: 'string', default: '' } );
+		}
 	} );
 } );
 

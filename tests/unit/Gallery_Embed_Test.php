@@ -151,4 +151,31 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$this->assertNotContains( 'load_script_translation_file', $filters );
 		$this->assertNotContains( 'load_script_textdomain_relative_path', $filters );
 	}
+
+	public function test_the_block_passes_its_display_attributes_and_wins_over_the_site_default(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		$this->module->register( $this->plugin );
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns' => 5,
+			'gallery_gap'     => 12,
+		);
+
+		$html = $this->module->render_block(
+			array(
+				'galleryId'     => 'g-1',
+				'columns'       => '2',
+				'columnsTablet' => '2',
+				'ratio'         => '3-2',
+				'perPage'       => '9',
+				'loadMore'      => 'on',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-columns="2"', $html );
+		$this->assertStringContainsString( ' data-columns-tablet="2"', $html );
+		$this->assertStringContainsString( ' data-ratio="3:2"', $html );
+		$this->assertStringContainsString( ' data-per-page="9"', $html );
+		$this->assertStringContainsString( ' data-load-more="on"', $html );
+		$this->assertStringContainsString( ' data-gap="12"', $html );
+	}
 }

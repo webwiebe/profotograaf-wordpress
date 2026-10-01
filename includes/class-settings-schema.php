@@ -17,7 +17,9 @@ defined( 'ABSPATH' ) || exit;
  * An entry has these keys:
  *
  * - tab: General, Galleries, Enquiry forms or Advanced (see tabs()).
- * - type: `enum` (needs `choices`), `bool`, `int` (needs `min` and `max`) or `text`.
+ * - type: `enum` (needs `choices`), `bool`, `int` (needs `min` and `max`),
+ *   `int_or_empty` (like `int`, and an empty string stays empty to mean "use the
+ *   platform default") or `text`.
  * - default: the built-in value, last in the resolution order.
  * - label and description: shown on the screen.
  * - choices: value => label, for `enum`.
@@ -34,7 +36,7 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 2;
+	public const VERSION = 3;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
@@ -61,6 +63,15 @@ final class Settings_Schema {
 	 * @return array<string,Entry>
 	 */
 	public static function entries(): array {
+		return array_merge( self::base_entries(), self::gallery_display_entries() );
+	}
+
+	/**
+	 * The options that are not gallery display settings.
+	 *
+	 * @return array<string,Entry>
+	 */
+	private static function base_entries(): array {
 		return array(
 			'fallback_link_label'    => array(
 				'tab'         => self::TAB_GENERAL,
@@ -132,6 +143,128 @@ final class Settings_Schema {
 	}
 
 	/**
+	 * The gallery display options, shown on the Galleries tab after the layout.
+	 * An empty value means the option is not sent and Profotograaf decides.
+	 * The block attribute and the shortcode attribute of each one are listed in
+	 * Gallery_Renderer::OPTIONS.
+	 *
+	 * @return array<string,Entry>
+	 */
+	private static function gallery_display_entries(): array {
+		$platform = array( '' => __( 'Profotograaf default', 'profotograaf' ) );
+		$on_off   = $platform + array(
+			'on'  => __( 'On', 'profotograaf' ),
+			'off' => __( 'Off', 'profotograaf' ),
+		);
+		$note     = __( 'A block or shortcode can set its own. Leave empty for the Profotograaf default.', 'profotograaf' );
+
+		return array(
+			'gallery_columns'        => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'int_or_empty',
+				'default'     => '',
+				'min'         => 1,
+				'max'         => 8,
+				'label'       => __( 'Columns', 'profotograaf' ),
+				'description' => __( 'Columns on wide screens, from 1 to 8.', 'profotograaf' ) . ' ' . $note,
+			),
+			'gallery_columns_tablet' => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'int_or_empty',
+				'default'     => '',
+				'min'         => 1,
+				'max'         => 8,
+				'label'       => __( 'Columns on tablets', 'profotograaf' ),
+				'description' => __( 'Columns on medium screens, from 1 to 8.', 'profotograaf' ) . ' ' . $note,
+			),
+			'gallery_columns_mobile' => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'int_or_empty',
+				'default'     => '',
+				'min'         => 1,
+				'max'         => 4,
+				'label'       => __( 'Columns on phones', 'profotograaf' ),
+				'description' => __( 'Columns on narrow screens, from 1 to 4.', 'profotograaf' ) . ' ' . $note,
+			),
+			'gallery_gap'            => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'int_or_empty',
+				'default'     => '',
+				'min'         => 0,
+				'max'         => 96,
+				'label'       => __( 'Gap between photos (pixels)', 'profotograaf' ),
+				'description' => __( 'Space between photos, from 0 to 96 pixels.', 'profotograaf' ) . ' ' . $note,
+			),
+			'gallery_ratio'          => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Photo shape', 'profotograaf' ),
+				'description' => __( 'Crop every photo to one aspect ratio, or keep each photo as shot.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $platform + array(
+					'original' => __( 'Original', 'profotograaf' ),
+					'1-1'      => __( 'Square (1:1)', 'profotograaf' ),
+					'4-3'      => '4:3',
+					'3-2'      => '3:2',
+					'16-9'     => '16:9',
+					'3-4'      => '3:4',
+					'2-3'      => '2:3',
+				),
+			),
+			'gallery_captions'       => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Captions', 'profotograaf' ),
+				'description' => __( 'Whether photo captions show and where.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $platform + array(
+					'off'     => __( 'Hidden', 'profotograaf' ),
+					'below'   => __( 'Below the photo', 'profotograaf' ),
+					'overlay' => __( 'On top of the photo', 'profotograaf' ),
+				),
+			),
+			'gallery_sort'           => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Sort order', 'profotograaf' ),
+				'description' => __( 'The order of the photos.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $platform + array(
+					'newest' => __( 'Newest first', 'profotograaf' ),
+					'oldest' => __( 'Oldest first', 'profotograaf' ),
+					'name'   => __( 'By file name', 'profotograaf' ),
+					'random' => __( 'Random', 'profotograaf' ),
+				),
+			),
+			'gallery_per_page'       => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'int_or_empty',
+				'default'     => '',
+				'min'         => 1,
+				'max'         => 200,
+				'label'       => __( 'Photos per page', 'profotograaf' ),
+				'description' => __( 'Show this many photos at first, from 1 to 200. Leave empty to show all of them.', 'profotograaf' ),
+			),
+			'gallery_load_more'      => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Load more button', 'profotograaf' ),
+				'description' => __( 'Add a button that shows the next photos when "Photos per page" is set.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $on_off,
+			),
+			'gallery_lightbox'       => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Lightbox', 'profotograaf' ),
+				'description' => __( 'Open a photo in a larger view when a visitor clicks it.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $on_off,
+			),
+		);
+	}
+
+	/**
 	 * One entry.
 	 *
 	 * @param string $key Option key.
@@ -178,10 +311,14 @@ final class Settings_Schema {
 		if ( isset( $entry['sanitize'] ) ) {
 			return ( $entry['sanitize'] )( $value );
 		}
+		if ( 'int_or_empty' === $entry['type'] && ( '' === $value || null === $value ) ) {
+			return '';
+		}
 		switch ( $entry['type'] ) {
 			case 'enum':
 				$choice = is_scalar( $value ) ? sanitize_key( (string) $value ) : '';
 				return array_key_exists( $choice, $entry['choices'] ?? array() ) ? $choice : null;
+			case 'int_or_empty':
 			case 'int':
 				if ( ! is_scalar( $value ) || ! is_numeric( $value ) ) {
 					return null;
@@ -220,8 +357,9 @@ final class Settings_Schema {
 		$properties = array();
 		foreach ( self::entries() as $key => $entry ) {
 			$types    = array(
-				'bool' => 'boolean',
-				'int'  => 'integer',
+				'bool'         => 'boolean',
+				'int'          => 'integer',
+				'int_or_empty' => array( 'integer', 'string' ),
 			);
 			$property = array(
 				'type'        => $types[ $entry['type'] ] ?? 'string',
@@ -231,7 +369,7 @@ final class Settings_Schema {
 			if ( 'enum' === $entry['type'] ) {
 				$property['enum'] = array_keys( $entry['choices'] ?? array() );
 			}
-			if ( 'int' === $entry['type'] ) {
+			if ( 'int' === $entry['type'] || 'int_or_empty' === $entry['type'] ) {
 				$property['minimum'] = $entry['min'] ?? null;
 				$property['maximum'] = $entry['max'] ?? null;
 			}

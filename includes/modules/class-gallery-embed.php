@@ -96,7 +96,7 @@ class Gallery_Embed implements Module {
 				'title'  => $attributes['galleryTitle'] ?? '',
 				'url'    => $attributes['galleryUrl'] ?? '',
 				'class'  => $class,
-			)
+			) + Gallery_Renderer::options_from_block( $attributes )
 		);
 	}
 

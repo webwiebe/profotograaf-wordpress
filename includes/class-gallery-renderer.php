@@ -20,6 +20,66 @@ defined( 'ABSPATH' ) || exit;
 class Gallery_Renderer {
 
 	/**
+	 * The display options. Each key is the render argument and the shortcode
+	 * attribute. `setting` is the Settings_Schema entry that holds the site
+	 * default, `attribute` the block attribute and `data` the name of the
+	 * data-* attribute that embed.js reads. To pass one more option through,
+	 * add an entry here, a schema entry and a block.json attribute.
+	 */
+	public const OPTIONS = array(
+		'columns'        => array(
+			'setting'   => 'gallery_columns',
+			'attribute' => 'columns',
+			'data'      => 'data-columns',
+		),
+		'columns_tablet' => array(
+			'setting'   => 'gallery_columns_tablet',
+			'attribute' => 'columnsTablet',
+			'data'      => 'data-columns-tablet',
+		),
+		'columns_mobile' => array(
+			'setting'   => 'gallery_columns_mobile',
+			'attribute' => 'columnsMobile',
+			'data'      => 'data-columns-mobile',
+		),
+		'gap'            => array(
+			'setting'   => 'gallery_gap',
+			'attribute' => 'gap',
+			'data'      => 'data-gap',
+		),
+		'ratio'          => array(
+			'setting'   => 'gallery_ratio',
+			'attribute' => 'ratio',
+			'data'      => 'data-ratio',
+		),
+		'captions'       => array(
+			'setting'   => 'gallery_captions',
+			'attribute' => 'captions',
+			'data'      => 'data-captions',
+		),
+		'sort'           => array(
+			'setting'   => 'gallery_sort',
+			'attribute' => 'sort',
+			'data'      => 'data-sort',
+		),
+		'per_page'       => array(
+			'setting'   => 'gallery_per_page',
+			'attribute' => 'perPage',
+			'data'      => 'data-per-page',
+		),
+		'load_more'      => array(
+			'setting'   => 'gallery_load_more',
+			'attribute' => 'loadMore',
+			'data'      => 'data-load-more',
+		),
+		'lightbox'       => array(
+			'setting'   => 'gallery_lightbox',
+			'attribute' => 'lightbox',
+			'data'      => 'data-lightbox',
+		),
+	);
+
+	/**
 	 * Script handling.
 	 *
 	 * @var Embed_Script
@@ -64,18 +124,47 @@ class Gallery_Renderer {
 	}
 
 	/**
+	 * The shortcode attributes and render arguments of the display options,
+	 * each with an empty string, which stands for "not set here".
+	 *
+	 * @return array<string,string>
+	 */
+	public static function option_defaults(): array {
+		return array_fill_keys( array_keys( self::OPTIONS ), '' );
+	}
+
+	/**
+	 * Render arguments for the display options of a block.
+	 *
+	 * @param array<string,mixed> $attributes Block attributes.
+	 * @return array<string,mixed>
+	 */
+	public static function options_from_block( array $attributes ): array {
+		$args = array();
+		foreach ( self::OPTIONS as $key => $option ) {
+			$args[ $key ] = $attributes[ $option['attribute'] ] ?? '';
+		}
+		return $args;
+	}
+
+	/**
 	 * Renders a gallery.
 	 *
 	 * Keys of $args: id (required), layout (grid, masonry or slideshow; the
 	 * default layout from the settings when empty or unknown), title and url
-	 * (the fallback link; looked up when both are empty) and class (extra CSS
-	 * classes for the div).
+	 * (the fallback link; looked up when both are empty), class (extra CSS
+	 * classes for the div) and the display options listed in OPTIONS.
 	 *
-	 * @param array<string,mixed> $args Arguments.
+	 * A display option comes from $args first, from $shortcode second and from
+	 * the site default last. An empty or invalid value falls through to the
+	 * next layer.
+	 *
+	 * @param array<string,mixed> $args      Arguments, from the block.
+	 * @param array<string,mixed> $shortcode Display options from shortcode attributes.
 	 * @return string HTML. Without a valid id, editors get a notice and visitors
 	 *                get nothing.
 	 */
-	public function render( array $args ): string {
+	public function render( array $args, array $shortcode = array() ): string {
 		$id = isset( $args['id'] ) ? trim( (string) $args['id'] ) : '';
 		if ( ! self::valid_id( $id ) ) {
 			return $this->notice(
@@ -94,13 +183,39 @@ class Gallery_Renderer {
 			: '';
 
 		return $notice . sprintf(
-			'<div class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s" style="min-height:8em">%4$s<noscript>%5$s</noscript></div>',
+			'<div class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s"%6$s style="min-height:8em">%4$s<noscript>%5$s</noscript></div>',
 			esc_attr( $classes ),
 			esc_attr( $id ),
 			esc_attr( $layout ),
 			$this->fallback_link( $id, $args ),
-			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
+			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' ),
+			$this->data_attributes( $args, $shortcode )
 		);
+	}
+
+	/**
+	 * The data-* attributes of the display options that have a value, each
+	 * with a leading space.
+	 *
+	 * @param array<string,mixed> $block     Block layer.
+	 * @param array<string,mixed> $shortcode Shortcode layer.
+	 */
+	private function data_attributes( array $block, array $shortcode ): string {
+		$html = '';
+		foreach ( self::OPTIONS as $key => $option ) {
+			$layers = array();
+			foreach ( array( $block, $shortcode ) as $layer ) {
+				$layers[] = array( $option['setting'] => $layer[ $key ] ?? '' );
+			}
+			$value = (string) $this->settings->resolve( $option['setting'], ...$layers );
+			if ( '' === $value ) {
+				continue;
+			}
+			// Ratios are stored as 4-3 (a colon is not allowed in an option key).
+			$value = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
+			$html .= sprintf( ' %1$s="%2$s"', $option['data'], esc_attr( $value ) );
+		}
+		return $html;
 	}
 
 	/**
