@@ -69,6 +69,14 @@ final class Settings_Schema {
 				'label'       => __( 'Gallery link text', 'profotograaf' ),
 				'description' => __( 'Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use "View the gallery".', 'profotograaf' ),
 			),
+			'client_portal_path'     => array(
+				'tab'         => self::TAB_GENERAL,
+				'type'        => 'text',
+				'default'     => Modules\Client_Galleries::DEFAULT_PATH,
+				'label'       => __( 'Client portal path', 'profotograaf' ),
+				'description' => __( 'The path of the client portal on your Profotograaf address, used by the "Find your gallery" block. A block can set its own. The default is /client.', 'profotograaf' ),
+				'sanitize'    => array( Modules\Client_Galleries::class, 'sanitize_path' ),
+			),
 			'default_layout'         => array(
 				'tab'         => self::TAB_GALLERIES,
 				'type'        => 'enum',

@@ -10,6 +10,7 @@ namespace Profotograaf\Modules;
 use Profotograaf\Config;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
+use Profotograaf\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,6 +30,10 @@ defined( 'ABSPATH' ) || exit;
  *   photographer subdomain or a custom domain, where the portal is at `/client`;
  * - a full http(s) URL, used as given, with `/client` added when it has no path.
  *
+ * The `/client` part is the portal path. The block attribute `portalPath` sets
+ * it for one block, the `client_portal_path` setting for the site, and
+ * `/client` is the default.
+ *
  * The block itself is registered by the Blocks module from
  * blocks/client-galleries/block.json. This module only attaches the render
  * callback and the editor script translations.
@@ -37,13 +42,33 @@ class Client_Galleries implements Module {
 
 	public const BLOCK = 'profotograaf/client-galleries';
 
+	public const DEFAULT_PATH = '/client';
+
+	public const DEFAULT_HEADING_LEVEL = 3;
+
+	/**
+	 * Settings.
+	 *
+	 * @var Settings|null
+	 */
+	private ?Settings $settings;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param Settings|null $settings Settings, or null to create them on first use.
+	 */
+	public function __construct( ?Settings $settings = null ) {
+		$this->settings = $settings;
+	}
+
 	/**
 	 * Adds the hooks.
 	 *
 	 * @param Plugin $plugin Service container.
 	 */
 	public function register( Plugin $plugin ): void {
-		unset( $plugin );
+		$this->settings = $plugin->settings();
 		add_filter( 'register_block_type_args', array( $this, 'add_render_callback' ), 10, 2 );
 		add_action( 'init', array( $this, 'load_script_translations' ), 20 );
 	}
@@ -76,11 +101,36 @@ class Client_Galleries implements Module {
 	}
 
 	/**
+	 * Cleans a portal path: a site relative path such as `/client`.
+	 *
+	 * A missing leading slash is added and a trailing one removed. Returns null
+	 * for the root, a host, a query, a fragment, a space or a `..` segment.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string|null The path, or null when it is not usable.
+	 */
+	public static function sanitize_path( $value ): ?string {
+		if ( ! is_scalar( $value ) ) {
+			return null;
+		}
+		$path = trim( (string) $value );
+		if ( str_starts_with( $path, '//' ) || ! preg_match( '#^/?[A-Za-z0-9._~%/-]+$#', $path ) ) {
+			return null;
+		}
+		$path = '/' . trim( $path, '/' );
+		if ( '/' === $path || in_array( '..', explode( '/', $path ), true ) ) {
+			return null;
+		}
+		return $path;
+	}
+
+	/**
 	 * Turns what a person typed into the portal URL, or an empty string.
 	 *
 	 * @param string $address Slug, host or URL.
+	 * @param string $path    Portal path, used when the address has none.
 	 */
-	public static function portal_url( string $address ): string {
+	public static function portal_url( string $address, string $path = self::DEFAULT_PATH ): string {
 		$address = trim( $address );
 		if ( '' === $address || preg_match( '/\s/', $address ) ) {
 			return '';
@@ -93,21 +143,21 @@ class Client_Galleries implements Module {
 			if ( '' === $host || ! in_array( $scheme, array( 'http', 'https' ), true ) ) {
 				return '';
 			}
-			$path = (string) wp_parse_url( $address, PHP_URL_PATH );
-			if ( '' === trim( $path, '/' ) ) {
-				return rtrim( $address, '/' ) . '/client';
+			$own_path = (string) wp_parse_url( $address, PHP_URL_PATH );
+			if ( '' === trim( $own_path, '/' ) ) {
+				return rtrim( $address, '/' ) . $path;
 			}
 			return $address;
 		}
 
 		// A slug on the platform.
 		if ( preg_match( '/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i', $address ) ) {
-			return Config::platform_url() . '/' . strtolower( $address ) . '/client';
+			return Config::platform_url() . '/' . strtolower( $address ) . $path;
 		}
 
 		// A host name, with an optional port and path.
 		if ( preg_match( '#^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::\d{1,5})?(?:/.*)?$#i', $address ) && false !== strpos( $address, '.' ) ) {
-			return self::portal_url( 'https://' . $address );
+			return self::portal_url( 'https://' . $address, $path );
 		}
 
 		return '';
@@ -142,7 +192,8 @@ class Client_Galleries implements Module {
 	 */
 	public function render( array $attributes ): string {
 		$address = $this->resolve_address( isset( $attributes['portal'] ) ? (string) $attributes['portal'] : '' );
-		$url     = self::portal_url( $address );
+		$path    = (string) $this->settings()->resolve( 'client_portal_path', array( 'client_portal_path' => $attributes['portalPath'] ?? '' ) );
+		$url     = self::portal_url( $address, $path );
 
 		if ( '' === $url ) {
 			return $this->render_notice();
@@ -155,15 +206,42 @@ class Client_Galleries implements Module {
 
 		$rel = $new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
 
+		$tag = self::heading_tag( $attributes['headingLevel'] ?? self::DEFAULT_HEADING_LEVEL );
+
 		return sprintf(
-			'<div %1$s><h3 class="wp-block-profotograaf-client-galleries__heading">%2$s</h3><p class="wp-block-profotograaf-client-galleries__text">%3$s</p><a class="wp-block-profotograaf-client-galleries__button" href="%4$s"%5$s>%6$s</a></div>',
+			'<div %1$s><%7$s class="wp-block-profotograaf-client-galleries__heading">%2$s</%7$s><p class="wp-block-profotograaf-client-galleries__text">%3$s</p><div class="wp-block-button"><a class="wp-block-profotograaf-client-galleries__button wp-block-button__link wp-element-button" href="%4$s"%5$s>%6$s</a></div></div>',
 			$this->wrapper_attributes(),
 			esc_html( $heading ),
 			esc_html( $text ),
 			esc_url( $url ),
 			$rel,
-			esc_html( $label )
+			esc_html( $label ),
+			$tag
 		);
+	}
+
+	/**
+	 * The element for a heading level: h2 to h6, or `p` for 0. Anything else
+	 * gives the default, so the block never outputs a second h1.
+	 *
+	 * @param mixed $level Saved level.
+	 */
+	public static function heading_tag( $level ): string {
+		$level = is_numeric( $level ) ? (int) $level : self::DEFAULT_HEADING_LEVEL;
+		if ( 0 === $level ) {
+			return 'p';
+		}
+		return $level >= 2 && $level <= 6 ? 'h' . $level : 'h' . self::DEFAULT_HEADING_LEVEL;
+	}
+
+	/**
+	 * The settings.
+	 */
+	private function settings(): Settings {
+		if ( null === $this->settings ) {
+			$this->settings = new Settings();
+		}
+		return $this->settings;
 	}
 
 	/**

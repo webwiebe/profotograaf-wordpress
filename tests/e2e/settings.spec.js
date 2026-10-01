@@ -1,6 +1,20 @@
 // @ts-check
 const { test, expect } = require( '@playwright/test' );
+const { execFileSync } = require( 'node:child_process' );
+const path = require( 'node:path' );
 const { login, mock } = require( './helpers' );
+
+const compose = path.resolve( __dirname, 'docker-compose.yml' );
+
+/**
+ * Runs WP-CLI in the E2E WordPress container.
+ *
+ * @param {...string} args
+ * @return {string} Standard output.
+ */
+function wp( ...args ) {
+	return execFileSync( 'docker', [ 'compose', '-f', compose, 'run', '--rm', '-T', 'cli', 'wp', ...args ], { encoding: 'utf8', timeout: 180_000 } );
+}
 
 test.describe( 'Settings > Profotograaf', () => {
 	test.beforeEach( async ( { page } ) => {
@@ -141,5 +155,40 @@ test.describe( 'Settings > Profotograaf', () => {
 		} );
 
 		expect( response.status() ).toBeGreaterThanOrEqual( 400 );
+	} );
+
+	test( 'a revoked connection shows a dismissible notice on every admin screen that clears on recovery', async ( { page } ) => {
+		wp( 'option', 'update', 'profotograaf_connection', '{"last_error":"The connection was ended in your Profotograaf account."}', '--format=json' );
+		try {
+			await page.goto( '/wp-admin/index.php' );
+			const notice = page.locator( '.profotograaf-notice--revoked' );
+			await expect( notice ).toHaveCount( 1 );
+			await expect( notice ).toContainText( 'Profotograaf is no longer connected' );
+			await expect( notice.getByRole( 'link', { name: 'Connect this site again' } ) ).toHaveAttribute( 'href', /options-general\.php\?page=profotograaf$/ );
+
+			// The settings page shows the state itself, so the notice stays away.
+			await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
+			await expect( page.locator( '.profotograaf-notice--revoked' ) ).toHaveCount( 0 );
+
+			await page.goto( '/wp-admin/index.php' );
+			await notice.getByRole( 'link', { name: 'Dismiss' } ).click();
+			await expect( page.locator( '.profotograaf-notice--revoked' ) ).toHaveCount( 0 );
+			await page.reload();
+			await expect( page.locator( '.profotograaf-notice--revoked' ) ).toHaveCount( 0 );
+
+			// Another revocation starts a new episode and shows the notice again.
+			wp( 'option', 'update', 'profotograaf_notice_episodes', '{"revoked":{"since":42}}', '--format=json' );
+			await page.reload();
+			await expect( page.locator( '.profotograaf-notice--revoked' ) ).toHaveCount( 1 );
+
+			// The state recovers: the notice goes.
+			wp( 'option', 'delete', 'profotograaf_connection' );
+			await page.reload();
+			await expect( page.locator( '.profotograaf-notice--revoked' ) ).toHaveCount( 0 );
+		} finally {
+			wp( 'option', 'delete', 'profotograaf_connection' );
+			wp( 'option', 'delete', 'profotograaf_notice_episodes' );
+			wp( 'user', 'meta', 'delete', 'admin', 'profotograaf_dismissed_notices' );
+		}
 	} );
 } );

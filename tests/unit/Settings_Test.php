@@ -68,6 +68,7 @@ class Settings_Test extends Wp_Test_Case {
 		$this->assertSame(
 			array(
 				'fallback_link_label'    => 'Open the gallery',
+				'client_portal_path'     => '/client',
 				'default_layout'         => 'slideshow',
 				'leads_enabled'          => false,
 				'leads_alert_email'      => '',
@@ -175,6 +176,7 @@ class Settings_Test extends Wp_Test_Case {
 		$this->assertSame(
 			array(
 				'fallback_link_label'    => '',
+				'client_portal_path'     => '/client',
 				'default_layout'         => 'masonry',
 				'leads_enabled'          => true,
 				'leads_alert_email'      => '',

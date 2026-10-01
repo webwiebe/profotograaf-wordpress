@@ -1,4 +1,6 @@
 .wp-block-profotograaf-client-galleries {
+	--profotograaf-focus-color: currentcolor;
+
 	box-sizing: border-box;
 	padding: 1.5rem;
 	border: 1px solid currentcolor;
@@ -15,19 +17,34 @@
 	margin: 0 0 1rem;
 }
 
-.wp-block-profotograaf-client-galleries__button {
+/*
+ * The button is a core/button link, so the theme's button styles apply on
+ * block themes (theme.json) and classic themes (.wp-block-button__link).
+ * These rules have no specificity (:where) and only fill in what a theme
+ * leaves unset.
+ */
+:where(.wp-block-profotograaf-client-galleries .wp-block-button__link) {
 	display: inline-block;
 	padding: 0.6em 1.4em;
 	border-radius: 4px;
-	background: #1d2327;
+	background-color: #1d2327;
 	color: #fff;
 	text-decoration: none;
+	cursor: pointer;
 }
 
-.wp-block-profotograaf-client-galleries__button:hover,
-.wp-block-profotograaf-client-galleries__button:focus {
-	background: #000;
+:where(.wp-block-profotograaf-client-galleries .wp-block-button__link:hover) {
+	background-color: #000;
 	color: #fff;
+}
+
+/*
+ * The ring takes the block's text color, which has the contrast of the block's
+ * own text on its background (3:1 is required for a focus indicator).
+ */
+.wp-block-profotograaf-client-galleries__button:focus-visible {
+	outline: 2px solid var(--profotograaf-focus-color);
+	outline-offset: 3px;
 }
 
 .wp-block-profotograaf-client-galleries__notice {

@@ -14,9 +14,17 @@
 			"type": "string",
 			"default": ""
 		},
+		"portalPath": {
+			"type": "string",
+			"default": ""
+		},
 		"heading": {
 			"type": "string",
 			"default": ""
+		},
+		"headingLevel": {
+			"type": "number",
+			"default": 3
 		},
 		"description": {
 			"type": "string",
@@ -37,6 +45,9 @@
 		"color": {
 			"background": true,
 			"text": true
+		},
+		"border": {
+			"radius": true
 		},
 		"spacing": {
 			"padding": true,

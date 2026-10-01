@@ -1,16 +1,18 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	PanelBody,
+	SelectControl,
 	TextControl,
 	TextareaControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import './style.css';
 import { registerServerRenderedBlock } from '../register';
 import metadata from './block.json';
-import { previewCopy } from './helpers';
+import { headingTag, previewCopy } from './helpers';
 import type { ClientGalleriesAttributes } from './helpers';
 
 interface EditProps {
@@ -18,8 +20,19 @@ interface EditProps {
 	setAttributes: ( next: Partial< ClientGalleriesAttributes > ) => void;
 }
 
+function headingOptions(): { label: string; value: string }[] {
+	return [
+		{ label: __( 'Heading 2', 'profotograaf' ), value: '2' },
+		{ label: __( 'Heading 3', 'profotograaf' ), value: '3' },
+		{ label: __( 'Heading 4', 'profotograaf' ), value: '4' },
+		{ label: __( 'Heading 5', 'profotograaf' ), value: '5' },
+		{ label: __( 'Heading 6', 'profotograaf' ), value: '6' },
+		{ label: __( 'Paragraph', 'profotograaf' ), value: '0' },
+	];
+}
+
 function PortalPanel( { attributes, setAttributes }: EditProps ) {
-	const { portal, openInNewTab } = attributes;
+	const { portal, portalPath, openInNewTab } = attributes;
 	return (
 		<PanelBody title={ __( 'Client portal', 'profotograaf' ) }>
 			<TextControl
@@ -32,6 +45,18 @@ function PortalPanel( { attributes, setAttributes }: EditProps ) {
 				) }
 				value={ portal }
 				onChange={ ( value ) => setAttributes( { portal: value } ) }
+			/>
+			<TextControl
+				__nextHasNoMarginBottom
+				__next40pxDefaultSize
+				label={ __( 'Portal path', 'profotograaf' ) }
+				help={ __(
+					'Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it.',
+					'profotograaf'
+				) }
+				value={ portalPath }
+				placeholder="/client"
+				onChange={ ( value ) => setAttributes( { portalPath: value } ) }
 			/>
 			<ToggleControl
 				__nextHasNoMarginBottom
@@ -46,7 +71,7 @@ function PortalPanel( { attributes, setAttributes }: EditProps ) {
 }
 
 function TextPanel( { attributes, setAttributes }: EditProps ) {
-	const { heading, description, buttonLabel } = attributes;
+	const { heading, headingLevel, description, buttonLabel } = attributes;
 	return (
 		<PanelBody title={ __( 'Text', 'profotograaf' ) } initialOpen={ false }>
 			<TextControl
@@ -56,6 +81,16 @@ function TextPanel( { attributes, setAttributes }: EditProps ) {
 				value={ heading }
 				placeholder={ __( 'Find your gallery', 'profotograaf' ) }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
+			/>
+			<SelectControl
+				__nextHasNoMarginBottom
+				__next40pxDefaultSize
+				label={ __( 'Heading level', 'profotograaf' ) }
+				value={ String( headingLevel ) }
+				options={ headingOptions() }
+				onChange={ ( value ) =>
+					setAttributes( { headingLevel: Number( value ) } )
+				}
 			/>
 			<TextareaControl
 				__nextHasNoMarginBottom
@@ -103,15 +138,19 @@ function Edit( { attributes, setAttributes }: EditProps ) {
 				setAttributes={ setAttributes }
 			/>
 			<div { ...blockProps }>
-				<h3 className="wp-block-profotograaf-client-galleries__heading">
-					{ copy.heading }
-				</h3>
+				{ createElement(
+					headingTag( attributes.headingLevel ),
+					{ className: 'wp-block-profotograaf-client-galleries__heading' },
+					copy.heading
+				) }
 				<p className="wp-block-profotograaf-client-galleries__text">
 					{ copy.description }
 				</p>
-				<span className="wp-block-profotograaf-client-galleries__button">
-					{ copy.buttonLabel }
-				</span>
+				<div className="wp-block-button">
+					<span className="wp-block-profotograaf-client-galleries__button wp-block-button__link wp-element-button">
+						{ copy.buttonLabel }
+					</span>
+				</div>
 				{ copy.showNotice && (
 					<p className="wp-block-profotograaf-client-galleries__notice">
 						{ __(

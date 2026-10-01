@@ -26,7 +26,9 @@ async function registeredEdit() {
 
 const blank: ClientGalleriesAttributes = {
 	portal: '',
+	portalPath: '',
 	heading: '',
+	headingLevel: 3,
 	description: '',
 	buttonLabel: '',
 	openInNewTab: false,
@@ -47,6 +49,17 @@ describe( 'client galleries block', () => {
 		expect( screen.getByText( /Only editors see this note/ ) ).toBeTruthy();
 	} );
 
+	it( 'previews the heading at the chosen level or as a paragraph', async () => {
+		const { settings } = await registeredEdit();
+		const Edit = settings.edit;
+		const { container, rerender } = render( <Edit attributes={ { ...blank, headingLevel: 2 } } setAttributes={ vi.fn() } /> );
+		expect( screen.getByRole( 'heading', { level: 2 } ).textContent ).toBe( 'Find your gallery' );
+
+		rerender( <Edit attributes={ { ...blank, headingLevel: 0 } } setAttributes={ vi.fn() } /> );
+		expect( screen.queryByRole( 'heading' ) ).toBeNull();
+		expect( container.querySelector( 'p.wp-block-profotograaf-client-galleries__heading' ) ).toBeTruthy();
+	} );
+
 	it( 'hides the note once a portal is set', async () => {
 		const { settings } = await registeredEdit();
 		const Edit = settings.edit;
@@ -61,14 +74,18 @@ describe( 'client galleries block', () => {
 		render( <Edit attributes={ blank } setAttributes={ setAttributes } /> );
 
 		fireEvent.change( screen.getByLabelText( 'Portal address' ), { target: { value: 'studio' } } );
+		fireEvent.change( screen.getByLabelText( 'Portal path' ), { target: { value: '/portal' } } );
 		fireEvent.click( screen.getByLabelText( 'Open in a new tab' ) );
+		fireEvent.change( screen.getByLabelText( 'Heading level' ), { target: { value: '2' } } );
 		fireEvent.change( screen.getByLabelText( 'Heading' ), { target: { value: 'Hello' } } );
 		fireEvent.change( screen.getByRole( 'textbox', { name: 'Text' } ), { target: { value: 'Body' } } );
 		fireEvent.change( screen.getByLabelText( 'Button label' ), { target: { value: 'Go' } } );
 
 		expect( setAttributes.mock.calls.map( ( c ) => c[ 0 ] ) ).toEqual( [
 			{ portal: 'studio' },
+			{ portalPath: '/portal' },
 			{ openInNewTab: true },
+			{ headingLevel: 2 },
 			{ heading: 'Hello' },
 			{ description: 'Body' },
 			{ buttonLabel: 'Go' },
