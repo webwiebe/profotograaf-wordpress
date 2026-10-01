@@ -22,6 +22,23 @@ function profotograaf_uninstall_site(): void {
 		return;
 	}
 
+	// Enquiries that never reached Profotograaf are deleted with the rest. Tell the admin first, without personal data.
+	$failed = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value LIKE %s", $wpdb->esc_like( 'profotograaf_lead_job_' ) . '%', '%' . $wpdb->esc_like( '"status":"failed"' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off check on uninstall.
+	if ( $failed > 0 ) {
+		$to = is_array( $settings ) && ! empty( $settings['leads_alert_email'] ) ? (string) $settings['leads_alert_email'] : (string) get_option( 'admin_email', '' );
+		if ( '' !== $to ) {
+			wp_mail(
+				$to,
+				'[' . wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES ) . '] ' . __( 'Undeliverable enquiries were deleted', 'profotograaf' ),
+				sprintf(
+					/* translators: %d: number of enquiries. */
+					_n( '%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin.', '%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin.', $failed, 'profotograaf' ),
+					$failed
+				)
+			);
+		}
+	}
+
 	$like  = $wpdb->esc_like( 'profotograaf_' ) . '%';
 	$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
 	foreach ( (array) $names as $name ) {

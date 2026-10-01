@@ -95,6 +95,7 @@ final class Delivery {
 		}
 
 		try {
+			$this->queue->alert_pending();
 			$this->queue->prune();
 			foreach ( $this->queue->due( self::BATCH ) as $job ) {
 				++$result[ $this->deliver( $job ) ];

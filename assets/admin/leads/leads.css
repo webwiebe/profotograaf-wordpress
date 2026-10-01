@@ -30,3 +30,9 @@
 	list-style: disc;
 	margin-left: 20px;
 }
+
+.profotograaf-leads-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}

@@ -173,4 +173,54 @@ class Delivery_Test extends Leads_Test_Case {
 
 		$this->delivery->run();
 	}
+
+	public function test_a_rejected_lead_alerts_the_admin_once_without_personal_data(): void {
+		$this->http->reply( 400, array( 'error' => 'invalid email' ) );
+
+		$this->delivery->run();
+		$this->now += 100000;
+		$this->delivery->run();
+
+		$this->assertCount( 1, $this->mails );
+		$this->assertStringContainsString( 'Contact Form 7: Wedding', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'anna@example.com', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'Hello', $this->mails[0][2] );
+	}
+
+	public function test_a_lead_that_runs_out_of_attempts_alerts_the_admin(): void {
+		$this->store->jobs['a']['attempts'] = Queue::MAX_ATTEMPTS - 1;
+		$this->http->reply( 503 );
+
+		$this->delivery->run();
+
+		$this->assertCount( 1, $this->mails );
+	}
+
+	public function test_a_lead_stays_past_the_retention_until_an_alert_went_out(): void {
+		$this->mail_works = false;
+		$this->http->reply( 400, array( 'error' => 'invalid email' ) );
+		$this->delivery->run();
+		$this->assertArrayNotHasKey( 'alerted_at', $this->store->jobs['a'] );
+
+		$this->now += 100 * 86400;
+		$this->delivery->run();
+		$this->assertCount( 1, $this->store->jobs, 'The lead stays while no alert went out.' );
+
+		$this->mail_works = true;
+		$this->delivery->run();
+		$this->assertSame( array(), $this->store->jobs, 'Removed once the alert and the expiry warning went out.' );
+		$this->assertStringContainsString( 'removed', end( $this->mails )[1] );
+	}
+
+	public function test_a_run_removes_expired_failed_leads_after_warning_the_admin(): void {
+		$this->http->reply( 400, array( 'error' => 'invalid email' ) );
+		$this->delivery->run();
+		$this->mails = array();
+
+		$this->now += 30 * 86400;
+		$this->delivery->run();
+
+		$this->assertSame( array(), $this->store->jobs );
+		$this->assertCount( 1, $this->mails );
+	}
 }
