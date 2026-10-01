@@ -183,12 +183,12 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 
 	public function test_frame_ancestors_matching(): void {
 		$origin = 'https://photos.example.com';
-		$this->assertTrue( \Profotograaf\Api_Client::frame_ancestors_allow( 'frame-ancestors *', $origin ) );
-		$this->assertTrue( \Profotograaf\Api_Client::frame_ancestors_allow( 'frame-ancestors https:', $origin ) );
-		$this->assertTrue( \Profotograaf\Api_Client::frame_ancestors_allow( 'FRAME-ANCESTORS HTTPS://PHOTOS.EXAMPLE.COM', $origin ) );
-		$this->assertFalse( \Profotograaf\Api_Client::frame_ancestors_allow( "frame-ancestors 'none'", $origin ) );
-		$this->assertFalse( \Profotograaf\Api_Client::frame_ancestors_allow( "default-src 'self'", $origin ) );
-		$this->assertFalse( \Profotograaf\Api_Client::frame_ancestors_allow( '', $origin ) );
-		$this->assertFalse( \Profotograaf\Api_Client::frame_ancestors_allow( "frame-ancestors {$origin}, frame-ancestors 'self'", $origin ) );
+		$this->assertTrue( \Profotograaf\Frame_Ancestors::allow( 'frame-ancestors *', $origin ) );
+		$this->assertTrue( \Profotograaf\Frame_Ancestors::allow( 'frame-ancestors https:', $origin ) );
+		$this->assertTrue( \Profotograaf\Frame_Ancestors::allow( 'FRAME-ANCESTORS HTTPS://PHOTOS.EXAMPLE.COM', $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "frame-ancestors 'none'", $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "default-src 'self'", $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( '', $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "frame-ancestors {$origin}, frame-ancestors 'self'", $origin ) );
 	}
 }

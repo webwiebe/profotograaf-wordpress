@@ -93,7 +93,7 @@ class Origin_Sync implements Module {
 			if ( is_string( $path ) && '' !== $path && null !== $this->plugin ) {
 				$state = $this->write_origin( $path, $origin );
 			} elseif ( null !== $this->plugin ) {
-				$state = $this->verify_origin( $origin );
+				$state = $this->verify_origin( $origin, $this->plugin );
 			}
 		}
 
@@ -112,16 +112,17 @@ class Origin_Sync implements Module {
 	 * photographer's public pages, without any credentials.
 	 *
 	 * @param string $origin Origin to look for.
+	 * @param Plugin $plugin Service container.
 	 * @return array{state:string,origin:string,message:string}
 	 */
-	private function verify_origin( string $origin ): array {
+	private function verify_origin( string $origin, Plugin $plugin ): array {
 		$state = array(
 			'state'   => 'manual',
 			'origin'  => $origin,
 			'message' => '',
 		);
 
-		$galleries = $this->plugin->api()->list_galleries();
+		$galleries = $plugin->api()->list_galleries();
 		if ( is_wp_error( $galleries ) ) {
 			$state['message'] = $galleries->get_error_message();
 			return $state;
@@ -139,7 +140,7 @@ class Origin_Sync implements Module {
 			return $state;
 		}
 
-		$allowed = $this->plugin->api()->framing_allows( $url, $origin );
+		$allowed = $plugin->api()->framing_allows( $url, $origin );
 		if ( is_wp_error( $allowed ) ) {
 			$state['message'] = $allowed->get_error_message();
 		} elseif ( $allowed ) {
