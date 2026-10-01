@@ -9,6 +9,7 @@ namespace Profotograaf\Modules;
 
 use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Admin\Settings_Fields;
+use Profotograaf\Cron_Health;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
 use Profotograaf\Settings_Schema;
@@ -49,6 +50,7 @@ class Settings_Page implements Module {
 		add_action( 'admin_init', array( $this, 'migrate_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'admin_notices', array( $this, 'reconnect_notice' ) );
+		add_action( 'admin_notices', array( $this, 'cron_notice' ) );
 		add_action( 'admin_post_profotograaf_connect', array( $this, 'handle_connect' ) );
 		add_action( 'admin_post_profotograaf_cancel', array( $this, 'handle_cancel' ) );
 		add_action( 'admin_post_profotograaf_disconnect', array( $this, 'handle_disconnect' ) );
@@ -125,6 +127,34 @@ class Settings_Page implements Module {
 				'nonce'   => wp_create_nonce( 'profotograaf_poll' ),
 			)
 		);
+	}
+
+	/**
+	 * Warns on the settings page when WP-Cron does not run and leads wait.
+	 */
+	public function cron_notice(): void {
+		if ( ! current_user_can( self::CAPABILITY ) ) {
+			return;
+		}
+		if ( 'settings_page_' . self::SLUG !== $this->screen_id() ) {
+			return;
+		}
+		$this->cron_health()->render_notice();
+	}
+
+	/**
+	 * Id of the admin screen being shown, empty when there is none.
+	 */
+	protected function screen_id(): string {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		return $screen ? (string) $screen->id : '';
+	}
+
+	/**
+	 * Cron health of this site.
+	 */
+	protected function cron_health(): Cron_Health {
+		return Cron_Health::for_site();
 	}
 
 	/**
