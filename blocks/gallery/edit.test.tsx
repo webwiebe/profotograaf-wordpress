@@ -187,4 +187,23 @@ describe( 'Edit after picking in this session', () => {
 		expect( screen.getByText( /3 photos,/ ) ).toBeTruthy();
 		expect( view.container.querySelector( 'img.profotograaf-gallery-preview__thumb' ) ).toBeTruthy();
 	} );
+
+	it( 'gives the cover the alt text from the platform', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow( { cover_alt: 'The couple at the altar' } ) ] );
+
+		let attrs: GalleryAttributes = empty;
+		const setAttributes = ( next: Partial< GalleryAttributes > ) => {
+			attrs = { ...attrs, ...next };
+			view.rerender( <Edit attributes={ attrs } setAttributes={ setAttributes } /> );
+		};
+		const view = render( <Edit attributes={ attrs } setAttributes={ setAttributes } /> );
+
+		fireEvent.click( await screen.findByText( 'Spring wedding' ) );
+
+		await waitFor( () =>
+			expect(
+				view.container.querySelector( 'img.profotograaf-gallery-preview__thumb' )?.getAttribute( 'alt' )
+			).toBe( 'The couple at the altar' )
+		);
+	} );
 } );

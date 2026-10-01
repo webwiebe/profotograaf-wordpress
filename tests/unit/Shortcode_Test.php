@@ -33,7 +33,7 @@ class Shortcode_Test extends Gallery_Test_Case {
 			'url'    => 'https://profotograaf.nl/share/g/spring-wedding',
 		);
 
-		$this->assertSame( $this->renderer->render( $atts ), $shortcode->render( $atts ) );
+		$this->assertSame( $shortcode->render( $atts ), self::HINT . $this->renderer->render( $atts ) );
 		$this->assertStringContainsString( 'data-layout="slideshow"', $shortcode->render( $atts ) );
 	}
 

@@ -39,12 +39,45 @@ class Embed_Script {
 	private bool $printed = false;
 
 	/**
+	 * Whether the connection hint was handed out on this page.
+	 *
+	 * @var bool
+	 */
+	private bool $hinted = false;
+
+	/**
 	 * URL of the script: versioned when the version is known.
 	 */
 	public function url(): string {
 		$version = $this->version();
 		$file    = '' === $version ? 'embed.js' : 'embed.' . $version . '.js';
 		return Config::platform_endpoint( '/share/embed/' . $file );
+	}
+
+	/**
+	 * Link tags that open the connection to the platform early, once per page.
+	 *
+	 * Galleries are rendered after wp_head, so the hint goes next to the first
+	 * gallery. `preconnect` is allowed in the body. The second tag with
+	 * crossorigin covers the data requests embed.js makes with fetch, which
+	 * use a separate connection.
+	 *
+	 * @return string HTML, or an empty string after the first call.
+	 */
+	public function preconnect(): string {
+		if ( $this->hinted ) {
+			return '';
+		}
+		$url    = Config::platform_url();
+		$scheme = (string) wp_parse_url( $url, PHP_URL_SCHEME );
+		$host   = (string) wp_parse_url( $url, PHP_URL_HOST );
+		$port   = wp_parse_url( $url, PHP_URL_PORT );
+		if ( '' === $scheme || '' === $host ) {
+			return '';
+		}
+		$this->hinted = true;
+		$origin       = esc_url( $scheme . '://' . $host . ( $port ? ':' . $port : '' ) );
+		return sprintf( '<link rel="preconnect" href="%1$s"><link rel="preconnect" href="%1$s" crossorigin>', $origin );
 	}
 
 	/**
