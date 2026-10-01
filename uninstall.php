@@ -65,7 +65,13 @@ function profotograaf_uninstall_site(): void {
 }
 
 if ( is_multisite() ) {
-	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $profotograaf_site_id ) {
+	// number 0 lifts the default limit of 100 sites, so large networks are cleaned completely.
+	foreach ( get_sites(
+		array(
+			'fields' => 'ids',
+			'number' => 0,
+		)
+	) as $profotograaf_site_id ) {
 		switch_to_blog( (int) $profotograaf_site_id );
 		profotograaf_uninstall_site();
 		restore_current_blog();

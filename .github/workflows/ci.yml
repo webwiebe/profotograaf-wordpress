@@ -180,3 +180,28 @@ jobs:
             test-results
       - if: always()
         run: docker compose -f tests/e2e/docker-compose.yml down -v
+
+  e2e-multisite:
+    name: E2E multisite (WordPress 7.1)
+    runs-on: ubuntu-latest
+    env:
+      WP_VERSION: '7.1'
+      PROFOTOGRAAF_MULTISITE: '1'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - run: tests/e2e/up.sh
+      # Converts the site to a network, creates two subsites and network-activates the plugin.
+      - run: tests/e2e/multisite.sh
+      - run: pnpm exec playwright test tests/e2e/multisite.spec.js
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: e2e-multisite
+          path: |
+            playwright-report
+            test-results
+      - if: always()
+        run: docker compose -f tests/e2e/docker-compose.yml down -v

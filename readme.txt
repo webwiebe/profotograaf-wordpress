@@ -96,6 +96,10 @@ No. You approve the connection on profotograaf.nl. The plugin stores an access t
 
 Click Disconnect on the settings page. To also remove this site from your account, open Connected apps in your Profotograaf account settings.
 
+= Does it work on a WordPress multisite network? =
+
+Yes. Every site in the network connects to Profotograaf on its own, because each site pairs with its own account and keeps its own settings. Network activation leaves each site disconnected. Network Admin, Settings, Profotograaf lists every site with its connection state and its failed enquiries, and links to each site's settings page.
+
 == Screenshots ==
 
 1. Connect your site to Profotograaf from Settings > Profotograaf.
