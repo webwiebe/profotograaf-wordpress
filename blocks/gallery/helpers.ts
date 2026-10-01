@@ -32,17 +32,91 @@ export function layoutLabel( layout: GalleryAttributes[ 'layout' ] ): string {
 	);
 }
 
-export function errorMessage( error: RestError | null | undefined ): string {
-	if ( error?.code === 'profotograaf_not_connected' ) {
+export type ErrorKind =
+	| 'not-connected'
+	| 'reconnect'
+	| 'rate-limited'
+	| 'network'
+	| 'platform';
+
+// Codes the browser side of @wordpress/api-fetch rejects with when no usable
+// answer came back from the site.
+const TRANSPORT_CODES = [ 'fetch_error', 'invalid_json' ];
+
+/** Which of the five editor failures a REST rejection is. */
+export function errorKind( error: RestError | null | undefined ): ErrorKind {
+	const code = error?.code ?? '';
+	const status = error?.data?.status ?? 0;
+	if ( code === 'profotograaf_not_connected' ) {
+		return 'not-connected';
+	}
+	if ( code === 'profotograaf_reconnect' ) {
+		return 'reconnect';
+	}
+	if ( status === 429 ) {
+		return 'rate-limited';
+	}
+	if (
+		code === 'profotograaf_network' ||
+		TRANSPORT_CODES.includes( code ) ||
+		status === 504
+	) {
+		return 'network';
+	}
+	return 'platform';
+}
+
+/** Whether trying the same request again can help. */
+export function canRetry( error: RestError | null | undefined ): boolean {
+	const kind = errorKind( error );
+	return kind !== 'not-connected' && kind !== 'reconnect';
+}
+
+function rateLimitedMessage( seconds: number ): string {
+	if ( seconds <= 0 ) {
 		return __(
-			'Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery.',
+			'Profotograaf is receiving too many requests. Try again in a moment.',
 			'profotograaf'
 		);
 	}
-	return (
-		error?.message ||
-		__( 'The galleries could not be loaded.', 'profotograaf' )
+	return sprintf(
+		/* translators: %d: number of seconds to wait. */
+		_n(
+			'Profotograaf is receiving too many requests. Try again in %d second.',
+			'Profotograaf is receiving too many requests. Try again in %d seconds.',
+			seconds,
+			'profotograaf'
+		),
+		seconds
 	);
+}
+
+/** The translated message for a REST rejection. The server text is never shown. */
+export function errorMessage( error: RestError | null | undefined ): string {
+	switch ( errorKind( error ) ) {
+		case 'not-connected':
+			return __(
+				'Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery.',
+				'profotograaf'
+			);
+		case 'reconnect':
+			return __(
+				'Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission.',
+				'profotograaf'
+			);
+		case 'rate-limited':
+			return rateLimitedMessage( error?.data?.retry_after ?? 0 );
+		case 'network':
+			return __(
+				'Profotograaf could not be reached. Check your connection and try again.',
+				'profotograaf'
+			);
+		default:
+			return __(
+				'Profotograaf reported a problem. Try again later.',
+				'profotograaf'
+			);
+	}
 }
 
 export function notEligible(): string {

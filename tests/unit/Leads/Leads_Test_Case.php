@@ -10,7 +10,9 @@ namespace Profotograaf\Tests\Leads;
 use Brain\Monkey\Functions;
 use Profotograaf\Leads\Dispatcher;
 use Profotograaf\Leads\Form_Settings;
+use Profotograaf\Leads\Lead_Alerts;
 use Profotograaf\Leads\Queue;
+use Profotograaf\Settings;
 use Profotograaf\Tests\Wp_Test_Case;
 
 /**
@@ -32,15 +34,39 @@ abstract class Leads_Test_Case extends Wp_Test_Case {
 	 */
 	protected array $scheduled = array();
 
+	/**
+	 * Mails sent with wp_mail: [ to, subject, body ].
+	 *
+	 * @var array<int,array{0:string,1:string,2:string}>
+	 */
+	protected array $mails = array();
+
+	/**
+	 * Whether wp_mail succeeds.
+	 *
+	 * @var bool
+	 */
+	protected bool $mail_works = true;
+
 	private int $uuid = 0;
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->store      = new Memory_Job_Store();
-		$this->queue      = new Queue( $this->store, fn() => $this->now );
-		$this->dispatcher = new Dispatcher( new Form_Settings(), $this->queue );
+		$this->store                  = new Memory_Job_Store();
+		$this->options['admin_email'] = 'admin@example.com';
+		$this->queue                  = new Queue( $this->store, fn() => $this->now, new Lead_Alerts( new Settings() ) );
+		$this->dispatcher             = new Dispatcher( new Form_Settings(), $this->queue );
 
 		Functions\when( 'is_email' )->alias( fn( $email ) => false !== filter_var( $email, FILTER_VALIDATE_EMAIL ) ? $email : false );
+		Functions\when( 'sanitize_text_field' )->alias( fn( $value ) => trim( strip_tags( (string) $value ) ) );
+		Functions\when( 'wp_specialchars_decode' )->returnArg();
+		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://photos.example.com/wp-admin/' . $path );
+		Functions\when( 'wp_mail' )->alias(
+			function ( $to, $subject, $body ) {
+				$this->mails[] = array( $to, $subject, $body );
+				return $this->mail_works;
+			}
+		);
 		Functions\when( 'wp_generate_uuid4' )->alias( fn() => 'uuid-' . ( ++$this->uuid ) );
 		Functions\when( 'wp_next_scheduled' )->justReturn( false );
 		Functions\when( 'wp_schedule_single_event' )->alias(

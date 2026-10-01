@@ -16,6 +16,7 @@ use Profotograaf\Leads\Delivery;
 use Profotograaf\Leads\Dispatcher;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Gravity_Forms;
+use Profotograaf\Leads\Lead_Alerts;
 use Profotograaf\Leads\Option_Job_Store;
 use Profotograaf\Leads\Queue;
 use Profotograaf\Leads\Wpforms;
@@ -43,7 +44,7 @@ class Leads implements Module {
 	 */
 	public function register( Plugin $plugin ): void {
 
-		$queue      = new Queue( new Option_Job_Store() );
+		$queue      = new Queue( new Option_Job_Store(), null, new Lead_Alerts( $plugin->settings() ) );
 		$settings   = new Form_Settings();
 		$dispatcher = new Dispatcher( $settings, $queue );
 

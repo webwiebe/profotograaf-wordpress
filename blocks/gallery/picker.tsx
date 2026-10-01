@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Button, Notice, Spinner } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { LIST_PATH, countLabel, errorMessage } from './helpers';
+import { LIST_PATH, canRetry, countLabel, errorMessage } from './helpers';
 import type { GalleryRow, RestError } from './types';
 
 function PickerRow( {
@@ -40,32 +40,54 @@ function PickerRow( {
 	);
 }
 
+function PickerError( {
+	error,
+	onRetry,
+}: {
+	error: RestError;
+	onRetry: () => void;
+} ) {
+	return (
+		<>
+			<Notice status="warning" isDismissible={ false }>
+				{ errorMessage( error ) }
+			</Notice>
+			{ canRetry( error ) && (
+				<Button variant="secondary" onClick={ onRetry }>
+					{ __( 'Try again', 'profotograaf' ) }
+				</Button>
+			) }
+		</>
+	);
+}
+
 export function Picker( {
 	onPick,
 }: {
 	onPick: ( gallery: GalleryRow ) => void;
 } ) {
 	const [ galleries, setGalleries ] = useState< GalleryRow[] | null >( null );
-	const [ error, setError ] = useState( '' );
+	const [ error, setError ] = useState< RestError | null >( null );
+	const [ attempt, setAttempt ] = useState( 0 );
 
 	useEffect( () => {
 		let active = true;
 		apiFetch< GalleryRow[] >( { path: LIST_PATH } )
 			.then( ( rows ) => active && setGalleries( rows ) )
-			.catch(
-				( e: RestError ) => active && setError( errorMessage( e ) )
-			);
+			.catch( ( e: RestError ) => active && setError( e ) );
 		return () => {
 			active = false;
 		};
-	}, [] );
+	}, [ attempt ] );
+
+	const retry = () => {
+		setError( null );
+		setGalleries( null );
+		setAttempt( ( n ) => n + 1 );
+	};
 
 	if ( error ) {
-		return (
-			<Notice status="warning" isDismissible={ false }>
-				{ error }
-			</Notice>
-		);
+		return <PickerError error={ error } onRetry={ retry } />;
 	}
 	if ( galleries === null ) {
 		return <Spinner />;

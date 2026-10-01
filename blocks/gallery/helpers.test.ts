@@ -4,6 +4,8 @@ import {
 	countLabel,
 	eligibility,
 	embeddablePath,
+	canRetry,
+	errorKind,
 	errorMessage,
 	layoutLabel,
 	layoutOptions,
@@ -48,13 +50,40 @@ describe( 'errorMessage', () => {
 		);
 	} );
 
-	it( 'passes a server message through', () => {
-		expect( errorMessage( { message: 'Rate limited' } ) ).toBe( 'Rate limited' );
+	it( 'asks for a reconnect when the token lacks a permission', () => {
+		expect( errorMessage( { code: 'profotograaf_reconnect' } ) ).toMatch(
+			/Connect this site to Profotograaf again/
+		);
+	} );
+
+	it( 'names the wait for a rate limit', () => {
+		const limited = { code: 'profotograaf_http', data: { status: 429, retry_after: 42 } };
+		expect( errorMessage( limited ) ).toBe(
+			'Profotograaf is receiving too many requests. Try again in 42 seconds.'
+		);
+		expect( errorMessage( { ...limited, data: { status: 429, retry_after: 1 } } ) ).toMatch(
+			/in 1 second\./
+		);
+		expect( errorMessage( { data: { status: 429 } } ) ).toMatch( /in a moment/ );
+	} );
+
+	it( 'explains a network failure', () => {
+		const text = /could not be reached/;
+		expect( errorMessage( { code: 'profotograaf_network' } ) ).toMatch( text );
+		expect( errorMessage( { code: 'fetch_error' } ) ).toMatch( text );
+		expect( errorMessage( { code: 'invalid_json' } ) ).toMatch( text );
+		expect( errorMessage( { data: { status: 504 } } ) ).toMatch( text );
+	} );
+
+	it( 'never shows the server text for a platform error', () => {
+		expect( errorMessage( { code: 'profotograaf_http', message: 'Raw platform text', data: { status: 502 } } ) ).toMatch(
+			/reported a problem/
+		);
 	} );
 
 	it( 'falls back to a generic message', () => {
-		expect( errorMessage( null ) ).toBe( 'The galleries could not be loaded.' );
-		expect( errorMessage( {} ) ).toBe( 'The galleries could not be loaded.' );
+		expect( errorMessage( null ) ).toMatch( /reported a problem/ );
+		expect( errorMessage( {} ) ).toMatch( /reported a problem/ );
 	} );
 } );
 
@@ -131,7 +160,26 @@ describe( 'pickNotice', () => {
 	} );
 
 	it( 'turns a failed request into its message', async () => {
-		const post = vi.fn().mockRejectedValue( { message: 'Boom' } );
-		expect( await pickNotice( galleryRow( { embeddable: false } ), post ) ).toBe( 'Boom' );
+		const post = vi.fn().mockRejectedValue( { code: 'profotograaf_network' } );
+		expect( await pickNotice( galleryRow( { embeddable: false } ), post ) ).toMatch( /could not be reached/ );
+	} );
+} );
+
+describe( 'errorKind and canRetry', () => {
+	it( 'classifies each failure', () => {
+		expect( errorKind( { code: 'profotograaf_not_connected' } ) ).toBe( 'not-connected' );
+		expect( errorKind( { code: 'profotograaf_reconnect' } ) ).toBe( 'reconnect' );
+		expect( errorKind( { data: { status: 429 } } ) ).toBe( 'rate-limited' );
+		expect( errorKind( { code: 'profotograaf_network' } ) ).toBe( 'network' );
+		expect( errorKind( { data: { status: 502 } } ) ).toBe( 'platform' );
+		expect( errorKind( null ) ).toBe( 'platform' );
+	} );
+
+	it( 'offers a retry only where trying again can help', () => {
+		expect( canRetry( { code: 'profotograaf_not_connected' } ) ).toBe( false );
+		expect( canRetry( { code: 'profotograaf_reconnect' } ) ).toBe( false );
+		expect( canRetry( { data: { status: 429 } } ) ).toBe( true );
+		expect( canRetry( { code: 'fetch_error' } ) ).toBe( true );
+		expect( canRetry( { data: { status: 502 } } ) ).toBe( true );
 	} );
 } );
