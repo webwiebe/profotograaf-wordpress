@@ -52,6 +52,12 @@ describe( 'displaySummary', () => {
 			} )
 		).toEqual( [ 'Newest first', '1 photo per page', 'load more button', 'lightbox off' ] );
 	} );
+
+	it( 'names what photos link to', () => {
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, linkTo: 'page' } ) ).toEqual( [
+			'links to: the photo page on profotograaf',
+		] );
+	} );
 } );
 
 describe( 'displayControls', () => {

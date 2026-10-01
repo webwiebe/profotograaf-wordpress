@@ -41,7 +41,7 @@ describe.each( [ 'gallery', 'client-galleries' ] )( 'blocks/%s/block.json', ( bl
 
 	it( 'gives every attribute a default of its declared type', () => {
 		for ( const [ key, attribute ] of Object.entries( json.attributes ) ) {
-			expect( typeof attribute.default, key ).toBe( attribute.type );
+			expect( Array.isArray( attribute.default ) ? 'array' : typeof attribute.default, key ).toBe( attribute.type );
 		}
 	} );
 } );

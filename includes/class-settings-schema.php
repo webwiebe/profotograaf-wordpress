@@ -38,7 +38,7 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 3;
+	public const VERSION = 4;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
@@ -278,6 +278,26 @@ final class Settings_Schema {
 				'label'       => __( 'Lightbox', 'profotograaf' ),
 				'description' => __( 'Open a photo in a larger view when a visitor clicks it.', 'profotograaf' ) . ' ' . $note,
 				'choices'     => $on_off,
+			),
+			'gallery_duotone'        => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'text',
+				'default'     => '',
+				'label'       => __( 'Duotone colours', 'profotograaf' ),
+				'description' => __( 'Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours.', 'profotograaf' ),
+				'sanitize'    => array( Gallery_Renderer::class, 'clean_duotone' ),
+			),
+			'gallery_link_to'        => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Link photos to', 'profotograaf' ),
+				'description' => __( 'What a click on a photo does when the lightbox is off.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $platform + array(
+					'none' => __( 'Nothing', 'profotograaf' ),
+					'file' => __( 'The photo file', 'profotograaf' ),
+					'page' => __( 'The photo page on Profotograaf', 'profotograaf' ),
+				),
 			),
 		);
 	}
