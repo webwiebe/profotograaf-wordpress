@@ -2,6 +2,7 @@
 const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
+const AxeBuilder = require( '@axe-core/playwright' ).default;
 const { login, mock } = require( './helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
@@ -262,6 +263,39 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await anonymous.goto( url );
 		await expect( anonymous.locator( '.profotograaf-gallery-notice' ) ).toHaveCount( 0 );
 		await expect( anonymous.locator( 'div[data-profotograaf-gallery="g-removed"]' ).getByRole( 'link' ) ).toBeVisible();
+		await visitor.close();
+	} );
+
+	test( 'a gallery page announces the platform host early and holds space for the photos', async ( { browser } ) => {
+		const url = publishPost( 'Performance E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9"] [profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext( { javaScriptEnabled: false } );
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		await expect( page.locator( 'link[rel="preconnect"]:not([crossorigin])' ) ).toHaveCount( 1 );
+		await expect( page.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
+		const shaped = page.locator( 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]' );
+		await expect( shaped ).toHaveCSS( 'aspect-ratio', '16 / 9' );
+		const box = await shaped.boundingBox();
+		expect( box.height ).toBeGreaterThan( 100 );
+		await visitor.close();
+	} );
+
+	test( 'the gallery demo page has no axe violations', async ( { browser } ) => {
+		const url = publishPost(
+			'Accessibility E2E',
+			'[profotograaf_gallery id="g-e2e"] [profotograaf_gallery id="g-e2e" layout="masonry" ratio="4-3"] [profotograaf_gallery id="g-e2e" layout="slideshow"]'
+		);
+
+		const visitor = await browser.newContext();
+		const page = await visitor.newPage();
+		await page.goto( url );
+		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveCount( 3 );
+
+		// Scoped to the plugin markup: the active theme is outside this repository.
+		const results = await new AxeBuilder( { page } ).include( '[data-profotograaf-gallery]' ).analyze();
+		expect( results.violations, JSON.stringify( results.violations, null, 2 ) ).toEqual( [] );
 		await visitor.close();
 	} );
 

@@ -40,6 +40,18 @@ describe( 'Picker', () => {
 		);
 	} );
 
+	it( 'uses the alt text the platform sends for the cover and keeps it empty otherwise', async () => {
+		fetchMock.mockResolvedValue( [
+			galleryRow( { cover_alt: 'The couple at the altar' } ),
+			galleryRow( { id: 'g-2', title: 'Autumn' } ),
+		] );
+		const { container } = render( <Picker onPick={ vi.fn() } /> );
+		await screen.findAllByRole( 'button' );
+		const images = container.querySelectorAll( 'img' );
+		expect( images[ 0 ]?.getAttribute( 'alt' ) ).toBe( 'The couple at the altar' );
+		expect( images[ 1 ]?.getAttribute( 'alt' ) ).toBe( '' );
+	} );
+
 	it( 'renders a thumbnail only for galleries with a cover', async () => {
 		fetchMock.mockResolvedValue( [
 			galleryRow(),

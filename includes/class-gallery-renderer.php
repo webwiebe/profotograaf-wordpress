@@ -335,9 +335,11 @@ class Gallery_Renderer {
 			? $this->notice( __( 'This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery.', 'profotograaf' ) )
 			: '';
 
-		return $notice . sprintf(
+		$data = $this->data_attributes( $args, $shortcode );
+
+		return $notice . $this->script->preconnect() . sprintf(
 			'<div %1$s>%2$s<noscript>%3$s</noscript></div>',
-			$this->wrapper_attributes( $args, $classes, $id, $layout, $this->data_attributes( $args, $shortcode ) ),
+			$this->wrapper_attributes( $args, $classes, $id, $layout, $data ),
 			$this->fallback_link( $id, $args ),
 			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
 		);
@@ -406,7 +408,7 @@ class Gallery_Renderer {
 					'class'                     => 'profotograaf-gallery',
 					'data-profotograaf-gallery' => $id,
 					'data-layout'               => $layout,
-				) + $data + array( 'style' => 'min-height:8em' )
+				) + $data + array( 'style' => Reserved_Space::style( $data ) )
 			);
 		}
 		$html = sprintf(
@@ -418,7 +420,7 @@ class Gallery_Renderer {
 		foreach ( $data as $name => $value ) {
 			$html .= sprintf( ' %1$s="%2$s"', $name, esc_attr( $value ) );
 		}
-		return $html . ' style="min-height:8em"';
+		return $html . sprintf( ' style="%s"', esc_attr( Reserved_Space::style( $data ) ) );
 	}
 
 	/**

@@ -59,6 +59,7 @@ class Api_Client_Test extends Wp_Test_Case {
 					'available'   => false,
 					'photo_count' => 12,
 					'cover_url'   => 'https://cdn.example/cover.jpg',
+					'cover_alt'   => 'The couple at the altar',
 					'updated_at'  => '2026-09-01T10:00:00Z',
 				),
 				array( 'title' => 'row without an id is dropped' ),
@@ -72,6 +73,7 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertTrue( $rows[0]['embeddable'] );
 		$this->assertFalse( $rows[0]['available'] );
 		$this->assertSame( 12, $rows[0]['photo_count'] );
+		$this->assertSame( 'The couple at the altar', $rows[0]['cover_alt'] );
 
 		$request = $this->http->requests[0];
 		$this->assertSame( 'GET', $request['method'] );

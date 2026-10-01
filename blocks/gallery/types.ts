@@ -25,6 +25,8 @@ export interface GalleryRow {
 	title: string;
 	url: string;
 	cover_url?: string;
+	/** Alt text of the cover photo, when the platform sends one. */
+	cover_alt?: string;
 	photo_count: number;
 	embeddable: boolean;
 	available: boolean;

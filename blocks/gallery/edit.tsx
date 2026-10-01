@@ -47,7 +47,7 @@ function Preview( {
 				<img
 					className="profotograaf-gallery-preview__thumb"
 					src={ shown.cover_url }
-					alt=""
+					alt={ shown.cover_alt ?? '' }
 				/>
 			) }
 			<div>

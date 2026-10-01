@@ -161,40 +161,40 @@ msgstr "Wijzigingen opgeslagen."
 msgid "The enquiries are queued again."
 msgstr "De aanvragen staan weer in de wachtrij."
 
-#: includes/class-api-client.php:144
+#: includes/class-api-client.php:146
 #: includes/class-gallery-rest.php:145
 #: includes/class-gallery-rest.php:163
 #: includes/class-photo-list.php:49
 msgid "A gallery id is required."
 msgstr "Een galerij-id is verplicht."
 
-#: includes/class-api-client.php:161
+#: includes/class-api-client.php:163
 msgid "The request to switch embedding on is not valid."
 msgstr "Het verzoek om insluiten aan te zetten is niet geldig."
 
-#: includes/class-api-client.php:171
+#: includes/class-api-client.php:173
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Deze koppeling mag nog geen galerijen aanzetten. Koppel deze site opnieuw via Instellingen > Profotograaf om de nieuwe toestemming te geven."
 
-#: includes/class-api-client.php:210
+#: includes/class-api-client.php:212
 msgid "A lead needs a name and an email address."
 msgstr "Een aanvraag heeft een naam en een e-mailadres nodig."
 
-#: includes/class-api-client.php:348
+#: includes/class-api-client.php:350
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "De verbinding wordt vernieuwd. Probeer het zo opnieuw."
 
-#: includes/class-api-client.php:372
+#: includes/class-api-client.php:374
 msgid "The connection was ended in your Profotograaf account."
 msgstr "De verbinding is beëindigd in je Profotograaf-account."
 
-#: includes/class-api-client.php:441
+#: includes/class-api-client.php:443
 msgid "The request could not be encoded."
 msgstr "Het verzoek kon niet worden gecodeerd."
 
-#: includes/class-api-client.php:316
-#: includes/class-api-client.php:456
-#: includes/class-api-client.php:461
+#: includes/class-api-client.php:318
+#: includes/class-api-client.php:458
+#: includes/class-api-client.php:463
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf is niet bereikbaar."
 
@@ -522,11 +522,11 @@ msgctxt "block keyword"
 msgid "portfolio"
 msgstr "portfolio"
 
-#: includes/class-api-client.php:306
+#: includes/class-api-client.php:308
 msgid "That page is not on the Profotograaf platform."
 msgstr ""
 
-#: includes/class-api-client.php:323
+#: includes/class-api-client.php:325
 msgid "The public page could not be loaded."
 msgstr ""
 
@@ -778,7 +778,7 @@ msgstr ""
 msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
 msgstr ""
 
-#: includes/class-embed-script.php:130
+#: includes/class-embed-script.php:163
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
@@ -790,11 +790,11 @@ msgstr ""
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:342
+#: includes/class-gallery-renderer.php:344
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:481
+#: includes/class-gallery-renderer.php:483
 msgid "View this gallery on Profotograaf"
 msgstr ""
 

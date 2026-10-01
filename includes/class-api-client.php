@@ -95,8 +95,9 @@ class Api_Client {
 	 * Needs the galleries:read scope. `available` says whether the public
 	 * embed route serves the gallery right now; `embeddable` is the setting.
 	 * `cover_url` is a presigned thumbnail that expires after a few minutes.
+	 * `cover_alt` is the alt text of that photo when the platform sends one.
 	 *
-	 * @return array<int,array{id:string,slug:string,title:string,url:string,embeddable:bool,available:bool,photo_count:int,cover_url:string,updated_at:string}>|WP_Error
+	 * @return array<int,array{id:string,slug:string,title:string,url:string,embeddable:bool,available:bool,photo_count:int,cover_url:string,cover_alt:string,updated_at:string}>|WP_Error
 	 */
 	public function list_galleries() {
 		$body = $this->request( 'GET', '/api/v1/embed/galleries' );
@@ -117,6 +118,7 @@ class Api_Client {
 				'available'   => ! empty( $row['available'] ),
 				'photo_count' => (int) ( $row['photo_count'] ?? 0 ),
 				'cover_url'   => (string) ( $row['cover_url'] ?? '' ),
+				'cover_alt'   => (string) ( $row['cover_alt'] ?? '' ),
 				'updated_at'  => (string) ( $row['updated_at'] ?? '' ),
 			);
 		}

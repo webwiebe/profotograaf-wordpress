@@ -22,7 +22,7 @@ function PickerRow( {
 					<img
 						className="profotograaf-gallery-picker__thumb"
 						src={ gallery.cover_url }
-						alt=""
+						alt={ gallery.cover_alt ?? '' }
 					/>
 				) : (
 					<span className="profotograaf-gallery-picker__thumb" />
