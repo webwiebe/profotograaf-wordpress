@@ -4,7 +4,9 @@ import { __ } from '@wordpress/i18n';
 // index signature.
 export type ClientGalleriesAttributes = {
 	portal: string;
+	portalPath: string;
 	heading: string;
+	headingLevel: number;
 	description: string;
 	buttonLabel: string;
 	openInNewTab: boolean;
@@ -37,4 +39,22 @@ export function previewCopy(
 		buttonLabel: buttonLabel || __( 'Open my gallery', 'profotograaf' ),
 		showNotice: ! portal,
 	};
+}
+
+/** The element a heading level renders as: h2 to h6, or `p` for 0. */
+export function headingTag( level: number ): 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' {
+	switch ( level ) {
+		case 0:
+			return 'p';
+		case 2:
+			return 'h2';
+		case 4:
+			return 'h4';
+		case 5:
+			return 'h5';
+		case 6:
+			return 'h6';
+		default:
+			return 'h3';
+	}
 }
