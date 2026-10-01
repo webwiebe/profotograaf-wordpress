@@ -37,6 +37,43 @@ final class Api_Errors {
 	}
 
 	/**
+	 * Platform error codes that have a local message.
+	 *
+	 * @return array<int,string>
+	 */
+	public static function known_codes(): array {
+		return array(
+			'device.expired',
+			'device.slow_down',
+			'device.unknown_code',
+			'device.unknown_client',
+			'lead.invalid',
+		);
+	}
+
+	/**
+	 * Translated message for a platform error code, empty for an unknown code.
+	 *
+	 * @param string $code Platform error code.
+	 */
+	public static function message_for( string $code ): string {
+		switch ( $code ) {
+			case 'device.expired':
+				return __( 'The connection to Profotograaf has expired. Connect this site again.', 'profotograaf' );
+			case 'device.slow_down':
+				return __( 'Profotograaf asked for fewer connection checks. Trying again shortly.', 'profotograaf' );
+			case 'device.unknown_code':
+				return __( 'Profotograaf does not know this connection code. Start the connection again.', 'profotograaf' );
+			case 'device.unknown_client':
+				return __( 'Profotograaf does not recognise this site. Start the connection again.', 'profotograaf' );
+			case 'lead.invalid':
+				return __( 'Profotograaf rejected the enquiry because it is incomplete or invalid.', 'profotograaf' );
+			default:
+				return '';
+		}
+	}
+
+	/**
 	 * Error for a site without a connection.
 	 */
 	public static function not_connected(): WP_Error {
@@ -51,15 +88,33 @@ final class Api_Errors {
 	public static function http( array $response ): WP_Error {
 		$status = $response['status'];
 		$body   = is_array( $response['body'] ) ? $response['body'] : array();
-		/* translators: %d: HTTP status code. */
-		$message = isset( $body['error'] ) && is_string( $body['error'] ) && '' !== $body['error'] ? $body['error'] : sprintf( __( 'Profotograaf answered with HTTP %d.', 'profotograaf' ), $status );
+		$code   = isset( $body['code'] ) && is_string( $body['code'] ) ? $body['code'] : '';
+		$raw    = isset( $body['error'] ) && is_string( $body['error'] ) ? $body['error'] : '';
+
+		$message = self::message_for( $code );
+		if ( '' === $message && '' !== $raw ) {
+			Logger::debug(
+				'The platform sent an error text without a known code.',
+				array(
+					'status' => $status,
+					'code'   => $code,
+					'reason' => $raw,
+				)
+			);
+			/* translators: %d: HTTP status code. */
+			$message = sprintf( __( 'The platform reported an error (HTTP %d). Try again later.', 'profotograaf' ), $status );
+		}
+		if ( '' === $message ) {
+			/* translators: %d: HTTP status code. */
+			$message = sprintf( __( 'Profotograaf answered with HTTP %d.', 'profotograaf' ), $status );
+		}
 
 		return new WP_Error(
 			'profotograaf_http',
 			$message,
 			array(
 				'status'      => $status,
-				'code'        => isset( $body['code'] ) && is_string( $body['code'] ) ? $body['code'] : '',
+				'code'        => $code,
 				'retryable'   => 408 === $status || 429 === $status || $status >= 500,
 				'retry_after' => $response['retry_after'],
 			)
