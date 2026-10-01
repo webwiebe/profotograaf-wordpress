@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import apiFetch from '@wordpress/api-fetch';
 import Edit from './edit';
+import { DISPLAY_DEFAULTS } from './display-options';
 import { galleryRow } from '../test-support/fixtures';
 import type { GalleryAttributes } from './types';
 
@@ -16,6 +17,7 @@ const empty: GalleryAttributes = {
 	galleryTitle: '',
 	galleryUrl: '',
 	layout: '',
+	...DISPLAY_DEFAULTS,
 };
 
 beforeEach( () => {
@@ -78,7 +80,52 @@ describe( 'Edit with a gallery', () => {
 		galleryTitle: 'Spring wedding',
 		galleryUrl: 'https://studio.example/share/g/spring-wedding',
 		layout: 'slideshow',
+		...DISPLAY_DEFAULTS,
 	};
+
+	it( 'stores each display option the author sets', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		const setAttributes = vi.fn();
+		render( <Edit attributes={ chosen } setAttributes={ setAttributes } /> );
+		fireEvent.change( screen.getByLabelText( 'Columns' ), { target: { value: '12' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { columns: '8' } );
+		fireEvent.change( screen.getByLabelText( 'Columns on phones' ), { target: { value: '2' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { columnsMobile: '2' } );
+		fireEvent.change( screen.getByLabelText( 'Captions' ), { target: { value: 'overlay' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { captions: 'overlay' } );
+		fireEvent.change( screen.getByLabelText( 'Lightbox' ), { target: { value: 'off' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { lightbox: 'off' } );
+	} );
+
+	it( 'previews columns, gap, shape and captions', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		const { container } = render(
+			<Edit
+				attributes={ {
+					...chosen,
+					columns: '4',
+					gap: '0',
+					ratio: '16-9',
+					captions: 'below',
+					perPage: '12',
+					lightbox: 'on',
+				} }
+				setAttributes={ vi.fn() }
+			/>
+		);
+		const grid = container.querySelector< HTMLElement >( '.profotograaf-gallery-grid' );
+		expect( grid?.style.getPropertyValue( '--profotograaf-columns' ) ).toBe( '4' );
+		expect( grid?.style.getPropertyValue( '--profotograaf-gap' ) ).toBe( '0px' );
+		expect( grid?.style.getPropertyValue( '--profotograaf-ratio' ) ).toBe( '16 / 9' );
+		expect( screen.getAllByText( 'Caption' ) ).toHaveLength( 6 );
+		expect( screen.getByText( '12 photos per page, lightbox on' ) ).toBeTruthy();
+	} );
+
+	it( 'shows no captions in the preview when they are hidden', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		render( <Edit attributes={ { ...chosen, captions: 'off' } } setAttributes={ vi.fn() } /> );
+		expect( screen.queryByText( 'Caption' ) ).toBeNull();
+	} );
 
 	it( 'shows the title and layout, and no picker', async () => {
 		fetchMock.mockResolvedValue( [ galleryRow() ] );

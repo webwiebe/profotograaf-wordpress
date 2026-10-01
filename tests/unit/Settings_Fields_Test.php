@@ -57,6 +57,34 @@ class Settings_Fields_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( 'type="text"', $this->render( 'general' ) );
 	}
 
+	public function test_the_galleries_tab_has_a_control_for_every_display_option(): void {
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns'  => 4,
+			'gallery_captions' => 'below',
+		);
+		$html                                   = $this->render( 'galleries' );
+
+		$this->assertMatchesRegularExpression( '/<input type="number"[^>]*id="profotograaf-gallery-columns"[^>]*value="4"[^>]*min="1" max="8"/', $html );
+		$this->assertMatchesRegularExpression( '/<input type="number"[^>]*id="profotograaf-gallery-gap"[^>]*value=""/', $html );
+		$this->assertMatchesRegularExpression( '/value="below" selected/', $html );
+		foreach ( array( 'columns_tablet', 'columns_mobile', 'ratio', 'sort', 'per_page', 'load_more', 'lightbox' ) as $key ) {
+			$this->assertStringContainsString( 'name="profotograaf_settings[gallery_' . $key . ']"', $html, $key );
+		}
+	}
+
+	public function test_saving_the_galleries_tab_with_empty_numbers_keeps_them_empty(): void {
+		$clean = ( new Settings() )->sanitize(
+			array(
+				'_tab'            => 'galleries',
+				'gallery_columns' => '',
+				'gallery_gap'     => '12',
+			)
+		);
+
+		$this->assertSame( '', $clean['gallery_columns'] );
+		$this->assertSame( 12, $clean['gallery_gap'] );
+	}
+
 	public function test_an_entry_with_a_link_shows_it_after_the_description(): void {
 		$html = $this->render( 'advanced' );
 

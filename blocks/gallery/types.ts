@@ -1,3 +1,5 @@
+import type { DisplayAttributes } from './display-options';
+
 /** A row of the /profotograaf/v1/galleries REST route. */
 export interface GalleryRow {
 	id: string;
@@ -16,7 +18,7 @@ export type GalleryAttributes = {
 	galleryTitle: string;
 	galleryUrl: string;
 	layout: '' | 'grid' | 'masonry' | 'slideshow';
-};
+} & DisplayAttributes;
 
 /** What the REST layer rejects with. */
 export interface RestError {

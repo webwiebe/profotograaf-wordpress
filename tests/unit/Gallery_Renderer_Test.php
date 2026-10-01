@@ -9,6 +9,7 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Gallery_Index;
+use Profotograaf\Gallery_Renderer;
 
 class Gallery_Renderer_Test extends Gallery_Test_Case {
 
@@ -356,5 +357,116 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			);
 			$this->assertStringContainsString( 'class="profotograaf-gallery wp-block-profotograaf-gallery ' . $align . '"', $html );
 		}
+	}
+
+	public function test_without_any_setting_no_display_attribute_is_sent(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringNotContainsString( 'data-columns', $html );
+		$this->assertStringNotContainsString( 'data-lightbox', $html );
+		$this->assertStringContainsString( 'data-layout="grid" style="min-height:8em"', $html );
+	}
+
+	public function test_the_site_default_reaches_embed_js_as_data_attributes(): void {
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns'        => 4,
+			'gallery_columns_tablet' => 3,
+			'gallery_columns_mobile' => 1,
+			'gallery_gap'            => 0,
+			'gallery_ratio'          => '4-3',
+			'gallery_captions'       => 'overlay',
+			'gallery_sort'           => 'newest',
+			'gallery_per_page'       => 24,
+			'gallery_load_more'      => 'on',
+			'gallery_lightbox'       => 'off',
+		);
+
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		foreach ( array(
+			'data-columns="4"',
+			'data-columns-tablet="3"',
+			'data-columns-mobile="1"',
+			'data-gap="0"',
+			'data-ratio="4:3"',
+			'data-captions="overlay"',
+			'data-sort="newest"',
+			'data-per-page="24"',
+			'data-load-more="on"',
+			'data-lightbox="off"',
+		) as $attribute ) {
+			$this->assertStringContainsString( ' ' . $attribute, $html, $attribute );
+		}
+	}
+
+	public function test_block_wins_over_shortcode_and_shortcode_over_site_default(): void {
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns' => 5,
+			'gallery_gap'     => 10,
+			'gallery_sort'    => 'oldest',
+		);
+
+		$html = $this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'columns' => '2',
+				'gap'     => '',
+			),
+			array(
+				'columns' => '6',
+				'gap'     => '20',
+				'sort'    => 'random',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-columns="2"', $html );
+		$this->assertStringContainsString( ' data-gap="20"', $html );
+		$this->assertStringContainsString( ' data-sort="random"', $html );
+	}
+
+	public function test_a_block_can_turn_off_what_the_site_default_turns_on(): void {
+		$this->options['profotograaf_settings'] = array( 'gallery_lightbox' => 'on' );
+
+		$html = $this->renderer->render(
+			array(
+				'id'       => 'g-1',
+				'lightbox' => 'off',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-lightbox="off"', $html );
+	}
+
+	public function test_invalid_values_are_dropped_and_numbers_are_kept_in_range(): void {
+		$html = $this->renderer->render(
+			array(
+				'id'       => 'g-1',
+				'columns'  => '99',
+				'gap'      => 'wide',
+				'captions' => '"><script>',
+				'ratio'    => '5-7',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-columns="8"', $html );
+		$this->assertStringNotContainsString( 'data-gap', $html );
+		$this->assertStringNotContainsString( 'data-captions', $html );
+		$this->assertStringNotContainsString( 'data-ratio', $html );
+		$this->assertStringNotContainsString( '<script>', $html );
+	}
+
+	public function test_block_attributes_map_to_render_arguments(): void {
+		$args = Gallery_Renderer::options_from_block(
+			array(
+				'columnsTablet' => '3',
+				'perPage'       => '12',
+				'unknown'       => 'x',
+			)
+		);
+
+		$this->assertSame( '3', $args['columns_tablet'] );
+		$this->assertSame( '12', $args['per_page'] );
+		$this->assertSame( '', $args['lightbox'] );
+		$this->assertSame( array_keys( Gallery_Renderer::OPTIONS ), array_keys( $args ) );
 	}
 }

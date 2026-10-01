@@ -76,6 +76,16 @@ class Settings_Test extends Wp_Test_Case {
 				'leads_failed_retention' => 7,
 				'telemetry_enabled'      => false,
 				'keep_data_on_uninstall' => true,
+				'gallery_columns'        => '',
+				'gallery_columns_tablet' => '',
+				'gallery_columns_mobile' => '',
+				'gallery_gap'            => '',
+				'gallery_ratio'          => '',
+				'gallery_captions'       => '',
+				'gallery_sort'           => '',
+				'gallery_per_page'       => '',
+				'gallery_load_more'      => '',
+				'gallery_lightbox'       => '',
 			),
 			$clean
 		);
@@ -185,6 +195,16 @@ class Settings_Test extends Wp_Test_Case {
 				'leads_failed_retention' => 7,
 				'telemetry_enabled'      => false,
 				'keep_data_on_uninstall' => false,
+				'gallery_columns'        => '',
+				'gallery_columns_tablet' => '',
+				'gallery_columns_mobile' => '',
+				'gallery_gap'            => '',
+				'gallery_ratio'          => '',
+				'gallery_captions'       => '',
+				'gallery_sort'           => '',
+				'gallery_per_page'       => '',
+				'gallery_load_more'      => '',
+				'gallery_lightbox'       => '',
 			),
 			$this->options['profotograaf_settings']
 		);
@@ -223,5 +243,20 @@ class Settings_Test extends Wp_Test_Case {
 		$this->assertSame( array_keys( Settings_Schema::entries() ), array_keys( $schema['properties'] ) );
 		$this->assertSame( array( 'grid', 'masonry', 'slideshow' ), $schema['properties']['default_layout']['enum'] );
 		$this->assertSame( 'boolean', $schema['properties']['leads_enabled']['type'] );
+	}
+
+	public function test_optional_numbers_stay_empty_or_are_clamped(): void {
+		$this->assertSame( '', Settings_Schema::parse( 'gallery_columns', '' ) );
+		$this->assertSame( 8, Settings_Schema::parse( 'gallery_columns', '12' ) );
+		$this->assertSame( 0, Settings_Schema::parse( 'gallery_gap', '0' ) );
+		$this->assertNull( Settings_Schema::parse( 'gallery_gap', 'wide' ) );
+		$this->assertSame( '', ( new Settings() )->get( 'gallery_per_page' ) );
+	}
+
+	public function test_the_rest_schema_accepts_an_empty_optional_number(): void {
+		$property = Settings_Schema::rest_schema()['schema']['properties']['gallery_columns'];
+
+		$this->assertSame( array( 'integer', 'string' ), $property['type'] );
+		$this->assertSame( 8, $property['maximum'] );
 	}
 }

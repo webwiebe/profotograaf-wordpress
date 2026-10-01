@@ -19,6 +19,8 @@ import {
 	pickedAttributes,
 	pickNotice,
 } from './helpers';
+import { DisplayPanel } from './display-panel';
+import { PreviewGrid } from './preview-grid';
 import type { GalleryAttributes, GalleryRow } from './types';
 
 interface EditProps {
@@ -119,6 +121,15 @@ function useMissingGallery( galleryId: string ): boolean {
 	return missing;
 }
 
+function missingNotice( missing: boolean ): string {
+	return missing
+		? __(
+				'This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery.',
+				'profotograaf'
+		  )
+		: '';
+}
+
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const { galleryId } = attributes;
 	const [ notice, setNotice ] = useState( '' );
@@ -150,6 +161,10 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 				attributes={ attributes }
 				setAttributes={ setAttributes }
 			/>
+			<DisplayPanel
+				attributes={ attributes }
+				setAttributes={ setAttributes }
+			/>
 			<div { ...blockProps }>
 				{ ! galleryId ? (
 					<Placeholder
@@ -166,15 +181,13 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<Preview
 						attributes={ attributes }
 						shown={ shown }
-						notice={
-							notice ||
-							( missing
-								? __(
-										'This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery.',
-										'profotograaf'
-								  )
-								: '' )
-						}
+						notice={ notice || missingNotice( missing ) }
+					/>
+				) }
+				{ galleryId && (
+					<PreviewGrid
+						attributes={ attributes }
+						cover={ shown?.cover_url }
 					/>
 				) }
 			</div>

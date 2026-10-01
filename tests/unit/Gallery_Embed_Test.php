@@ -20,13 +20,13 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		Functions\when( 'add_action' )->justReturn( true );
 		Functions\when( 'add_filter' )->justReturn( true );
 		Functions\when( 'get_block_wrapper_attributes' )->alias(
-			fn( $extra ) => sprintf(
-				'class="%1$s wp-block-profotograaf-gallery" data-profotograaf-gallery="%2$s" data-layout="%3$s" style="%4$s"',
-				$extra['class'],
-				$extra['data-profotograaf-gallery'],
-				$extra['data-layout'],
-				$extra['style']
-			)
+			function ( $extra ) {
+				$data = '';
+				foreach ( array_diff_key( $extra, array_flip( array( 'class', 'style' ) ) ) as $name => $value ) {
+					$data .= sprintf( ' %1$s="%2$s"', $name, $value );
+				}
+				return sprintf( 'class="%1$s wp-block-profotograaf-gallery"%2$s style="%3$s"', $extra['class'], $data, $extra['style'] );
+			}
 		);
 		Functions\when( 'sanitize_html_class' )->alias( fn( $name ) => preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $name ) );
 		$this->module = new Gallery_Embed();
@@ -183,5 +183,32 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$this->assertContains( 'init', $actions );
 		$this->assertNotContains( 'load_script_translation_file', $filters );
 		$this->assertNotContains( 'load_script_textdomain_relative_path', $filters );
+	}
+
+	public function test_the_block_passes_its_display_attributes_and_wins_over_the_site_default(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		$this->module->register( $this->plugin );
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns' => 5,
+			'gallery_gap'     => 12,
+		);
+
+		$html = $this->module->render_block(
+			array(
+				'galleryId'     => 'g-1',
+				'columns'       => '2',
+				'columnsTablet' => '2',
+				'ratio'         => '3-2',
+				'perPage'       => '9',
+				'loadMore'      => 'on',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-columns="2"', $html );
+		$this->assertStringContainsString( ' data-columns-tablet="2"', $html );
+		$this->assertStringContainsString( ' data-ratio="3:2"', $html );
+		$this->assertStringContainsString( ' data-per-page="9"', $html );
+		$this->assertStringContainsString( ' data-load-more="on"', $html );
+		$this->assertStringContainsString( ' data-gap="12"', $html );
 	}
 }

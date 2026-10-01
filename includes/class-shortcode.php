@@ -15,7 +15,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * Optional `title` and `url` set the fallback link and save the lookup.
  * Optional `class` adds CSS classes to the wrapper and `align` (wide or full)
- * adds the matching alignment class.
+ * adds the matching alignment class. The display options (columns,
+ * columns_tablet, columns_mobile, gap, ratio, captions, sort, per_page,
+ * load_more and lightbox) override the site default.
  */
 class Shortcode {
 
@@ -51,7 +53,7 @@ class Shortcode {
 	 * @return string HTML.
 	 */
 	public function render( $atts ): string {
-		$atts  = shortcode_atts(
+		$atts    = shortcode_atts(
 			array(
 				'id'     => '',
 				'layout' => '',
@@ -59,13 +61,15 @@ class Shortcode {
 				'url'    => '',
 				'class'  => '',
 				'align'  => '',
-			),
+			) + Gallery_Renderer::option_defaults(),
 			is_array( $atts ) ? $atts : array(),
 			self::TAG
 		);
-		$extra = $this->classes( (string) $atts['class'], (string) $atts['align'] );
-		unset( $atts['align'] );
-		return $this->renderer->render( array_merge( $atts, array( 'class' => $extra ) ) );
+		$options = array_intersect_key( $atts, Gallery_Renderer::option_defaults() );
+		$args    = array_diff_key( $atts, $options );
+		$extra   = $this->classes( (string) $args['class'], (string) $args['align'] );
+		unset( $args['align'] );
+		return $this->renderer->render( array_merge( $args, array( 'class' => $extra ) ), $options );
 	}
 
 	/**

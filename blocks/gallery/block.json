@@ -26,6 +26,46 @@
 			"type": "string",
 			"enum": [ "", "grid", "masonry", "slideshow" ],
 			"default": ""
+		},
+		"columns": {
+			"type": "string",
+			"default": ""
+		},
+		"columnsTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"columnsMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"gap": {
+			"type": "string",
+			"default": ""
+		},
+		"ratio": {
+			"type": "string",
+			"default": ""
+		},
+		"captions": {
+			"type": "string",
+			"default": ""
+		},
+		"sort": {
+			"type": "string",
+			"default": ""
+		},
+		"perPage": {
+			"type": "string",
+			"default": ""
+		},
+		"loadMore": {
+			"type": "string",
+			"default": ""
+		},
+		"lightbox": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"supports": {

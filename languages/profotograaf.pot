@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T14:11:36+00:00\n"
+"POT-Creation-Date: 2026-10-01T14:37:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -52,7 +52,7 @@ msgid "Profotograaf enquiries"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:106
-#: includes/class-settings-schema.php:60
+#: includes/class-settings-schema.php:62
 msgid "Enquiry forms"
 msgstr ""
 
@@ -339,19 +339,19 @@ msgstr[1] ""
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:85
+#: includes/class-gallery-renderer.php:174
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:96
+#: includes/class-gallery-renderer.php:185
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:103
+#: includes/class-gallery-renderer.php:192
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:192
+#: includes/class-gallery-renderer.php:309
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
@@ -367,109 +367,262 @@ msgstr ""
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr ""
 
-#: includes/class-settings-schema.php:58
+#: includes/class-settings-schema.php:60
 msgid "General"
 msgstr ""
 
-#: includes/class-settings-schema.php:59
+#: includes/class-settings-schema.php:61
 #: includes/modules/class-privacy.php:229
 msgid "Galleries"
 msgstr ""
 
-#: includes/class-settings-schema.php:61
+#: includes/class-settings-schema.php:63
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-settings-schema.php:76
+#: includes/class-settings-schema.php:87
 msgid "Gallery link text"
 msgstr ""
 
-#: includes/class-settings-schema.php:77
+#: includes/class-settings-schema.php:88
 msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
 msgstr ""
 
-#: includes/class-settings-schema.php:83
+#: includes/class-settings-schema.php:94
 msgid "Client portal path"
 msgstr ""
 
-#: includes/class-settings-schema.php:84
+#: includes/class-settings-schema.php:95
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr ""
 
-#: includes/class-settings-schema.php:91
+#: includes/class-settings-schema.php:102
 msgid "Default gallery layout"
 msgstr ""
 
-#: includes/class-settings-schema.php:92
+#: includes/class-settings-schema.php:103
 msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr ""
 
-#: includes/class-settings-schema.php:94
+#: includes/class-settings-schema.php:105
 #: build/gallery/index.js:2
 msgid "Grid"
 msgstr ""
 
-#: includes/class-settings-schema.php:95
+#: includes/class-settings-schema.php:106
 #: build/gallery/index.js:2
 msgid "Masonry"
 msgstr ""
 
-#: includes/class-settings-schema.php:96
+#: includes/class-settings-schema.php:107
 #: build/gallery/index.js:2
 msgid "Slideshow"
 msgstr ""
 
-#: includes/class-settings-schema.php:103
+#: includes/class-settings-schema.php:114
 msgid "Collect enquiries"
 msgstr ""
 
-#: includes/class-settings-schema.php:104
+#: includes/class-settings-schema.php:115
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:110
+#: includes/class-settings-schema.php:121
 msgid "Failure alerts go to"
 msgstr ""
 
-#: includes/class-settings-schema.php:111
+#: includes/class-settings-schema.php:122
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr ""
 
-#: includes/class-settings-schema.php:118
+#: includes/class-settings-schema.php:129
 msgid "Mail undeliverable enquiries to"
 msgstr ""
 
-#: includes/class-settings-schema.php:119
+#: includes/class-settings-schema.php:130
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr ""
 
-#: includes/class-settings-schema.php:128
+#: includes/class-settings-schema.php:139
 msgid "Keep undeliverable enquiries for (days)"
 msgstr ""
 
-#: includes/class-settings-schema.php:129
+#: includes/class-settings-schema.php:140
 msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr ""
 
-#: includes/class-settings-schema.php:135
+#: includes/class-settings-schema.php:146
 msgid "Share anonymous usage data"
 msgstr ""
 
-#: includes/class-settings-schema.php:136
+#: includes/class-settings-schema.php:147
 msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
 msgstr ""
 
-#: includes/class-settings-schema.php:139
+#: includes/class-settings-schema.php:150
 #: includes/modules/class-telemetry-consent.php:88
 msgid "What is shared"
 msgstr ""
 
-#: includes/class-settings-schema.php:146
+#: includes/class-settings-schema.php:157
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:147
+#: includes/class-settings-schema.php:158
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
+msgstr ""
+
+#: includes/class-settings-schema.php:172
+msgid "Profotograaf default"
+msgstr ""
+
+#: includes/class-settings-schema.php:174
+#: build/gallery/index.js:3
+msgid "On"
+msgstr ""
+
+#: includes/class-settings-schema.php:175
+#: build/gallery/index.js:3
+msgid "Off"
+msgstr ""
+
+#: includes/class-settings-schema.php:177
+msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
+msgstr ""
+
+#: includes/class-settings-schema.php:186
+#: build/gallery/index.js:3
+msgid "Columns"
+msgstr ""
+
+#: includes/class-settings-schema.php:187
+msgid "Columns on wide screens, from 1 to 8."
+msgstr ""
+
+#: includes/class-settings-schema.php:195
+#: build/gallery/index.js:3
+msgid "Columns on tablets"
+msgstr ""
+
+#: includes/class-settings-schema.php:196
+msgid "Columns on medium screens, from 1 to 8."
+msgstr ""
+
+#: includes/class-settings-schema.php:204
+#: build/gallery/index.js:3
+msgid "Columns on phones"
+msgstr ""
+
+#: includes/class-settings-schema.php:205
+msgid "Columns on narrow screens, from 1 to 4."
+msgstr ""
+
+#: includes/class-settings-schema.php:213
+#: build/gallery/index.js:3
+msgid "Gap between photos (pixels)"
+msgstr ""
+
+#: includes/class-settings-schema.php:214
+msgid "Space between photos, from 0 to 96 pixels."
+msgstr ""
+
+#: includes/class-settings-schema.php:220
+#: build/gallery/index.js:3
+msgid "Photo shape"
+msgstr ""
+
+#: includes/class-settings-schema.php:221
+msgid "Crop every photo to one aspect ratio, or keep each photo as shot."
+msgstr ""
+
+#: includes/class-settings-schema.php:223
+#: build/gallery/index.js:3
+msgid "Original"
+msgstr ""
+
+#: includes/class-settings-schema.php:224
+#: build/gallery/index.js:3
+msgid "Square (1:1)"
+msgstr ""
+
+#: includes/class-settings-schema.php:236
+#: build/gallery/index.js:3
+msgid "Captions"
+msgstr ""
+
+#: includes/class-settings-schema.php:237
+msgid "Whether photo captions show and where."
+msgstr ""
+
+#: includes/class-settings-schema.php:239
+#: build/gallery/index.js:3
+msgid "Hidden"
+msgstr ""
+
+#: includes/class-settings-schema.php:240
+#: build/gallery/index.js:3
+msgid "Below the photo"
+msgstr ""
+
+#: includes/class-settings-schema.php:241
+#: build/gallery/index.js:3
+msgid "On top of the photo"
+msgstr ""
+
+#: includes/class-settings-schema.php:248
+#: build/gallery/index.js:3
+msgid "Sort order"
+msgstr ""
+
+#: includes/class-settings-schema.php:249
+msgid "The order of the photos."
+msgstr ""
+
+#: includes/class-settings-schema.php:251
+#: build/gallery/index.js:3
+msgid "Newest first"
+msgstr ""
+
+#: includes/class-settings-schema.php:252
+#: build/gallery/index.js:3
+msgid "Oldest first"
+msgstr ""
+
+#: includes/class-settings-schema.php:253
+#: build/gallery/index.js:3
+msgid "By file name"
+msgstr ""
+
+#: includes/class-settings-schema.php:254
+#: build/gallery/index.js:3
+msgid "Random"
+msgstr ""
+
+#: includes/class-settings-schema.php:263
+#: build/gallery/index.js:3
+msgid "Photos per page"
+msgstr ""
+
+#: includes/class-settings-schema.php:264
+msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
+msgstr ""
+
+#: includes/class-settings-schema.php:270
+#: build/gallery/index.js:3
+msgid "Load more button"
+msgstr ""
+
+#: includes/class-settings-schema.php:271
+msgid "Add a button that shows the next photos when \"Photos per page\" is set."
+msgstr ""
+
+#: includes/class-settings-schema.php:278
+#: build/gallery/index.js:3
+msgid "Lightbox"
+msgstr ""
+
+#: includes/class-settings-schema.php:279
+msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr ""
 
 #. translators: %d: number of failed leads put back in line.
@@ -1119,6 +1272,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: build/gallery/index.js:2
+#: build/gallery/index.js:3
 msgid "Site default"
 msgstr ""
 
@@ -1159,33 +1313,65 @@ msgid "There are no galleries in your Profotograaf account yet."
 msgstr ""
 
 #: build/gallery/index.js:3
+msgid "Display"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Leave empty for the site default."
+msgstr ""
+
+#. translators: %d: number of photos shown at first.
 #: build/gallery/index.js:4
+#, js-format
+msgid "%d photo per page"
+msgid_plural "%d photos per page"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/gallery/index.js:4
+msgid "load more button"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "lightbox on"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "lightbox off"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Caption"
+msgstr ""
+
+#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "Profotograaf gallery"
 msgstr ""
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 #, js-format
 msgid "layout: %s"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "Gallery"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "Layout"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "Choose another gallery"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "Choose one of your galleries."
 msgstr ""
 
