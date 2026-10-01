@@ -68,6 +68,38 @@
 			"default": ""
 		}
 	},
+	"variations": [
+		{
+			"name": "grid",
+			"title": "Profotograaf grid gallery",
+			"description": "Show a Profotograaf gallery as an even grid.",
+			"icon": "grid-view",
+			"keywords": [ "grid" ],
+			"attributes": { "layout": "grid" },
+			"scope": [ "inserter", "transform" ],
+			"isActive": [ "layout" ]
+		},
+		{
+			"name": "masonry",
+			"title": "Profotograaf masonry gallery",
+			"description": "Show a Profotograaf gallery in masonry layout, each photo at its own height.",
+			"icon": "images-alt2",
+			"keywords": [ "masonry" ],
+			"attributes": { "layout": "masonry" },
+			"scope": [ "inserter", "transform" ],
+			"isActive": [ "layout" ]
+		},
+		{
+			"name": "slideshow",
+			"title": "Profotograaf slideshow",
+			"description": "Show a Profotograaf gallery as a slideshow.",
+			"icon": "slides",
+			"keywords": [ "slideshow", "slider" ],
+			"attributes": { "layout": "slideshow" },
+			"scope": [ "inserter", "transform" ],
+			"isActive": [ "layout" ]
+		}
+	],
 	"supports": {
 		"html": false,
 		"align": [ "wide", "full" ],
