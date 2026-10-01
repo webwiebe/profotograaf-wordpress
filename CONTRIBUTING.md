@@ -109,7 +109,8 @@ make phpstan     # PHPStan level 8 against its baseline
 make test        # PHPUnit
 make build       # blocks
 make e2e         # release copy in WordPress on Docker, Playwright, Plugin Check
-make pot         # regenerate languages/profotograaf.pot
+make i18n        # regenerate everything in languages/ (see Translations)
+make i18n-check  # hardcoded strings and a stale .pot
 ```
 
 Standards a change has to meet:
@@ -144,4 +145,21 @@ GitHub Actions on GitHub-hosted runners:
 
 ## Translations
 
-Run `make pot` after changing strings. Dutch lives in `languages/profotograaf-nl_NL.po`; `make mo` compiles it. Other languages come from translate.wordpress.org once the plugin is in the directory.
+Every user-facing string goes through `__()` (PHP) or `@wordpress/i18n` (blocks and scripts) with the text domain `profotograaf`, and gets a `/* translators: */` comment where it has placeholders. PHPCS enforces the WordPress i18n sniffs for PHP. `scripts/check-i18n.mjs strings` fails on text in `blocks/` and `assets/` that skips `__()`: JSX text, literal `label`, `title`, `help`, `placeholder` and similar props, and literals written to `textContent` or `innerHTML`. Put `// i18n-ignore` on a line that holds text no person reads.
+
+After changing strings, run `make i18n` and commit everything it changes in `languages/`:
+
+```sh
+make i18n          # pot, po, mo and json in one go
+make pot           # build the blocks, then regenerate languages/profotograaf.pot
+make po            # merge the .pot into every languages/*.po
+make mo            # compile every .po
+make json          # one JSON file per translated script, for wp_set_script_translations
+make i18n-check    # what CI runs: hardcoded strings and a stale .pot
+```
+
+`make pot` reads PHP, `block.json` and the built block scripts in `build/`, because WP-CLI cannot read TypeScript. That is why the `.pot` references `build/gallery/index.js`, and why WordPress finds the JSON by the hash of that path. `make json` deletes the old JSON files first.
+
+CI fails when the committed `.pot` differs from a fresh one (the creation date is ignored). The `.po` and JSON files are not compared, so run `make i18n` before every commit that changes strings.
+
+Dutch lives in `languages/profotograaf-nl_NL.po`. To add a locale, add `languages/profotograaf-<locale>.po` (copy the `.pot` header, set `Language:` and `Plural-Forms:`), then run `make i18n`. Nothing else changes: `update-po` fills the new file from the `.pot` and the JSON files follow from the `.po`. Other languages come from translate.wordpress.org once the plugin is in the directory.

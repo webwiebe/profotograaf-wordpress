@@ -6,7 +6,7 @@ WP_CLI_IMAGE ?= wordpress:cli-php8.3
 PHP_COV_IMAGE ?= profotograaf-php-cov
 PNPM = . scripts/use-pnpm.sh &&
 
-.PHONY: install lint test build e2e e2e-up e2e-down plugin-check pot mo zip quality quality-js quality-php phpstan coverage-php php-cov-image composer-audit
+.PHONY: install lint test build e2e e2e-up e2e-down plugin-check pot po mo json i18n i18n-check zip quality quality-js quality-php phpstan coverage-php php-cov-image composer-audit
 
 install:
 	$(DOCKER_RUN) -e COMPOSER_CACHE_DIR=/tmp/cc composer:2 install --no-interaction --no-progress
@@ -66,11 +66,37 @@ e2e: e2e-up
 plugin-check: e2e-up
 	tests/e2e/plugin-check.sh; status=$$?; $(MAKE) e2e-down; exit $$status
 
-pot:
-	$(DOCKER_RUN) --user 0 $(WP_CLI_IMAGE) wp i18n make-pot . languages/profotograaf.pot --slug=profotograaf --domain=profotograaf --exclude=node_modules,vendor,tests,dist,build,bin,.github --allow-root
+# Strings come from PHP, block.json and the built block scripts (build/), so the
+# blocks are built first. Block sources are TypeScript, which wp i18n cannot read.
+POT_FILE = languages/profotograaf.pot
+POT_EXCLUDE = node_modules,vendor,tests,dist,bin,docs,scripts,coverage,playwright-report,test-results,.github,.tools,build/*/block.json
+MAKE_POT = $(DOCKER_RUN) --user 0 $(WP_CLI_IMAGE) wp i18n make-pot . $(1) --slug=profotograaf --domain=profotograaf --exclude=$(POT_EXCLUDE) --allow-root
 
-mo:
+pot: build
+	$(call MAKE_POT,$(POT_FILE))
+
+# Merges the .pot into every .po in languages/, so a new locale is a new .po file.
+po: pot
+	$(DOCKER_RUN) --user 0 $(WP_CLI_IMAGE) wp i18n update-po $(POT_FILE) languages --allow-root
+
+mo: po
 	$(DOCKER_RUN) --user 0 $(WP_CLI_IMAGE) wp i18n make-mo languages --allow-root
+
+# Old JSON files are removed first: their names hold a hash of the script path,
+# so a renamed script would otherwise leave a stale file behind.
+json: po
+	rm -f languages/*.json
+	$(DOCKER_RUN) --user 0 $(WP_CLI_IMAGE) wp i18n make-json languages --no-purge --allow-root
+
+# Regenerates every file in languages/: .pot, .po, .mo and the script .json files.
+i18n: pot po mo json
+
+# Fails on a stale .pot or on a user-facing string that skips __().
+i18n-check: build
+	$(PNPM) node scripts/check-i18n.mjs strings
+	mkdir -p coverage
+	$(call MAKE_POT,coverage/profotograaf.pot)
+	$(PNPM) node scripts/check-i18n.mjs pot $(POT_FILE) coverage/profotograaf.pot
 
 zip: build
 	bin/build-release.sh --zip
