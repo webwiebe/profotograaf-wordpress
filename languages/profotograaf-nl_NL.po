@@ -774,19 +774,19 @@ msgstr ""
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:82
+#: includes/class-gallery-renderer.php:85
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:93
+#: includes/class-gallery-renderer.php:96
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:102
+#: includes/class-gallery-renderer.php:103
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:163
+#: includes/class-gallery-renderer.php:192
 msgid "View this gallery on Profotograaf"
 msgstr ""
 

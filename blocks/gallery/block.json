@@ -31,8 +31,28 @@
 	"supports": {
 		"html": false,
 		"align": [ "wide", "full" ],
+		"anchor": true,
+		"className": true,
+		"color": {
+			"background": true,
+			"text": true,
+			"link": true,
+			"gradients": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"border": {
+			"color": true,
+			"radius": true,
+			"style": true,
+			"width": true
+		},
 		"spacing": {
-			"margin": true
+			"margin": true,
+			"padding": true,
+			"blockGap": true
 		}
 	},
 	"editorScript": "file:./index.js",
