@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T13:47:58+00:00\n"
+"POT-Creation-Date: 2026-10-01T13:54:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -52,7 +52,7 @@ msgid "Profotograaf enquiries"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:106
-#: includes/class-settings-schema.php:53
+#: includes/class-settings-schema.php:60
 msgid "Enquiry forms"
 msgstr ""
 
@@ -62,6 +62,7 @@ msgstr ""
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:457
+#: includes/modules/class-telemetry-consent.php:106
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -366,95 +367,108 @@ msgstr ""
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr ""
 
-#: includes/class-settings-schema.php:51
+#: includes/class-settings-schema.php:58
 msgid "General"
 msgstr ""
 
-#: includes/class-settings-schema.php:52
+#: includes/class-settings-schema.php:59
 #: includes/modules/class-privacy.php:229
 msgid "Galleries"
 msgstr ""
 
-#: includes/class-settings-schema.php:54
+#: includes/class-settings-schema.php:61
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-settings-schema.php:69
+#: includes/class-settings-schema.php:76
 msgid "Gallery link text"
 msgstr ""
 
-#: includes/class-settings-schema.php:70
+#: includes/class-settings-schema.php:77
 msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
 msgstr ""
 
-#: includes/class-settings-schema.php:76
+#: includes/class-settings-schema.php:83
 msgid "Client portal path"
 msgstr ""
 
-#: includes/class-settings-schema.php:77
+#: includes/class-settings-schema.php:84
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr ""
 
-#: includes/class-settings-schema.php:84
+#: includes/class-settings-schema.php:91
 msgid "Default gallery layout"
 msgstr ""
 
-#: includes/class-settings-schema.php:85
+#: includes/class-settings-schema.php:92
 msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr ""
 
-#: includes/class-settings-schema.php:87
+#: includes/class-settings-schema.php:94
 #: build/gallery/index.js:2
 msgid "Grid"
 msgstr ""
 
-#: includes/class-settings-schema.php:88
+#: includes/class-settings-schema.php:95
 #: build/gallery/index.js:2
 msgid "Masonry"
 msgstr ""
 
-#: includes/class-settings-schema.php:89
+#: includes/class-settings-schema.php:96
 #: build/gallery/index.js:2
 msgid "Slideshow"
 msgstr ""
 
-#: includes/class-settings-schema.php:96
+#: includes/class-settings-schema.php:103
 msgid "Collect enquiries"
 msgstr ""
 
-#: includes/class-settings-schema.php:97
+#: includes/class-settings-schema.php:104
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:103
+#: includes/class-settings-schema.php:110
 msgid "Failure alerts go to"
 msgstr ""
 
-#: includes/class-settings-schema.php:104
+#: includes/class-settings-schema.php:111
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr ""
 
-#: includes/class-settings-schema.php:111
+#: includes/class-settings-schema.php:118
 msgid "Mail undeliverable enquiries to"
 msgstr ""
 
-#: includes/class-settings-schema.php:112
+#: includes/class-settings-schema.php:119
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr ""
 
-#: includes/class-settings-schema.php:121
+#: includes/class-settings-schema.php:128
 msgid "Keep undeliverable enquiries for (days)"
 msgstr ""
 
-#: includes/class-settings-schema.php:122
+#: includes/class-settings-schema.php:129
 msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr ""
 
-#: includes/class-settings-schema.php:128
+#: includes/class-settings-schema.php:135
+msgid "Share anonymous usage data"
+msgstr ""
+
+#: includes/class-settings-schema.php:136
+msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
+msgstr ""
+
+#: includes/class-settings-schema.php:139
+#: includes/modules/class-telemetry-consent.php:88
+msgid "What is shared"
+msgstr ""
+
+#: includes/class-settings-schema.php:146
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:129
+#: includes/class-settings-schema.php:147
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
@@ -998,6 +1012,18 @@ msgstr ""
 
 #: includes/modules/class-site-health.php:407
 msgid "Open the leads screen"
+msgstr ""
+
+#: includes/modules/class-telemetry-consent.php:87
+msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
+msgstr ""
+
+#: includes/modules/class-telemetry-consent.php:93
+msgid "Enable telemetry"
+msgstr ""
+
+#: includes/modules/class-telemetry-consent.php:94
+msgid "Not now"
 msgstr ""
 
 #: uninstall.php:32
