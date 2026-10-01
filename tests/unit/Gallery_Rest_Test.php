@@ -70,7 +70,7 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->connect();
 	}
 
-	public function test_both_routes_need_the_edit_posts_capability(): void {
+	public function test_all_routes_need_the_edit_posts_capability(): void {
 		$routes = array();
 		Functions\when( 'register_rest_route' )->alias(
 			function ( $space, $route, $args ) use ( &$routes ) {
@@ -80,7 +80,7 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 
 		$this->rest->register_routes();
 
-		$this->assertCount( 2, $routes );
+		$this->assertCount( 3, $routes );
 		foreach ( $routes as $route ) {
 			$this->assertSame( 'profotograaf/v1', $route['namespace'] );
 			$this->assertSame( array( $this->rest, 'can_edit' ), $route['permission_callback'] );
@@ -218,5 +218,78 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 
 		$this->assertSame( 400, $error->data['status'] );
 		$this->assertCount( 0, $this->http->requests );
+	}
+
+	public function test_it_lists_the_photos_of_a_gallery(): void {
+		$this->http->reply( 200, array( 'photos' => array( $this->photo( 'p-1' ) ) ) );
+
+		$rows = $this->rest->list_photos( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
+
+		$this->assertSame( 'p-1', $rows[0]['id'] );
+		$this->assertSame( 'https://profotograaf.nl/share/img/a/thumb-1.jpg', $rows[0]['thumb_url'] );
+		$this->assertSame( 'GET', $this->http->requests[0]['method'] );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries/g-1/photos', $this->http->requests[0]['url'] );
+	}
+
+	public function test_a_bad_gallery_id_gives_a_400_for_the_photo_list(): void {
+		$error = $this->rest->list_photos( new Rest_Request_Stub( array( 'id' => '../x' ) ) );
+
+		$this->assertSame( 400, $error->data['status'] );
+		$this->assertCount( 0, $this->http->requests );
+	}
+
+	public function test_a_missing_photo_list_route_on_the_platform_is_a_502(): void {
+		$this->http->reply( 404, array( 'error' => 'not found' ) );
+
+		$error = $this->rest->list_photos( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
+
+		$this->assertSame( 502, $error->data['status'] );
+	}
+
+	public function test_the_photo_route_is_registered_for_editors(): void {
+		$routes = array();
+		Functions\when( 'register_rest_route' )->alias(
+			function ( $space, $route, $args ) use ( &$routes ) {
+				$routes[ $route ] = $args;
+			}
+		);
+
+		$this->rest->register_routes();
+
+		$route = $routes['/galleries/(?P<id>[A-Za-z0-9_-]{1,64})/photos'];
+		$this->assertSame( 'GET', $route['methods'] );
+		Functions\when( 'current_user_can' )->justReturn( false );
+		$this->assertFalse( call_user_func( $route['permission_callback'] ) );
+	}
+
+	/**
+	 * A photo as the public gallery payload lists it.
+	 *
+	 * @param string $id Photo id.
+	 * @return array<string,mixed>
+	 */
+	private function photo( string $id ): array {
+		return array(
+			'id'      => $id,
+			'width'   => 3000,
+			'height'  => 2000,
+			'alt'     => '',
+			'title'   => 'Bride',
+			'caption' => 'First dance',
+			'images'  => array(
+				array(
+					'variant' => 'thumb',
+					'url'     => 'https://profotograaf.nl/share/img/a/thumb-1.jpg',
+					'width'   => 400,
+					'height'  => 400,
+				),
+				array(
+					'variant' => 'web',
+					'url'     => 'https://profotograaf.nl/share/img/a/web-1.jpg',
+					'width'   => 1600,
+					'height'  => 1067,
+				),
+			),
+		);
 	}
 }

@@ -25,6 +25,10 @@ class Gallery_Renderer {
 	 * default, `attribute` the block attribute and `data` the name of the
 	 * data-* attribute that embed.js reads. To pass one more option through,
 	 * add an entry here, a schema entry and a block.json attribute.
+	 *
+	 * An entry with `list` set holds a list of photo ids, has no site default
+	 * (so no `setting`) and is written comma separated. The block stores an
+	 * array and the shortcode takes a comma separated string.
 	 */
 	public const OPTIONS = array(
 		'columns'        => array(
@@ -77,7 +81,17 @@ class Gallery_Renderer {
 			'attribute' => 'lightbox',
 			'data'      => 'data-lightbox',
 		),
+		'exclude'        => array(
+			'list'      => true,
+			'attribute' => 'excludedPhotoIds',
+			'data'      => 'data-exclude',
+		),
 	);
+
+	/**
+	 * Most photo ids one gallery block can leave out.
+	 */
+	public const MAX_EXCLUDED = 500;
 
 	/**
 	 * Script handling.
@@ -121,6 +135,30 @@ class Gallery_Renderer {
 	 */
 	public static function valid_id( string $id ): bool {
 		return 1 === preg_match( '/^[A-Za-z0-9_-]{1,64}$/', $id );
+	}
+
+	/**
+	 * Photo ids from a list or a comma separated string. Ids that are not valid,
+	 * repeated or beyond MAX_EXCLUDED are dropped.
+	 *
+	 * @param mixed $value Array of ids or comma separated string.
+	 * @return string[]
+	 */
+	public static function clean_ids( $value ): array {
+		if ( is_string( $value ) ) {
+			$value = explode( ',', $value );
+		}
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+		$ids = array();
+		foreach ( $value as $id ) {
+			$id = is_scalar( $id ) ? trim( (string) $id ) : '';
+			if ( self::valid_id( $id ) ) {
+				$ids[ $id ] = $id;
+			}
+		}
+		return array_slice( array_values( $ids ), 0, self::MAX_EXCLUDED );
 	}
 
 	/**
@@ -203,6 +241,14 @@ class Gallery_Renderer {
 	private function data_attributes( array $block, array $shortcode ): array {
 		$attributes = array();
 		foreach ( self::OPTIONS as $key => $option ) {
+			if ( ! empty( $option['list'] ) ) {
+				$ids = self::clean_ids( $block[ $key ] ?? '' );
+				$ids = array() !== $ids ? $ids : self::clean_ids( $shortcode[ $key ] ?? '' );
+				if ( array() !== $ids ) {
+					$attributes[ $option['data'] ] = implode( ',', $ids );
+				}
+				continue;
+			}
 			$layers = array();
 			foreach ( array( $block, $shortcode ) as $layer ) {
 				$layers[] = array( $option['setting'] => $layer[ $key ] ?? '' );

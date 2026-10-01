@@ -3,7 +3,8 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import apiFetch from '@wordpress/api-fetch';
 import Edit from './edit';
 import { DISPLAY_DEFAULTS } from './display-options';
-import { galleryRow } from '../test-support/fixtures';
+import { EXCLUDE_DEFAULTS } from './exclude';
+import { galleryRow, photoRow } from '../test-support/fixtures';
 import type { GalleryAttributes } from './types';
 
 vi.mock( '@wordpress/components', async () => import( '../test-support/wp-mocks' ) );
@@ -18,6 +19,7 @@ const empty: GalleryAttributes = {
 	galleryUrl: '',
 	layout: '',
 	...DISPLAY_DEFAULTS,
+	...EXCLUDE_DEFAULTS,
 };
 
 beforeEach( () => {
@@ -81,6 +83,7 @@ describe( 'Edit with a gallery', () => {
 		galleryUrl: 'https://studio.example/share/g/spring-wedding',
 		layout: 'slideshow',
 		...DISPLAY_DEFAULTS,
+		...EXCLUDE_DEFAULTS,
 	};
 
 	it( 'stores each display option the author sets', () => {
@@ -132,7 +135,8 @@ describe( 'Edit with a gallery', () => {
 		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
 		expect( screen.getByText( 'Spring wedding' ) ).toBeTruthy();
 		expect( screen.getByText( 'layout: Slideshow' ) ).toBeTruthy();
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 1 ) );
+		// The gallery list and the photo list.
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 2 ) );
 		expect( screen.queryByText( /may have been deleted/ ) ).toBeNull();
 	} );
 
@@ -145,7 +149,7 @@ describe( 'Edit with a gallery', () => {
 	it( 'shows no warning when the list cannot be loaded', async () => {
 		fetchMock.mockRejectedValue( { code: 'profotograaf_not_connected' } );
 		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 1 ) );
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 2 ) );
 		expect( screen.queryByText( /may have been deleted/ ) ).toBeNull();
 	} );
 
@@ -186,5 +190,104 @@ describe( 'Edit after picking in this session', () => {
 		await screen.findByText( /cannot be shown on other sites/ );
 		expect( screen.getByText( /3 photos,/ ) ).toBeTruthy();
 		expect( view.container.querySelector( 'img.profotograaf-gallery-preview__thumb' ) ).toBeTruthy();
+	} );
+} );
+
+describe( 'Edit leaving photos out', () => {
+	const chosen: GalleryAttributes = {
+		...empty,
+		galleryId: 'g-1',
+		galleryTitle: 'Spring wedding',
+		galleryUrl: 'https://studio.example/share/g/spring-wedding',
+	};
+	const photos = [
+		photoRow( { id: 'p-1', title: 'Bride', thumb_url: 'https://studio.example/p-1.jpg' } ),
+		photoRow( { id: 'p-2', title: 'Groom', thumb_url: 'https://studio.example/p-2.jpg' } ),
+		photoRow( { id: 'p-3', title: 'Rings', thumb_url: 'https://studio.example/p-3.jpg' } ),
+	];
+
+	function serve( photoList: unknown ) {
+		fetchMock.mockImplementation( ( options ) =>
+			Promise.resolve(
+				( options as { path: string } ).path.endsWith( '/photos' ) ? photoList : [ galleryRow() ]
+			)
+		);
+	}
+
+	const previewSources = ( container: HTMLElement ) =>
+		Array.from( container.querySelectorAll( '.profotograaf-gallery-grid img' ) ).map( ( img ) =>
+			img.getAttribute( 'src' )
+		);
+
+	it( 'loads the photos of the chosen gallery', async () => {
+		serve( photos );
+		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await screen.findByLabelText( 'Bride' );
+		expect( fetchMock ).toHaveBeenCalledWith( { path: '/profotograaf/v1/galleries/g-1/photos' } );
+		expect( screen.getByLabelText( 'Rings' ) ).toBeTruthy();
+	} );
+
+	it( 'stores a photo the author selects and shows it again on the next click', async () => {
+		serve( photos );
+		const setAttributes = vi.fn();
+		const view = render( <Edit attributes={ chosen } setAttributes={ setAttributes } /> );
+		fireEvent.click( await screen.findByLabelText( 'Groom' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { excludedPhotoIds: [ 'p-2' ] } );
+
+		view.rerender(
+			<Edit attributes={ { ...chosen, excludedPhotoIds: [ 'p-2' ] } } setAttributes={ setAttributes } />
+		);
+		fireEvent.click( screen.getByLabelText( 'Groom' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { excludedPhotoIds: [] } );
+	} );
+
+	it( 'leaves excluded photos out of the editor preview', async () => {
+		serve( photos );
+		const { container } = render(
+			<Edit attributes={ { ...chosen, excludedPhotoIds: [ 'p-2' ] } } setAttributes={ vi.fn() } />
+		);
+		await screen.findByLabelText( 'Bride' );
+		await waitFor( () =>
+			expect( previewSources( container ) ).toEqual( [
+				'https://studio.example/p-1.jpg',
+				'https://studio.example/p-3.jpg',
+			] )
+		);
+		// Once in the inspector panel and once under the preview.
+		expect( screen.getAllByText( '1 photo left out' ) ).toHaveLength( 2 );
+		expect( screen.getByLabelText( 'Groom' ).getAttribute( 'aria-pressed' ) ).toBe( 'true' );
+	} );
+
+	it( 'shows every photo again from the inspector button', async () => {
+		serve( photos );
+		const setAttributes = vi.fn();
+		render(
+			<Edit attributes={ { ...chosen, excludedPhotoIds: [ 'p-1', 'p-2' ] } } setAttributes={ setAttributes } />
+		);
+		fireEvent.click( await screen.findByText( 'Show all photos' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { excludedPhotoIds: [] } );
+	} );
+
+	it( 'says so when the gallery has no photos', async () => {
+		serve( [] );
+		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await screen.findByText( 'This gallery has no photos yet.' );
+	} );
+
+	it( 'shows a translated warning when the photo list cannot be loaded and keeps the cover preview', async () => {
+		fetchMock.mockImplementation( ( options ) =>
+			( options as { path: string } ).path.endsWith( '/photos' )
+				? Promise.reject( { code: 'profotograaf_http', data: { status: 502 } } )
+				: Promise.resolve( [ galleryRow() ] )
+		);
+		const { container } = render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await screen.findByText( 'Profotograaf reported a problem. Try again later.' );
+		expect( container.querySelectorAll( '.profotograaf-gallery-grid__tile' ) ).toHaveLength( 6 );
+	} );
+
+	it( 'offers no photo panel before a gallery is chosen', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		render( <Edit attributes={ empty } setAttributes={ vi.fn() } /> );
+		expect( screen.queryByLabelText( 'Photos' ) ).toBeNull();
 	} );
 } );

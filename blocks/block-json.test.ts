@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { layoutOptions } from './gallery/helpers';
 import { DISPLAY_DEFAULTS } from './gallery/display-options';
+import { EXCLUDE_DEFAULTS } from './gallery/exclude';
 import { previewCopy } from './client-galleries/helpers';
 import type { ClientGalleriesAttributes } from './client-galleries/helpers';
 
@@ -41,7 +42,8 @@ describe.each( [ 'gallery', 'client-galleries' ] )( 'blocks/%s/block.json', ( bl
 
 	it( 'gives every attribute a default of its declared type', () => {
 		for ( const [ key, attribute ] of Object.entries( json.attributes ) ) {
-			expect( typeof attribute.default, key ).toBe( attribute.type );
+			const actual = Array.isArray( attribute.default ) ? 'array' : typeof attribute.default;
+			expect( actual, key ).toBe( attribute.type );
 		}
 	} );
 } );
@@ -59,6 +61,17 @@ describe( 'gallery display attributes', () => {
 		for ( const key of Object.keys( DISPLAY_DEFAULTS ) ) {
 			expect( json.attributes[ key ], key ).toEqual( { type: 'string', default: '' } );
 		}
+	} );
+} );
+
+describe( 'gallery excluded photos attribute', () => {
+	it( 'is a list of strings that starts empty, like the editor default', () => {
+		const json = load( 'gallery' );
+		expect( json.attributes.excludedPhotoIds ).toEqual( {
+			type: 'array',
+			items: { type: 'string' },
+			default: EXCLUDE_DEFAULTS.excludedPhotoIds,
+		} );
 	} );
 } );
 

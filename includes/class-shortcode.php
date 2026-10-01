@@ -17,7 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * Optional `class` adds CSS classes to the wrapper and `align` (wide or full)
  * adds the matching alignment class. The display options (columns,
  * columns_tablet, columns_mobile, gap, ratio, captions, sort, per_page,
- * load_more and lightbox) override the site default.
+ * load_more and lightbox) override the site default. Optional `exclude` takes
+ * photo ids separated by commas and leaves those photos out of the gallery.
  */
 class Shortcode {
 
