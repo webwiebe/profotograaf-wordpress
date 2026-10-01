@@ -8,8 +8,13 @@
 	}
 
 	var status = panel.querySelector( '.profotograaf-pairing__status' );
+	var __ = window.wp.i18n.__;
 	var failures = 0;
 	var maxFailures = 5;
+
+	function errorText() {
+		return __( 'Could not check the connection. Reload this page to try again.', 'profotograaf' );
+	}
 
 	function schedule( seconds ) {
 		var delay = Math.max( 1, seconds ) * 1000;
@@ -35,7 +40,7 @@
 				if ( ! payload || ! payload.success ) {
 					failures += 1;
 					if ( failures >= maxFailures ) {
-						status.textContent = config.i18n.error;
+						status.textContent = errorText();
 						return;
 					}
 					schedule( interval );
@@ -54,7 +59,7 @@
 			.catch( function () {
 				failures += 1;
 				if ( failures >= maxFailures ) {
-					status.textContent = config.i18n.error;
+					status.textContent = errorText();
 					return;
 				}
 				schedule( parseInt( panel.getAttribute( 'data-interval' ), 10 ) || 5 );

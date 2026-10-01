@@ -115,17 +115,14 @@ class Settings_Page implements Module {
 			return;
 		}
 		wp_enqueue_style( 'profotograaf-settings', PROFOTOGRAAF_URL . 'assets/admin/settings.css', array(), PROFOTOGRAAF_VERSION );
-		wp_enqueue_script( 'profotograaf-settings', PROFOTOGRAAF_URL . 'assets/admin/settings.js', array(), PROFOTOGRAAF_VERSION, true );
+		wp_enqueue_script( 'profotograaf-settings', PROFOTOGRAAF_URL . 'assets/admin/settings.js', array( 'wp-i18n' ), PROFOTOGRAAF_VERSION, true );
+		wp_set_script_translations( 'profotograaf-settings', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
 		wp_localize_script(
 			'profotograaf-settings',
 			'profotograafSettings',
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'profotograaf_poll' ),
-				'i18n'    => array(
-					'waiting' => __( 'Waiting for you to approve the connection in Profotograaf.', 'profotograaf' ),
-					'error'   => __( 'Could not check the connection. Reload this page to try again.', 'profotograaf' ),
-				),
 			)
 		);
 	}

@@ -217,4 +217,38 @@ class Settings_Page_Test extends Wp_Test_Case {
 			$this->assertSame( '{"status":"pending","interval":3}', $e->getMessage() );
 		}
 	}
+
+	public function test_the_settings_script_gets_its_translations_from_the_standard_api(): void {
+		$deps = null;
+		$data = null;
+		Functions\when( 'wp_enqueue_style' )->justReturn( true );
+		Functions\when( 'admin_url' )->justReturn( 'https://example.com/wp-admin/admin-ajax.php' );
+		Functions\when( 'wp_create_nonce' )->justReturn( 'nonce' );
+		Functions\when( 'wp_enqueue_script' )->alias(
+			function ( $handle, $src, $dependencies ) use ( &$deps ) {
+				$deps = $dependencies;
+			}
+		);
+		Functions\when( 'wp_localize_script' )->alias(
+			function ( $handle, $name, $values ) use ( &$data ) {
+				$data = $values;
+			}
+		);
+		Functions\expect( 'wp_set_script_translations' )
+			->once()
+			->with( 'profotograaf-settings', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+
+		$this->page->enqueue( 'settings_page_profotograaf' );
+
+		$this->assertContains( 'wp-i18n', $deps );
+		$this->assertArrayNotHasKey( 'i18n', $data );
+		$this->assertSame( 'nonce', $data['nonce'] );
+	}
+
+	public function test_other_admin_screens_load_no_settings_script(): void {
+		Functions\expect( 'wp_enqueue_script' )->never();
+		Functions\expect( 'wp_set_script_translations' )->never();
+
+		$this->page->enqueue( 'plugins.php' );
+	}
 }

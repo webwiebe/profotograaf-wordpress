@@ -33,11 +33,6 @@ class Gallery_Embed implements Module {
 	public const BLOCK = 'profotograaf/gallery';
 
 	/**
-	 * Source path of the editor script the JSON translations are made from.
-	 */
-	public const EDITOR_SOURCE = 'blocks/gallery/edit.js';
-
-	/**
 	 * Renderer shared by the block and the shortcode.
 	 *
 	 * @var Gallery_Renderer|null
@@ -62,7 +57,7 @@ class Gallery_Embed implements Module {
 		add_action( Gallery_Index::LOOKUP_HOOK, array( $index, 'lookup' ) );
 		add_action( Embed_Script::REFRESH_HOOK, array( $script, 'refresh' ) );
 		add_filter( 'register_block_type_args', array( $this, 'block_args' ), 10, 2 );
-		add_filter( 'load_script_translation_file', array( $this, 'script_translation_file' ), 10, 3 );
+		add_action( 'init', array( $this, 'load_script_translations' ), 20 );
 	}
 
 	/**
@@ -105,23 +100,18 @@ class Gallery_Embed implements Module {
 	}
 
 	/**
-	 * Points the editor script at the shipped JSON translations.
+	 * Loads the editor script translations from this plugin's languages folder.
 	 *
-	 * WordPress looks for `<domain>-<locale>-<md5 of the script path>.json`,
-	 * and the block build moves the script to build/gallery/index.js, so the
-	 * file made from the source (`wp i18n make-json`) is not where it looks.
-	 *
-	 * @param string|false $file   File WordPress would load.
-	 * @param string       $handle Script handle.
-	 * @param string       $domain Text domain.
-	 * @return string|false
+	 * The JSON files are named after the built script (build/gallery/index.js),
+	 * which is the path WordPress hashes, so the standard lookup finds them.
 	 */
-	public function script_translation_file( $file, $handle, $domain ) {
-		unset( $handle );
-		if ( 'profotograaf' !== $domain || ( is_string( $file ) && is_readable( $file ) ) ) {
-			return $file;
+	public function load_script_translations(): void {
+		if ( ! function_exists( 'generate_block_asset_handle' ) ) {
+			return;
 		}
-		$shipped = PROFOTOGRAAF_DIR . 'languages/profotograaf-' . determine_locale() . '-' . md5( self::EDITOR_SOURCE ) . '.json';
-		return is_readable( $shipped ) ? $shipped : $file;
+		$handle = generate_block_asset_handle( self::BLOCK, 'editorScript' );
+		if ( wp_script_is( $handle, 'registered' ) ) {
+			wp_set_script_translations( $handle, 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		}
 	}
 }
