@@ -794,7 +794,7 @@ msgstr ""
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:500
+#: includes/class-gallery-renderer.php:483
 msgid "View this gallery on Profotograaf"
 msgstr ""
 

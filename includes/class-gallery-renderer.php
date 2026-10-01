@@ -408,7 +408,7 @@ class Gallery_Renderer {
 					'class'                     => 'profotograaf-gallery',
 					'data-profotograaf-gallery' => $id,
 					'data-layout'               => $layout,
-				) + $data + array( 'style' => $this->reserved_space( $data ) )
+				) + $data + array( 'style' => Reserved_Space::style( $data ) )
 			);
 		}
 		$html = sprintf(
@@ -420,24 +420,7 @@ class Gallery_Renderer {
 		foreach ( $data as $name => $value ) {
 			$html .= sprintf( ' %1$s="%2$s"', $name, esc_attr( $value ) );
 		}
-		return $html . sprintf( ' style="%s"', esc_attr( $this->reserved_space( $data ) ) );
-	}
-
-	/**
-	 * The inline style that holds space for the gallery until embed.js draws
-	 * it, which limits layout shift. The box gets the ratio of one photo and
-	 * grows when the gallery is taller. An original or unset ratio keeps the
-	 * fixed minimum.
-	 *
-	 * @param array<string,string> $data Display option data attributes.
-	 */
-	private function reserved_space( array $data ): string {
-		$style = 'min-height:8em';
-		$ratio = $data[ self::OPTIONS['ratio']['data'] ] ?? '';
-		if ( 1 === preg_match( '/^([1-9][0-9]{0,2}):([1-9][0-9]{0,2})$/', $ratio, $parts ) ) {
-			$style .= ';aspect-ratio:' . $parts[1] . ' / ' . $parts[2];
-		}
-		return $style;
+		return $html . sprintf( ' style="%s"', esc_attr( Reserved_Space::style( $data ) ) );
 	}
 
 	/**
