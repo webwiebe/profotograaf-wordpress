@@ -63,7 +63,7 @@ msgstr "Aanvraagformulieren"
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:457
-#: includes/modules/class-telemetry-consent.php:106
+#: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
 msgstr "Je hebt hier geen toestemming voor."
 
@@ -1235,19 +1235,19 @@ msgid "Help improve Profotograaf by sharing anonymous usage and error data. This
 msgstr ""
 
 #: includes/class-settings-schema.php:150
-#: includes/modules/class-telemetry-consent.php:88
+#: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr ""
 
-#: includes/modules/class-telemetry-consent.php:87
+#: includes/modules/class-telemetry-consent.php:107
 msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
 msgstr ""
 
-#: includes/modules/class-telemetry-consent.php:93
+#: includes/modules/class-telemetry-consent.php:113
 msgid "Enable telemetry"
 msgstr ""
 
-#: includes/modules/class-telemetry-consent.php:94
+#: includes/modules/class-telemetry-consent.php:114
 msgid "Not now"
 msgstr ""
 
