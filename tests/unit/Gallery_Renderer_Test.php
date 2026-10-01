@@ -41,6 +41,18 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( 'data-layout="slideshow"', $html );
 	}
 
+	public function test_the_site_link_text_is_used_for_a_gallery_without_a_title(): void {
+		\Brain\Monkey\Functions\when( 'sanitize_text_field' )->alias( fn( $value ) => (string) $value );
+		$this->options['profotograaf_settings'] = array( 'fallback_link_label' => 'See the photos' );
+		$args                                   = array(
+			'id'  => 'g-1',
+			'url' => 'https://profotograaf.nl/share/g/x',
+		);
+
+		$this->assertStringContainsString( '>See the photos</a>', $this->renderer->render( $args ) );
+		$this->assertStringContainsString( '>Own title</a>', $this->renderer->render( $args + array( 'title' => 'Own title' ) ) );
+	}
+
 	public function test_a_missing_layout_uses_the_grid_without_settings(): void {
 		$html = $this->renderer->render(
 			array(
