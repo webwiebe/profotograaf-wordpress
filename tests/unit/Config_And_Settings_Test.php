@@ -121,4 +121,112 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 
 		$this->assertSame( 'error', Origin_Sync::status()['state'] );
 	}
+
+	/**
+	 * Builds a connected plugin on a fake transport.
+	 *
+	 * @param Fake_Transport $http Transport.
+	 */
+	private function plugin_with( Fake_Transport $http ): \Profotograaf\Plugin {
+		$connection = new \Profotograaf\Connection();
+		$this->connect();
+		return new \Profotograaf\Plugin( $connection, new \Profotograaf\Api_Client( $connection, $http, $this->clock() ), $this->clock() );
+	}
+
+	private function gallery_row(): array {
+		return array(
+			array(
+				'id'         => 'g1',
+				'url'        => 'https://profotograaf.nl/studio/bruiloft',
+				'embeddable' => true,
+			),
+		);
+	}
+
+	public function test_origin_sync_verifies_the_frame_ancestors_when_there_is_no_write_endpoint(): void {
+		$http = new Fake_Transport();
+		$http->reply( 200, $this->gallery_row() );
+		$http->reply( 200, null, array( 'content-security-policy' => "default-src 'self'; frame-ancestors 'self' https://photos.example.com" ) );
+
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+
+		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
+		$this->assertSame( 'https://profotograaf.nl/studio/bruiloft', $http->requests[1]['url'] );
+		$this->assertArrayNotHasKey( 'Authorization', $http->requests[1]['headers'] );
+	}
+
+	public function test_origin_sync_stays_manual_when_the_origin_is_not_listed(): void {
+		$http = new Fake_Transport();
+		$http->reply( 200, $this->gallery_row() );
+		$http->reply( 200, null, array( 'content-security-policy' => "frame-ancestors 'self' https://other.example.com" ) );
+
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+
+		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
+	}
+
+	public function test_origin_sync_stays_manual_when_the_page_cannot_be_checked(): void {
+		$http = new Fake_Transport();
+		$http->reply( 200, array() );
+
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+
+		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
+		$this->assertCount( 1, $http->requests );
+	}
+
+	public function test_frame_ancestors_matching(): void {
+		$origin = 'https://photos.example.com';
+		$this->assertTrue( \Profotograaf\Frame_Ancestors::allow( 'frame-ancestors *', $origin ) );
+		$this->assertTrue( \Profotograaf\Frame_Ancestors::allow( 'frame-ancestors https:', $origin ) );
+		$this->assertTrue( \Profotograaf\Frame_Ancestors::allow( 'FRAME-ANCESTORS HTTPS://PHOTOS.EXAMPLE.COM', $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "frame-ancestors 'none'", $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "default-src 'self'", $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( '', $origin ) );
+		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "frame-ancestors {$origin}, frame-ancestors 'self'", $origin ) );
+	}
+
+	public function test_origin_sync_records_why_the_check_failed(): void {
+		$http = new Fake_Transport();
+		$http->reply( 500, array( 'error' => 'boom' ) );
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
+		$this->assertSame( 'boom', Origin_Sync::status()['message'] );
+
+		$http = new Fake_Transport();
+		$http->reply( 200, $this->gallery_row() );
+		$http->reply( 404 );
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
+		$this->assertNotSame( '', Origin_Sync::status()['message'] );
+	}
+
+	public function test_framing_check_refuses_other_hosts_and_reports_network_failures(): void {
+		$http = new Fake_Transport();
+		$api  = $this->plugin_with( $http )->api();
+
+		$this->assertWPError( $api->framing_allows( 'https://evil.example.net/x', 'https://photos.example.com' ) );
+		$this->assertCount( 0, $http->requests );
+
+		$http->fail( new \RuntimeException( 'down' ) );
+		$this->assertWPError( $api->framing_allows( 'https://profotograaf.nl/x', 'https://photos.example.com' ) );
+		$http->fail( new \WP_Error( 'http_request_failed' ) );
+		$this->assertWPError( $api->framing_allows( 'https://profotograaf.nl/x', 'https://photos.example.com' ) );
+		$http->reply( 503 );
+		$this->assertWPError( $api->framing_allows( 'https://profotograaf.nl/x', 'https://photos.example.com' ) );
+	}
+
+	private function assertWPError( $value ): void {
+		$this->assertInstanceOf( \WP_Error::class, $value );
+	}
 }

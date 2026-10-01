@@ -23,8 +23,9 @@ defined( 'ABSPATH' ) || exit;
  * leads:write) is refused there. TODO: once the platform lets the WordPress
  * client write the list, return the path from the
  * `profotograaf_origin_sync_endpoint` filter and this module starts syncing
- * after connect, with no other change. Until then the settings page tells the
- * photographer which origin to add.
+ * after connect, with no other change. Until then sync() only verifies: it reads
+ * the frame-ancestors of a public page and records `synced` once this site is
+ * listed, otherwise the settings page tells the photographer which origin to add.
  */
 class Origin_Sync implements Module {
 
@@ -91,6 +92,8 @@ class Origin_Sync implements Module {
 			$path = apply_filters( 'profotograaf_origin_sync_endpoint', null, $origin );
 			if ( is_string( $path ) && '' !== $path && null !== $this->plugin ) {
 				$state = $this->write_origin( $path, $origin );
+			} elseif ( null !== $this->plugin ) {
+				$state = $this->verify_origin( $origin, $this->plugin );
 			}
 		}
 
@@ -102,6 +105,48 @@ class Origin_Sync implements Module {
 	 */
 	public function forget(): void {
 		delete_option( self::OPTION );
+	}
+
+	/**
+	 * Checks whether the platform already lets this origin frame the
+	 * photographer's public pages, without any credentials.
+	 *
+	 * @param string $origin Origin to look for.
+	 * @param Plugin $plugin Service container.
+	 * @return array{state:string,origin:string,message:string}
+	 */
+	private function verify_origin( string $origin, Plugin $plugin ): array {
+		$state = array(
+			'state'   => 'manual',
+			'origin'  => $origin,
+			'message' => '',
+		);
+
+		$galleries = $plugin->api()->list_galleries();
+		if ( is_wp_error( $galleries ) ) {
+			$state['message'] = $galleries->get_error_message();
+			return $state;
+		}
+		$url = '';
+		foreach ( $galleries as $gallery ) {
+			if ( '' !== $gallery['url'] && ( '' === $url || $gallery['embeddable'] ) ) {
+				$url = $gallery['url'];
+				if ( $gallery['embeddable'] ) {
+					break;
+				}
+			}
+		}
+		if ( '' === $url ) {
+			return $state;
+		}
+
+		$allowed = $plugin->api()->framing_allows( $url, $origin );
+		if ( is_wp_error( $allowed ) ) {
+			$state['message'] = $allowed->get_error_message();
+		} elseif ( $allowed ) {
+			$state['state'] = 'synced';
+		}
+		return $state;
 	}
 
 	/**

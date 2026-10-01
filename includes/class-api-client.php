@@ -283,6 +283,34 @@ class Api_Client {
 	}
 
 	/**
+	 * Whether a public platform page lets `$origin` frame it.
+	 *
+	 * Requests the page, on the platform host only, without credentials and
+	 * reads the frame-ancestors of its Content-Security-Policy.
+	 *
+	 * @param string $url    Public page URL.
+	 * @param string $origin Origin that wants to frame the page.
+	 * @return bool|WP_Error True when listed, false when the page names other origins or none.
+	 */
+	public function framing_allows( string $url, string $origin ) {
+		if ( strtolower( (string) wp_parse_url( Config::platform_url(), PHP_URL_HOST ) ) !== strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) ) ) {
+			return $this->error( 'profotograaf_invalid', __( 'That page is not on the Profotograaf platform.', 'profotograaf' ), 0, false );
+		}
+		try {
+			$result = $this->transport->send( 'GET', $url, array( 'Accept' => 'text/html' ), null, Config::http_timeout() );
+		} catch ( \Throwable $e ) {
+			$result = new WP_Error( 'profotograaf_network' );
+		}
+		if ( is_wp_error( $result ) ) {
+			return $this->error( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
+		}
+		if ( (int) $result['status'] >= 400 ) {
+			return $this->error( 'profotograaf_http', __( 'The public page could not be loaded.', 'profotograaf' ), (int) $result['status'], (int) $result['status'] >= 500 );
+		}
+		return Frame_Ancestors::allow( (string) ( $result['headers']['content-security-policy'] ?? '' ), $origin );
+	}
+
+	/**
 	 * Exchanges the refresh token for a new pair.
 	 *
 	 * Called by request() and by the background refresh. A 401 from the
