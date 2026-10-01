@@ -20,6 +20,7 @@ import {
 	pickNotice,
 } from './helpers';
 import { DisplayPanel } from './display-panel';
+import { ImageTextPanel } from './image-text-panel';
 import { PreviewGrid } from './preview-grid';
 import type { GalleryAttributes, GalleryRow } from './types';
 
@@ -95,6 +96,25 @@ function InspectorPanel( { attributes, setAttributes }: EditProps ) {
 	);
 }
 
+function InspectorPanels( { attributes, setAttributes }: EditProps ) {
+	return (
+		<>
+			<InspectorPanel
+				attributes={ attributes }
+				setAttributes={ setAttributes }
+			/>
+			<DisplayPanel
+				attributes={ attributes }
+				setAttributes={ setAttributes }
+			/>
+			<ImageTextPanel
+				items={ attributes.imageText }
+				setItems={ ( imageText ) => setAttributes( { imageText } ) }
+			/>
+		</>
+	);
+}
+
 /** Whether the account's gallery list leaves this gallery out (deleted or unknown). */
 function useMissingGallery( galleryId: string ): boolean {
 	const [ missing, setMissing ] = useState( false );
@@ -157,11 +177,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 
 	return (
 		<>
-			<InspectorPanel
-				attributes={ attributes }
-				setAttributes={ setAttributes }
-			/>
-			<DisplayPanel
+			<InspectorPanels
 				attributes={ attributes }
 				setAttributes={ setAttributes }
 			/>
@@ -188,6 +204,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<PreviewGrid
 						attributes={ attributes }
 						cover={ shown?.cover_url }
+						imageText={ attributes.imageText }
 					/>
 				) }
 			</div>

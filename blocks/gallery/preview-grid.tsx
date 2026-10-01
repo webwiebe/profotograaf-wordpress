@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import type { CSSProperties } from 'react';
+import type { ImageText } from './types';
 import {
 	cssRatio,
 	displaySummary,
@@ -15,9 +16,11 @@ const TILES = 6;
 export function PreviewGrid( {
 	attributes,
 	cover,
+	imageText = [],
 }: {
 	attributes: DisplayAttributes;
 	cover?: string | undefined;
+	imageText?: ImageText[];
 } ) {
 	const columns = Number( attributes.columns ) || 3;
 	const gap = attributes.gap === '' ? 8 : Number( attributes.gap );
@@ -27,6 +30,8 @@ export function PreviewGrid( {
 		'--profotograaf-ratio': cssRatio( attributes.ratio ),
 	} as CSSProperties;
 	const summary = displaySummary( attributes );
+	// The platform photo ids are not known in the editor, so the first entries
+	// stand in for the first tiles.
 	const showCaption =
 		attributes.captions === 'below' || attributes.captions === 'overlay';
 
@@ -40,12 +45,14 @@ export function PreviewGrid( {
 						data-captions={ attributes.captions || undefined }
 					>
 						{ cover ? (
-							<img src={ cover } alt="" />
+							<img src={ cover } alt={ imageText[ index ]?.alt ?? '' } />
 						) : (
 							<span className="profotograaf-gallery-grid__blank" />
 						) }
 						{ showCaption && (
-							<figcaption>{ __( 'Caption', 'profotograaf' ) }</figcaption>
+							<figcaption>
+								{ imageText[ index ]?.caption || __( 'Caption', 'profotograaf' ) }
+							</figcaption>
 						) }
 					</figure>
 				) ) }

@@ -17,6 +17,7 @@ const empty: GalleryAttributes = {
 	galleryTitle: '',
 	galleryUrl: '',
 	layout: '',
+	imageText: [],
 	...DISPLAY_DEFAULTS,
 };
 
@@ -80,6 +81,7 @@ describe( 'Edit with a gallery', () => {
 		galleryTitle: 'Spring wedding',
 		galleryUrl: 'https://studio.example/share/g/spring-wedding',
 		layout: 'slideshow',
+		imageText: [],
 		...DISPLAY_DEFAULTS,
 	};
 
@@ -95,6 +97,42 @@ describe( 'Edit with a gallery', () => {
 		expect( setAttributes ).toHaveBeenLastCalledWith( { captions: 'overlay' } );
 		fireEvent.change( screen.getByLabelText( 'Lightbox' ), { target: { value: 'off' } } );
 		expect( setAttributes ).toHaveBeenLastCalledWith( { lightbox: 'off' } );
+		fireEvent.change( screen.getByLabelText( 'Link photos to' ), { target: { value: 'file' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { linkTo: 'file' } );
+	} );
+
+	it( 'adds, edits and removes the text of a single photo', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		const setAttributes = vi.fn();
+		const { rerender } = render( <Edit attributes={ chosen } setAttributes={ setAttributes } /> );
+		fireEvent.click( screen.getByText( 'Add a photo' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { imageText: [ { id: '' } ] } );
+
+		const withOne = { ...chosen, imageText: [ { id: 'p-1', caption: 'Sunrise' } ] };
+		rerender( <Edit attributes={ withOne } setAttributes={ setAttributes } /> );
+		fireEvent.change( screen.getByLabelText( 'Alt text' ), { target: { value: 'Sun over the sea' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( {
+			imageText: [ { id: 'p-1', caption: 'Sunrise', alt: 'Sun over the sea' } ],
+		} );
+		fireEvent.click( screen.getByText( 'Remove' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { imageText: [] } );
+	} );
+
+	it( 'shows the per-photo caption and alt text on the first tiles', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		const { container } = render(
+			<Edit
+				attributes={ {
+					...chosen,
+					captions: 'below',
+					imageText: [ { id: 'p-1', caption: 'Sunrise', alt: 'Sun over the sea' } ],
+				} }
+				setAttributes={ vi.fn() }
+			/>
+		);
+		expect( screen.getAllByText( 'Sunrise' ).length ).toBeGreaterThan( 0 );
+		expect( screen.getAllByText( 'Caption' ) ).toHaveLength( 5 );
+		expect( container ).toBeTruthy();
 	} );
 
 	it( 'previews columns, gap, shape and captions', () => {

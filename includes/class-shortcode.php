@@ -17,7 +17,10 @@ defined( 'ABSPATH' ) || exit;
  * Optional `class` adds CSS classes to the wrapper and `align` (wide or full)
  * adds the matching alignment class. The display options (columns,
  * columns_tablet, columns_mobile, gap, ratio, captions, sort, per_page,
- * load_more and lightbox) override the site default.
+ * load_more, lightbox, duotone and link_to) override the site default. `ratio`
+ * crops the photos. `duotone` is two hex colours such as "#1a1a2e,#f5c542".
+ * `image_text` sets a caption and alt text per photo as JSON, for example
+ * image_text='[{"id":"p1","caption":"Sunrise","alt":"Sun over the sea"}]'.
  */
 class Shortcode {
 

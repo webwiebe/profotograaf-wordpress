@@ -436,29 +436,29 @@ msgstr "Er staan nog geen galerijen in je Profotograaf-account."
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord, een vervaldatum, keuzemodus of een instelling alleen voor de klant staat insluiten niet toe."
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 msgid "Gallery"
 msgstr "Galerij"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 msgid "Layout"
 msgstr "Indeling"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 msgid "Choose another gallery"
 msgstr "Kies een andere galerij"
 
-#: build/gallery/index.js:4
 #: build/gallery/index.js:5
+#: build/gallery/index.js:6
 msgid "Profotograaf gallery"
 msgstr "Profotograaf-galerij"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 msgid "Choose one of your galleries."
 msgstr "Kies een van je galerijen."
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 #, js-format
 msgid "layout: %s"
 msgstr "indeling: %s"
@@ -780,23 +780,23 @@ msgstr ""
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:174
+#: includes/class-gallery-renderer.php:287
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:185
+#: includes/class-gallery-renderer.php:298
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:192
+#: includes/class-gallery-renderer.php:305
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:309
+#: includes/class-gallery-renderer.php:441
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr ""
 
@@ -1432,7 +1432,8 @@ msgstr ""
 msgid "lightbox off"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:3
+#: build/gallery/index.js:5
 msgid "Caption"
 msgstr ""
 
@@ -1593,4 +1594,62 @@ msgstr ""
 #: blocks/gallery/block.json
 msgctxt "block variation keyword"
 msgid "slider"
+msgstr ""
+
+#: includes/class-settings-schema.php:286
+msgid "Duotone colours"
+msgstr ""
+
+#: includes/class-settings-schema.php:287
+msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
+msgstr ""
+
+#: includes/class-settings-schema.php:294
+#: build/gallery/index.js:3
+msgid "Link photos to"
+msgstr ""
+
+#: includes/class-settings-schema.php:295
+msgid "What a click on a photo does when the lightbox is off."
+msgstr ""
+
+#: includes/class-settings-schema.php:297
+#: build/gallery/index.js:3
+msgid "Nothing"
+msgstr ""
+
+#: includes/class-settings-schema.php:298
+#: build/gallery/index.js:3
+msgid "The photo file"
+msgstr ""
+
+#: includes/class-settings-schema.php:299
+#: build/gallery/index.js:3
+msgid "The photo page on Profotograaf"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Photo ID"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Alt text"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Remove"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Photo captions and alt text"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Add a photo"
+msgstr ""
+
+#. translators: %s: what a photo links to, such as "The photo file".
+#: build/gallery/index.js:5
+#, js-format
+msgid "links to: %s"
 msgstr ""

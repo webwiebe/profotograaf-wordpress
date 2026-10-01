@@ -7,7 +7,12 @@
 	"category": "media",
 	"icon": "format-gallery",
 	"description": "Show one of your Profotograaf galleries as a grid, masonry or slideshow.",
-	"keywords": [ "gallery", "photos", "profotograaf", "portfolio" ],
+	"keywords": [
+		"gallery",
+		"photos",
+		"profotograaf",
+		"portfolio"
+	],
 	"textdomain": "profotograaf",
 	"attributes": {
 		"galleryId": {
@@ -24,7 +29,12 @@
 		},
 		"layout": {
 			"type": "string",
-			"enum": [ "", "grid", "masonry", "slideshow" ],
+			"enum": [
+				"",
+				"grid",
+				"masonry",
+				"slideshow"
+			],
 			"default": ""
 		},
 		"columns": {
@@ -66,6 +76,17 @@
 		"lightbox": {
 			"type": "string",
 			"default": ""
+		},
+		"linkTo": {
+			"type": "string",
+			"default": ""
+		},
+		"imageText": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
 		}
 	},
 	"variations": [
@@ -102,7 +123,10 @@
 	],
 	"supports": {
 		"html": false,
-		"align": [ "wide", "full" ],
+		"align": [
+			"wide",
+			"full"
+		],
 		"anchor": true,
 		"className": true,
 		"color": {
@@ -125,8 +149,16 @@
 			"margin": true,
 			"padding": true,
 			"blockGap": true
+		},
+		"filter": {
+			"duotone": true
 		}
 	},
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css"
+	"editorStyle": "file:./index.css",
+	"selectors": {
+		"filter": {
+			"duotone": ".wp-block-profotograaf-gallery img"
+		}
+	}
 }

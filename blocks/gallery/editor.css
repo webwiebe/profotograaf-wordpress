@@ -112,3 +112,11 @@
 	color: #fff;
 	background: rgba(0, 0, 0, 0.55);
 }
+
+.profotograaf-image-text {
+	display: grid;
+	gap: 8px;
+	margin-block-end: 16px;
+	padding-block-end: 16px;
+	border-block-end: 1px solid #ddd;
+}
