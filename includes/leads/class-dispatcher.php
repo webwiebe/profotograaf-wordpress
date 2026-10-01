@@ -7,6 +7,8 @@
 
 namespace Profotograaf\Leads;
 
+use Profotograaf\Logger;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -81,10 +83,14 @@ final class Dispatcher {
 			if ( 'queued' === $result ) {
 				Delivery::schedule( $this->queue->now() );
 			} else {
+				if ( 'full' === $result ) {
+					Logger::warning( 'A lead was dropped because the queue is full.' );
+				}
 				do_action( 'profotograaf_lead_not_queued', $result, $submission );
 			}
 			return $result;
 		} catch ( \Throwable $e ) {
+			Logger::exception( 'A form submission could not be queued.', $e, array( 'form' => $submission->form_key ) );
 			return 'error';
 		}//end try
 	}

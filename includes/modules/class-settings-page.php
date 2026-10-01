@@ -7,15 +7,19 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Admin\Leads_Settings;
+use Profotograaf\Admin\Settings_Fields;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
-use Profotograaf\Settings;
+use Profotograaf\Settings_Schema;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The settings page: connect and disconnect, connection status, default
- * layout and the allowed embed origin.
+ * The settings page, in the tabs General, Galleries, Enquiry forms and
+ * Advanced. General holds the connection status, connect and disconnect and
+ * the allowed embed origin. The options on every tab come from
+ * Settings_Schema.
  *
  * Every state change is an admin-post or admin-ajax action that checks the
  * manage_options capability and a nonce before doing anything.
@@ -41,7 +45,8 @@ class Settings_Page implements Module {
 		$this->plugin = $plugin;
 
 		add_action( 'admin_menu', array( $this, 'add_menu' ) );
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'init', array( $this, 'register_settings' ) );
+		add_action( 'admin_init', array( $this, 'migrate_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'admin_notices', array( $this, 'reconnect_notice' ) );
 		add_action( 'admin_post_profotograaf_connect', array( $this, 'handle_connect' ) );
@@ -76,16 +81,14 @@ class Settings_Page implements Module {
 	 * Registers the settings.
 	 */
 	public function register_settings(): void {
-		$settings = $this->plugin()->settings();
-		register_setting(
-			'profotograaf',
-			Settings::OPTION,
-			array(
-				'type'              => 'array',
-				'sanitize_callback' => array( $settings, 'sanitize' ),
-				'default'           => array( 'default_layout' => Settings::DEFAULT_LAYOUT ),
-			)
-		);
+		$this->plugin()->settings()->register();
+	}
+
+	/**
+	 * Normalises settings saved by an older version, once per schema version.
+	 */
+	public function migrate_settings(): void {
+		$this->plugin()->settings()->migrate();
 	}
 
 	/**
@@ -233,14 +236,17 @@ class Settings_Page implements Module {
 		$connection = $this->plugin()->connection();
 		$status     = $connection->status();
 		$pairing    = $connection->pairing();
+		$tab        = $this->current_tab();
 		?>
 		<div class="wrap profotograaf-settings">
 			<h1><?php esc_html_e( 'Profotograaf', 'profotograaf' ); ?></h1>
 			<?php $this->render_notice(); ?>
+			<?php $this->render_tabs( $tab ); ?>
 
+			<?php if ( Settings_Schema::TAB_GENERAL === $tab ) : ?>
 			<h2><?php esc_html_e( 'Connection', 'profotograaf' ); ?></h2>
-			<?php if ( null !== $pairing ) : ?>
-				<?php $this->render_pairing( $pairing ); ?>
+				<?php if ( null !== $pairing ) : ?>
+					<?php $this->render_pairing( $pairing ); ?>
 			<?php elseif ( 'connected' === $status['state'] ) : ?>
 				<p class="profotograaf-status profotograaf-status--connected">
 					<strong><?php esc_html_e( 'Connected', 'profotograaf' ); ?></strong>
@@ -268,27 +274,14 @@ class Settings_Page implements Module {
 				<p><?php esc_html_e( 'Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site.', 'profotograaf' ); ?></p>
 				<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect to Profotograaf', 'profotograaf' ), 'primary' ); ?>
 			<?php endif; ?>
+			<?php endif; ?>
 
-			<h2><?php esc_html_e( 'Settings', 'profotograaf' ); ?></h2>
-			<form method="post" action="options.php">
-				<?php settings_fields( 'profotograaf' ); ?>
-				<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row"><label for="profotograaf-default-layout"><?php esc_html_e( 'Default gallery layout', 'profotograaf' ); ?></label></th>
-						<td>
-							<select id="profotograaf-default-layout" name="<?php echo esc_attr( Settings::OPTION ); ?>[default_layout]">
-								<?php foreach ( $this->layout_labels() as $value => $label ) : ?>
-									<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $this->plugin()->settings()->default_layout(), $value ); ?>><?php echo esc_html( $label ); ?></option>
-								<?php endforeach; ?>
-							</select>
-							<p class="description"><?php esc_html_e( 'Used when a gallery block or shortcode does not choose a layout.', 'profotograaf' ); ?></p>
-						</td>
-					</tr>
-				</table>
-				<?php submit_button(); ?>
-			</form>
+			<?php if ( Settings_Schema::TAB_ENQUIRY === $tab ) : ?>
+				<p><a href="<?php echo esc_url( Leads_Settings::url() ); ?>"><?php esc_html_e( 'Set up the enquiry forms', 'profotograaf' ); ?></a></p>
+			<?php endif; ?>
+			<?php ( new Settings_Fields( $this->plugin()->settings() ) )->render_form( $tab ); ?>
 
-			<?php if ( 'connected' === $status['state'] ) : ?>
+			<?php if ( Settings_Schema::TAB_GENERAL === $tab && 'connected' === $status['state'] ) : ?>
 				<?php $this->render_origin_sync(); ?>
 			<?php endif; ?>
 		</div>
@@ -296,16 +289,26 @@ class Settings_Page implements Module {
 	}
 
 	/**
-	 * Layout names for the select.
-	 *
-	 * @return array<string,string>
+	 * The tab to show: the `tab` query argument when it names a tab, else General.
 	 */
-	private function layout_labels(): array {
-		return array(
-			'grid'      => __( 'Grid', 'profotograaf' ),
-			'masonry'   => __( 'Masonry', 'profotograaf' ),
-			'slideshow' => __( 'Slideshow', 'profotograaf' ),
-		);
+	private function current_tab(): string {
+		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- selects what to show, changes nothing.
+		return array_key_exists( $tab, Settings_Schema::tabs() ) ? $tab : Settings_Schema::TAB_GENERAL;
+	}
+
+	/**
+	 * Prints the tab links.
+	 *
+	 * @param string $current Tab shown now.
+	 */
+	private function render_tabs( string $current ): void {
+		?>
+		<nav class="nav-tab-wrapper">
+			<?php foreach ( Settings_Schema::tabs() as $slug => $label ) : ?>
+				<a class="nav-tab<?php echo $slug === $current ? ' nav-tab-active' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'tab', $slug, self::url() ) ); ?>"<?php echo $slug === $current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $label ); ?></a>
+			<?php endforeach; ?>
+		</nav>
+		<?php
 	}
 
 	/**

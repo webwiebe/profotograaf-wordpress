@@ -80,10 +80,7 @@ class Gallery_Renderer {
 			return '';
 		}
 
-		$layout = isset( $args['layout'] ) ? sanitize_key( (string) $args['layout'] ) : '';
-		if ( ! in_array( $layout, Settings::LAYOUTS, true ) ) {
-			$layout = $this->settings->default_layout();
-		}
+		$layout = (string) $this->settings->resolve( 'default_layout', array( 'default_layout' => $args['layout'] ?? '' ) );
 
 		$this->script->enqueue();
 
@@ -119,7 +116,8 @@ class Gallery_Renderer {
 			return '';
 		}
 
-		$label = '' !== $title ? $title : __( 'View the gallery', 'profotograaf' );
+		$site_label = (string) $this->settings->resolve( 'fallback_link_label' );
+		$label      = '' !== $title ? $title : ( '' !== $site_label ? $site_label : __( 'View the gallery', 'profotograaf' ) );
 		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( $label ) );
 	}
 

@@ -14,7 +14,7 @@ test.describe( 'Settings > Profotograaf', () => {
 		await expect( page.getByRole( 'heading', { level: 1, name: 'Profotograaf' } ) ).toBeVisible();
 		await expect( page.getByText( 'Not connected' ) ).toBeVisible();
 		await expect( page.getByRole( 'button', { name: 'Connect to Profotograaf' } ) ).toBeVisible();
-		await expect( page.getByLabel( 'Default gallery layout' ) ).toHaveValue( 'grid' );
+		await expect( page.getByLabel( 'Gallery link text' ) ).toHaveValue( '' );
 	} );
 
 	test( 'the menu entry sits under Settings', async ( { page } ) => {
@@ -23,8 +23,29 @@ test.describe( 'Settings > Profotograaf', () => {
 		await expect( page.locator( '#menu-settings' ).getByRole( 'link', { name: 'Profotograaf' } ) ).toBeVisible();
 	} );
 
-	test( 'the default layout is saved', async ( { page } ) => {
+	test( 'the four tabs are linked', async ( { page } ) => {
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
+
+		for ( const name of [ 'General', 'Galleries', 'Enquiry forms', 'Advanced' ] ) {
+			await expect( page.locator( '.nav-tab-wrapper' ).getByRole( 'link', { name } ) ).toBeVisible();
+		}
+	} );
+
+	test( 'the General tab saves the gallery link text', async ( { page } ) => {
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=general' );
+		await page.getByLabel( 'Gallery link text' ).fill( 'See the photos' );
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+
+		await expect( page.getByLabel( 'Gallery link text' ) ).toHaveValue( 'See the photos' );
+
+		// Leave the setting as found so the tests can run again.
+		await page.getByLabel( 'Gallery link text' ).fill( '' );
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+		await expect( page.getByLabel( 'Gallery link text' ) ).toHaveValue( '' );
+	} );
+
+	test( 'the Galleries tab saves the default layout', async ( { page } ) => {
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=galleries' );
 		await page.getByLabel( 'Default gallery layout' ).selectOption( 'masonry' );
 		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
 
@@ -35,6 +56,54 @@ test.describe( 'Settings > Profotograaf', () => {
 		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
 		await expect( page.getByLabel( 'Default gallery layout' ) ).toHaveValue( 'grid' );
 	} );
+
+	test( 'the Enquiry forms tab saves the collect switch', async ( { page } ) => {
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=enquiry-forms' );
+		const collect = page.getByLabel( 'Collect enquiries' );
+		await expect( collect ).toBeChecked();
+		await collect.uncheck();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+
+		await expect( page.getByLabel( 'Collect enquiries' ) ).not.toBeChecked();
+
+		await page.getByLabel( 'Collect enquiries' ).check();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+		await expect( page.getByLabel( 'Collect enquiries' ) ).toBeChecked();
+	} );
+
+	test( 'the Advanced tab saves the keep data switch', async ( { page } ) => {
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=advanced' );
+		const keep = page.getByLabel( 'Keep my data when the plugin is deleted' );
+		await expect( keep ).not.toBeChecked();
+		await keep.check();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+
+		await expect( page.getByLabel( 'Keep my data when the plugin is deleted' ) ).toBeChecked();
+
+		await page.getByLabel( 'Keep my data when the plugin is deleted' ).uncheck();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+		await expect( page.getByLabel( 'Keep my data when the plugin is deleted' ) ).not.toBeChecked();
+	} );
+
+	test( 'saving one tab keeps the values of the others', async ( { page } ) => {
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=galleries' );
+		await page.getByLabel( 'Default gallery layout' ).selectOption( 'slideshow' );
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=advanced' );
+		await page.getByLabel( 'Keep my data when the plugin is deleted' ).check();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=galleries' );
+		await expect( page.getByLabel( 'Default gallery layout' ) ).toHaveValue( 'slideshow' );
+
+		await page.getByLabel( 'Default gallery layout' ).selectOption( 'grid' );
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=advanced' );
+		await page.getByLabel( 'Keep my data when the plugin is deleted' ).uncheck();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+	} );
+
 
 	test( 'connect shows the code, approval connects the site and disconnect clears it', async ( { page } ) => {
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );

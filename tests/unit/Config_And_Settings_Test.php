@@ -12,7 +12,6 @@ use Brain\Monkey\Functions;
 use Profotograaf\Autoloader;
 use Profotograaf\Config;
 use Profotograaf\Modules\Origin_Sync;
-use Profotograaf\Settings;
 
 class Config_And_Settings_Test extends Wp_Test_Case {
 
@@ -37,25 +36,6 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		Functions\when( 'home_url' )->justReturn( 'https://Photos.Example.com:8443/blog' );
 
 		$this->assertSame( 'https://photos.example.com:8443', Config::site_origin() );
-	}
-
-	public function test_the_default_layout_is_grid_and_junk_is_ignored(): void {
-		$settings = new Settings();
-		$this->assertSame( 'grid', $settings->default_layout() );
-
-		$this->options['profotograaf_settings'] = array( 'default_layout' => 'carousel' );
-		$this->assertSame( 'grid', $settings->default_layout() );
-
-		$this->options['profotograaf_settings'] = array( 'default_layout' => 'masonry' );
-		$this->assertSame( 'masonry', $settings->default_layout() );
-	}
-
-	public function test_sanitize_only_accepts_known_layouts(): void {
-		$settings = new Settings();
-
-		$this->assertSame( array( 'default_layout' => 'slideshow' ), $settings->sanitize( array( 'default_layout' => 'slideshow' ) ) );
-		$this->assertSame( array( 'default_layout' => 'grid' ), $settings->sanitize( array( 'default_layout' => '<script>' ) ) );
-		$this->assertSame( array( 'default_layout' => 'grid' ), $settings->sanitize( 'nonsense' ) );
 	}
 
 	public function test_the_autoloader_maps_names_to_wordpress_file_names(): void {

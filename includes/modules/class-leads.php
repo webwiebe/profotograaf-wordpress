@@ -66,8 +66,10 @@ class Leads implements Module {
 				static fn( $bridge ): bool => $bridge instanceof Bridge
 			)
 		);
-		foreach ( $bridges as $bridge ) {
-			$bridge->register();
+		if ( $plugin->settings()->get( 'leads_enabled' ) ) {
+			foreach ( $bridges as $bridge ) {
+				$bridge->register();
+			}
 		}
 
 		( new Delivery( $queue, $plugin->api() ) )->register();
