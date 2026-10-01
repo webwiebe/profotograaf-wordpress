@@ -14,15 +14,19 @@ defined( 'ABSPATH' ) || exit;
  * option so a page view can write the no-JavaScript fallback link without a
  * request to the platform.
  *
- * The picker fills it whenever it lists the galleries. A gallery that is not
- * in it yet is looked up once (a signed in call to the platform), and a failed
- * or empty lookup is not repeated for five minutes.
+ * The picker fills it whenever it lists the galleries. A page view only reads
+ * the option. When a gallery is not in it yet, the view schedules one
+ * background lookup (a signed in call to the platform, made by cron) and
+ * renders without the link. A later view finds the result. A lookup is
+ * scheduled at most once per five minutes.
  */
 class Gallery_Index {
 
 	public const OPTION = 'profotograaf_gallery_index';
 
 	public const LOOKUP_GUARD = 'profotograaf_gallery_lookup';
+
+	public const LOOKUP_HOOK = 'profotograaf_lookup_galleries';
 
 	private const MAX_ENTRIES = 500;
 
@@ -64,25 +68,38 @@ class Gallery_Index {
 	/**
 	 * Details of one gallery: title and url, or null when unknown.
 	 *
+	 * Reads local data only. A miss schedules the background lookup.
+	 *
 	 * @param string $id Gallery id.
 	 * @return array{title:string,url:string}|null
 	 */
 	public function find( string $id ): ?array {
 		$found = $this->stored( $id );
-		if ( null !== $found ) {
-			return $found;
+		if ( null === $found ) {
+			$this->schedule_lookup();
 		}
-		if ( false !== get_transient( self::LOOKUP_GUARD ) ) {
-			return null;
+		return $found;
+	}
+
+	/**
+	 * Fetches the gallery list and stores it. Runs from cron, never on a page view.
+	 */
+	public function lookup(): void {
+		$rows = $this->api->list_galleries();
+		if ( ! is_wp_error( $rows ) ) {
+			$this->remember( $rows );
+		}
+	}
+
+	/**
+	 * Queues one lookup unless one is pending or ran in the last five minutes.
+	 */
+	private function schedule_lookup(): void {
+		if ( false !== get_transient( self::LOOKUP_GUARD ) || wp_next_scheduled( self::LOOKUP_HOOK ) ) {
+			return;
 		}
 		set_transient( self::LOOKUP_GUARD, 1, 5 * MINUTE_IN_SECONDS );
-
-		$rows = $this->api->list_galleries();
-		if ( is_wp_error( $rows ) ) {
-			return null;
-		}
-		$this->remember( $rows );
-		return $this->stored( $id );
+		wp_schedule_single_event( time(), self::LOOKUP_HOOK );
 	}
 
 	/**
