@@ -25,8 +25,19 @@ class Recording_Leads_Settings extends Leads_Settings {
 	 */
 	public array $finished = array();
 
+	/**
+	 * CSV files sent.
+	 *
+	 * @var string[]
+	 */
+	public array $csv = array();
+
 	protected function finish( string $done ): void {
 		$this->finished[] = $done;
+	}
+
+	protected function send_csv( string $csv ): void {
+		$this->csv[] = $csv;
 	}
 }
 
@@ -103,6 +114,8 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		$this->assertNotFalse( has_action( 'admin_menu', array( $this->page, 'add_menu' ) ) );
 		$this->assertNotFalse( has_action( 'admin_post_profotograaf_leads_save', array( $this->page, 'handle_save' ) ) );
 		$this->assertNotFalse( has_action( 'admin_post_profotograaf_leads_retry', array( $this->page, 'handle_retry' ) ) );
+		$this->assertNotFalse( has_action( 'admin_post_profotograaf_leads_export', array( $this->page, 'handle_export' ) ) );
+		$this->assertNotFalse( has_action( 'admin_post_profotograaf_leads_dismiss', array( $this->page, 'handle_dismiss' ) ) );
 	}
 
 	public function test_saving_stores_the_switch_and_mapping_of_known_forms_only(): void {
@@ -197,6 +210,71 @@ class Leads_Settings_Test extends Leads_Test_Case {
 			$this->page->handle_retry();
 		} finally {
 			$this->assertSame( 'failed', $this->store->jobs['a']['status'] );
+		}
+	}
+
+	public function test_export_sends_the_failed_leads_and_marks_them_exported(): void {
+		$this->allow( true );
+		$this->queue->enqueue( 'a', array( 'name' => 'Anna', 'email' => 'anna@example.com', 'source_form' => 'CF7: Wedding' ) );
+		$this->queue->enqueue( 'b', array( 'email' => 'pending@example.com' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad', 400 );
+
+		$this->page->handle_export();
+
+		$this->assertCount( 1, $this->page->csv );
+		$this->assertStringContainsString( 'anna@example.com', $this->page->csv[0] );
+		$this->assertStringNotContainsString( 'pending@example.com', $this->page->csv[0] );
+		$this->assertArrayHasKey( 'exported_at', $this->store->jobs['a'] );
+		$this->assertArrayNotHasKey( 'exported_at', $this->store->jobs['b'] );
+	}
+
+	public function test_export_needs_the_capability_and_a_nonce(): void {
+		$this->queue->enqueue( 'a', array( 'email' => 'a@example.com' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad', 400 );
+
+		$this->allow( false );
+		try {
+			$this->page->handle_export();
+			$this->fail( 'Expected the capability check to stop the export.' );
+		} catch ( \RuntimeException $e ) {
+			$this->assertSame( 'forbidden', $e->getMessage() );
+		}
+
+		$this->allow( true, false );
+		try {
+			$this->page->handle_export();
+			$this->fail( 'Expected the nonce check to stop the export.' );
+		} catch ( \RuntimeException $e ) {
+			$this->assertSame( 'bad nonce', $e->getMessage() );
+		}
+		$this->assertSame( array(), $this->page->csv );
+	}
+
+	public function test_dismiss_removes_only_exported_leads(): void {
+		$this->allow( true );
+		$this->queue->enqueue( 'a', array( 'email' => 'a@example.com' ) );
+		$this->queue->enqueue( 'b', array( 'email' => 'b@example.com' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad', 400 );
+		$this->queue->fail( $this->store->jobs['b'], 'bad', 400 );
+		$this->queue->mark_exported( array( 'a' ) );
+
+		$this->page->handle_dismiss();
+
+		$this->assertSame( array( 'b' ), array_keys( $this->store->jobs ) );
+		$this->assertSame( array( 'dismissed' ), $this->page->finished );
+	}
+
+	public function test_dismiss_needs_a_valid_nonce(): void {
+		$this->allow( true, false );
+		$this->queue->enqueue( 'a', array( 'email' => 'a@example.com' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad', 400 );
+		$this->queue->mark_exported( array( 'a' ) );
+
+		try {
+			$this->page->handle_dismiss();
+			$this->fail( 'Expected the nonce check to stop the dismissal.' );
+		} catch ( \RuntimeException $e ) {
+			$this->assertCount( 1, $this->store->jobs );
 		}
 	}
 }

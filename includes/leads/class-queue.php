@@ -20,14 +20,21 @@ defined( 'ABSPATH' ) || exit;
  * Retries back off exponentially: 1 minute after the first failure, then 2, 4,
  * 8 and so on up to 6 hours. A job that keeps failing for 10 attempts or 3
  * days, or that the platform rejects for good (a 4xx other than 408 and 429),
- * becomes `failed`, is kept for 7 days so the photographer can retry it, and
- * is then removed together with the personal data in it.
+ * becomes `failed`. Lead_Alerts mails the admin once at that moment. A failed
+ * job is kept until the photographer exports it and removes it, or until the
+ * retention in the settings has passed (30 days by default). Removal after the
+ * retention happens only for jobs that were alerted or exported, and sends a
+ * summary mail. A lead that does not fit in a full queue is reported to
+ * Lead_Alerts as dropped.
+ *
+ * A job also carries `failed_at`, `alerted_at`, `fallback_at` and
+ * `exported_at` once those things happened.
  */
 final class Queue {
 
 	public const MAX_ATTEMPTS = 10;
 	public const MAX_AGE      = 259200;
-	public const KEEP_FAILED  = 604800;
+	public const KEEP_FAILED  = 2592000;
 	public const MAX_PENDING  = 500;
 	public const BASE_DELAY   = 60;
 	public const MAX_DELAY    = 21600;
@@ -47,14 +54,24 @@ final class Queue {
 	private $clock;
 
 	/**
+	 * Alerts and mail fallback. Without it nothing is mailed, and failed jobs
+	 * are never pruned because none of them counts as alerted.
+	 *
+	 * @var Lead_Alerts|null
+	 */
+	private ?Lead_Alerts $alerts;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Job_Store     $store Storage.
-	 * @param callable|null $clock Returns the current unix time, `time` by default.
+	 * @param Job_Store        $store Storage.
+	 * @param callable|null    $clock Returns the current unix time, `time` by default.
+	 * @param Lead_Alerts|null $alerts Alerts and mail fallback.
 	 */
-	public function __construct( Job_Store $store, ?callable $clock = null ) {
-		$this->store = $store;
-		$this->clock = $clock ?? 'time';
+	public function __construct( Job_Store $store, ?callable $clock = null, ?Lead_Alerts $alerts = null ) {
+		$this->store  = $store;
+		$this->clock  = $clock ?? 'time';
+		$this->alerts = $alerts;
 	}
 
 	/**
@@ -83,6 +100,9 @@ final class Queue {
 	 */
 	public function enqueue( string $id, array $payload ): string {
 		if ( $this->counts()['pending'] >= self::MAX_PENDING ) {
+			if ( null !== $this->alerts ) {
+				$this->alerts->dropped( $payload, $this->now() );
+			}
 			return 'full';
 		}
 		$now = $this->now();
@@ -143,7 +163,7 @@ final class Queue {
 			$job['status']    = 'failed';
 			$job['next_at']   = 0;
 			$job['failed_at'] = $now;
-			$this->store->put( (string) $job['id'], $job );
+			$this->keep_failed( $job );
 			return 'failed';
 		}
 		$job['next_at'] = $now + max( self::backoff( $job['attempts'] ), min( $retry_after, self::MAX_DELAY ) );
@@ -165,7 +185,39 @@ final class Queue {
 		$job['last_error']  = $message;
 		$job['last_status'] = $status;
 		$job['failed_at']   = $this->now();
+		$this->keep_failed( $job );
+	}
+
+	/**
+	 * Stores a failed job and alerts the admin about it.
+	 *
+	 * @param array<string,mixed> $job The failed job.
+	 */
+	private function keep_failed( array $job ): void {
 		$this->store->put( (string) $job['id'], $job );
+		if ( null !== $this->alerts ) {
+			$this->store->put( (string) $job['id'], $this->alerts->failed( $job ) );
+		}
+	}
+
+	/**
+	 * Sends the alert again for failed jobs whose mail did not go out.
+	 *
+	 * @return int Jobs alerted.
+	 */
+	public function alert_pending(): int {
+		if ( null === $this->alerts ) {
+			return 0;
+		}
+		$count = 0;
+		foreach ( $this->store->all() as $id => $job ) {
+			if ( 'failed' === ( $job['status'] ?? '' ) && empty( $job['alerted_at'] ) ) {
+				$job = $this->alerts->failed( $job );
+				$this->store->put( (string) $id, $job );
+				$count += empty( $job['alerted_at'] ) ? 0 : 1;
+			}
+		}
+		return $count;
 	}
 
 	/**
@@ -184,7 +236,7 @@ final class Queue {
 			$job['attempts']   = 0;
 			$job['next_at']    = $now;
 			$job['created_at'] = $now;
-			unset( $job['failed_at'] );
+			unset( $job['failed_at'], $job['alerted_at'], $job['exported_at'] );
 			$this->store->put( (string) $id, $job );
 			++$count;
 		}
@@ -192,24 +244,84 @@ final class Queue {
 	}
 
 	/**
-	 * Removes failed jobs kept longer than a week.
+	 * Removes failed jobs kept longer than the retention, when the admin was
+	 * alerted about them or exported them. Mails a summary of the ones the admin
+	 * never exported.
 	 *
 	 * @return int Jobs removed.
 	 */
 	public function prune(): int {
-		$now     = $this->now();
-		$removed = 0;
+		$now        = $this->now();
+		$keep       = null !== $this->alerts ? $this->alerts->retention() : self::KEEP_FAILED;
+		$remove     = array();
+		$unexported = array();
 		foreach ( $this->store->all() as $id => $job ) {
-			if ( 'failed' !== ( $job['status'] ?? '' ) ) {
+			if ( 'failed' !== ( $job['status'] ?? '' ) || ! ( isset( $job['exported_at'] ) || isset( $job['alerted_at'] ) ) ) {
 				continue;
 			}
 			$since = (int) ( $job['failed_at'] ?? $job['created_at'] ?? 0 );
-			if ( $now - $since >= self::KEEP_FAILED ) {
-				$this->store->delete( (string) $id );
-				++$removed;
+			if ( $now - $since >= $keep ) {
+				$remove[] = (string) $id;
+				if ( ! isset( $job['exported_at'] ) ) {
+					$unexported[] = (string) ( $job['payload']['source_form'] ?? '' );
+				}
 			}
 		}
-		return $removed;
+		if ( array() !== $unexported && null !== $this->alerts && ! $this->alerts->expired( $unexported ) ) {
+			// The warning did not go out: keep the leads and try again on the next run.
+			return 0;
+		}
+		foreach ( $remove as $id ) {
+			$this->store->delete( $id );
+		}
+		return count( $remove );
+	}
+
+	/**
+	 * The failed jobs, oldest first, with their personal data. For the export.
+	 *
+	 * @return array<string,array<string,mixed>>
+	 */
+	public function failed_jobs(): array {
+		$jobs = array_filter(
+			$this->store->all(),
+			static fn( array $job ): bool => 'failed' === ( $job['status'] ?? '' )
+		);
+		uasort( $jobs, static fn( array $a, array $b ): int => (int) ( $a['failed_at'] ?? 0 ) <=> (int) ( $b['failed_at'] ?? 0 ) );
+		return $jobs;
+	}
+
+	/**
+	 * Records that the failed jobs were exported.
+	 *
+	 * @param string[] $ids Job ids.
+	 */
+	public function mark_exported( array $ids ): void {
+		$now  = $this->now();
+		$jobs = $this->store->all();
+		foreach ( $ids as $id ) {
+			$job = $jobs[ $id ] ?? null;
+			if ( null !== $job && 'failed' === ( $job['status'] ?? '' ) ) {
+				$job['exported_at'] = $now;
+				$this->store->put( $id, $job );
+			}
+		}
+	}
+
+	/**
+	 * Removes the failed jobs that were exported.
+	 *
+	 * @return int Jobs removed.
+	 */
+	public function dismiss_exported(): int {
+		$count = 0;
+		foreach ( $this->store->all() as $id => $job ) {
+			if ( 'failed' === ( $job['status'] ?? '' ) && isset( $job['exported_at'] ) ) {
+				$this->store->delete( (string) $id );
+				++$count;
+			}
+		}
+		return $count;
 	}
 
 	/**

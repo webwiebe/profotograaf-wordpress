@@ -70,6 +70,9 @@ class Settings_Test extends Wp_Test_Case {
 				'fallback_link_label'    => 'Open the gallery',
 				'default_layout'         => 'slideshow',
 				'leads_enabled'          => false,
+				'leads_alert_email'      => '',
+				'leads_fallback_email'   => '',
+				'leads_failed_retention' => '30',
 				'keep_data_on_uninstall' => true,
 			),
 			$clean
@@ -174,6 +177,9 @@ class Settings_Test extends Wp_Test_Case {
 				'fallback_link_label'    => '',
 				'default_layout'         => 'masonry',
 				'leads_enabled'          => true,
+				'leads_alert_email'      => '',
+				'leads_fallback_email'   => '',
+				'leads_failed_retention' => '30',
 				'keep_data_on_uninstall' => false,
 			),
 			$this->options['profotograaf_settings']

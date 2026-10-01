@@ -64,10 +64,41 @@ describe( 'Picker', () => {
 		expect( alert.textContent ).toMatch( /Connect this site to Profotograaf/ );
 	} );
 
-	it( 'shows the server message for any other failure', async () => {
-		fetchMock.mockRejectedValue( { message: 'Rate limited' } );
+	it( 'shows a rate limit message and retries on request', async () => {
+		fetchMock.mockRejectedValueOnce( {
+			code: 'profotograaf_http',
+			message: 'Rate limited',
+			data: { status: 429, retry_after: 30 },
+		} );
+		fetchMock.mockResolvedValueOnce( [ galleryRow() ] );
 		render( <Picker onPick={ vi.fn() } /> );
-		expect( ( await screen.findByRole( 'alert' ) ).textContent ).toBe( 'Rate limited' );
+		expect( ( await screen.findByRole( 'alert' ) ).textContent ).toMatch( /Try again in 30 seconds/ );
+
+		fireEvent.click( screen.getByText( 'Try again' ) );
+		await screen.findByText( 'Spring wedding' );
+		expect( fetchMock ).toHaveBeenCalledTimes( 2 );
+	} );
+
+	it( 'shows a network message with a retry action', async () => {
+		fetchMock.mockRejectedValue( { code: 'fetch_error', message: 'You are probably offline.' } );
+		render( <Picker onPick={ vi.fn() } /> );
+		expect( ( await screen.findByRole( 'alert' ) ).textContent ).toMatch( /could not be reached/ );
+		expect( screen.getByText( 'Try again' ) ).toBeTruthy();
+	} );
+
+	it( 'shows a platform error without the raw text', async () => {
+		fetchMock.mockRejectedValue( { code: 'profotograaf_http', message: 'Raw platform text', data: { status: 502 } } );
+		render( <Picker onPick={ vi.fn() } /> );
+		const alert = await screen.findByRole( 'alert' );
+		expect( alert.textContent ).toMatch( /reported a problem/ );
+		expect( alert.textContent ).not.toMatch( /Raw platform text/ );
+	} );
+
+	it( 'asks to reconnect without a retry action', async () => {
+		fetchMock.mockRejectedValue( { code: 'profotograaf_reconnect' } );
+		render( <Picker onPick={ vi.fn() } /> );
+		expect( ( await screen.findByRole( 'alert' ) ).textContent ).toMatch( /Connect this site to Profotograaf again/ );
+		expect( screen.queryByText( 'Try again' ) ).toBeNull();
 	} );
 
 	it( 'ignores a response that arrives after unmount', async () => {

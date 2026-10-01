@@ -9,6 +9,7 @@ namespace Profotograaf\Admin;
 
 use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Delivery;
+use Profotograaf\Leads\Failed_Export;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Mapping;
 use Profotograaf\Leads\Queue;
@@ -79,6 +80,8 @@ class Leads_Settings {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'admin_post_profotograaf_leads_save', array( $this, 'handle_save' ) );
 		add_action( 'admin_post_profotograaf_leads_retry', array( $this, 'handle_retry' ) );
+		add_action( 'admin_post_profotograaf_leads_export', array( $this, 'handle_export' ) );
+		add_action( 'admin_post_profotograaf_leads_dismiss', array( $this, 'handle_dismiss' ) );
 	}
 
 	/**
@@ -143,6 +146,28 @@ class Leads_Settings {
 	}
 
 	/**
+	 * Downloads the failed leads as CSV and marks them exported.
+	 */
+	public function handle_export(): void {
+		$this->authorize( 'profotograaf_leads_export' );
+
+		$jobs = $this->queue->failed_jobs();
+		$csv  = Failed_Export::build( $jobs );
+		$this->queue->mark_exported( array_map( 'strval', array_keys( $jobs ) ) );
+		$this->send_csv( $csv );
+	}
+
+	/**
+	 * Removes the failed leads that were exported.
+	 */
+	public function handle_dismiss(): void {
+		$this->authorize( 'profotograaf_leads_dismiss' );
+
+		$this->queue->dismiss_exported();
+		$this->finish( 'dismissed' );
+	}
+
+	/**
 	 * Renders the page.
 	 */
 	public function render(): void {
@@ -187,8 +212,8 @@ class Leads_Settings {
 					sprintf(
 						/* translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent. */
 						__( 'Waiting to be sent: %1$d. Could not be sent: %2$d.', 'profotograaf' ),
-						$counts['pending'],
-						$counts['failed']
+						number_format_i18n( $counts['pending'] ),
+						number_format_i18n( $counts['failed'] )
 					)
 				);
 				?>
@@ -289,12 +314,58 @@ class Leads_Settings {
 				</li>
 			<?php endforeach; ?>
 		</ul>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<input type="hidden" name="action" value="profotograaf_leads_retry">
-			<?php wp_nonce_field( 'profotograaf_leads_retry' ); ?>
-			<?php submit_button( __( 'Try again', 'profotograaf' ), 'secondary', 'submit', false ); ?>
+		<p class="description"><?php esc_html_e( 'Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed.', 'profotograaf' ); ?></p>
+		<div class="profotograaf-leads-actions">
+			<?php
+			$this->render_action( 'profotograaf_leads_retry', __( 'Try again', 'profotograaf' ) );
+			$this->render_action( 'profotograaf_leads_export', __( 'Download as CSV', 'profotograaf' ) );
+			if ( $this->has_exported() ) {
+				$this->render_action( 'profotograaf_leads_dismiss', __( 'Remove exported enquiries', 'profotograaf' ) );
+			}
+			?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Prints a button that posts one of the admin-post actions.
+	 *
+	 * @param string $action Action and nonce name.
+	 * @param string $label  Button text.
+	 */
+	private function render_action( string $action, string $label ): void {
+		?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="profotograaf-leads-action">
+			<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>">
+			<?php wp_nonce_field( $action ); ?>
+			<?php submit_button( $label, 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
+	}
+
+	/**
+	 * Whether a failed lead was exported.
+	 */
+	private function has_exported(): bool {
+		foreach ( $this->queue->failed_jobs() as $job ) {
+			if ( isset( $job['exported_at'] ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Sends the CSV to the browser and stops.
+	 *
+	 * @param string $csv File content.
+	 */
+	protected function send_csv( string $csv ): void {
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="profotograaf-failed-enquiries-' . gmdate( 'Ymd-His', $this->queue->now() ) . '.csv"' );
+		echo $csv; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSV download, every cell is quoted by Failed_Export.
+		exit;
 	}
 
 	/**
@@ -306,6 +377,8 @@ class Leads_Settings {
 			$message = __( 'Changes saved.', 'profotograaf' );
 		} elseif ( 'retried' === $done ) {
 			$message = __( 'The enquiries are queued again.', 'profotograaf' );
+		} elseif ( 'dismissed' === $done ) {
+			$message = __( 'The exported enquiries were removed.', 'profotograaf' );
 		} else {
 			return;
 		}

@@ -17,9 +17,11 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: profotograaf.php
-#: includes/modules/class-settings-page.php:72
-#: includes/modules/class-settings-page.php:73
-#: includes/modules/class-settings-page.php:239
+#: includes/class-cron-health.php:160
+#: includes/class-cron-health.php:175
+#: includes/modules/class-settings-page.php:74
+#: includes/modules/class-settings-page.php:75
+#: includes/modules/class-settings-page.php:269
 msgid "Profotograaf"
 msgstr ""
 
@@ -38,116 +40,117 @@ msgstr "Toon je Profotograaf-galerijen op je eigen site, geef klanten een ingang
 msgid "https://profotograaf.nl"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:96
-#: includes/admin/class-leads-settings.php:156
+#: includes/admin/class-leads-settings.php:99
+#: includes/admin/class-leads-settings.php:181
 msgid "Profotograaf enquiries"
 msgstr "Profotograaf-aanvragen"
 
-#: includes/admin/class-leads-settings.php:97
+#: includes/admin/class-leads-settings.php:100
 #: includes/class-settings-schema.php:51
 msgid "Enquiry forms"
 msgstr "Aanvraagformulieren"
 
-#: includes/admin/class-leads-settings.php:150
-#: includes/admin/class-leads-settings.php:345
-#: includes/modules/class-settings-page.php:204
-#: includes/modules/class-settings-page.php:231
-#: includes/modules/class-settings-page.php:427
+#: includes/admin/class-leads-settings.php:175
+#: includes/admin/class-leads-settings.php:418
+#: includes/modules/class-settings-page.php:234
+#: includes/modules/class-settings-page.php:261
+#: includes/modules/class-settings-page.php:457
 msgid "You do not have permission to do this."
 msgstr "Je hebt hier geen toestemming voor."
 
-#: includes/admin/class-leads-settings.php:159
+#: includes/admin/class-leads-settings.php:184
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
 msgstr "Stuur de aanvragen uit je contactformulieren naar je Profotograaf-inbox. Zet een formulier aan en controleer welk veld welk deel van de aanvraag vult. Voor een formulier dat uit staat wordt niets verstuurd."
 
-#: includes/admin/class-leads-settings.php:164
+#: includes/admin/class-leads-settings.php:189
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr "Deze site is niet verbonden met Profotograaf, dus aanvragen wachten in een wachtrij."
 
-#: includes/admin/class-leads-settings.php:165
+#: includes/admin/class-leads-settings.php:190
 msgid "Connect this site"
 msgstr "Verbind deze site"
 
-#: includes/admin/class-leads-settings.php:171
+#: includes/admin/class-leads-settings.php:196
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
 msgstr "Er is geen ondersteunde formulierplugin gevonden. Installeer Contact Form 7, WPForms of Gravity Forms en maak een formulier."
 
-#: includes/admin/class-leads-settings.php:179
+#: includes/admin/class-leads-settings.php:204
 msgid "Save changes"
 msgstr "Wijzigingen opslaan"
 
-#: includes/admin/class-leads-settings.php:183
+#: includes/admin/class-leads-settings.php:208
 msgid "Delivery"
 msgstr "Bezorging"
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
-#: includes/admin/class-leads-settings.php:189
+#: includes/admin/class-leads-settings.php:214
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
 msgstr "Wacht op verzending: %1$d. Kon niet worden verstuurd: %2$d."
 
-#: includes/admin/class-leads-settings.php:214
+#: includes/admin/class-leads-settings.php:239
 msgid "Name"
 msgstr "Naam"
 
-#: includes/admin/class-leads-settings.php:215
+#: includes/admin/class-leads-settings.php:240
 msgid "Email address"
 msgstr "E-mailadres"
 
-#: includes/admin/class-leads-settings.php:216
+#: includes/admin/class-leads-settings.php:241
 msgid "Phone"
 msgstr "Telefoon"
 
-#: includes/admin/class-leads-settings.php:217
+#: includes/admin/class-leads-settings.php:242
 msgid "Event date"
 msgstr "Datum van de gelegenheid"
 
-#: includes/admin/class-leads-settings.php:218
+#: includes/admin/class-leads-settings.php:243
 msgid "Message"
 msgstr "Bericht"
 
-#: includes/admin/class-leads-settings.php:228
+#: includes/admin/class-leads-settings.php:253
 msgid "Send submissions of this form to Profotograaf"
 msgstr "Stuur inzendingen van dit formulier naar Profotograaf"
 
 #. translators: %s: name of the form field that is picked automatically.
-#: includes/admin/class-leads-settings.php:247
+#: includes/admin/class-leads-settings.php:272
 #, php-format
 msgid "Automatic (%s)"
 msgstr "Automatisch (%s)"
 
-#: includes/admin/class-leads-settings.php:248
+#: includes/admin/class-leads-settings.php:273
 msgid "Automatic (no field found)"
 msgstr "Automatisch (geen veld gevonden)"
 
-#: includes/admin/class-leads-settings.php:252
+#: includes/admin/class-leads-settings.php:277
 msgid "Do not send"
 msgstr "Niet versturen"
 
-#: includes/admin/class-leads-settings.php:261
+#: includes/admin/class-leads-settings.php:286
 msgid "Every other field is sent along as a label and value."
 msgstr "Alle andere velden gaan mee als label en waarde."
 
 #. translators: 1: form name, 2: error message.
-#: includes/admin/class-leads-settings.php:283
+#: includes/admin/class-leads-settings.php:308
 #, php-format
 msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
-#: includes/admin/class-leads-settings.php:295
+#: includes/admin/class-leads-settings.php:320
+#: build/gallery/index.js:3
 msgid "Try again"
 msgstr "Opnieuw proberen"
 
-#: includes/admin/class-leads-settings.php:306
+#: includes/admin/class-leads-settings.php:377
 msgid "Changes saved."
 msgstr "Wijzigingen opgeslagen."
 
-#: includes/admin/class-leads-settings.php:308
+#: includes/admin/class-leads-settings.php:379
 msgid "The enquiries are queued again."
 msgstr "De aanvragen staan weer in de wachtrij."
 
 #: includes/class-api-client.php:144
-#: includes/class-gallery-rest.php:123
+#: includes/class-gallery-rest.php:128
 msgid "A gallery id is required."
 msgstr "Een galerij-id is verplicht."
 
@@ -226,11 +229,11 @@ msgstr "Open mijn galerij"
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
-#: includes/modules/class-settings-page.php:103
+#: includes/modules/class-settings-page.php:105
 msgid "Settings"
 msgstr "Instellingen"
 
-#: includes/modules/class-settings-page.php:324
+#: includes/modules/class-settings-page.php:354
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Wachten tot je de verbinding goedkeurt in Profotograaf."
 
@@ -238,69 +241,69 @@ msgstr "Wachten tot je de verbinding goedkeurt in Profotograaf."
 msgid "Could not check the connection. Reload this page to try again."
 msgstr "De verbinding kon niet worden gecontroleerd. Laad deze pagina opnieuw om het nog eens te proberen."
 
-#: includes/modules/class-settings-page.php:145
+#: includes/modules/class-settings-page.php:175
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr "Profotograaf heeft een nieuwe toestemming nodig om galerijen aan te zetten voor insluiten."
 
-#: includes/modules/class-settings-page.php:147
+#: includes/modules/class-settings-page.php:177
 msgid "Connect this site again"
 msgstr "Koppel deze site opnieuw"
 
-#: includes/modules/class-settings-page.php:179
+#: includes/modules/class-settings-page.php:209
 msgid "Disconnected from Profotograaf."
 msgstr "Verbinding met Profotograaf verbroken."
 
-#: includes/modules/class-settings-page.php:183
+#: includes/modules/class-settings-page.php:213
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr "Verbinding verbroken. Deze site heeft geen toegang meer. Om de site ook uit je account te verwijderen, open je Gekoppelde apps in de instellingen van je Profotograaf-account."
 
-#: includes/modules/class-settings-page.php:214
+#: includes/modules/class-settings-page.php:244
 msgid "Connected to Profotograaf."
 msgstr "Verbonden met Profotograaf."
 
-#: includes/modules/class-settings-page.php:217
+#: includes/modules/class-settings-page.php:247
 msgid "The connection was declined in Profotograaf."
 msgstr "De verbinding is geweigerd in Profotograaf."
 
-#: includes/modules/class-settings-page.php:220
+#: includes/modules/class-settings-page.php:250
 msgid "The code expired. Start the connection again."
 msgstr "De code is verlopen. Start de verbinding opnieuw."
 
-#: includes/modules/class-settings-page.php:244
+#: includes/modules/class-settings-page.php:274
 msgid "Connection"
 msgstr "Verbinding"
 
-#: includes/modules/class-settings-page.php:249
+#: includes/modules/class-settings-page.php:279
 msgid "Connected"
 msgstr "Verbonden"
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:253
+#: includes/modules/class-settings-page.php:283
 #, php-format
 msgid "since %s."
 msgstr "sinds %s."
 
-#: includes/modules/class-settings-page.php:259
+#: includes/modules/class-settings-page.php:289
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr "Deze koppeling is gemaakt voordat Profotograaf deze site galerijen kon laten aanzetten voor insluiten. Koppel opnieuw om die toestemming te geven. Je galerijen en instellingen blijven zoals ze zijn."
 
-#: includes/modules/class-settings-page.php:261
+#: includes/modules/class-settings-page.php:291
 msgid "Connect again"
 msgstr "Opnieuw koppelen"
 
-#: includes/modules/class-settings-page.php:263
+#: includes/modules/class-settings-page.php:293
 msgid "Disconnect"
 msgstr "Verbinding verbreken"
 
-#: includes/modules/class-settings-page.php:266
+#: includes/modules/class-settings-page.php:296
 msgid "Not connected"
 msgstr "Niet verbonden"
 
-#: includes/modules/class-settings-page.php:271
+#: includes/modules/class-settings-page.php:301
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr "Verbind deze site met je Profotograaf-account om galerijen te plaatsen en aanvragen te ontvangen. Je keurt de verbinding goed in Profotograaf, dus je wachtwoord komt nooit op deze site."
 
-#: includes/modules/class-settings-page.php:272
+#: includes/modules/class-settings-page.php:302
 msgid "Connect to Profotograaf"
 msgstr "Verbinden met Profotograaf"
 
@@ -327,39 +330,39 @@ msgstr "Metselwerk"
 msgid "Slideshow"
 msgstr "Diavoorstelling"
 
-#: includes/modules/class-settings-page.php:319
+#: includes/modules/class-settings-page.php:349
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bevestig deze code in Profotograaf om het verbinden af te ronden:"
 
-#: includes/modules/class-settings-page.php:322
+#: includes/modules/class-settings-page.php:352
 msgid "Open the approval page"
 msgstr "Open de goedkeuringspagina"
 
-#: includes/modules/class-settings-page.php:325
+#: includes/modules/class-settings-page.php:355
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: includes/modules/class-settings-page.php:336
+#: includes/modules/class-settings-page.php:366
 msgid "Embedding on this site"
 msgstr "Insluiten op deze site"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:341
+#: includes/modules/class-settings-page.php:371
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s mag je Profotograaf-pagina's in een frame tonen."
 
-#: includes/modules/class-settings-page.php:345
+#: includes/modules/class-settings-page.php:375
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf staat insluiten alleen toe op sites die via https worden aangeboden. Bied deze site aan via https om je pagina's in een frame in te sluiten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:350
+#: includes/modules/class-settings-page.php:380
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je %s toe onder \"Sites die mijn pagina's mogen insluiten\" in de instellingen van je Profotograaf-account."
 
-#: includes/modules/class-settings-page.php:358
+#: includes/modules/class-settings-page.php:388
 msgid "Check again"
 msgstr "Opnieuw controleren"
 
@@ -411,41 +414,37 @@ msgstr "Standaard van de site"
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr "Verbind deze site met Profotograaf onder Instellingen > Profotograaf om een galerij te kiezen."
 
-#: build/gallery/index.js:2
-msgid "The galleries could not be loaded."
-msgstr "De galerijen konden niet worden geladen."
-
-#: build/gallery/index.js:2
+#: build/gallery/index.js:3
 msgid "There are no galleries in your Profotograaf account yet."
 msgstr "Er staan nog geen galerijen in je Profotograaf-account."
 
-#: build/gallery/index.js:2
+#: build/gallery/index.js:3
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord, een vervaldatum, keuzemodus of een instelling alleen voor de klant staat insluiten niet toe."
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Gallery"
 msgstr "Galerij"
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Layout"
 msgstr "Indeling"
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Choose another gallery"
 msgstr "Kies een andere galerij"
 
-#: build/gallery/index.js:2
 #: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Profotograaf gallery"
 msgstr "Profotograaf-galerij"
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Choose one of your galleries."
 msgstr "Kies een van je galerijen."
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 #, js-format
 msgid "layout: %s"
 msgstr "indeling: %s"
@@ -543,15 +542,15 @@ msgstr ""
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:93
+#: includes/class-settings-schema.php:122
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:94
+#: includes/class-settings-schema.php:123
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:277
+#: includes/modules/class-settings-page.php:307
 msgid "Set up the enquiry forms"
 msgstr ""
 
@@ -579,4 +578,209 @@ msgstr ""
 #: includes/class-api-errors.php:105
 #, php-format
 msgid "The platform reported an error (HTTP %d). Try again later."
+msgstr ""
+
+#: build/gallery/index.js:2
+msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
+msgstr ""
+
+#: build/gallery/index.js:2
+msgid "Profotograaf is receiving too many requests. Try again in a moment."
+msgstr ""
+
+#. translators: %d: number of seconds to wait.
+#: build/gallery/index.js:3
+#, js-format
+msgid "Profotograaf is receiving too many requests. Try again in %d second."
+msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/gallery/index.js:3
+msgid "Profotograaf could not be reached. Check your connection and try again."
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Profotograaf reported a problem. Try again later."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:317
+msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:321
+msgid "Download as CSV"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:323
+msgid "Remove exported enquiries"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:381
+msgid "The exported enquiries were removed."
+msgstr ""
+
+#: includes/class-settings-schema.php:93
+msgid "Failure alerts go to"
+msgstr ""
+
+#: includes/class-settings-schema.php:94
+msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
+msgstr ""
+
+#: includes/class-settings-schema.php:101
+msgid "Mail undeliverable enquiries to"
+msgstr ""
+
+#: includes/class-settings-schema.php:102
+msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
+msgstr ""
+
+#: includes/class-settings-schema.php:109
+msgid "Keep undeliverable enquiries for"
+msgstr ""
+
+#: includes/class-settings-schema.php:110
+msgid "Enquiries that could not be delivered stay in the database until you export them or this time has passed. You get an email before they are removed."
+msgstr ""
+
+#: includes/class-settings-schema.php:112
+msgid "7 days"
+msgstr ""
+
+#: includes/class-settings-schema.php:113
+msgid "30 days"
+msgstr ""
+
+#: includes/class-settings-schema.php:114
+msgid "90 days"
+msgstr ""
+
+#: includes/class-settings-schema.php:115
+msgid "1 year"
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:61
+msgid "An enquiry could not be delivered"
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:64
+msgid "It is kept on this site. Export it or try again on the Enquiry forms page."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:89
+msgid "The queue of enquiries is full, so this enquiry was not saved. More enquiries are lost until the queue is empty. Check the connection to Profotograaf."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:92
+msgid "The enquiry was sent to your fallback email address."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:94
+msgid "An enquiry was dropped"
+msgstr ""
+
+#. translators: %d: number of enquiries.
+#: includes/leads/class-lead-alerts.php:109
+#, php-format
+msgid "%d enquiry that could not be delivered was removed because it was kept longer than the retention period."
+msgid_plural "%d enquiries that could not be delivered were removed because they were kept longer than the retention period."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/leads/class-lead-alerts.php:114
+#: includes/leads/class-lead-alerts.php:137
+msgid "Unknown form"
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:116
+msgid "Undeliverable enquiries were removed"
+msgstr ""
+
+#. translators: 1: form name, 2: date and time in UTC.
+#: includes/leads/class-lead-alerts.php:136
+#, php-format
+msgid "Form: %1$s. Time: %2$s UTC."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:193
+msgid "Enquiry that could not be delivered"
+msgstr ""
+
+#: uninstall.php:32
+msgid "Undeliverable enquiries were deleted"
+msgstr ""
+
+#. translators: %d: number of enquiries.
+#: uninstall.php:35
+#, php-format
+msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
+msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-cron-health.php:142
+msgid "Profotograaf lead delivery"
+msgstr ""
+
+#: includes/class-cron-health.php:157
+msgid "Profotograaf can deliver leads"
+msgstr ""
+
+#: includes/class-cron-health.php:163
+msgid "WP-Cron has run recently, so queued leads are delivered on time."
+msgstr ""
+
+#: includes/class-cron-health.php:171
+msgid "WP-Cron is disabled and leads cannot be delivered"
+msgstr ""
+
+#: includes/class-cron-health.php:172
+msgid "WP-Cron has stopped running and leads cannot be delivered"
+msgstr ""
+
+#: includes/class-cron-health.php:179
+msgid "Run WordPress cron from the server. Add this line to the crontab of the site:"
+msgstr ""
+
+#: includes/class-cron-health.php:195
+msgid "Run WordPress cron from the server with this crontab line:"
+msgstr ""
+
+#: includes/class-cron-health.php:214
+msgid "This site sets DISABLE_WP_CRON and no scheduled run has been seen."
+msgstr ""
+
+#: includes/class-cron-health.php:215
+msgid "No scheduled run has been seen for more than three hours."
+msgstr ""
+
+#. translators: %d: number of leads waiting for delivery.
+#: includes/class-cron-health.php:221
+#, php-format
+msgid "%d lead is waiting for delivery."
+msgid_plural "%d leads are waiting for delivery."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of failed leads put back in line.
+#: includes/cli/class-leads-command.php:77
+#, php-format
+msgid "Requeued %d failed lead."
+msgid_plural "Requeued %d failed leads."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/cli/class-leads-command.php:91
+msgid "Delivery is already running elsewhere, or nothing could be sent."
+msgstr ""
+
+#. translators: 1: leads delivered, 2: leads that will be retried, 3: leads that failed for good, 4: leads still pending.
+#: includes/cli/class-leads-command.php:103
+#, php-format
+msgid "Delivered %1$d, retrying %2$d, failed %3$d. %4$d pending."
+msgstr ""
+
+#: includes/cli/class-status-command.php:111
+msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
 msgstr ""
