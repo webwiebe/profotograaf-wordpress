@@ -67,6 +67,10 @@ The "Find your gallery" block is a plain link. It sends nothing to Profotograaf 
 
 When you switch on a form in the lead settings, every submission of that form is sent to `https://profotograaf.nl/api/v1/leads`: the name, email address, phone, date, message and the other fields of the form, the address of the page it was sent from, and the name of the form. Nothing is sent for forms you have not switched on.
 
+= Error events =
+
+When you opt in to telemetry, the plugin also records an error event when a token refresh, an enquiry delivery or the connection fails. An event holds the error code, the HTTP status, the plugin file and line, and the plugin, WordPress and PHP versions. Tokens, email addresses, URLs and file paths are removed from it first, and the same error is reported once per day. Events leave your site only with the daily telemetry batch.
+
 == Installation ==
 
 1. Install the plugin from the Plugins screen, or upload the zip.
