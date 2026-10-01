@@ -109,7 +109,7 @@ Example request body:
 
 - **Timing**: sent within the next usage batch
 - **Rate limiting**: one per (error_code, error_location, http_status) per 24-hour batch, deduplicated by earliest timestamp
-- **Format**: included in the usage batch as an array under `errors`
+- **Format**: included in the usage batch as an array under `errors`, at most 50 events per batch (the newest are kept); the plugin stores them in `profotograaf_telemetry_queued_errors` until the daily batch is built
 
 Example errors array:
 

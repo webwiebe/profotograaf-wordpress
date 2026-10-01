@@ -67,7 +67,19 @@ The "Find your gallery" block is a plain link. It sends nothing to Profotograaf 
 
 When you switch on a form in the lead settings, every submission of that form is sent to `https://profotograaf.nl/api/v1/leads`: the name, email address, phone, date, message and the other fields of the form, the address of the page it was sent from, and the name of the form. Nothing is sent for forms you have not switched on.
 
-= Help translate Profotograaf =
+= Anonymous usage data (only if you opt in) =
+
+Telemetry is off until you switch on "Share anonymous usage data" in the advanced settings or answer the prompt in the admin. Once it is on, the plugin sends one batch every 24 hours with a POST request to `https://bugbarn.wiebe.xyz/api/v1/ingest`, the self-hosted BugBarn error tracker operated by the plugin author. A host can replace the address with the `profotograaf_telemetry_endpoint` filter. Nothing is sent when you have not opted in, when the request carries Do Not Track or Global Privacy Control, or when the endpoint is empty.
+
+The batch holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
+
+BugBarn: https://github.com/wiebe-xyz/bugbarn
+
+= Error events =
+
+When you opt in to telemetry, the plugin also records an error event when a token refresh, an enquiry delivery or the connection fails. An event holds the error code, the HTTP status, the plugin file and line, and the plugin, WordPress and PHP versions. Tokens, email addresses, URLs and file paths are removed from it first, and the same error is reported once per day. Events leave your site only with the daily telemetry batch.
+
+== Help translate Profotograaf ==
 
 The plugin ships in English, Dutch, German, French, Spanish and Italian. The German, French, Spanish and Italian texts are machine drafts that a native speaker has not reviewed yet, so corrections are welcome. To translate or improve a language, join the project on translate.wordpress.org, or send a pull request with a `.po` file. The steps are in CONTRIBUTING.md in the public repository: https://github.com/webwiebe/profotograaf-wordpress.
 
@@ -99,6 +111,10 @@ No. You approve the connection on profotograaf.nl. The plugin stores an access t
 = How do I remove the connection completely? =
 
 Click Disconnect on the settings page. To also remove this site from your account, open Connected apps in your Profotograaf account settings.
+
+= Does it work on a WordPress multisite network? =
+
+Yes. Every site in the network connects to Profotograaf on its own, because each site pairs with its own account and keeps its own settings. Network activation leaves each site disconnected. Network Admin, Settings, Profotograaf lists every site with its connection state and its failed enquiries, and links to each site's settings page.
 
 == Screenshots ==
 

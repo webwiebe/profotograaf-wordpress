@@ -17,8 +17,12 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: profotograaf.php
+#: includes/admin/class-network-page.php:53
+#: includes/admin/class-network-page.php:54
+#: includes/admin/class-network-page.php:92
 #: includes/class-cron-health.php:160
 #: includes/class-cron-health.php:175
+#: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:74
 #: includes/modules/class-settings-page.php:75
@@ -62,7 +66,7 @@ msgstr "Anfrageformulare"
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:457
-#: includes/modules/class-telemetry-consent.php:106
+#: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
 msgstr "Du hast keine Berechtigung dafür."
 
@@ -212,46 +216,48 @@ msgstr "Die Anfragen wurden erneut in die Warteschlange gestellt."
 msgid "The exported enquiries were removed."
 msgstr "Die exportierten Anfragen wurden entfernt."
 
-#: includes/class-api-client.php:144
-#: includes/class-gallery-rest.php:128
+#: includes/class-api-client.php:146
+#: includes/class-gallery-rest.php:145
+#: includes/class-gallery-rest.php:163
+#: includes/class-photo-list.php:49
 msgid "A gallery id is required."
 msgstr "Eine Galerie-ID ist erforderlich."
 
-#: includes/class-api-client.php:161
+#: includes/class-api-client.php:163
 msgid "The request to switch embedding on is not valid."
 msgstr "Die Anfrage zum Einschalten der Einbettung ist ungültig."
 
-#: includes/class-api-client.php:171
+#: includes/class-api-client.php:173
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Diese Verbindung darf Galerien noch nicht einschalten. Verbinde diese Website unter Einstellungen > Profotograaf erneut, um die neue Berechtigung zu erteilen."
 
-#: includes/class-api-client.php:210
+#: includes/class-api-client.php:212
 msgid "A lead needs a name and an email address."
 msgstr "Ein Lead braucht einen Namen und eine E-Mail-Adresse."
 
-#: includes/class-api-client.php:306
+#: includes/class-api-client.php:308
 msgid "That page is not on the Profotograaf platform."
 msgstr "Diese Seite gehört nicht zur Profotograaf-Plattform."
 
-#: includes/class-api-client.php:316
-#: includes/class-api-client.php:456
-#: includes/class-api-client.php:461
+#: includes/class-api-client.php:318
+#: includes/class-api-client.php:458
+#: includes/class-api-client.php:463
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf konnte nicht erreicht werden."
 
-#: includes/class-api-client.php:323
+#: includes/class-api-client.php:325
 msgid "The public page could not be loaded."
 msgstr "Die öffentliche Seite konnte nicht geladen werden."
 
-#: includes/class-api-client.php:348
+#: includes/class-api-client.php:350
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "Die Verbindung wird erneuert. Versuche es gleich noch einmal."
 
-#: includes/class-api-client.php:372
+#: includes/class-api-client.php:374
 msgid "The connection was ended in your Profotograaf account."
 msgstr "Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/class-api-client.php:441
+#: includes/class-api-client.php:443
 msgid "The request could not be encoded."
 msgstr "Die Anfrage konnte nicht kodiert werden."
 
@@ -335,23 +341,23 @@ msgid_plural "%d leads are waiting for delivery."
 msgstr[0] "%d Lead wartet auf Zustellung."
 msgstr[1] "%d Leads warten auf Zustellung."
 
-#: includes/class-embed-script.php:130
+#: includes/class-embed-script.php:163
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Diese Galerie konnte nicht geladen werden. Bitte versuche es später erneut."
 
-#: includes/class-gallery-renderer.php:174
+#: includes/class-gallery-renderer.php:324
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr "Die Profotograaf-Galerie kann nicht angezeigt werden, weil ihre Galerie-ID fehlt oder ungültig ist. Wähle die Galerie erneut aus."
 
-#: includes/class-gallery-renderer.php:185
+#: includes/class-gallery-renderer.php:335
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Diese Profotograaf-Galerie wurde in deinem Konto nicht gefunden. Sie wurde möglicherweise gelöscht. Wähle eine andere Galerie."
 
-#: includes/class-gallery-renderer.php:192
+#: includes/class-gallery-renderer.php:344
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Diese Galerie benötigt JavaScript, um hier angezeigt zu werden."
 
-#: includes/class-gallery-renderer.php:309
+#: includes/class-gallery-renderer.php:483
 msgid "View this gallery on Profotograaf"
 msgstr "Diese Galerie auf Profotograaf ansehen"
 
@@ -460,7 +466,7 @@ msgid "Help improve Profotograaf by sharing anonymous usage and error data. This
 msgstr "Hilf mit, Profotograaf zu verbessern, indem du anonyme Nutzungs- und Fehlerdaten teilst. Das ist optional und du kannst es jederzeit ausschalten. Es werden keine personenbezogenen Daten erhoben. Beim Ausschalten wird das Senden sofort gestoppt und Daten, die auf den Versand warten, werden gelöscht."
 
 #: includes/class-settings-schema.php:150
-#: includes/modules/class-telemetry-consent.php:88
+#: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr "Was geteilt wird"
 
@@ -756,16 +762,19 @@ msgid "Dismiss"
 msgstr "Schließen"
 
 #: includes/modules/class-client-galleries.php:202
+#: patterns/client-portal-cta.php:21
 #: build/client-galleries/index.js:1
 msgid "Find your gallery"
 msgstr "Finde deine Galerie"
 
 #: includes/modules/class-client-galleries.php:203
+#: patterns/client-portal-cta.php:22
 #: build/client-galleries/index.js:1
 msgid "Sign in to the client portal to see your photos."
 msgstr "Melde dich im Kundenportal an, um deine Fotos zu sehen."
 
 #: includes/modules/class-client-galleries.php:204
+#: patterns/client-portal-cta.php:23
 #: build/client-galleries/index.js:1
 msgid "Open my gallery"
 msgstr "Meine Galerie öffnen"
@@ -834,6 +843,7 @@ msgstr "Wenn der Website-Betreiber die Website verbindet, sendet das Plugin den 
 msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr "Die Datenschutzerklärung von Profotograaf findest du unter https://profotograaf.nl/privacy."
 
+#: includes/admin/class-network-page.php:109
 #: includes/modules/class-settings-page.php:105
 msgid "Settings"
 msgstr "Einstellungen"
@@ -862,11 +872,13 @@ msgstr "Die Verbindung wurde in Profotograaf abgelehnt."
 msgid "The code expired. Start the connection again."
 msgstr "Der Code ist abgelaufen. Starte die Verbindung neu."
 
+#: includes/admin/class-network-page.php:98
 #: includes/modules/class-settings-page.php:274
 #: includes/modules/class-site-health.php:329
 msgid "Connection"
 msgstr "Verbindung"
 
+#: includes/admin/class-network-page.php:69
 #: includes/modules/class-settings-page.php:279
 msgid "Connected"
 msgstr "Verbunden"
@@ -889,6 +901,7 @@ msgstr "Erneut verbinden"
 msgid "Disconnect"
 msgstr "Trennen"
 
+#: includes/admin/class-network-page.php:75
 #: includes/modules/class-settings-page.php:296
 msgid "Not connected"
 msgstr "Nicht verbunden"
@@ -1167,15 +1180,15 @@ msgstr "keine"
 msgid "Open the leads screen"
 msgstr "Den Leads-Bildschirm öffnen"
 
-#: includes/modules/class-telemetry-consent.php:87
+#: includes/modules/class-telemetry-consent.php:107
 msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
 msgstr "Möchtest du helfen, Profotograaf zu verbessern? Du kannst anonyme Nutzungs- und Fehlerdaten teilen: Plugin-, WordPress- und PHP-Versionen, Sprache, aktivierte Module und die Anzahl von Erfolgen und Fehlschlägen. Deine Website-Adresse, Besucher, Galerien und Anfragen werden nie geteilt. Du kannst es jederzeit ausschalten."
 
-#: includes/modules/class-telemetry-consent.php:93
+#: includes/modules/class-telemetry-consent.php:113
 msgid "Enable telemetry"
 msgstr "Telemetrie aktivieren"
 
-#: includes/modules/class-telemetry-consent.php:94
+#: includes/modules/class-telemetry-consent.php:114
 msgid "Not now"
 msgstr "Jetzt nicht"
 
@@ -1321,57 +1334,58 @@ msgid "Leave empty for the site default."
 msgstr "Leer lassen für den Website-Standard."
 
 #. translators: %d: number of photos shown at first.
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 #, js-format
 msgid "%d photo per page"
 msgid_plural "%d photos per page"
 msgstr[0] "%d Foto pro Seite"
 msgstr[1] "%d Fotos pro Seite"
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "load more button"
 msgstr "Schaltfläche „Mehr laden“"
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "lightbox on"
 msgstr "Lightbox an"
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "lightbox off"
 msgstr "Lightbox aus"
 
 #: build/gallery/index.js:4
+#: build/gallery/index.js:6
 msgid "Caption"
 msgstr "Bildunterschrift"
 
-#: build/gallery/index.js:4
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Profotograaf gallery"
 msgstr "Profotograaf-Galerie"
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:5
+#: build/gallery/index.js:7
 #, js-format
 msgid "layout: %s"
 msgstr "Layout: %s"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:7
 msgid "Gallery"
 msgstr "Galerie"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:7
 msgid "Layout"
 msgstr "Layout"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:7
 msgid "Choose another gallery"
 msgstr "Eine andere Galerie wählen"
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:7
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr "Diese Galerie wurde in deinem Profotograaf-Konto nicht gefunden. Sie wurde möglicherweise gelöscht. Wähle eine andere Galerie."
 
-#: build/gallery/index.js:5
+#: build/gallery/index.js:7
 msgid "Choose one of your galleries."
 msgstr "Wähle eine deiner Galerien."
 
@@ -1431,3 +1445,268 @@ msgstr "Fotos"
 msgctxt "block keyword"
 msgid "portfolio"
 msgstr "Portfolio"
+
+#: includes/admin/class-network-page.php:71
+msgid "Connection ended"
+msgstr ""
+
+#: includes/admin/class-network-page.php:73
+msgid "Plugin not active"
+msgstr ""
+
+#: includes/admin/class-network-page.php:84
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: includes/admin/class-network-page.php:93
+msgid "Each site connects to Profotograaf on its own. Open a site to connect it or to see its failed enquiries."
+msgstr ""
+
+#: includes/admin/class-network-page.php:97
+msgid "Site"
+msgstr ""
+
+#: includes/admin/class-network-page.php:99
+msgid "Failed enquiries"
+msgstr ""
+
+#: includes/class-settings-schema.php:286
+msgid "Duotone colours"
+msgstr ""
+
+#: includes/class-settings-schema.php:287
+msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
+msgstr ""
+
+#: includes/class-settings-schema.php:294
+#: build/gallery/index.js:3
+msgid "Link photos to"
+msgstr ""
+
+#: includes/class-settings-schema.php:295
+msgid "What a click on a photo does when the lightbox is off."
+msgstr ""
+
+#: includes/class-settings-schema.php:297
+#: build/gallery/index.js:3
+msgid "Nothing"
+msgstr ""
+
+#: includes/class-settings-schema.php:298
+#: build/gallery/index.js:3
+msgid "The photo file"
+msgstr ""
+
+#: includes/class-settings-schema.php:299
+#: build/gallery/index.js:3
+msgid "The photo page on Profotograaf"
+msgstr ""
+
+#: includes/modules/class-patterns.php:54
+msgid "Sections for galleries, the client portal and enquiries."
+msgstr ""
+
+#: patterns/client-portal-cta.php:13
+msgid "Client portal call to action"
+msgstr ""
+
+#: patterns/client-portal-cta.php:14
+msgid "A button that takes clients to their private galleries."
+msgstr ""
+
+#: patterns/client-portal-cta.php:15
+msgid "client"
+msgstr ""
+
+#: patterns/client-portal-cta.php:15
+msgid "portal"
+msgstr ""
+
+#: patterns/client-portal-cta.php:15
+msgid "login"
+msgstr ""
+
+#: patterns/contact-page.php:23
+msgid "Replace this text with your enquiry form block."
+msgstr ""
+
+#: patterns/contact-page.php:27
+msgid "Contact page with enquiry form"
+msgstr ""
+
+#: patterns/contact-page.php:28
+msgid "An introduction, a place for your enquiry form and a small gallery."
+msgstr ""
+
+#: patterns/contact-page.php:29
+msgid "contact"
+msgstr ""
+
+#: patterns/contact-page.php:29
+msgid "enquiry"
+msgstr ""
+
+#: patterns/contact-page.php:29
+msgid "form"
+msgstr ""
+
+#: patterns/contact-page.php:31
+msgid "Get in touch"
+msgstr ""
+
+#: patterns/contact-page.php:32
+msgid "Tell me about your plans and I will reply within two working days."
+msgstr ""
+
+#: patterns/contact-page.php:34
+msgid "A look at my work"
+msgstr ""
+
+#: patterns/masonry-showcase.php:13
+msgid "Masonry showcase"
+msgstr ""
+
+#: patterns/masonry-showcase.php:14
+msgid "A wide gallery in masonry layout that keeps every photo as shot."
+msgstr ""
+
+#: patterns/masonry-showcase.php:15
+msgid "masonry"
+msgstr ""
+
+#: patterns/masonry-showcase.php:15
+msgid "showcase"
+msgstr ""
+
+#: patterns/masonry-showcase.php:15
+#: patterns/portfolio-grid.php:15
+msgid "gallery"
+msgstr ""
+
+#: patterns/masonry-showcase.php:17
+msgid "Showcase"
+msgstr ""
+
+#: patterns/portfolio-grid.php:13
+msgid "Portfolio grid"
+msgstr ""
+
+#: patterns/portfolio-grid.php:14
+msgid "A heading, a short introduction and a gallery grid."
+msgstr ""
+
+#: patterns/portfolio-grid.php:15
+msgid "portfolio"
+msgstr ""
+
+#: patterns/portfolio-grid.php:15
+msgid "grid"
+msgstr ""
+
+#: patterns/portfolio-grid.php:17
+msgid "Selected work"
+msgstr ""
+
+#: patterns/portfolio-grid.php:18
+msgid "A selection of recent sessions. Choose a gallery in the block settings."
+msgstr ""
+
+#. translators: %d: number of photos left out of the gallery.
+#: build/gallery/index.js:4
+#, js-format
+msgid "%d photo left out"
+msgid_plural "%d photos left out"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/gallery/index.js:4
+msgid "Select a photo to leave it out of this gallery block."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Show all photos"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "This gallery has no photos yet."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Photos"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Photo ID"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Alt text"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Remove"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Photo captions and alt text"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Add a photo"
+msgstr ""
+
+#. translators: %s: what a photo links to, such as "The photo file".
+#: build/gallery/index.js:6
+#, js-format
+msgid "links to: %s"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation title"
+msgid "Profotograaf grid gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation description"
+msgid "Show a Profotograaf gallery as an even grid."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "grid"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation title"
+msgid "Profotograaf masonry gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation description"
+msgid "Show a Profotograaf gallery in masonry layout, each photo at its own height."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "masonry"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation title"
+msgid "Profotograaf slideshow"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation description"
+msgid "Show a Profotograaf gallery as a slideshow."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "slideshow"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "slider"
+msgstr ""

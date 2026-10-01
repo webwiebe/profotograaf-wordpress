@@ -4,7 +4,8 @@ import { __, _n, sprintf } from '@wordpress/i18n';
  * The display options of the block. Every value is a string. An empty string
  * means "use the site default", which the server resolves (see
  * Gallery_Renderer::OPTIONS). To add an option, add it here, to block.json
- * and to Gallery_Renderer::OPTIONS.
+ * and to Gallery_Renderer::OPTIONS. `excludedPhotoIds` is a list of photo ids
+ * and lives in exclude.ts.
  */
 export type DisplayAttributes = {
 	columns: string;
@@ -17,6 +18,7 @@ export type DisplayAttributes = {
 	perPage: string;
 	loadMore: string;
 	lightbox: string;
+	linkTo: string;
 };
 
 type DisplayKey = keyof DisplayAttributes;
@@ -32,6 +34,7 @@ export const DISPLAY_DEFAULTS: DisplayAttributes = {
 	perPage: '',
 	loadMore: '',
 	lightbox: '',
+	linkTo: '',
 };
 
 interface ChoiceOption {
@@ -82,6 +85,15 @@ function captionOptions(): ChoiceOption[] {
 	];
 }
 
+function linkToOptions(): ChoiceOption[] {
+	return [
+		siteDefault(),
+		{ label: __( 'Nothing', 'profotograaf' ), value: 'none' },
+		{ label: __( 'The photo file', 'profotograaf' ), value: 'file' },
+		{ label: __( 'The photo page on Profotograaf', 'profotograaf' ), value: 'page' },
+	];
+}
+
 function sortOptions(): ChoiceOption[] {
 	return [
 		siteDefault(),
@@ -105,6 +117,7 @@ export function displayControls(): DisplayControl[] {
 		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200 },
 		{ attribute: 'loadMore', label: __( 'Load more button', 'profotograaf' ), kind: 'select', options: onOff() },
 		{ attribute: 'lightbox', label: __( 'Lightbox', 'profotograaf' ), kind: 'select', options: onOff() },
+		{ attribute: 'linkTo', label: __( 'Link photos to', 'profotograaf' ), kind: 'select', options: linkToOptions() },
 	];
 }
 
@@ -149,6 +162,16 @@ export function displaySummary( attributes: DisplayAttributes ): string[] {
 		parts.push( __( 'lightbox on', 'profotograaf' ) );
 	} else if ( attributes.lightbox === 'off' ) {
 		parts.push( __( 'lightbox off', 'profotograaf' ) );
+	}
+	const linkLabel = linkToOptions().find( ( o ) => o.value === attributes.linkTo )?.label;
+	if ( attributes.linkTo && linkLabel ) {
+		parts.push(
+			sprintf(
+				/* translators: %s: what a photo links to, such as "The photo file". */
+				__( 'links to: %s', 'profotograaf' ),
+				linkLabel.toLowerCase()
+			)
+		);
 	}
 	return parts;
 }

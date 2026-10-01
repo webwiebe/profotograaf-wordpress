@@ -20,7 +20,10 @@ import {
 	pickNotice,
 } from './helpers';
 import { DisplayPanel } from './display-panel';
+import { ExcludePanel } from './exclude-panel';
+import { ImageTextPanel } from './image-text-panel';
 import { PreviewGrid } from './preview-grid';
+import { usePhotos, type PhotosState } from './use-photos';
 import type { GalleryAttributes, GalleryRow } from './types';
 
 interface EditProps {
@@ -44,7 +47,7 @@ function Preview( {
 				<img
 					className="profotograaf-gallery-preview__thumb"
 					src={ shown.cover_url }
-					alt=""
+					alt={ shown.cover_alt ?? '' }
 				/>
 			) }
 			<div>
@@ -130,11 +133,37 @@ function missingNotice( missing: boolean ): string {
 		: '';
 }
 
+/** The sidebar panels: layout, display options and, once a gallery is chosen, its photos. */
+function InspectorPanels( {
+	attributes,
+	setAttributes,
+	photos,
+}: EditProps & { photos: PhotosState } ) {
+	return (
+		<>
+			<InspectorPanel attributes={ attributes } setAttributes={ setAttributes } />
+			<DisplayPanel attributes={ attributes } setAttributes={ setAttributes } />
+			<ImageTextPanel
+				items={ attributes.imageText }
+				setItems={ ( imageText ) => setAttributes( { imageText } ) }
+			/>
+			{ attributes.galleryId && (
+				<ExcludePanel
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+					state={ photos }
+				/>
+			) }
+		</>
+	);
+}
+
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const { galleryId } = attributes;
 	const [ notice, setNotice ] = useState( '' );
 	const [ preview, setPreview ] = useState< GalleryRow | null >( null );
 	const missing = useMissingGallery( galleryId );
+	const photos = usePhotos( galleryId );
 	const blockProps = useBlockProps();
 
 	const pick = ( gallery: GalleryRow ) => {
@@ -157,13 +186,10 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 
 	return (
 		<>
-			<InspectorPanel
+			<InspectorPanels
 				attributes={ attributes }
 				setAttributes={ setAttributes }
-			/>
-			<DisplayPanel
-				attributes={ attributes }
-				setAttributes={ setAttributes }
+				photos={ photos }
 			/>
 			<div { ...blockProps }>
 				{ ! galleryId ? (
@@ -188,6 +214,9 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<PreviewGrid
 						attributes={ attributes }
 						cover={ shown?.cover_url }
+						photos={ photos.photos }
+						excluded={ attributes.excludedPhotoIds }
+						imageText={ attributes.imageText }
 					/>
 				) }
 			</div>

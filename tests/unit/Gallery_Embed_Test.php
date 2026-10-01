@@ -75,7 +75,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			'<div class="profotograaf-gallery wp-block-profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			self::HINT . '<div class="profotograaf-gallery wp-block-profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
 			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
 			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
@@ -102,7 +102,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertStringStartsWith(
-			'<div class="wp-block-profotograaf-gallery has-background profotograaf-gallery" id="spring" data-layout="grid" style="min-height:8em;background-color:#fff">',
+			self::HINT . '<div class="wp-block-profotograaf-gallery has-background profotograaf-gallery" id="spring" data-layout="grid" style="min-height:8em;background-color:#fff">',
 			$html
 		);
 	}
