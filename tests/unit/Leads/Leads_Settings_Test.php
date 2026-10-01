@@ -13,6 +13,9 @@ use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Plugin;
+use Profotograaf\Api_Client;
+use Profotograaf\Connection;
+use Profotograaf\Tests\Fake_Transport;
 
 /**
  * Leads_Settings with the redirect-and-exit replaced by a recorder.
@@ -341,5 +344,97 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		$this->assertArrayNotHasKey( 'profotograaf_gallery_index', $this->options );
 		$this->assertSame( array( 'tools' ), $this->page->finished );
 		$this->assertSame( 'success', Site_Tools::take()['type'] );
+	}
+
+	private function page_with_api( Fake_Transport $http ): Recording_Leads_Settings {
+		$plugin = new Plugin( new Connection(), new Api_Client( new Connection(), $http, $this->clock() ), $this->clock() );
+		return new Recording_Leads_Settings( new Form_Settings(), $this->queue, array( new Stub_Bridge() ), $plugin );
+	}
+
+	public function test_syncing_galleries_stores_them_and_leaves_a_result(): void {
+		$this->allow( true );
+		$this->connect( 100000 );
+		Functions\when( 'get_current_user_id' )->justReturn( 3 );
+		Functions\when( 'number_format_i18n' )->returnArg();
+		$http = ( new Fake_Transport() )->reply( 200, array( array( 'id' => 'g1', 'title' => 'Wedding', 'url' => 'https://profotograaf.nl/g/1' ) ) );
+
+		$page = $this->page_with_api( $http );
+		$page->handle_sync_galleries();
+
+		$this->assertSame( array( 'g1' ), array_keys( $this->options['profotograaf_gallery_index'] ) );
+		$this->assertSame( array( 'tools' ), $page->finished );
+		$this->assertSame( 'Synced 1 gallery.', Site_Tools::take()['message'] );
+	}
+
+	public function test_rechecking_the_embed_version_leaves_a_result(): void {
+		$this->allow( true );
+		Functions\when( 'get_current_user_id' )->justReturn( 3 );
+		Functions\when( 'wp_remote_head' )->justReturn( array( 'code' => 200, 'etag' => '"0123456789ab"' ) );
+		Functions\when( 'wp_remote_retrieve_response_code' )->alias( fn( $response ) => $response['code'] );
+		Functions\when( 'wp_remote_retrieve_header' )->alias( fn( $response, $name ) => $response[ $name ] ?? '' );
+
+		$page = $this->page_with_api( new Fake_Transport() );
+		$page->handle_check_embed_version();
+
+		$this->assertSame( array( 'tools' ), $page->finished );
+		$this->assertStringContainsString( '0123456789ab', Site_Tools::take()['message'] );
+	}
+
+	public function test_the_page_shows_the_defaults_the_forms_and_the_tool_buttons(): void {
+		$this->allow( true );
+		Functions\when( 'get_current_user_id' )->justReturn( 3 );
+		Functions\when( 'number_format_i18n' )->returnArg();
+		Functions\when( 'wp_nonce_field' )->justReturn( '' );
+		Functions\when( 'settings_fields' )->justReturn( null );
+		Functions\when( 'sanitize_html_class' )->returnArg();
+		Functions\when( 'esc_url' )->returnArg();
+		Functions\when( 'selected' )->justReturn( '' );
+		Functions\when( 'checked' )->justReturn( '' );
+		Functions\when( 'submit_button' )->alias( fn( $label = '' ) => print( '<button>' . $label . '</button>' ) );
+		$_GET['done'] = 'tools';
+		Site_Tools::remember( array( 'type' => 'error', 'message' => 'Nope.' ) );
+		$this->options[ Form_Settings::OPTION ]['forms']['stub:1'] = array( 'enabled' => true, 'map' => array(), 'source_tag' => 'Wedding page' );
+		$this->queue->enqueue( 'a', array( 'email' => 'a@example.com' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad', 400 );
+		$this->queue->mark_exported( array( 'a' ) );
+
+		ob_start();
+		$this->page->render();
+		$html = (string) ob_get_clean();
+		unset( $_GET['done'] );
+
+		$this->assertStringContainsString( 'notice-error', $html );
+		$this->assertStringContainsString( 'Nope.', $html );
+		$this->assertStringContainsString( '<button>Save defaults</button>', $html );
+		$this->assertStringContainsString( 'name="profotograaf_settings[leads_failed_retention]"', $html );
+		$this->assertStringContainsString( 'name="forms[stub:1][source_tag]" value="Wedding page"', $html );
+		foreach ( array( 'profotograaf_sync_galleries', 'profotograaf_clear_gallery_index', 'profotograaf_check_embed_version', 'profotograaf_leads_dismiss' ) as $action ) {
+			$this->assertStringContainsString( 'value="' . $action . '"', $html );
+		}
+	}
+
+	public function test_a_tool_notice_is_not_shown_twice(): void {
+		$this->allow( true );
+		Functions\when( 'get_current_user_id' )->justReturn( 3 );
+		Functions\when( 'number_format_i18n' )->returnArg();
+		Functions\when( 'wp_nonce_field' )->justReturn( '' );
+		Functions\when( 'settings_fields' )->justReturn( null );
+		Functions\when( 'sanitize_html_class' )->returnArg();
+		Functions\when( 'esc_url' )->returnArg();
+		Functions\when( 'selected' )->justReturn( '' );
+		Functions\when( 'checked' )->justReturn( '' );
+		Functions\when( 'submit_button' )->justReturn( null );
+		$_GET['done'] = 'tools';
+
+		ob_start();
+		$this->page->render();
+		$html = (string) ob_get_clean();
+		unset( $_GET['done'] );
+
+		$this->assertStringNotContainsString( 'is-dismissible', $html );
+	}
+
+	public function test_a_source_tag_that_is_not_text_is_ignored(): void {
+		$this->assertSame( '', Form_Settings::clean_tag( array( 'x' ) ) );
 	}
 }

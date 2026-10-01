@@ -223,7 +223,7 @@ class Leads_Settings {
 			<?php endif; ?>
 
 			<h2><?php esc_html_e( 'Site defaults', 'profotograaf' ); ?></h2>
-			<?php ( new Settings_Fields( $this->plugin->settings() ) )->render_form( Settings_Schema::TAB_ENQUIRY ); ?>
+			<?php ( new Settings_Fields( $this->plugin->settings() ) )->render_form( Settings_Schema::TAB_ENQUIRY, __( 'Save defaults', 'profotograaf' ) ); ?>
 
 			<h2><?php esc_html_e( 'Forms', 'profotograaf' ); ?></h2>
 			<?php if ( array() === $forms ) : ?>
