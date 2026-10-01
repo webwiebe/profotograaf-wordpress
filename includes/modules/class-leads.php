@@ -8,6 +8,8 @@
 namespace Profotograaf\Modules;
 
 use Profotograaf\Admin\Leads_Settings;
+use Profotograaf\Cli\Registrar;
+use Profotograaf\Cron_Health;
 use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Contact_Form_7;
 use Profotograaf\Leads\Delivery;
@@ -72,7 +74,13 @@ class Leads implements Module {
 			}
 		}
 
-		( new Delivery( $queue, $plugin->api() ) )->register();
+		$store    = new Option_Job_Store();
+		$delivery = new Delivery( $queue, $plugin->api() );
+		$delivery->register();
+
+		$cron = new Cron_Health( $queue );
+		$cron->register();
+		Registrar::register( $plugin, $queue, $store, $delivery, $cron );
 
 		if ( is_admin() ) {
 			( new Leads_Settings( $settings, $queue, $bridges, $plugin ) )->register();
