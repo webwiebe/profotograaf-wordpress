@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T10:40:53+00:00\n"
+"POT-Creation-Date: 2026-10-01T10:58:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -189,12 +189,38 @@ msgstr ""
 msgid "The request could not be encoded."
 msgstr ""
 
-#: includes/class-api-errors.php:43
+#: includes/class-api-errors.php:62
+msgid "The connection to Profotograaf has expired. Connect this site again."
+msgstr ""
+
+#: includes/class-api-errors.php:64
+msgid "Profotograaf asked for fewer connection checks. Trying again shortly."
+msgstr ""
+
+#: includes/class-api-errors.php:66
+msgid "Profotograaf does not know this connection code. Start the connection again."
+msgstr ""
+
+#: includes/class-api-errors.php:68
+msgid "Profotograaf does not recognise this site. Start the connection again."
+msgstr ""
+
+#: includes/class-api-errors.php:70
+msgid "Profotograaf rejected the enquiry because it is incomplete or invalid."
+msgstr ""
+
+#: includes/class-api-errors.php:80
 msgid "This site is not connected to Profotograaf."
 msgstr ""
 
 #. translators: %d: HTTP status code.
-#: includes/class-api-errors.php:55
+#: includes/class-api-errors.php:105
+#, php-format
+msgid "The platform reported an error (HTTP %d). Try again later."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/class-api-errors.php:109
 #, php-format
 msgid "Profotograaf answered with HTTP %d."
 msgstr ""
