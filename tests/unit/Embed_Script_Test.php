@@ -82,7 +82,8 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		$this->script->enqueue();
 		$output = (string) ob_get_clean();
 
-		$this->assertSame( '<script async src="https://profotograaf.nl/share/embed/embed.js"></script>', $output );
+		$this->assertSame( 1, substr_count( $output, '<script ' ) );
+		$this->assertStringStartsWith( '<script async src="https://profotograaf.nl/share/embed/embed.js" onerror=', $output );
 		$this->assertSame( array(), $this->enqueued );
 	}
 
@@ -90,5 +91,36 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		\Brain\Monkey\Filters\expectApplied( 'profotograaf_embed_script_version' )->andReturn( 'aaaaaaaaaaaa' );
 
 		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.aaaaaaaaaaaa.js', $this->script->url() );
+	}
+
+	public function test_the_failure_handler_logs_an_actionable_console_message(): void {
+		Functions\when( 'wp_json_encode' )->alias( fn( $value, $flags = 0 ) => json_encode( $value, $flags ) );
+
+		$js = $this->script->error_handler();
+
+		$this->assertStringContainsString( 'console.error(', $js );
+		$this->assertStringContainsString( 'could not be loaded from https://profotograaf.nl/share/embed/embed.js', $js );
+		$this->assertStringContainsString( 'Content-Security-Policy', $js );
+		$this->assertStringContainsString( 'data-profotograaf-failed', $js );
+		$this->assertStringNotContainsString( '<', $js );
+	}
+
+	public function test_the_queued_tag_gets_the_failure_handler_once(): void {
+		$tag = '<script src="https://profotograaf.nl/share/embed/embed.js" id="profotograaf-embed-js" async></script>';
+		$out = $this->script->add_error_handler( $tag, Embed_Script::HANDLE );
+
+		$this->assertStringStartsWith( '<script onerror="console.error(', $out );
+		$this->assertSame( $out, $this->script->add_error_handler( $out, Embed_Script::HANDLE ) );
+		$this->assertSame( $tag, $this->script->add_error_handler( $tag, 'other' ) );
+	}
+
+	public function test_a_late_printed_tag_carries_the_failure_handler(): void {
+		Functions\when( 'did_action' )->justReturn( 1 );
+
+		ob_start();
+		$this->script->enqueue();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( '<script async src="https://profotograaf.nl/share/embed/embed.js" onerror="console.error(', $html );
 	}
 }

@@ -80,14 +80,30 @@ describe( 'Edit with a gallery', () => {
 		layout: 'slideshow',
 	};
 
-	it( 'shows the title and layout, and no picker', () => {
+	it( 'shows the title and layout, and no picker', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow() ] );
 		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
 		expect( screen.getByText( 'Spring wedding' ) ).toBeTruthy();
 		expect( screen.getByText( 'layout: Slideshow' ) ).toBeTruthy();
-		expect( fetchMock ).not.toHaveBeenCalled();
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 1 ) );
+		expect( screen.queryByText( /may have been deleted/ ) ).toBeNull();
+	} );
+
+	it( 'warns when the gallery is no longer in the account', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow( { id: 'g-other' } ) ] );
+		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await screen.findByText( /may have been deleted/ );
+	} );
+
+	it( 'shows no warning when the list cannot be loaded', async () => {
+		fetchMock.mockRejectedValue( { code: 'profotograaf_not_connected' } );
+		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 1 ) );
+		expect( screen.queryByText( /may have been deleted/ ) ).toBeNull();
 	} );
 
 	it( 'falls back to a generic title when the block has none', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
 		render(
 			<Edit attributes={ { ...chosen, galleryTitle: '' } } setAttributes={ vi.fn() } />
 		);
@@ -95,6 +111,7 @@ describe( 'Edit with a gallery', () => {
 	} );
 
 	it( 'clears the gallery from the inspector button', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
 		const setAttributes = vi.fn();
 		render( <Edit attributes={ chosen } setAttributes={ setAttributes } /> );
 		fireEvent.click( screen.getByText( 'Choose another gallery' ) );

@@ -16,6 +16,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 
 	protected function setUp(): void {
 		parent::setUp();
+		Functions\when( 'current_user_can' )->justReturn( false );
 		Functions\when( 'add_action' )->justReturn( true );
 		Functions\when( 'add_filter' )->justReturn( true );
 		Functions\when( 'sanitize_html_class' )->alias( fn( $name ) => preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $name ) );
@@ -66,8 +67,9 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			'<div class="profotograaf-gallery wp-block-profotograaf-gallery alignwide" data-profotograaf-gallery="g-1" data-layout="masonry">'
-			. '<a href="https://profotograaf.nl/share/g/spring-wedding">Spring wedding</a></div>',
+			'<div class="profotograaf-gallery wp-block-profotograaf-gallery alignwide" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
+			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
 		);
 	}
