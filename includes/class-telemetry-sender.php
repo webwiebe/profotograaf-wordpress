@@ -23,6 +23,7 @@ class Telemetry_Sender {
 	public const QUEUE_OPTION     = 'profotograaf_telemetry_queued_batches';
 	public const COUNTER_OPTION   = 'profotograaf_telemetry_queued_counters';
 	public const ATTEMPT_OPTION   = 'profotograaf_telemetry_queued_attempts';
+	public const ERRORS_OPTION    = 'profotograaf_telemetry_queued_errors';
 	public const BATCH_HOOK       = 'profotograaf_send_telemetry_batch';
 	public const RETRY_HOOK       = 'profotograaf_retry_telemetry_batch';
 	public const DEFAULT_ENDPOINT = 'https://bugbarn.wiebe.xyz/api/v1/ingest';
@@ -147,6 +148,7 @@ class Telemetry_Sender {
 			array_merge(
 				$counters,
 				array(
+					'errors'            => $this->pending_errors(),
 					'install_id'        => $this->connection->install_id(),
 					'plugin_version'    => defined( 'PROFOTOGRAAF_VERSION' ) ? PROFOTOGRAAF_VERSION : '',
 					'wordpress_version' => get_bloginfo( 'version' ),
@@ -169,6 +171,7 @@ class Telemetry_Sender {
 		}
 		$this->enqueue( $this->payload() );
 		delete_option( self::COUNTER_OPTION );
+		delete_option( self::ERRORS_OPTION );
 		return $this->send();
 	}
 
@@ -203,6 +206,33 @@ class Telemetry_Sender {
 	}
 
 	/**
+	 * Adds an error event to the next daily batch. The newest
+	 * Telemetry_Payload::MAX_ERRORS events are kept.
+	 *
+	 * @param array<string,mixed> $event Error event.
+	 * @return bool Whether it was stored. False without consent.
+	 */
+	public function add_error( array $event ): bool {
+		if ( ! $this->is_enabled() ) {
+			return false;
+		}
+		$events   = $this->pending_errors();
+		$events[] = $event;
+		update_option( self::ERRORS_OPTION, array_slice( $events, -Telemetry_Payload::MAX_ERRORS ), false );
+		return true;
+	}
+
+	/**
+	 * Error events waiting for the next daily batch.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	public function pending_errors(): array {
+		$stored = get_option( self::ERRORS_OPTION, array() );
+		return is_array( $stored ) ? array_values( $stored ) : array();
+	}
+
+	/**
 	 * Batches waiting to be sent.
 	 *
 	 * @return array<int,array<string,mixed>>
@@ -218,6 +248,7 @@ class Telemetry_Sender {
 	public function clear_queue(): void {
 		delete_option( self::QUEUE_OPTION );
 		delete_option( self::COUNTER_OPTION );
+		delete_option( self::ERRORS_OPTION );
 		delete_option( self::ATTEMPT_OPTION );
 	}
 
