@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T11:20:42+00:00\n"
+"POT-Creation-Date: 2026-10-01T10:40:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -17,9 +17,9 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: profotograaf.php
-#: includes/modules/class-settings-page.php:67
-#: includes/modules/class-settings-page.php:68
-#: includes/modules/class-settings-page.php:238
+#: includes/modules/class-settings-page.php:72
+#: includes/modules/class-settings-page.php:73
+#: includes/modules/class-settings-page.php:242
 msgid "Profotograaf"
 msgstr ""
 
@@ -44,14 +44,15 @@ msgid "Profotograaf enquiries"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:97
+#: includes/class-settings-schema.php:51
 msgid "Enquiry forms"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:150
 #: includes/admin/class-leads-settings.php:345
-#: includes/modules/class-settings-page.php:204
-#: includes/modules/class-settings-page.php:231
-#: includes/modules/class-settings-page.php:427
+#: includes/modules/class-settings-page.php:207
+#: includes/modules/class-settings-page.php:234
+#: includes/modules/class-settings-page.php:430
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -162,34 +163,43 @@ msgstr ""
 msgid "A lead needs a name and an email address."
 msgstr ""
 
-#: includes/class-api-client.php:304
-msgid "The connection is being refreshed. Try again in a moment."
+#: includes/class-api-client.php:306
+msgid "That page is not on the Profotograaf platform."
 msgstr ""
 
-#: includes/class-api-client.php:326
-msgid "The connection was ended in your Profotograaf account."
-msgstr ""
-
-#: includes/class-api-client.php:394
-msgid "The request could not be encoded."
-msgstr ""
-
-#: includes/class-api-client.php:401
-#: includes/class-api-client.php:405
+#: includes/class-api-client.php:316
+#: includes/class-api-client.php:456
+#: includes/class-api-client.php:461
 msgid "Profotograaf could not be reached."
 msgstr ""
 
+#: includes/class-api-client.php:323
+msgid "The public page could not be loaded."
+msgstr ""
+
+#: includes/class-api-client.php:348
+msgid "The connection is being refreshed. Try again in a moment."
+msgstr ""
+
+#: includes/class-api-client.php:372
+msgid "The connection was ended in your Profotograaf account."
+msgstr ""
+
+#: includes/class-api-client.php:441
+msgid "The request could not be encoded."
+msgstr ""
+
+#: includes/class-api-errors.php:43
+msgid "This site is not connected to Profotograaf."
+msgstr ""
+
 #. translators: %d: HTTP status code.
-#: includes/class-api-client.php:426
+#: includes/class-api-errors.php:55
 #, php-format
 msgid "Profotograaf answered with HTTP %d."
 msgstr ""
 
-#: includes/class-api-client.php:463
-msgid "This site is not connected to Profotograaf."
-msgstr ""
-
-#: includes/class-gallery-renderer.php:122
+#: includes/class-gallery-renderer.php:120
 msgid "View the gallery"
 msgstr ""
 
@@ -205,21 +215,77 @@ msgstr ""
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr ""
 
+#: includes/class-settings-schema.php:49
+msgid "General"
+msgstr ""
+
+#: includes/class-settings-schema.php:50
+msgid "Galleries"
+msgstr ""
+
+#: includes/class-settings-schema.php:52
+msgid "Advanced"
+msgstr ""
+
+#: includes/class-settings-schema.php:67
+msgid "Gallery link text"
+msgstr ""
+
+#: includes/class-settings-schema.php:68
+msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
+msgstr ""
+
+#: includes/class-settings-schema.php:74
+msgid "Default gallery layout"
+msgstr ""
+
+#: includes/class-settings-schema.php:75
+msgid "Used when a gallery block or shortcode does not choose a layout."
+msgstr ""
+
+#: includes/class-settings-schema.php:77
+#: build/gallery/index.js:2
+msgid "Grid"
+msgstr ""
+
+#: includes/class-settings-schema.php:78
+#: build/gallery/index.js:2
+msgid "Masonry"
+msgstr ""
+
+#: includes/class-settings-schema.php:79
+#: build/gallery/index.js:2
+msgid "Slideshow"
+msgstr ""
+
+#: includes/class-settings-schema.php:86
+msgid "Collect enquiries"
+msgstr ""
+
+#: includes/class-settings-schema.php:87
+msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
+msgstr ""
+
+#: includes/class-settings-schema.php:93
+msgid "Keep my data when the plugin is deleted"
+msgstr ""
+
+#: includes/class-settings-schema.php:94
+msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
+msgstr ""
+
 #: includes/modules/class-client-galleries.php:171
-#: blocks/client-galleries/index.js:54
-#: blocks/client-galleries/index.js:88
+#: build/client-galleries/index.js:1
 msgid "Find your gallery"
 msgstr ""
 
 #: includes/modules/class-client-galleries.php:172
-#: blocks/client-galleries/index.js:66
-#: blocks/client-galleries/index.js:92
+#: build/client-galleries/index.js:1
 msgid "Sign in to the client portal to see your photos."
 msgstr ""
 
 #: includes/modules/class-client-galleries.php:173
-#: blocks/client-galleries/index.js:79
-#: blocks/client-galleries/index.js:98
+#: build/client-galleries/index.js:1
 msgid "Open my gallery"
 msgstr ""
 
@@ -227,231 +293,210 @@ msgstr ""
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:100
-#: includes/modules/class-settings-page.php:272
+#: includes/modules/class-settings-page.php:103
 msgid "Settings"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:123
-#: includes/modules/class-settings-page.php:324
+#: includes/modules/class-settings-page.php:126
+#: includes/modules/class-settings-page.php:327
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:124
+#: includes/modules/class-settings-page.php:127
 msgid "Could not check the connection. Reload this page to try again."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:145
+#: includes/modules/class-settings-page.php:148
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:147
+#: includes/modules/class-settings-page.php:150
 msgid "Connect this site again"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:179
+#: includes/modules/class-settings-page.php:182
 msgid "Disconnected from Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:183
+#: includes/modules/class-settings-page.php:186
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:214
+#: includes/modules/class-settings-page.php:217
 msgid "Connected to Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:217
+#: includes/modules/class-settings-page.php:220
 msgid "The connection was declined in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:220
+#: includes/modules/class-settings-page.php:223
 msgid "The code expired. Start the connection again."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:241
+#: includes/modules/class-settings-page.php:247
 msgid "Connection"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:246
+#: includes/modules/class-settings-page.php:252
 msgid "Connected"
 msgstr ""
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:250
+#: includes/modules/class-settings-page.php:256
 #, php-format
 msgid "since %s."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:256
+#: includes/modules/class-settings-page.php:262
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:258
+#: includes/modules/class-settings-page.php:264
 msgid "Connect again"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:260
+#: includes/modules/class-settings-page.php:266
 msgid "Disconnect"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:263
+#: includes/modules/class-settings-page.php:269
 msgid "Not connected"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:268
+#: includes/modules/class-settings-page.php:274
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:269
+#: includes/modules/class-settings-page.php:275
 msgid "Connect to Profotograaf"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:277
-msgid "Default gallery layout"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:284
-msgid "Used when a gallery block or shortcode does not choose a layout."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:305
-#: blocks/gallery/edit.js:27
-msgid "Grid"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:306
-#: blocks/gallery/edit.js:28
-msgid "Masonry"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:307
-#: blocks/gallery/edit.js:29
-msgid "Slideshow"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:319
-msgid "Confirm this code in Profotograaf to finish connecting:"
+#: includes/modules/class-settings-page.php:280
+msgid "Set up the enquiry forms"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:322
-msgid "Open the approval page"
+msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:325
+msgid "Open the approval page"
+msgstr ""
+
+#: includes/modules/class-settings-page.php:328
 msgid "Cancel"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:336
+#: includes/modules/class-settings-page.php:339
 msgid "Embedding on this site"
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:341
+#: includes/modules/class-settings-page.php:344
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:345
+#: includes/modules/class-settings-page.php:348
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:350
+#: includes/modules/class-settings-page.php:353
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:358
+#: includes/modules/class-settings-page.php:361
 msgid "Check again"
 msgstr ""
 
-#: blocks/client-galleries/index.js:22
+#: build/client-galleries/index.js:1
 msgid "Client portal"
 msgstr ""
 
-#: blocks/client-galleries/index.js:26
+#: build/client-galleries/index.js:1
 msgid "Portal address"
 msgstr ""
 
-#: blocks/client-galleries/index.js:27
+#: build/client-galleries/index.js:1
 msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
 msgstr ""
 
-#: blocks/client-galleries/index.js:38
+#: build/client-galleries/index.js:1
 msgid "Open in a new tab"
 msgstr ""
 
-#: blocks/client-galleries/index.js:46
-#: blocks/client-galleries/index.js:64
+#: build/client-galleries/index.js:1
 msgid "Text"
 msgstr ""
 
-#: blocks/client-galleries/index.js:52
+#: build/client-galleries/index.js:1
 msgid "Heading"
 msgstr ""
 
-#: blocks/client-galleries/index.js:77
+#: build/client-galleries/index.js:1
 msgid "Button label"
 msgstr ""
 
-#: blocks/client-galleries/index.js:102
+#: build/client-galleries/index.js:1
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr ""
 
 #. translators: %d: number of photos in a gallery.
-#: blocks/gallery/edit.js:19
+#: build/gallery/index.js:2
 #, js-format
 msgid "%d photo"
 msgid_plural "%d photos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: blocks/gallery/edit.js:26
+#: build/gallery/index.js:2
 msgid "Site default"
 msgstr ""
 
-#: blocks/gallery/edit.js:35
+#: build/gallery/index.js:2
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr ""
 
-#: blocks/gallery/edit.js:42
+#: build/gallery/index.js:2
 msgid "The galleries could not be loaded."
 msgstr ""
 
-#: blocks/gallery/edit.js:73
-msgid "There are no galleries in your Profotograaf account yet."
-msgstr ""
-
-#: blocks/gallery/edit.js:117
+#: build/gallery/index.js:2
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr ""
 
-#: blocks/gallery/edit.js:165
-msgid "Gallery"
+#: build/gallery/index.js:2
+msgid "There are no galleries in your Profotograaf account yet."
 msgstr ""
 
-#: blocks/gallery/edit.js:167
-msgid "Layout"
-msgstr ""
-
-#: blocks/gallery/edit.js:186
-msgid "Choose another gallery"
-msgstr ""
-
-#: blocks/gallery/edit.js:195
-#: blocks/gallery/edit.js:215
+#: build/gallery/index.js:2
+#: build/gallery/index.js:3
 msgid "Profotograaf gallery"
 msgstr ""
 
-#: blocks/gallery/edit.js:196
-msgid "Choose one of your galleries."
-msgstr ""
-
 #. translators: %s: layout name such as grid.
-#: blocks/gallery/edit.js:226
+#: build/gallery/index.js:3
 #, js-format
 msgid "layout: %s"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Gallery"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Layout"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Choose another gallery"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Choose one of your galleries."
 msgstr ""
 
 #: blocks/client-galleries/block.json

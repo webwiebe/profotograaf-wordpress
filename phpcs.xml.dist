@@ -30,6 +30,13 @@
 	<rule ref="WordPress-Docs"/>
 	<rule ref="PHPCompatibilityWP"/>
 
+	<!--
+		Translation sniffs, enforced as errors: the text domain, no variables or
+		concatenation in translated strings, placeholders with a translators
+		comment, ordered placeholders in multi-placeholder strings. The block
+		and settings scripts have their own check in scripts/check-i18n.mjs.
+		scripts/phpcs-config.test.mjs fails when this rule is removed.
+	-->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
