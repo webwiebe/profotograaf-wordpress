@@ -57,6 +57,14 @@ class Settings_Fields_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( 'type="text"', $this->render( 'general' ) );
 	}
 
+	public function test_an_entry_with_a_link_shows_it_after_the_description(): void {
+		$html = $this->render( 'advanced' );
+
+		$this->assertStringContainsString( 'name="profotograaf_settings[telemetry_enabled]"', $html );
+		$this->assertStringContainsString( 'href="' . Settings_Schema::TELEMETRY_DOC_URL . '"', $html );
+		$this->assertStringNotContainsString( 'href=', $this->render( 'galleries' ) );
+	}
+
 	public function test_the_settings_page_shows_the_tab_named_in_the_query(): void {
 		$connection = new Connection();
 		$plugin     = new Plugin( $connection, new Api_Client( $connection, new Fake_Transport(), $this->clock() ), $this->clock() );
