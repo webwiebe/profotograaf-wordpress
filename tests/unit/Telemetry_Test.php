@@ -133,17 +133,10 @@ class Telemetry_Test extends Wp_Test_Case {
 
 		$this->assertTrue( $sender->enqueue( array( 'type' => 'usage' ) ) );
 		$this->assertCount( 1, $sender->queue() );
+		Functions\when( 'wp_schedule_single_event' )->justReturn( true );
 		$this->assertSame( 0, $sender->send() );
 		$this->assertSame( 1, $sender->dispatched );
 		$this->assertCount( 1, $sender->queue() );
-	}
-
-	public function test_the_skeleton_sender_sends_nothing_even_with_consent(): void {
-		$this->opt_in();
-		$sender = new Telemetry_Sender( $this->settings );
-		$sender->enqueue( array( 'type' => 'usage' ) );
-
-		$this->assertSame( 0, $sender->send() );
 	}
 
 	public function test_a_host_can_force_telemetry_off(): void {

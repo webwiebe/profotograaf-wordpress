@@ -19,6 +19,7 @@ msgstr ""
 #: profotograaf.php
 #: includes/class-cron-health.php:160
 #: includes/class-cron-health.php:175
+#: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:74
 #: includes/modules/class-settings-page.php:75
@@ -62,7 +63,7 @@ msgstr "Aanvraagformulieren"
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:457
-#: includes/modules/class-telemetry-consent.php:106
+#: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
 msgstr "Je hebt hier geen toestemming voor."
 
@@ -218,16 +219,19 @@ msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin opnieuw."
 
 #: includes/modules/class-client-galleries.php:202
+#: patterns/client-portal-cta.php:21
 #: build/client-galleries/index.js:1
 msgid "Find your gallery"
 msgstr "Vind je galerij"
 
 #: includes/modules/class-client-galleries.php:203
+#: patterns/client-portal-cta.php:22
 #: build/client-galleries/index.js:1
 msgid "Sign in to the client portal to see your photos."
 msgstr "Log in op het klantportaal om je foto's te bekijken."
 
 #: includes/modules/class-client-galleries.php:204
+#: patterns/client-portal-cta.php:23
 #: build/client-galleries/index.js:1
 msgid "Open my gallery"
 msgstr "Open mijn galerij"
@@ -1231,19 +1235,19 @@ msgid "Help improve Profotograaf by sharing anonymous usage and error data. This
 msgstr ""
 
 #: includes/class-settings-schema.php:150
-#: includes/modules/class-telemetry-consent.php:88
+#: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr ""
 
-#: includes/modules/class-telemetry-consent.php:87
+#: includes/modules/class-telemetry-consent.php:107
 msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
 msgstr ""
 
-#: includes/modules/class-telemetry-consent.php:93
+#: includes/modules/class-telemetry-consent.php:113
 msgid "Enable telemetry"
 msgstr ""
 
-#: includes/modules/class-telemetry-consent.php:94
+#: includes/modules/class-telemetry-consent.php:114
 msgid "Not now"
 msgstr ""
 
@@ -1430,4 +1434,163 @@ msgstr ""
 
 #: build/gallery/index.js:4
 msgid "Caption"
+msgstr ""
+
+#: includes/modules/class-patterns.php:54
+msgid "Sections for galleries, the client portal and enquiries."
+msgstr ""
+
+#: patterns/client-portal-cta.php:13
+msgid "Client portal call to action"
+msgstr ""
+
+#: patterns/client-portal-cta.php:14
+msgid "A button that takes clients to their private galleries."
+msgstr ""
+
+#: patterns/client-portal-cta.php:15
+msgid "client"
+msgstr ""
+
+#: patterns/client-portal-cta.php:15
+msgid "portal"
+msgstr ""
+
+#: patterns/client-portal-cta.php:15
+msgid "login"
+msgstr ""
+
+#: patterns/contact-page.php:23
+msgid "Replace this text with your enquiry form block."
+msgstr ""
+
+#: patterns/contact-page.php:27
+msgid "Contact page with enquiry form"
+msgstr ""
+
+#: patterns/contact-page.php:28
+msgid "An introduction, a place for your enquiry form and a small gallery."
+msgstr ""
+
+#: patterns/contact-page.php:29
+msgid "contact"
+msgstr ""
+
+#: patterns/contact-page.php:29
+msgid "enquiry"
+msgstr ""
+
+#: patterns/contact-page.php:29
+msgid "form"
+msgstr ""
+
+#: patterns/contact-page.php:31
+msgid "Get in touch"
+msgstr ""
+
+#: patterns/contact-page.php:32
+msgid "Tell me about your plans and I will reply within two working days."
+msgstr ""
+
+#: patterns/contact-page.php:34
+msgid "A look at my work"
+msgstr ""
+
+#: patterns/masonry-showcase.php:13
+msgid "Masonry showcase"
+msgstr ""
+
+#: patterns/masonry-showcase.php:14
+msgid "A wide gallery in masonry layout that keeps every photo as shot."
+msgstr ""
+
+#: patterns/masonry-showcase.php:15
+msgid "masonry"
+msgstr ""
+
+#: patterns/masonry-showcase.php:15
+msgid "showcase"
+msgstr ""
+
+#: patterns/masonry-showcase.php:15
+#: patterns/portfolio-grid.php:15
+msgid "gallery"
+msgstr ""
+
+#: patterns/masonry-showcase.php:17
+msgid "Showcase"
+msgstr ""
+
+#: patterns/portfolio-grid.php:13
+msgid "Portfolio grid"
+msgstr ""
+
+#: patterns/portfolio-grid.php:14
+msgid "A heading, a short introduction and a gallery grid."
+msgstr ""
+
+#: patterns/portfolio-grid.php:15
+msgid "portfolio"
+msgstr ""
+
+#: patterns/portfolio-grid.php:15
+msgid "grid"
+msgstr ""
+
+#: patterns/portfolio-grid.php:17
+msgid "Selected work"
+msgstr ""
+
+#: patterns/portfolio-grid.php:18
+msgid "A selection of recent sessions. Choose a gallery in the block settings."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation title"
+msgid "Profotograaf grid gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation description"
+msgid "Show a Profotograaf gallery as an even grid."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "grid"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation title"
+msgid "Profotograaf masonry gallery"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation description"
+msgid "Show a Profotograaf gallery in masonry layout, each photo at its own height."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "masonry"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation title"
+msgid "Profotograaf slideshow"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation description"
+msgid "Show a Profotograaf gallery as a slideshow."
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "slideshow"
+msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block variation keyword"
+msgid "slider"
 msgstr ""
