@@ -136,10 +136,28 @@ class Client_Galleries_Test extends Wp_Test_Case {
 		$this->assertArrayNotHasKey( 'render_callback', $other );
 	}
 
-	public function test_editor_translations_are_found_under_the_source_path(): void {
-		$this->assertSame( 'blocks/client-galleries/index.js', $this->block->source_script_path( 'build/client-galleries/index.js', '' ) );
-		$this->assertSame( 'build/other/index.js', $this->block->source_script_path( 'build/other/index.js', '' ) );
-		$this->assertFalse( $this->block->source_script_path( false, '' ) );
+	public function test_editor_translations_use_the_standard_api(): void {
+		Functions\when( 'generate_block_asset_handle' )->justReturn( 'profotograaf-client-galleries-editor-script' );
+		Functions\when( 'wp_script_is' )->justReturn( true );
+		Functions\expect( 'wp_set_script_translations' )
+			->once()
+			->with( 'profotograaf-client-galleries-editor-script', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+
+		$this->block->load_script_translations();
+	}
+
+	public function test_it_does_not_remap_the_script_path_for_translations(): void {
+		$filters = array();
+		Functions\when( 'add_filter' )->alias(
+			function ( $hook ) use ( &$filters ) {
+				$filters[] = $hook;
+			}
+		);
+		Functions\when( 'add_action' )->justReturn( true );
+
+		$this->block->register( new \Profotograaf\Plugin() );
+
+		$this->assertNotContains( 'load_script_textdomain_relative_path', $filters );
 	}
 
 	public function test_block_json_matches_the_render_attributes(): void {

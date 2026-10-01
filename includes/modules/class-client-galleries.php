@@ -46,26 +46,6 @@ class Client_Galleries implements Module {
 		unset( $plugin );
 		add_filter( 'register_block_type_args', array( $this, 'add_render_callback' ), 10, 2 );
 		add_action( 'init', array( $this, 'load_script_translations' ), 20 );
-		add_filter( 'load_script_textdomain_relative_path', array( $this, 'source_script_path' ), 10, 2 );
-	}
-
-	/**
-	 * Looks up editor translations under the source path of the script.
-	 *
-	 * The translation files are generated from `blocks/<name>/index.js` while
-	 * WordPress loads `build/<name>/index.js`. Without this mapping the Dutch
-	 * editor strings would never be found.
-	 *
-	 * @param string|false $relative Path of the script relative to the plugin.
-	 * @param string       $source   Script URL.
-	 * @return string|false
-	 */
-	public function source_script_path( $relative, $source ) {
-		unset( $source );
-		if ( is_string( $relative ) && 0 === strpos( $relative, 'build/client-galleries/' ) ) {
-			return 'blocks/' . substr( $relative, strlen( 'build/' ) );
-		}
-		return $relative;
 	}
 
 	/**

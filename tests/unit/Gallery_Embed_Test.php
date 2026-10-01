@@ -110,14 +110,43 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$this->assertSame( array( 'grid', 'masonry', 'slideshow' ), \Profotograaf\Settings::LAYOUTS );
 	}
 
-	public function test_the_editor_script_finds_the_shipped_json_translation(): void {
-		Functions\when( 'determine_locale' )->justReturn( 'nl_NL' );
-		$json = dirname( __DIR__, 2 ) . '/languages/profotograaf-nl_NL-' . md5( Gallery_Embed::EDITOR_SOURCE ) . '.json';
-		if ( ! is_readable( $json ) ) {
-			$this->markTestSkipped( 'Run make json first.' );
-		}
+	public function test_the_editor_script_translations_use_the_standard_api(): void {
+		Functions\when( 'generate_block_asset_handle' )->justReturn( 'profotograaf-gallery-editor-script' );
+		Functions\when( 'wp_script_is' )->justReturn( true );
+		Functions\expect( 'wp_set_script_translations' )
+			->once()
+			->with( 'profotograaf-gallery-editor-script', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
 
-		$this->assertSame( $json, $this->module->script_translation_file( false, 'handle', 'profotograaf' ) );
-		$this->assertFalse( $this->module->script_translation_file( false, 'handle', 'other-domain' ) );
+		$this->module->load_script_translations();
+	}
+
+	public function test_nothing_is_attached_while_the_editor_script_is_not_registered(): void {
+		Functions\when( 'generate_block_asset_handle' )->justReturn( 'profotograaf-gallery-editor-script' );
+		Functions\when( 'wp_script_is' )->justReturn( false );
+		Functions\expect( 'wp_set_script_translations' )->never();
+
+		$this->module->load_script_translations();
+	}
+
+	public function test_it_hooks_the_translations_and_adds_no_translation_file_filter(): void {
+		$actions = array();
+		$filters = array();
+		Functions\when( 'add_action' )->alias(
+			function ( $hook ) use ( &$actions ) {
+				$actions[] = $hook;
+			}
+		);
+		Functions\when( 'add_filter' )->alias(
+			function ( $hook ) use ( &$filters ) {
+				$filters[] = $hook;
+			}
+		);
+		Functions\when( 'add_shortcode' )->justReturn( true );
+
+		$this->module->register( $this->plugin );
+
+		$this->assertContains( 'init', $actions );
+		$this->assertNotContains( 'load_script_translation_file', $filters );
+		$this->assertNotContains( 'load_script_textdomain_relative_path', $filters );
 	}
 }
