@@ -21,6 +21,7 @@ import {
 } from './helpers';
 import { DisplayPanel } from './display-panel';
 import { ExcludePanel } from './exclude-panel';
+import { ImageTextPanel } from './image-text-panel';
 import { PreviewGrid } from './preview-grid';
 import { usePhotos, type PhotosState } from './use-photos';
 import type { GalleryAttributes, GalleryRow } from './types';
@@ -142,6 +143,10 @@ function InspectorPanels( {
 		<>
 			<InspectorPanel attributes={ attributes } setAttributes={ setAttributes } />
 			<DisplayPanel attributes={ attributes } setAttributes={ setAttributes } />
+			<ImageTextPanel
+				items={ attributes.imageText }
+				setItems={ ( imageText ) => setAttributes( { imageText } ) }
+			/>
 			{ attributes.galleryId && (
 				<ExcludePanel
 					attributes={ attributes }
@@ -211,6 +216,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						cover={ shown?.cover_url }
 						photos={ photos.photos }
 						excluded={ attributes.excludedPhotoIds }
+						imageText={ attributes.imageText }
 					/>
 				) }
 			</div>

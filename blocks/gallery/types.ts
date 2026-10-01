@@ -12,6 +12,13 @@ export interface PhotoRow {
 	thumb_url: string;
 }
 
+/** A caption and alt text for one photo, matched by the platform photo id. */
+export interface ImageText {
+	id: string;
+	caption?: string;
+	alt?: string;
+}
+
 /** A row of the /profotograaf/v1/galleries REST route. */
 export interface GalleryRow {
 	id: string;
@@ -30,6 +37,7 @@ export type GalleryAttributes = {
 	galleryTitle: string;
 	galleryUrl: string;
 	layout: '' | 'grid' | 'masonry' | 'slideshow';
+	imageText: ImageText[];
 } & DisplayAttributes &
 	ExcludeAttributes;
 

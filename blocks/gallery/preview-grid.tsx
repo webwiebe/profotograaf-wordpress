@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import type { CSSProperties } from 'react';
+import type { ImageText } from './types';
 import {
 	cssRatio,
 	displaySummary,
@@ -46,11 +47,13 @@ export function PreviewGrid( {
 	cover,
 	photos,
 	excluded = [],
+	imageText = [],
 }: {
 	attributes: DisplayAttributes;
 	cover?: string | undefined;
 	photos?: PhotoRow[] | null | undefined;
 	excluded?: string[];
+	imageText?: ImageText[];
 } ) {
 	const columns = Number( attributes.columns ) || 3;
 	const gap = attributes.gap === '' ? 8 : Number( attributes.gap );
@@ -70,19 +73,21 @@ export function PreviewGrid( {
 	return (
 		<>
 			<div className="profotograaf-gallery-grid" style={ style }>
-				{ tilesFor( photos, excluded, cover ).map( ( tile ) => (
+				{ tilesFor( photos, excluded, cover ).map( ( tile, index ) => (
 					<figure
 						key={ tile.key }
 						className="profotograaf-gallery-grid__tile"
 						data-captions={ attributes.captions || undefined }
 					>
 						{ tile.src ? (
-							<img src={ tile.src } alt="" />
+							<img src={ tile.src } alt={ imageText[ index ]?.alt ?? '' } />
 						) : (
 							<span className="profotograaf-gallery-grid__blank" />
 						) }
 						{ showCaption && (
-							<figcaption>{ __( 'Caption', 'profotograaf' ) }</figcaption>
+							<figcaption>
+								{ imageText[ index ]?.caption || __( 'Caption', 'profotograaf' ) }
+							</figcaption>
 						) }
 					</figure>
 				) ) }
