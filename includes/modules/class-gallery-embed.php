@@ -59,6 +59,7 @@ class Gallery_Embed implements Module {
 		( new Oembed( $script ) )->register();
 		( new Gallery_Rest( $plugin->api(), $index ) )->register();
 
+		add_action( Gallery_Index::LOOKUP_HOOK, array( $index, 'lookup' ) );
 		add_action( Embed_Script::REFRESH_HOOK, array( $script, 'refresh' ) );
 		add_filter( 'register_block_type_args', array( $this, 'block_args' ), 10, 2 );
 		add_filter( 'load_script_translation_file', array( $this, 'script_translation_file' ), 10, 3 );

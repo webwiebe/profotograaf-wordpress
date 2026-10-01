@@ -7,6 +7,9 @@
 
 namespace Profotograaf\Tests;
 
+use Brain\Monkey\Functions;
+use Profotograaf\Gallery_Index;
+
 class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 	public function test_it_writes_the_embed_div_with_the_fallback_link(): void {
@@ -128,13 +131,47 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.js', $this->script->url() );
 	}
 
-	public function test_a_missing_link_is_looked_up_once_and_remembered(): void {
+	/**
+	 * Records the lookup events that get scheduled, as hook names.
+	 *
+	 * @return \ArrayObject<int,string>
+	 */
+	private function record_scheduled(): \ArrayObject {
+		$scheduled = new \ArrayObject();
+		Functions\when( 'wp_schedule_single_event' )->alias(
+			function ( $when, $hook ) use ( $scheduled ) {
+				if ( Gallery_Index::LOOKUP_HOOK === $hook ) {
+					$scheduled[] = $hook;
+				}
+				return true;
+			}
+		);
+		return $scheduled;
+	}
+
+	public function test_a_missing_link_renders_without_a_request_and_schedules_a_lookup(): void {
+		$this->connect();
+		$scheduled = $this->record_scheduled();
+
+		$html = $this->renderer->render( array( 'id' => 'g-2' ) );
+		$this->renderer->render( array( 'id' => 'g-2' ) );
+
+		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid"></div>', $html );
+		$this->assertCount( 0, $this->http->requests, 'A render path must not call the platform.' );
+		$this->assertSame( array( Gallery_Index::LOOKUP_HOOK ), $scheduled->getArrayCopy() );
+	}
+
+	public function test_the_link_and_title_appear_after_the_background_lookup(): void {
 		$this->connect();
 		$this->http->reply( 200, array( $this->row( 'g-1', 'Spring wedding' ), $this->row( 'g-2', 'Autumn portraits' ) ) );
+		$index = new Gallery_Index( $this->api );
 
+		$before = $this->renderer->render( array( 'id' => 'g-2' ) );
+		$index->lookup();
 		$first  = $this->renderer->render( array( 'id' => 'g-2' ) );
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
+		$this->assertStringNotContainsString( '<a ', $before );
 		$this->assertStringContainsString( '<a href="https://profotograaf.nl/share/g/spring-wedding">Autumn portraits</a>', $first );
 		$this->assertStringContainsString( '>Spring wedding</a>', $second );
 		$this->assertCount( 1, $this->http->requests );
@@ -142,16 +179,18 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertFalse( $this->autoload['profotograaf_gallery_index'], 'The index must not autoload.' );
 	}
 
-	public function test_a_failed_lookup_is_not_repeated_and_the_div_stays_without_a_link(): void {
+	public function test_a_failed_lookup_leaves_the_div_without_a_link_and_is_not_rescheduled_at_once(): void {
 		$this->connect();
 		$this->http->reply( 500, array( 'error' => 'boom' ) );
+		$scheduled = $this->record_scheduled();
 
-		$first  = $this->renderer->render( array( 'id' => 'g-1' ) );
+		$first = $this->renderer->render( array( 'id' => 'g-1' ) );
+		( new Gallery_Index( $this->api ) )->lookup();
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
 		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid"></div>', $first );
 		$this->assertSame( $first, $second );
-		$this->assertCount( 1, $this->http->requests );
+		$this->assertCount( 1, $scheduled );
 	}
 
 	public function test_a_disconnected_site_still_renders_without_a_request(): void {
