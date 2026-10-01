@@ -292,6 +292,25 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( 'class="profotograaf-gallery wp-block-profotograaf-gallery alignwide"', $html );
 	}
 
+	public function test_a_wrapper_callable_builds_the_div_attributes(): void {
+		$seen = array();
+		$html = $this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'layout'  => 'grid',
+				'class'   => 'ignored',
+				'wrapper' => function ( array $attributes ) use ( &$seen ) {
+					$seen = $attributes;
+					return 'class="custom"';
+				},
+			)
+		);
+
+		$this->assertStringStartsWith( '<div class="custom">', $html );
+		$this->assertSame( 'g-1', $seen['data-profotograaf-gallery'] );
+		$this->assertSame( 'profotograaf-gallery', $seen['class'] );
+	}
+
 	/**
 	 * The audit for #41 found no triangle in the plugin markup. These elements
 	 * draw one in a browser or a theme (a disclosure marker or a list bullet),

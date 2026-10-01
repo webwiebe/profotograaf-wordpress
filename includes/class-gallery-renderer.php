@@ -68,8 +68,11 @@ class Gallery_Renderer {
 	 *
 	 * Keys of $args: id (required), layout (grid, masonry or slideshow; the
 	 * default layout from the settings when empty or unknown), title and url
-	 * (the fallback link; looked up when both are empty) and class (extra CSS
-	 * classes for the div).
+	 * (the fallback link; looked up when both are empty), class (extra CSS
+	 * classes for the div) and wrapper (a callable that takes the div's
+	 * attributes and returns the attribute string; the block passes
+	 * get_block_wrapper_attributes so its color, typography, border, spacing and
+	 * anchor supports reach the div).
 	 *
 	 * @param array<string,mixed> $args Arguments.
 	 * @return string HTML. Without a valid id, editors get a notice and visitors
@@ -94,12 +97,38 @@ class Gallery_Renderer {
 			: '';
 
 		return $notice . sprintf(
-			'<div class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s" style="min-height:8em">%4$s<noscript>%5$s</noscript></div>',
-			esc_attr( $classes ),
-			esc_attr( $id ),
-			esc_attr( $layout ),
+			'<div %1$s>%2$s<noscript>%3$s</noscript></div>',
+			$this->wrapper_attributes( $args, $classes, $id, $layout ),
 			$this->fallback_link( $id, $args ),
 			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
+		);
+	}
+
+	/**
+	 * The attribute string of the gallery div.
+	 *
+	 * @param array<string,mixed> $args    Render arguments.
+	 * @param string              $classes Classes, with the extra ones from the arguments.
+	 * @param string              $id      Gallery id.
+	 * @param string              $layout  Layout.
+	 */
+	private function wrapper_attributes( array $args, string $classes, string $id, string $layout ): string {
+		$wrapper = $args['wrapper'] ?? null;
+		if ( is_callable( $wrapper ) ) {
+			return (string) $wrapper(
+				array(
+					'class'                     => 'profotograaf-gallery',
+					'data-profotograaf-gallery' => $id,
+					'data-layout'               => $layout,
+					'style'                     => 'min-height:8em',
+				)
+			);
+		}
+		return sprintf(
+			'class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s" style="min-height:8em"',
+			esc_attr( $classes ),
+			esc_attr( $id ),
+			esc_attr( $layout )
 		);
 	}
 

@@ -19,6 +19,15 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		Functions\when( 'current_user_can' )->justReturn( false );
 		Functions\when( 'add_action' )->justReturn( true );
 		Functions\when( 'add_filter' )->justReturn( true );
+		Functions\when( 'get_block_wrapper_attributes' )->alias(
+			fn( $extra ) => sprintf(
+				'class="%1$s wp-block-profotograaf-gallery" data-profotograaf-gallery="%2$s" data-layout="%3$s" style="%4$s"',
+				$extra['class'],
+				$extra['data-profotograaf-gallery'],
+				$extra['data-layout'],
+				$extra['style']
+			)
+		);
 		Functions\when( 'sanitize_html_class' )->alias( fn( $name ) => preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $name ) );
 		$this->module = new Gallery_Embed();
 	}
@@ -62,14 +71,38 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 				'galleryTitle' => 'Spring wedding',
 				'galleryUrl'   => 'https://profotograaf.nl/share/g/spring-wedding',
 				'layout'       => 'masonry',
-				'align'        => 'wide',
 			)
 		);
 
 		$this->assertSame(
-			'<div class="profotograaf-gallery wp-block-profotograaf-gallery alignwide" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			'<div class="profotograaf-gallery wp-block-profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
 			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
 			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
+			$html
+		);
+	}
+
+	public function test_the_block_wrapper_comes_from_the_block_supports(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		Functions\when( 'get_block_wrapper_attributes' )->alias(
+			fn( $extra ) => sprintf(
+				'class="wp-block-profotograaf-gallery has-background %1$s" id="spring" data-layout="%2$s" style="%3$s;background-color:#fff"',
+				$extra['class'],
+				$extra['data-layout'],
+				$extra['style']
+			)
+		);
+		$this->module->register( $this->plugin );
+
+		$html = $this->module->render_block(
+			array(
+				'galleryId' => 'g-1',
+				'layout'    => 'grid',
+			)
+		);
+
+		$this->assertStringStartsWith(
+			'<div class="wp-block-profotograaf-gallery has-background profotograaf-gallery" id="spring" data-layout="grid" style="min-height:8em;background-color:#fff">',
 			$html
 		);
 	}
