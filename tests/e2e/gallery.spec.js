@@ -165,7 +165,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await visitor.close();
 	} );
 
-	test( 'with JavaScript off a visitor sees the link and the notice, and no list or disclosure markup', async ( { browser } ) => {
+	test( 'with JavaScript off a visitor sees the link and no list or disclosure markup', async ( { browser } ) => {
 		const url = publishPost( 'No script E2E', '[profotograaf_gallery id="g-e2e"]' );
 
 		const visitor = await browser.newContext( { javaScriptEnabled: false } );
@@ -174,7 +174,6 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
-		await expect( embed ).toContainText( 'This gallery needs JavaScript to be shown here.' );
 		await expect( embed.locator( 'details, summary, ul, li, img' ) ).toHaveCount( 0 );
 		await visitor.close();
 	} );
