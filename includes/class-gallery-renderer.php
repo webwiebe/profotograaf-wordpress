@@ -153,7 +153,10 @@ class Gallery_Renderer {
 	 * Keys of $args: id (required), layout (grid, masonry or slideshow; the
 	 * default layout from the settings when empty or unknown), title and url
 	 * (the fallback link; looked up when both are empty), class (extra CSS
-	 * classes for the div) and the display options listed in OPTIONS.
+	 * classes for the div), the display options listed in OPTIONS and wrapper (a callable that takes the div's
+	 * attributes and returns the attribute string; the block passes
+	 * get_block_wrapper_attributes so its color, typography, border, spacing and
+	 * anchor supports reach the div).
 	 *
 	 * A display option comes from $args first, from $shortcode second and from
 	 * the site default last. An empty or invalid value falls through to the
@@ -183,25 +186,22 @@ class Gallery_Renderer {
 			: '';
 
 		return $notice . sprintf(
-			'<div class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s"%6$s style="min-height:8em">%4$s<noscript>%5$s</noscript></div>',
-			esc_attr( $classes ),
-			esc_attr( $id ),
-			esc_attr( $layout ),
+			'<div %1$s>%2$s<noscript>%3$s</noscript></div>',
+			$this->wrapper_attributes( $args, $classes, $id, $layout, $this->data_attributes( $args, $shortcode ) ),
 			$this->fallback_link( $id, $args ),
-			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' ),
-			$this->data_attributes( $args, $shortcode )
+			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
 		);
 	}
 
 	/**
-	 * The data-* attributes of the display options that have a value, each
-	 * with a leading space.
+	 * The data-* attributes of the display options that have a value.
 	 *
 	 * @param array<string,mixed> $block     Block layer.
 	 * @param array<string,mixed> $shortcode Shortcode layer.
+	 * @return array<string,string> Attribute name => value.
 	 */
-	private function data_attributes( array $block, array $shortcode ): string {
-		$html = '';
+	private function data_attributes( array $block, array $shortcode ): array {
+		$attributes = array();
 		foreach ( self::OPTIONS as $key => $option ) {
 			$layers = array();
 			foreach ( array( $block, $shortcode ) as $layer ) {
@@ -212,10 +212,41 @@ class Gallery_Renderer {
 				continue;
 			}
 			// Ratios are stored as 4-3 (a colon is not allowed in an option key).
-			$value = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
-			$html .= sprintf( ' %1$s="%2$s"', $option['data'], esc_attr( $value ) );
+			$attributes[ $option['data'] ] = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
 		}
-		return $html;
+		return $attributes;
+	}
+
+	/**
+	 * The attribute string of the gallery div.
+	 *
+	 * @param array<string,mixed>  $args    Render arguments.
+	 * @param string               $classes Classes, with the extra ones from the arguments.
+	 * @param string               $id      Gallery id.
+	 * @param string               $layout  Layout.
+	 * @param array<string,string> $data    Display option data attributes.
+	 */
+	private function wrapper_attributes( array $args, string $classes, string $id, string $layout, array $data ): string {
+		$wrapper = $args['wrapper'] ?? null;
+		if ( is_callable( $wrapper ) ) {
+			return (string) $wrapper(
+				array(
+					'class'                     => 'profotograaf-gallery',
+					'data-profotograaf-gallery' => $id,
+					'data-layout'               => $layout,
+				) + $data + array( 'style' => 'min-height:8em' )
+			);
+		}
+		$html = sprintf(
+			'class="%1$s" data-profotograaf-gallery="%2$s" data-layout="%3$s"',
+			esc_attr( $classes ),
+			esc_attr( $id ),
+			esc_attr( $layout )
+		);
+		foreach ( $data as $name => $value ) {
+			$html .= sprintf( ' %1$s="%2$s"', $name, esc_attr( $value ) );
+		}
+		return $html . ' style="min-height:8em"';
 	}
 
 	/**

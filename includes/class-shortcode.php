@@ -13,9 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * `[profotograaf_gallery id="..." layout="grid"]` for the classic editor and
  * page builders. It renders through Gallery_Renderer, like the block.
  *
- * Optional `title` and `url` set the fallback link and save the lookup. The
- * display options (columns, columns_tablet, columns_mobile, gap, ratio,
- * captions, sort, per_page, load_more and lightbox) override the site default.
+ * Optional `title` and `url` set the fallback link and save the lookup.
+ * Optional `class` adds CSS classes to the wrapper and `align` (wide or full)
+ * adds the matching alignment class. The display options (columns,
+ * columns_tablet, columns_mobile, gap, ratio, captions, sort, per_page,
+ * load_more and lightbox) override the site default.
  */
 class Shortcode {
 
@@ -57,11 +59,39 @@ class Shortcode {
 				'layout' => '',
 				'title'  => '',
 				'url'    => '',
+				'class'  => '',
+				'align'  => '',
 			) + Gallery_Renderer::option_defaults(),
 			is_array( $atts ) ? $atts : array(),
 			self::TAG
 		);
 		$options = array_intersect_key( $atts, Gallery_Renderer::option_defaults() );
-		return $this->renderer->render( array_diff_key( $atts, $options ), $options );
+		$args    = array_diff_key( $atts, $options );
+		$extra   = $this->classes( (string) $args['class'], (string) $args['align'] );
+		unset( $args['align'] );
+		return $this->renderer->render( array_merge( $args, array( 'class' => $extra ) ), $options );
+	}
+
+	/**
+	 * The extra classes for the wrapper: the `class` value cleaned per class,
+	 * plus `alignwide` or `alignfull` for the `align` value.
+	 *
+	 * @param string $extra Space separated classes.
+	 * @param string $align Alignment: wide or full.
+	 */
+	private function classes( string $extra, string $align ): string {
+		$classes = array();
+		$names   = preg_split( '/\s+/', trim( $extra ) );
+		foreach ( false === $names ? array() : $names as $name ) {
+			$name = sanitize_html_class( $name );
+			if ( '' !== $name ) {
+				$classes[] = $name;
+			}
+		}
+		$align = strtolower( trim( $align ) );
+		if ( in_array( $align, array( 'wide', 'full' ), true ) ) {
+			$classes[] = 'align' . $align;
+		}
+		return implode( ' ', array_unique( $classes ) );
 	}
 }

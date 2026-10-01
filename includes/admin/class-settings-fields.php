@@ -52,7 +52,12 @@ final class Settings_Fields {
 						<th scope="row"><?php $this->render_label( $key, $entry ); ?></th>
 						<td>
 							<?php $this->render_control( $key, $entry ); ?>
-							<p class="description"><?php echo esc_html( $entry['description'] ); ?></p>
+							<p class="description">
+								<?php echo esc_html( $entry['description'] ); ?>
+								<?php if ( isset( $entry['link'] ) ) : ?>
+									<a href="<?php echo esc_url( $entry['link']['url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $entry['link']['label'] ); ?></a>
+								<?php endif; ?>
+							</p>
 						</td>
 					</tr>
 				<?php endforeach; ?>

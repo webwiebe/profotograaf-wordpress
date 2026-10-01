@@ -96,7 +96,23 @@ class Gallery_Embed implements Module {
 				'title'  => $attributes['galleryTitle'] ?? '',
 				'url'    => $attributes['galleryUrl'] ?? '',
 				'class'  => $class,
-			) + Gallery_Renderer::options_from_block( $attributes )
+			) + Gallery_Renderer::options_from_block( $attributes ) + $this->wrapper_argument()
+		);
+	}
+
+	/**
+	 * The wrapper argument for the renderer. WordPress builds the attribute
+	 * string from the block's supports (color, typography, border, spacing,
+	 * anchor, extra classes and alignment).
+	 *
+	 * @return array<string,callable>
+	 */
+	private function wrapper_argument(): array {
+		if ( ! function_exists( 'get_block_wrapper_attributes' ) ) {
+			return array();
+		}
+		return array(
+			'wrapper' => static fn( array $attributes ): string => get_block_wrapper_attributes( $attributes ),
 		);
 	}
 

@@ -15,6 +15,7 @@ class Shortcode_Test extends Gallery_Test_Case {
 	protected function setUp(): void {
 		parent::setUp();
 		Functions\when( 'current_user_can' )->justReturn( false );
+		Functions\when( 'sanitize_html_class' )->alias( fn( $name ) => preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $name ) );
 	}
 
 	public function test_it_registers_the_tag(): void {
@@ -79,5 +80,29 @@ class Shortcode_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( ' data-load-more="on"', $html );
 		$this->assertStringContainsString( ' data-lightbox="off"', $html );
 		$this->assertStringContainsString( ' data-captions="below"', $html );
+	}
+
+	public function test_class_and_align_reach_the_wrapper(): void {
+		$html = ( new Shortcode( $this->renderer ) )->render(
+			array(
+				'id'    => 'g-1',
+				'class' => 'my-gallery  "><script>',
+				'align' => 'wide',
+			)
+		);
+
+		$this->assertStringContainsString( 'class="profotograaf-gallery my-gallery script alignwide"', $html );
+		$this->assertStringNotContainsString( '<script>', $html );
+	}
+
+	public function test_an_unknown_align_value_adds_no_class(): void {
+		$html = ( new Shortcode( $this->renderer ) )->render(
+			array(
+				'id'    => 'g-1',
+				'align' => 'left',
+			)
+		);
+
+		$this->assertStringContainsString( 'class="profotograaf-gallery"', $html );
 	}
 }

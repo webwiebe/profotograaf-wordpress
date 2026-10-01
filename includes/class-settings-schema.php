@@ -27,8 +27,10 @@ defined( 'ABSPATH' ) || exit;
  *   stored as the nearest bound.
  * - sanitize: optional callable that replaces the type's own parsing. It
  *   returns the clean value, or null when the input is not usable.
+ * - link: optional array with `url` and `label`, shown as a link after the
+ *   description.
  *
- * @phpstan-type Entry array{tab:string,type:string,default:mixed,label:string,description:string,choices?:array<int|string,string>,min?:int,max?:int,sanitize?:callable}
+ * @phpstan-type Entry array{tab:string,type:string,default:mixed,label:string,description:string,choices?:array<int|string,string>,min?:int,max?:int,sanitize?:callable,link?:array{url:string,label:string}}
  */
 final class Settings_Schema {
 
@@ -42,6 +44,11 @@ final class Settings_Schema {
 	public const TAB_GALLERIES = 'galleries';
 	public const TAB_ENQUIRY   = 'enquiry-forms';
 	public const TAB_ADVANCED  = 'advanced';
+
+	/**
+	 * Where the telemetry design is published.
+	 */
+	public const TELEMETRY_DOC_URL = 'https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md';
 
 	/**
 	 * Settings screen tabs, in order.
@@ -131,6 +138,17 @@ final class Settings_Schema {
 				'max'         => 90,
 				'label'       => __( 'Keep undeliverable enquiries for (days)', 'profotograaf' ),
 				'description' => __( 'Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed.', 'profotograaf' ),
+			),
+			'telemetry_enabled'      => array(
+				'tab'         => self::TAB_ADVANCED,
+				'type'        => 'bool',
+				'default'     => false,
+				'label'       => __( 'Share anonymous usage data', 'profotograaf' ),
+				'description' => __( 'Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent.', 'profotograaf' ),
+				'link'        => array(
+					'url'   => self::TELEMETRY_DOC_URL,
+					'label' => __( 'What is shared', 'profotograaf' ),
+				),
 			),
 			'keep_data_on_uninstall' => array(
 				'tab'         => self::TAB_ADVANCED,
