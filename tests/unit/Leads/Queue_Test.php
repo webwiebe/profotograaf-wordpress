@@ -116,16 +116,207 @@ class Queue_Test extends Leads_Test_Case {
 		$this->assertSame( array( 'a' ), array_keys( $this->queue->due( 10 ) ) );
 	}
 
-	public function test_failed_jobs_and_their_personal_data_are_removed_after_a_week(): void {
-		$this->queue->enqueue( 'a', self::PAYLOAD );
-		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+	private const THIRTY_DAYS = 30 * 86400;
 
-		$this->now += Queue::KEEP_FAILED - 1;
+	public function test_a_failed_job_is_kept_for_the_retention_and_then_removed_with_a_warning(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD + array( 'source_form' => 'CF7: Wedding' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->mails = array();
+
+		$this->now += self::THIRTY_DAYS - 1;
 		$this->assertSame( 0, $this->queue->prune() );
+		$this->assertCount( 1, $this->store->jobs );
 
 		$this->now += 1;
 		$this->assertSame( 1, $this->queue->prune() );
 		$this->assertSame( array(), $this->store->jobs );
+		$this->assertCount( 1, $this->mails );
+		$this->assertStringContainsString( 'CF7: Wedding', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'anna@example.com', $this->mails[0][2] );
+	}
+
+	public function test_the_retention_follows_the_setting(): void {
+		$this->options['profotograaf_settings']['leads_failed_retention'] = '7';
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->now += 7 * 86400;
+
+		$this->assertSame( 1, $this->queue->prune() );
+	}
+
+	public function test_a_job_without_a_sent_alert_is_never_pruned(): void {
+		$this->mail_works = false;
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->now += 10 * self::THIRTY_DAYS;
+
+		$this->assertSame( 0, $this->queue->prune() );
+		$this->assertCount( 1, $this->store->jobs );
+	}
+
+	public function test_nothing_is_removed_when_the_expiry_warning_cannot_be_mailed(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->mail_works = false;
+
+		$this->now += self::THIRTY_DAYS;
+
+		$this->assertSame( 0, $this->queue->prune() );
+		$this->assertCount( 1, $this->store->jobs );
+
+		$this->mail_works = true;
+		$this->assertSame( 1, $this->queue->prune() );
+	}
+
+	public function test_an_exported_job_is_removed_without_a_warning(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->queue->mark_exported( array( 'a' ) );
+		$this->mails = array();
+
+		$this->now += self::THIRTY_DAYS;
+
+		$this->assertSame( 1, $this->queue->prune() );
+		$this->assertSame( array(), $this->mails );
+	}
+
+	public function test_a_failed_job_is_alerted_once(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD + array( 'source_form' => 'CF7: Wedding' ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->assertCount( 1, $this->mails );
+		$this->assertSame( 'admin@example.com', $this->mails[0][0] );
+		$this->assertStringContainsString( 'CF7: Wedding', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'Anna', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'anna@example.com', $this->mails[0][2] );
+
+		$this->assertSame( 0, $this->queue->alert_pending() );
+		$this->assertCount( 1, $this->mails );
+	}
+
+	public function test_running_out_of_attempts_alerts_too(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		for ( $i = 0; $i < Queue::MAX_ATTEMPTS; $i++ ) {
+			$this->queue->retry_later( $this->store->jobs['a'], 'down', 503 );
+		}
+
+		$this->assertCount( 1, $this->mails );
+	}
+
+	public function test_a_retry_that_is_not_final_sends_no_alert(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->retry_later( $this->store->jobs['a'], 'down', 503 );
+
+		$this->assertSame( array(), $this->mails );
+	}
+
+	public function test_an_alert_that_failed_is_sent_again_later(): void {
+		$this->mail_works = false;
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->assertArrayNotHasKey( 'alerted_at', $this->store->jobs['a'] );
+
+		$this->mail_works = true;
+		$this->assertSame( 1, $this->queue->alert_pending() );
+		$this->assertArrayHasKey( 'alerted_at', $this->store->jobs['a'] );
+		$this->assertSame( 0, $this->queue->alert_pending() );
+	}
+
+	public function test_a_dropped_lead_alerts_the_admin_once_an_hour(): void {
+		for ( $i = 0; $i < Queue::MAX_PENDING; $i++ ) {
+			$this->store->jobs[ 'j' . $i ] = array( 'status' => 'pending' );
+		}
+
+		$this->assertSame( 'full', $this->queue->enqueue( 'late', self::PAYLOAD + array( 'source_form' => 'CF7: Wedding' ) ) );
+		$this->assertSame( 'full', $this->queue->enqueue( 'later', self::PAYLOAD ) );
+
+		$this->assertCount( 1, $this->mails );
+		$this->assertStringContainsString( 'CF7: Wedding', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'anna@example.com', $this->mails[0][2] );
+
+		$this->transients = array();
+		$this->queue->enqueue( 'latest', self::PAYLOAD );
+		$this->assertCount( 2, $this->mails );
+	}
+
+	public function test_the_fallback_mails_a_failed_lead_once(): void {
+		$this->options['profotograaf_settings']['leads_fallback_email'] = 'studio@example.com';
+		$this->queue->enqueue( 'a', self::PAYLOAD + array( 'extra_fields' => array( array( 'label' => 'Venue', 'value' => 'Barn' ) ) ) );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->assertCount( 2, $this->mails );
+		$this->assertSame( 'studio@example.com', $this->mails[1][0] );
+		$this->assertStringContainsString( 'anna@example.com', $this->mails[1][2] );
+		$this->assertStringContainsString( 'Venue: Barn', $this->mails[1][2] );
+
+		$this->queue->alert_pending();
+		$this->assertCount( 2, $this->mails );
+	}
+
+	public function test_the_fallback_mails_a_dropped_lead(): void {
+		$this->options['profotograaf_settings']['leads_fallback_email'] = 'studio@example.com';
+		for ( $i = 0; $i < Queue::MAX_PENDING; $i++ ) {
+			$this->store->jobs[ 'j' . $i ] = array( 'status' => 'pending' );
+		}
+
+		$this->queue->enqueue( 'late', self::PAYLOAD );
+		$this->queue->enqueue( 'later', self::PAYLOAD );
+
+		$to = array_column( $this->mails, 0 );
+		$this->assertSame( array( 'studio@example.com', 'admin@example.com', 'studio@example.com' ), $to );
+	}
+
+	public function test_alerts_go_to_the_configured_address(): void {
+		$this->options['profotograaf_settings']['leads_alert_email'] = 'owner@example.com';
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->assertSame( 'owner@example.com', $this->mails[0][0] );
+	}
+
+	public function test_no_recipient_means_no_alert_and_the_job_is_kept(): void {
+		unset( $this->options['admin_email'] );
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->assertSame( array(), $this->mails );
+		$this->assertArrayNotHasKey( 'alerted_at', $this->store->jobs['a'] );
+	}
+
+	public function test_retrying_a_failed_job_clears_its_alert_so_a_new_failure_alerts_again(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->queue->retry_failed();
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->assertCount( 2, $this->mails );
+	}
+
+	public function test_failed_jobs_can_be_exported_and_the_exported_ones_dismissed(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->enqueue( 'b', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->queue->fail( $this->store->jobs['b'], 'bad input', 400 );
+
+		$this->assertSame( array( 'a', 'b' ), array_keys( $this->queue->failed_jobs() ) );
+
+		$this->queue->mark_exported( array( 'a', 'missing' ) );
+		$this->assertSame( 1, $this->queue->dismiss_exported() );
+		$this->assertSame( array( 'b' ), array_keys( $this->store->jobs ) );
+	}
+
+	public function test_a_queue_without_alerts_never_prunes_unexported_jobs(): void {
+		$queue = new Queue( $this->store, fn() => $this->now );
+		$queue->enqueue( 'a', self::PAYLOAD );
+		$queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->now += 10 * self::THIRTY_DAYS;
+
+		$this->assertSame( 0, $queue->prune() );
+		$this->assertSame( 0, $queue->alert_pending() );
+		$this->assertSame( array(), $this->mails );
 	}
 
 	public function test_next_due_at_is_the_earliest_pending_job(): void {

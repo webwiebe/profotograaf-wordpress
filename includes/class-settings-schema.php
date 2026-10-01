@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * - sanitize: optional callable that replaces the type's own parsing. It
  *   returns the clean value, or null when the input is not usable.
  *
- * @phpstan-type Entry array{tab:string,type:string,default:mixed,label:string,description:string,choices?:array<string,string>,sanitize?:callable}
+ * @phpstan-type Entry array{tab:string,type:string,default:mixed,label:string,description:string,choices?:array<int|string,string>,sanitize?:callable}
  */
 final class Settings_Schema {
 
@@ -85,6 +85,35 @@ final class Settings_Schema {
 				'default'     => true,
 				'label'       => __( 'Collect enquiries', 'profotograaf' ),
 				'description' => __( 'Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen.', 'profotograaf' ),
+			),
+			'leads_alert_email'      => array(
+				'tab'         => self::TAB_ENQUIRY,
+				'type'        => 'text',
+				'default'     => '',
+				'label'       => __( 'Failure alerts go to', 'profotograaf' ),
+				'description' => __( 'Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address.', 'profotograaf' ),
+				'sanitize'    => array( self::class, 'sanitize_email_or_empty' ),
+			),
+			'leads_fallback_email'   => array(
+				'tab'         => self::TAB_ENQUIRY,
+				'type'        => 'text',
+				'default'     => '',
+				'label'       => __( 'Mail undeliverable enquiries to', 'profotograaf' ),
+				'description' => __( 'When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off.', 'profotograaf' ),
+				'sanitize'    => array( self::class, 'sanitize_email_or_empty' ),
+			),
+			'leads_failed_retention' => array(
+				'tab'         => self::TAB_ENQUIRY,
+				'type'        => 'enum',
+				'default'     => '30',
+				'label'       => __( 'Keep undeliverable enquiries for', 'profotograaf' ),
+				'description' => __( 'Enquiries that could not be delivered stay in the database until you export them or this time has passed. You get an email before they are removed.', 'profotograaf' ),
+				'choices'     => array(
+					'7'   => __( '7 days', 'profotograaf' ),
+					'30'  => __( '30 days', 'profotograaf' ),
+					'90'  => __( '90 days', 'profotograaf' ),
+					'365' => __( '1 year', 'profotograaf' ),
+				),
 			),
 			'keep_data_on_uninstall' => array(
 				'tab'         => self::TAB_ADVANCED,
@@ -152,6 +181,23 @@ final class Settings_Schema {
 			default:
 				return is_scalar( $value ) ? trim( sanitize_text_field( (string) $value ) ) : null;
 		}
+	}
+
+	/**
+	 * Cleans an email address option that may stay empty.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string|null The address, an empty string, or null when it is not an address.
+	 */
+	public static function sanitize_email_or_empty( $value ): ?string {
+		if ( ! is_scalar( $value ) ) {
+			return null;
+		}
+		$email = trim( sanitize_text_field( (string) $value ) );
+		if ( '' === $email ) {
+			return '';
+		}
+		return false === is_email( $email ) ? null : $email;
 	}
 
 	/**

@@ -38,112 +38,112 @@ msgstr "Toon je Profotograaf-galerijen op je eigen site, geef klanten een ingang
 msgid "https://profotograaf.nl"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:96
-#: includes/admin/class-leads-settings.php:156
+#: includes/admin/class-leads-settings.php:99
+#: includes/admin/class-leads-settings.php:181
 msgid "Profotograaf enquiries"
 msgstr "Profotograaf-aanvragen"
 
-#: includes/admin/class-leads-settings.php:97
+#: includes/admin/class-leads-settings.php:100
 #: includes/class-settings-schema.php:51
 msgid "Enquiry forms"
 msgstr "Aanvraagformulieren"
 
-#: includes/admin/class-leads-settings.php:150
-#: includes/admin/class-leads-settings.php:345
+#: includes/admin/class-leads-settings.php:175
+#: includes/admin/class-leads-settings.php:418
 #: includes/modules/class-settings-page.php:204
 #: includes/modules/class-settings-page.php:231
 #: includes/modules/class-settings-page.php:427
 msgid "You do not have permission to do this."
 msgstr "Je hebt hier geen toestemming voor."
 
-#: includes/admin/class-leads-settings.php:159
+#: includes/admin/class-leads-settings.php:184
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
 msgstr "Stuur de aanvragen uit je contactformulieren naar je Profotograaf-inbox. Zet een formulier aan en controleer welk veld welk deel van de aanvraag vult. Voor een formulier dat uit staat wordt niets verstuurd."
 
-#: includes/admin/class-leads-settings.php:164
+#: includes/admin/class-leads-settings.php:189
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr "Deze site is niet verbonden met Profotograaf, dus aanvragen wachten in een wachtrij."
 
-#: includes/admin/class-leads-settings.php:165
+#: includes/admin/class-leads-settings.php:190
 msgid "Connect this site"
 msgstr "Verbind deze site"
 
-#: includes/admin/class-leads-settings.php:171
+#: includes/admin/class-leads-settings.php:196
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
 msgstr "Er is geen ondersteunde formulierplugin gevonden. Installeer Contact Form 7, WPForms of Gravity Forms en maak een formulier."
 
-#: includes/admin/class-leads-settings.php:179
+#: includes/admin/class-leads-settings.php:204
 msgid "Save changes"
 msgstr "Wijzigingen opslaan"
 
-#: includes/admin/class-leads-settings.php:183
+#: includes/admin/class-leads-settings.php:208
 msgid "Delivery"
 msgstr "Bezorging"
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
-#: includes/admin/class-leads-settings.php:189
+#: includes/admin/class-leads-settings.php:214
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
 msgstr "Wacht op verzending: %1$d. Kon niet worden verstuurd: %2$d."
 
-#: includes/admin/class-leads-settings.php:214
+#: includes/admin/class-leads-settings.php:239
 msgid "Name"
 msgstr "Naam"
 
-#: includes/admin/class-leads-settings.php:215
+#: includes/admin/class-leads-settings.php:240
 msgid "Email address"
 msgstr "E-mailadres"
 
-#: includes/admin/class-leads-settings.php:216
+#: includes/admin/class-leads-settings.php:241
 msgid "Phone"
 msgstr "Telefoon"
 
-#: includes/admin/class-leads-settings.php:217
+#: includes/admin/class-leads-settings.php:242
 msgid "Event date"
 msgstr "Datum van de gelegenheid"
 
-#: includes/admin/class-leads-settings.php:218
+#: includes/admin/class-leads-settings.php:243
 msgid "Message"
 msgstr "Bericht"
 
-#: includes/admin/class-leads-settings.php:228
+#: includes/admin/class-leads-settings.php:253
 msgid "Send submissions of this form to Profotograaf"
 msgstr "Stuur inzendingen van dit formulier naar Profotograaf"
 
 #. translators: %s: name of the form field that is picked automatically.
-#: includes/admin/class-leads-settings.php:247
+#: includes/admin/class-leads-settings.php:272
 #, php-format
 msgid "Automatic (%s)"
 msgstr "Automatisch (%s)"
 
-#: includes/admin/class-leads-settings.php:248
+#: includes/admin/class-leads-settings.php:273
 msgid "Automatic (no field found)"
 msgstr "Automatisch (geen veld gevonden)"
 
-#: includes/admin/class-leads-settings.php:252
+#: includes/admin/class-leads-settings.php:277
 msgid "Do not send"
 msgstr "Niet versturen"
 
-#: includes/admin/class-leads-settings.php:261
+#: includes/admin/class-leads-settings.php:286
 msgid "Every other field is sent along as a label and value."
 msgstr "Alle andere velden gaan mee als label en waarde."
 
 #. translators: 1: form name, 2: error message.
-#: includes/admin/class-leads-settings.php:283
+#: includes/admin/class-leads-settings.php:308
 #, php-format
 msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
-#: includes/admin/class-leads-settings.php:295
+#: includes/admin/class-leads-settings.php:320
 #: build/gallery/index.js:3
 msgid "Try again"
 msgstr "Opnieuw proberen"
 
-#: includes/admin/class-leads-settings.php:306
+#: includes/admin/class-leads-settings.php:377
 msgid "Changes saved."
 msgstr "Wijzigingen opgeslagen."
 
-#: includes/admin/class-leads-settings.php:308
+#: includes/admin/class-leads-settings.php:379
 msgid "The enquiries are queued again."
 msgstr "De aanvragen staan weer in de wachtrij."
 
@@ -540,11 +540,11 @@ msgstr ""
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:93
+#: includes/class-settings-schema.php:122
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:94
+#: includes/class-settings-schema.php:123
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
@@ -601,3 +601,118 @@ msgstr ""
 #: build/gallery/index.js:3
 msgid "Profotograaf reported a problem. Try again later."
 msgstr ""
+
+#: includes/admin/class-leads-settings.php:317
+msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:321
+msgid "Download as CSV"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:323
+msgid "Remove exported enquiries"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:381
+msgid "The exported enquiries were removed."
+msgstr ""
+
+#: includes/class-settings-schema.php:93
+msgid "Failure alerts go to"
+msgstr ""
+
+#: includes/class-settings-schema.php:94
+msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
+msgstr ""
+
+#: includes/class-settings-schema.php:101
+msgid "Mail undeliverable enquiries to"
+msgstr ""
+
+#: includes/class-settings-schema.php:102
+msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
+msgstr ""
+
+#: includes/class-settings-schema.php:109
+msgid "Keep undeliverable enquiries for"
+msgstr ""
+
+#: includes/class-settings-schema.php:110
+msgid "Enquiries that could not be delivered stay in the database until you export them or this time has passed. You get an email before they are removed."
+msgstr ""
+
+#: includes/class-settings-schema.php:112
+msgid "7 days"
+msgstr ""
+
+#: includes/class-settings-schema.php:113
+msgid "30 days"
+msgstr ""
+
+#: includes/class-settings-schema.php:114
+msgid "90 days"
+msgstr ""
+
+#: includes/class-settings-schema.php:115
+msgid "1 year"
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:61
+msgid "An enquiry could not be delivered"
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:64
+msgid "It is kept on this site. Export it or try again on the Enquiry forms page."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:89
+msgid "The queue of enquiries is full, so this enquiry was not saved. More enquiries are lost until the queue is empty. Check the connection to Profotograaf."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:92
+msgid "The enquiry was sent to your fallback email address."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:94
+msgid "An enquiry was dropped"
+msgstr ""
+
+#. translators: %d: number of enquiries.
+#: includes/leads/class-lead-alerts.php:109
+#, php-format
+msgid "%d enquiry that could not be delivered was removed because it was kept longer than the retention period."
+msgid_plural "%d enquiries that could not be delivered were removed because they were kept longer than the retention period."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/leads/class-lead-alerts.php:114
+#: includes/leads/class-lead-alerts.php:137
+msgid "Unknown form"
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:116
+msgid "Undeliverable enquiries were removed"
+msgstr ""
+
+#. translators: 1: form name, 2: date and time in UTC.
+#: includes/leads/class-lead-alerts.php:136
+#, php-format
+msgid "Form: %1$s. Time: %2$s UTC."
+msgstr ""
+
+#: includes/leads/class-lead-alerts.php:193
+msgid "Enquiry that could not be delivered"
+msgstr ""
+
+#: uninstall.php:32
+msgid "Undeliverable enquiries were deleted"
+msgstr ""
+
+#. translators: %d: number of enquiries.
+#: uninstall.php:35
+#, php-format
+msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
+msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
+msgstr[0] ""
+msgstr[1] ""
