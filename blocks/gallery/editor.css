@@ -113,6 +113,51 @@
 	background: rgba(0, 0, 0, 0.55);
 }
 
+.profotograaf-photo-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 6px;
+	margin: 0 0 12px;
+	padding: 0;
+	list-style: none;
+}
+
+.profotograaf-photo-grid__item {
+	margin: 0;
+}
+
+.profotograaf-photo-grid__help {
+	margin-block: 0 8px;
+	color: #555;
+}
+
+.profotograaf-photo-grid__button {
+	position: relative;
+	display: block;
+	width: 100%;
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: 2px;
+	background: #e0e0e0;
+	cursor: pointer;
+}
+
+.profotograaf-photo-grid__button img,
+.profotograaf-photo-grid__blank {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+}
+
+.profotograaf-photo-grid__button[aria-pressed="true"] {
+	border-color: #cc1818;
+}
+
+.profotograaf-photo-grid__button[aria-pressed="true"] img {
+	opacity: 0.35;
+}
+
 .profotograaf-image-text {
 	display: grid;
 	gap: 8px;

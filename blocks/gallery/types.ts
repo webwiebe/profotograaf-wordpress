@@ -1,4 +1,16 @@
 import type { DisplayAttributes } from './display-options';
+import type { ExcludeAttributes } from './exclude';
+
+/** A row of the /profotograaf/v1/galleries/{id}/photos REST route. */
+export interface PhotoRow {
+	id: string;
+	title: string;
+	alt: string;
+	caption: string;
+	width: number;
+	height: number;
+	thumb_url: string;
+}
 
 /** A caption and alt text for one photo, matched by the platform photo id. */
 export interface ImageText {
@@ -26,7 +38,8 @@ export type GalleryAttributes = {
 	galleryUrl: string;
 	layout: '' | 'grid' | 'masonry' | 'slideshow';
 	imageText: ImageText[];
-} & DisplayAttributes;
+} & DisplayAttributes &
+	ExcludeAttributes;
 
 /** What the REST layer rejects with. */
 export interface RestError {

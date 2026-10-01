@@ -1,4 +1,17 @@
-import type { GalleryRow } from '../gallery/types';
+import type { GalleryRow, PhotoRow } from '../gallery/types';
+
+export function photoRow( overrides: Partial< PhotoRow > = {} ): PhotoRow {
+	return {
+		id: 'p-1',
+		title: 'Bride',
+		alt: '',
+		caption: '',
+		width: 3000,
+		height: 2000,
+		thumb_url: 'https://studio.example/img/p-1/thumb.jpg',
+		...overrides,
+	};
+}
 
 export function galleryRow( overrides: Partial< GalleryRow > = {} ): GalleryRow {
 	return {

@@ -21,6 +21,8 @@ defined( 'ABSPATH' ) || exit;
  * crops the photos. `duotone` is two hex colours such as "#1a1a2e,#f5c542".
  * `image_text` sets a caption and alt text per photo as JSON, for example
  * image_text='[{"id":"p1","caption":"Sunrise","alt":"Sun over the sea"}]'.
+ * Optional `exclude` takes photo ids separated by commas and leaves those
+ * photos out of the gallery.
  */
 class Shortcode {
 

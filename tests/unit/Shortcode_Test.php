@@ -105,4 +105,10 @@ class Shortcode_Test extends Gallery_Test_Case {
 
 		$this->assertStringContainsString( 'class="profotograaf-gallery"', $html );
 	}
+
+	public function test_the_exclude_attribute_lists_photos_to_leave_out(): void {
+		$html = ( new Shortcode( $this->renderer ) )->render( array( 'id' => 'g-1', 'exclude' => 'p-1, p-2' ) );
+
+		$this->assertStringContainsString( ' data-exclude="p-1,p-2"', $html );
+	}
 }

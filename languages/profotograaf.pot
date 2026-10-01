@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T16:56:39+00:00\n"
+"POT-Creation-Date: 2026-10-01T17:08:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -214,7 +214,9 @@ msgid "The exported enquiries were removed."
 msgstr ""
 
 #: includes/class-api-client.php:144
-#: includes/class-gallery-rest.php:128
+#: includes/class-gallery-rest.php:145
+#: includes/class-gallery-rest.php:163
+#: includes/class-photo-list.php:49
 msgid "A gallery id is required."
 msgstr ""
 
@@ -340,19 +342,19 @@ msgstr[1] ""
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:287
+#: includes/class-gallery-renderer.php:324
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:298
+#: includes/class-gallery-renderer.php:335
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:305
+#: includes/class-gallery-renderer.php:342
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:441
+#: includes/class-gallery-renderer.php:481
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
@@ -1465,85 +1467,109 @@ msgstr ""
 msgid "Leave empty for the site default."
 msgstr ""
 
-#: build/gallery/index.js:3
+#. translators: %d: number of photos left out of the gallery.
+#: build/gallery/index.js:4
+#, js-format
+msgid "%d photo left out"
+msgid_plural "%d photos left out"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/gallery/index.js:4
+msgid "Select a photo to leave it out of this gallery block."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Show all photos"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "This gallery has no photos yet."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Photos"
+msgstr ""
+
+#: build/gallery/index.js:4
 msgid "Photo ID"
 msgstr ""
 
-#: build/gallery/index.js:3
-#: build/gallery/index.js:5
+#: build/gallery/index.js:4
+#: build/gallery/index.js:6
 msgid "Caption"
 msgstr ""
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Alt text"
 msgstr ""
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Remove"
 msgstr ""
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Photo captions and alt text"
 msgstr ""
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Add a photo"
 msgstr ""
 
 #. translators: %d: number of photos shown at first.
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 #, js-format
 msgid "%d photo per page"
 msgid_plural "%d photos per page"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "load more button"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "lightbox on"
 msgstr ""
 
-#: build/gallery/index.js:4
+#: build/gallery/index.js:5
 msgid "lightbox off"
 msgstr ""
 
 #. translators: %s: what a photo links to, such as "The photo file".
-#: build/gallery/index.js:5
+#: build/gallery/index.js:6
 #, js-format
 msgid "links to: %s"
 msgstr ""
 
-#: build/gallery/index.js:5
 #: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Profotograaf gallery"
 msgstr ""
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 #, js-format
 msgid "layout: %s"
 msgstr ""
 
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Gallery"
 msgstr ""
 
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Layout"
 msgstr ""
 
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Choose another gallery"
 msgstr ""
 
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Choose one of your galleries."
 msgstr ""
 

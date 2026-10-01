@@ -4,7 +4,8 @@ import { __, _n, sprintf } from '@wordpress/i18n';
  * The display options of the block. Every value is a string. An empty string
  * means "use the site default", which the server resolves (see
  * Gallery_Renderer::OPTIONS). To add an option, add it here, to block.json
- * and to Gallery_Renderer::OPTIONS.
+ * and to Gallery_Renderer::OPTIONS. `excludedPhotoIds` is a list of photo ids
+ * and lives in exclude.ts.
  */
 export type DisplayAttributes = {
 	columns: string;

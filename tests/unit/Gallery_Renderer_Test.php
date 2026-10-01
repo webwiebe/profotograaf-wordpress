@@ -471,6 +471,47 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( array_keys( Gallery_Renderer::OPTIONS ), array_keys( $args ) );
 	}
 
+	public function test_excluded_photos_reach_embed_js_as_a_comma_separated_list(): void {
+		$html = $this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'exclude' => array( 'p-1', 'p_2', 'p-1', 'bad id', '"><script>', '' ),
+			)
+		);
+
+		$this->assertStringContainsString( ' data-exclude="p-1,p_2"', $html );
+		$this->assertStringNotContainsString( '<script>', $html );
+	}
+
+	public function test_no_excluded_photos_send_no_attribute(): void {
+		$this->assertStringNotContainsString( 'data-exclude', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+		$this->assertStringNotContainsString( 'data-exclude', $this->renderer->render( array( 'id' => 'g-1', 'exclude' => array() ), array( 'exclude' => ' , ' ) ) );
+	}
+
+	public function test_the_block_list_wins_over_the_shortcode_list(): void {
+		$block = $this->renderer->render( array( 'id' => 'g-1', 'exclude' => array( 'a' ) ), array( 'exclude' => 'b,c' ) );
+		$code  = $this->renderer->render( array( 'id' => 'g-1', 'exclude' => '' ), array( 'exclude' => 'b, c' ) );
+
+		$this->assertStringContainsString( ' data-exclude="a"', $block );
+		$this->assertStringContainsString( ' data-exclude="b,c"', $code );
+	}
+
+	public function test_the_excluded_list_is_capped(): void {
+		$ids = array();
+		for ( $i = 0; $i < Gallery_Renderer::MAX_EXCLUDED + 10; $i++ ) {
+			$ids[] = 'p' . $i;
+		}
+
+		$this->assertCount( Gallery_Renderer::MAX_EXCLUDED, Gallery_Renderer::clean_ids( $ids ) );
+		$this->assertSame( array(), Gallery_Renderer::clean_ids( 42 ) );
+	}
+
+	public function test_the_excluded_block_attribute_maps_to_the_exclude_argument(): void {
+		$args = Gallery_Renderer::options_from_block( array( 'excludedPhotoIds' => array( 'p-1' ) ) );
+
+		$this->assertSame( array( 'p-1' ), $args['exclude'] );
+	}
+
 	public function test_duotone_and_link_to_follow_the_same_layers_as_the_other_options(): void {
 		$this->options['profotograaf_settings'] = array(
 			'gallery_duotone' => '#111111,#EEEEEE',

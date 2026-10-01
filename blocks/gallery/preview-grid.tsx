@@ -6,20 +6,53 @@ import {
 	displaySummary,
 	type DisplayAttributes,
 } from './display-options';
+import { excludedCount, excludedLabel, visiblePhotos } from './exclude';
+import type { PhotoRow } from './types';
 
 const TILES = 6;
+const MAX_PHOTO_TILES = 12;
+
+interface Tile {
+	key: string;
+	src: string | undefined;
+}
+
+/**
+ * The tiles to draw. With the photo list, the first photos that are not left
+ * out. Without it (loading, or the platform has no list), the cover on every
+ * tile.
+ */
+function tilesFor(
+	photos: PhotoRow[] | null | undefined,
+	excluded: string[],
+	cover: string | undefined
+): Tile[] {
+	if ( photos && photos.length > 0 ) {
+		return visiblePhotos( photos, excluded )
+			.slice( 0, MAX_PHOTO_TILES )
+			.map( ( photo ) => ( { key: photo.id, src: photo.thumb_url || undefined } ) );
+	}
+	return Array.from( { length: TILES }, ( _unused, index ) => ( {
+		key: String( index ),
+		src: cover,
+	} ) );
+}
 
 /**
  * A sketch of the gallery in the editor. It follows columns, gap, shape and
- * captions the way embed.js will draw them, with the cover as every tile.
+ * captions the way embed.js will draw them. Photos left out do not appear.
  */
 export function PreviewGrid( {
 	attributes,
 	cover,
+	photos,
+	excluded = [],
 	imageText = [],
 }: {
 	attributes: DisplayAttributes;
 	cover?: string | undefined;
+	photos?: PhotoRow[] | null | undefined;
+	excluded?: string[];
 	imageText?: ImageText[];
 } ) {
 	const columns = Number( attributes.columns ) || 3;
@@ -30,22 +63,24 @@ export function PreviewGrid( {
 		'--profotograaf-ratio': cssRatio( attributes.ratio ),
 	} as CSSProperties;
 	const summary = displaySummary( attributes );
-	// The platform photo ids are not known in the editor, so the first entries
-	// stand in for the first tiles.
+	const left = photos ? excludedCount( photos, excluded ) : 0;
+	if ( left > 0 ) {
+		summary.push( excludedLabel( left ) );
+	}
 	const showCaption =
 		attributes.captions === 'below' || attributes.captions === 'overlay';
 
 	return (
 		<>
 			<div className="profotograaf-gallery-grid" style={ style }>
-				{ Array.from( { length: TILES }, ( _unused, index ) => (
+				{ tilesFor( photos, excluded, cover ).map( ( tile, index ) => (
 					<figure
-						key={ index }
+						key={ tile.key }
 						className="profotograaf-gallery-grid__tile"
 						data-captions={ attributes.captions || undefined }
 					>
-						{ cover ? (
-							<img src={ cover } alt={ imageText[ index ]?.alt ?? '' } />
+						{ tile.src ? (
+							<img src={ tile.src } alt={ imageText[ index ]?.alt ?? '' } />
 						) : (
 							<span className="profotograaf-gallery-grid__blank" />
 						) }

@@ -77,6 +77,13 @@
 			"type": "string",
 			"default": ""
 		},
+		"excludedPhotoIds": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
+		},
 		"linkTo": {
 			"type": "string",
 			"default": ""
