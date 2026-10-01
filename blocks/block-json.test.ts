@@ -60,7 +60,7 @@ describe( 'client galleries attributes', () => {
 		) as ClientGalleriesAttributes;
 		expect( previewCopy( defaults ).showNotice ).toBe( true );
 		expect( Object.keys( defaults ).sort() ).toEqual(
-			[ 'buttonLabel', 'description', 'heading', 'openInNewTab', 'portal' ]
+			[ 'buttonLabel', 'description', 'heading', 'headingLevel', 'openInNewTab', 'portal', 'portalPath' ]
 		);
 	} );
 } );

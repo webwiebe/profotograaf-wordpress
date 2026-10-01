@@ -10,14 +10,18 @@ namespace Profotograaf\Tests;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use Profotograaf\Modules\Client_Galleries;
+use Profotograaf\Settings;
 
 class Client_Galleries_Test extends Wp_Test_Case {
 
 	private Client_Galleries $block;
 
+	private Settings $settings;
+
 	protected function setUp(): void {
 		parent::setUp();
-		$this->block = new Client_Galleries();
+		$this->settings = new Settings();
+		$this->block    = new Client_Galleries( $this->settings );
 		Functions\when( 'esc_url' )->alias( fn( $url ) => (string) $url );
 		Functions\when( 'get_block_wrapper_attributes' )->justReturn( 'class="wp-block-profotograaf-client-galleries"' );
 		Functions\when( 'current_user_can' )->justReturn( false );
@@ -61,7 +65,7 @@ class Client_Galleries_Test extends Wp_Test_Case {
 		$html = $this->block->render( array( 'portal' => 'studio' ) );
 
 		$this->assertStringContainsString( 'href="https://profotograaf.nl/studio/client"', $html );
-		$this->assertStringContainsString( '>Find your gallery</h3>', $html );
+		$this->assertStringContainsString( '<h3 class="wp-block-profotograaf-client-galleries__heading">Find your gallery</h3>', $html );
 		$this->assertStringContainsString( '>Open my gallery</a>', $html );
 		$this->assertStringNotContainsString( 'target=', $html );
 	}
@@ -128,6 +132,124 @@ class Client_Galleries_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( 'profotograaf.nl/studio/client', $html );
 	}
 
+	/**
+	 * @return array<string,array{0:string,1:string}>
+	 */
+	public static function paths(): array {
+		return array(
+			'slug with path'    => array( 'studio', '/portal', 'https://profotograaf.nl/studio/portal' ),
+			'host with path'    => array( 'photos.example.com', '/clients', 'https://photos.example.com/clients' ),
+			'url without path'  => array( 'https://photos.example.com', '/clients', 'https://photos.example.com/clients' ),
+			'address path wins' => array( 'photos.example.com/own', '/clients', 'https://photos.example.com/own' ),
+		);
+	}
+
+	/**
+	 * @dataProvider paths
+	 */
+	public function test_portal_url_uses_the_given_path( string $address, string $path, string $expected ): void {
+		$this->assertSame( $expected, Client_Galleries::portal_url( $address, $path ) );
+	}
+
+	public function test_site_setting_sets_the_portal_path(): void {
+		$this->options['profotograaf_settings'] = array( 'client_portal_path' => '/portal' );
+
+		$html = $this->block->render( array( 'portal' => 'studio' ) );
+
+		$this->assertStringContainsString( 'href="https://profotograaf.nl/studio/portal"', $html );
+	}
+
+	public function test_block_path_wins_over_the_site_setting(): void {
+		$this->options['profotograaf_settings'] = array( 'client_portal_path' => '/portal' );
+
+		$html = $this->block->render(
+			array(
+				'portal'     => 'studio',
+				'portalPath' => 'clients',
+			)
+		);
+
+		$this->assertStringContainsString( 'href="https://profotograaf.nl/studio/clients"', $html );
+	}
+
+	public function test_invalid_block_path_falls_back_to_the_default(): void {
+		$html = $this->block->render(
+			array(
+				'portal'     => 'studio',
+				'portalPath' => '/a b?x',
+			)
+		);
+
+		$this->assertStringContainsString( 'href="https://profotograaf.nl/studio/client"', $html );
+	}
+
+	/**
+	 * @return array<string,array{0:string,1:?string}>
+	 */
+	public static function path_inputs(): array {
+		return array(
+			'plain'        => array( '/client', '/client' ),
+			'no slash'     => array( 'portal', '/portal' ),
+			'nested'       => array( '/my/portal/', '/my/portal' ),
+			'surrounding'  => array( '  /portal ', '/portal' ),
+			'root'         => array( '/', null ),
+			'space inside' => array( '/a b', null ),
+			'query'        => array( '/a?b=1', null ),
+			'fragment'     => array( '/a#b', null ),
+			'host'         => array( '//evil.example', null ),
+			'scheme'       => array( 'https://evil.example/x', null ),
+			'traversal'    => array( '/a/../b', null ),
+		);
+	}
+
+	/**
+	 * @dataProvider path_inputs
+	 */
+	public function test_portal_path_sanitising( string $input, ?string $expected ): void {
+		$this->assertSame( $expected, Client_Galleries::sanitize_path( $input ) );
+	}
+
+	/**
+	 * @return array<string,array{0:array<string,mixed>,1:string}>
+	 */
+	public static function heading_levels(): array {
+		return array(
+			'default is h3' => array( array(), 'h3' ),
+			'h2'            => array( array( 'headingLevel' => 2 ), 'h2' ),
+			'h6'            => array( array( 'headingLevel' => 6 ), 'h6' ),
+			'string level'  => array( array( 'headingLevel' => '4' ), 'h4' ),
+			'paragraph'     => array( array( 'headingLevel' => 0 ), 'p' ),
+			'h1 is refused' => array( array( 'headingLevel' => 1 ), 'h3' ),
+			'out of range'  => array( array( 'headingLevel' => 9 ), 'h3' ),
+			'junk'          => array( array( 'headingLevel' => 'x' ), 'h3' ),
+		);
+	}
+
+	/**
+	 * @dataProvider heading_levels
+	 * @param array<string,mixed> $attributes Extra attributes.
+	 */
+	public function test_heading_level( array $attributes, string $tag ): void {
+		$html = $this->block->render( array( 'portal' => 'studio' ) + $attributes );
+
+		$this->assertStringContainsString( '<' . $tag . ' class="wp-block-profotograaf-client-galleries__heading">Find your gallery</' . $tag . '>', $html );
+	}
+
+	public function test_button_carries_the_core_button_classes(): void {
+		$html = $this->block->render( array( 'portal' => 'studio' ) );
+
+		$this->assertStringContainsString( '<div class="wp-block-button">', $html );
+		$this->assertMatchesRegularExpression( '/<a class="wp-block-profotograaf-client-galleries__button wp-block-button__link wp-element-button"/', $html );
+	}
+
+	public function test_schema_has_the_portal_path_with_a_default(): void {
+		$entry = \Profotograaf\Settings_Schema::entry( 'client_portal_path' );
+
+		$this->assertNotNull( $entry );
+		$this->assertSame( '/client', $entry['default'] );
+		$this->assertSame( '/client', $this->settings->resolve( 'client_portal_path' ) );
+	}
+
 	public function test_render_callback_is_added_to_this_block_only(): void {
 		$args = $this->block->add_render_callback( array( 'title' => 'x' ), Client_Galleries::BLOCK );
 		$this->assertSame( array( $this->block, 'render' ), $args['render_callback'] );
@@ -165,7 +287,7 @@ class Client_Galleries_Test extends Wp_Test_Case {
 
 		$this->assertSame( Client_Galleries::BLOCK, $json['name'] );
 		$this->assertSame( 'profotograaf', $json['textdomain'] );
-		foreach ( array( 'portal', 'heading', 'description', 'buttonLabel', 'openInNewTab' ) as $attribute ) {
+		foreach ( array( 'portal', 'portalPath', 'heading', 'headingLevel', 'description', 'buttonLabel', 'openInNewTab' ) as $attribute ) {
 			$this->assertArrayHasKey( $attribute, $json['attributes'] );
 		}
 		$this->assertArrayNotHasKey( 'render', $json, 'The render callback is attached in PHP.' );
