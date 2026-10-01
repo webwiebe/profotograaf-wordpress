@@ -23,6 +23,11 @@ class Gallery_Rest {
 	public const NAMESPACE = 'profotograaf/v1';
 
 	/**
+	 * Seconds to wait when the platform rate limits without saying for how long.
+	 */
+	private const DEFAULT_RETRY_AFTER = 60;
+
+	/**
 	 * API client.
 	 *
 	 * @var Api_Client
@@ -94,7 +99,7 @@ class Gallery_Rest {
 	/**
 	 * GET /galleries.
 	 *
-	 * @return array<int,array<string,mixed>>|\WP_Error
+	 * @return array<int,array<string,mixed>>|\WP_Error|\WP_REST_Response
 	 */
 	public function list_galleries() {
 		$rows = $this->api->list_galleries();
@@ -115,7 +120,7 @@ class Gallery_Rest {
 	 * POST /galleries/{id}/embeddable.
 	 *
 	 * @param \WP_REST_Request $request Request.
-	 * @return array<string,mixed>|\WP_Error
+	 * @return array<string,mixed>|\WP_Error|\WP_REST_Response
 	 */
 	public function mark_embeddable( $request ) {
 		$id = (string) $request->get_param( 'id' );
@@ -132,19 +137,51 @@ class Gallery_Rest {
 	/**
 	 * Gives an API error an HTTP status for the REST response.
 	 *
+	 * A platform rate limit stays a 429 and carries a Retry-After header, which
+	 * a WP_Error cannot, so that case is a WP_REST_Response with the same body
+	 * shape the REST server builds for an error. Timeouts and unreachable
+	 * platforms are 504. Other platform failures are 502.
+	 *
 	 * @param \WP_Error $error Error from the API client.
+	 * @return \WP_Error|\WP_REST_Response
 	 */
-	private function as_rest_error( \WP_Error $error ): \WP_Error {
+	private function as_rest_error( \WP_Error $error ) {
 		$statuses = array(
 			'profotograaf_not_connected' => 409,
 			'profotograaf_reconnect'     => 403,
 			'profotograaf_invalid'       => 400,
+			'profotograaf_network'       => 504,
 		);
 		$code     = (string) $error->get_error_code();
-		return new \WP_Error(
-			$code,
-			$error->get_error_message(),
-			array( 'status' => $statuses[ $code ] ?? 502 )
+		$source   = $error->get_error_data();
+		$source   = is_array( $source ) ? $source : array();
+		$upstream = (int) ( $source['status'] ?? 0 );
+		$status   = $statuses[ $code ] ?? 502;
+		if ( 'profotograaf_http' === $code ) {
+			if ( 429 === $upstream ) {
+				$status = 429;
+			} elseif ( 408 === $upstream || 504 === $upstream ) {
+				$status = 504;
+			}
+		}
+
+		$data = array(
+			'status'    => $status,
+			'retryable' => (bool) ( $source['retryable'] ?? false ),
 		);
+		if ( 429 === $status ) {
+			$retry_after         = (int) ( $source['retry_after'] ?? 0 );
+			$data['retry_after'] = $retry_after > 0 ? $retry_after : self::DEFAULT_RETRY_AFTER;
+			return new \WP_REST_Response(
+				array(
+					'code'    => $code,
+					'message' => $error->get_error_message(),
+					'data'    => $data,
+				),
+				429,
+				array( 'Retry-After' => (string) $data['retry_after'] )
+			);
+		}
+		return new \WP_Error( $code, $error->get_error_message(), $data );
 	}
 }

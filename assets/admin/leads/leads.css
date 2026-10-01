@@ -13,8 +13,9 @@
 
 .profotograaf-leads-map th {
 	font-weight: 400;
-	padding: 6px 16px 6px 0;
-	text-align: left;
+	padding: 6px;
+	padding-inline-end: 16px;
+	text-align: start;
 	width: 160px;
 }
 
@@ -28,7 +29,7 @@
 
 .profotograaf-leads-failures {
 	list-style: disc;
-	margin-left: 20px;
+	margin-inline-start: 20px;
 }
 
 .profotograaf-leads-actions {

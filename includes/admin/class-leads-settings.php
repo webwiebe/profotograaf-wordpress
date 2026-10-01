@@ -212,8 +212,8 @@ class Leads_Settings {
 					sprintf(
 						/* translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent. */
 						__( 'Waiting to be sent: %1$d. Could not be sent: %2$d.', 'profotograaf' ),
-						$counts['pending'],
-						$counts['failed']
+						number_format_i18n( $counts['pending'] ),
+						number_format_i18n( $counts['failed'] )
 					)
 				);
 				?>

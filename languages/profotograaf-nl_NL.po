@@ -135,6 +135,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: includes/admin/class-leads-settings.php:295
+#: build/gallery/index.js:3
 msgid "Try again"
 msgstr "Opnieuw proberen"
 
@@ -147,7 +148,7 @@ msgid "The enquiries are queued again."
 msgstr "De aanvragen staan weer in de wachtrij."
 
 #: includes/class-api-client.php:144
-#: includes/class-gallery-rest.php:123
+#: includes/class-gallery-rest.php:128
 msgid "A gallery id is required."
 msgstr "Een galerij-id is verplicht."
 
@@ -411,41 +412,37 @@ msgstr "Standaard van de site"
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr "Verbind deze site met Profotograaf onder Instellingen > Profotograaf om een galerij te kiezen."
 
-#: build/gallery/index.js:2
-msgid "The galleries could not be loaded."
-msgstr "De galerijen konden niet worden geladen."
-
-#: build/gallery/index.js:2
+#: build/gallery/index.js:3
 msgid "There are no galleries in your Profotograaf account yet."
 msgstr "Er staan nog geen galerijen in je Profotograaf-account."
 
-#: build/gallery/index.js:2
+#: build/gallery/index.js:3
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord, een vervaldatum, keuzemodus of een instelling alleen voor de klant staat insluiten niet toe."
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Gallery"
 msgstr "Galerij"
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Layout"
 msgstr "Indeling"
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Choose another gallery"
 msgstr "Kies een andere galerij"
 
-#: build/gallery/index.js:2
 #: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Profotograaf gallery"
 msgstr "Profotograaf-galerij"
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Choose one of your galleries."
 msgstr "Kies een van je galerijen."
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:3
+#: build/gallery/index.js:4
 #, js-format
 msgid "layout: %s"
 msgstr "indeling: %s"
@@ -579,4 +576,28 @@ msgstr ""
 #: includes/class-api-errors.php:105
 #, php-format
 msgid "The platform reported an error (HTTP %d). Try again later."
+msgstr ""
+
+#: build/gallery/index.js:2
+msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
+msgstr ""
+
+#: build/gallery/index.js:2
+msgid "Profotograaf is receiving too many requests. Try again in a moment."
+msgstr ""
+
+#. translators: %d: number of seconds to wait.
+#: build/gallery/index.js:3
+#, js-format
+msgid "Profotograaf is receiving too many requests. Try again in %d second."
+msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/gallery/index.js:3
+msgid "Profotograaf could not be reached. Check your connection and try again."
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Profotograaf reported a problem. Try again later."
 msgstr ""
