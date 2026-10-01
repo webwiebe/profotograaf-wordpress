@@ -17,6 +17,9 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: profotograaf.php
+#: includes/admin/class-network-page.php:53
+#: includes/admin/class-network-page.php:54
+#: includes/admin/class-network-page.php:92
 #: includes/class-cron-health.php:160
 #: includes/class-cron-health.php:175
 #: includes/modules/class-patterns.php:53
@@ -242,6 +245,7 @@ msgstr "Open mijn galerij"
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
+#: includes/admin/class-network-page.php:109
 #: includes/modules/class-settings-page.php:105
 msgid "Settings"
 msgstr "Instellingen"
@@ -283,11 +287,13 @@ msgstr "De verbinding is geweigerd in Profotograaf."
 msgid "The code expired. Start the connection again."
 msgstr "De code is verlopen. Start de verbinding opnieuw."
 
+#: includes/admin/class-network-page.php:98
 #: includes/modules/class-settings-page.php:274
 #: includes/modules/class-site-health.php:329
 msgid "Connection"
 msgstr "Verbinding"
 
+#: includes/admin/class-network-page.php:69
 #: includes/modules/class-settings-page.php:279
 msgid "Connected"
 msgstr "Verbonden"
@@ -310,6 +316,7 @@ msgstr "Opnieuw koppelen"
 msgid "Disconnect"
 msgstr "Verbinding verbreken"
 
+#: includes/admin/class-network-page.php:75
 #: includes/modules/class-settings-page.php:296
 msgid "Not connected"
 msgstr "Niet verbonden"
@@ -1678,4 +1685,28 @@ msgstr ""
 
 #: build/gallery/index.js:4
 msgid "Photos"
+msgstr ""
+
+#: includes/admin/class-network-page.php:71
+msgid "Connection ended"
+msgstr ""
+
+#: includes/admin/class-network-page.php:73
+msgid "Plugin not active"
+msgstr ""
+
+#: includes/admin/class-network-page.php:84
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: includes/admin/class-network-page.php:93
+msgid "Each site connects to Profotograaf on its own. Open a site to connect it or to see its failed enquiries."
+msgstr ""
+
+#: includes/admin/class-network-page.php:97
+msgid "Site"
+msgstr ""
+
+#: includes/admin/class-network-page.php:99
+msgid "Failed enquiries"
 msgstr ""
