@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T11:46:19+00:00\n"
+"POT-Creation-Date: 2026-10-01T12:38:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -52,6 +52,7 @@ msgstr ""
 
 #: includes/admin/class-leads-settings.php:175
 #: includes/admin/class-leads-settings.php:418
+#: includes/modules/class-admin-notices.php:185
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:457
@@ -488,6 +489,39 @@ msgstr ""
 msgid "Enquiry that could not be delivered"
 msgstr ""
 
+#: includes/modules/class-admin-notices.php:120
+msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
+msgstr ""
+
+#: includes/modules/class-admin-notices.php:122
+#: includes/modules/class-settings-page.php:177
+msgid "Connect this site again"
+msgstr ""
+
+#: includes/modules/class-admin-notices.php:130
+msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
+msgstr ""
+
+#: includes/modules/class-admin-notices.php:132
+msgid "Check the connection"
+msgstr ""
+
+#. translators: %d: number of enquiries.
+#: includes/modules/class-admin-notices.php:143
+#, php-format
+msgid "%d enquiry could not be delivered to Profotograaf."
+msgid_plural "%d enquiries could not be delivered to Profotograaf."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/modules/class-admin-notices.php:147
+msgid "Retry or export the enquiries"
+msgstr ""
+
+#: includes/modules/class-admin-notices.php:174
+msgid "Dismiss"
+msgstr ""
+
 #: includes/modules/class-client-galleries.php:151
 #: build/client-galleries/index.js:1
 msgid "Find your gallery"
@@ -513,10 +547,6 @@ msgstr ""
 
 #: includes/modules/class-settings-page.php:175
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:177
-msgid "Connect this site again"
 msgstr ""
 
 #: includes/modules/class-settings-page.php:209
