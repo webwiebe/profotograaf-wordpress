@@ -7,14 +7,17 @@
 
 namespace Profotograaf\Admin;
 
+use Profotograaf\Embed_Script;
 use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Delivery;
 use Profotograaf\Leads\Failed_Export;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Mapping;
 use Profotograaf\Leads\Queue;
+use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Modules\Settings_Page;
 use Profotograaf\Plugin;
+use Profotograaf\Settings_Schema;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -82,6 +85,9 @@ class Leads_Settings {
 		add_action( 'admin_post_profotograaf_leads_retry', array( $this, 'handle_retry' ) );
 		add_action( 'admin_post_profotograaf_leads_export', array( $this, 'handle_export' ) );
 		add_action( 'admin_post_profotograaf_leads_dismiss', array( $this, 'handle_dismiss' ) );
+		add_action( 'admin_post_profotograaf_sync_galleries', array( $this, 'handle_sync_galleries' ) );
+		add_action( 'admin_post_profotograaf_clear_gallery_index', array( $this, 'handle_clear_gallery_index' ) );
+		add_action( 'admin_post_profotograaf_check_embed_version', array( $this, 'handle_check_embed_version' ) );
 	}
 
 	/**
@@ -168,6 +174,30 @@ class Leads_Settings {
 	}
 
 	/**
+	 * Fetches the gallery list now and stores it in the gallery index.
+	 */
+	public function handle_sync_galleries(): void {
+		$this->authorize( 'profotograaf_sync_galleries' );
+		$this->finish_tool( $this->tools()->sync_galleries() );
+	}
+
+	/**
+	 * Forgets the remembered gallery titles and links.
+	 */
+	public function handle_clear_gallery_index(): void {
+		$this->authorize( 'profotograaf_clear_gallery_index' );
+		$this->finish_tool( $this->tools()->clear_gallery_index() );
+	}
+
+	/**
+	 * Reads the current embed script version from the platform now.
+	 */
+	public function handle_check_embed_version(): void {
+		$this->authorize( 'profotograaf_check_embed_version' );
+		$this->finish_tool( $this->tools()->check_embed_version() );
+	}
+
+	/**
 	 * Renders the page.
 	 */
 	public function render(): void {
@@ -192,6 +222,10 @@ class Leads_Settings {
 				</div>
 			<?php endif; ?>
 
+			<h2><?php esc_html_e( 'Site defaults', 'profotograaf' ); ?></h2>
+			<?php ( new Settings_Fields( $this->plugin->settings() ) )->render_form( Settings_Schema::TAB_ENQUIRY ); ?>
+
+			<h2><?php esc_html_e( 'Forms', 'profotograaf' ); ?></h2>
 			<?php if ( array() === $forms ) : ?>
 				<p><?php esc_html_e( 'No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form.', 'profotograaf' ); ?></p>
 			<?php else : ?>
@@ -219,6 +253,15 @@ class Leads_Settings {
 				?>
 			</p>
 			<?php $this->render_failures( $counts['failed'] ); ?>
+
+			<h2><?php esc_html_e( 'Galleries and embed script', 'profotograaf' ); ?></h2>
+			<div class="profotograaf-leads-actions">
+				<?php
+				$this->render_action( 'profotograaf_sync_galleries', __( 'Sync galleries now', 'profotograaf' ) );
+				$this->render_action( 'profotograaf_clear_gallery_index', __( 'Clear the gallery index', 'profotograaf' ) );
+				$this->render_action( 'profotograaf_check_embed_version', __( 'Re-check the embed version', 'profotograaf' ) );
+				?>
+			</div>
 		</div>
 		<?php
 	}
@@ -253,6 +296,11 @@ class Leads_Settings {
 					<?php esc_html_e( 'Send submissions of this form to Profotograaf', 'profotograaf' ); ?>
 				</label>
 			</p>
+			<p>
+				<label for="<?php echo esc_attr( 'profotograaf-' . $slug . '-source-tag' ); ?>"><?php esc_html_e( 'Source tag', 'profotograaf' ); ?></label>
+				<input type="text" class="regular-text" maxlength="<?php echo esc_attr( (string) Form_Settings::MAX_TAG ); ?>" id="<?php echo esc_attr( 'profotograaf-' . $slug . '-source-tag' ); ?>" name="<?php echo esc_attr( $base . '[source_tag]' ); ?>" value="<?php echo esc_attr( $config['source_tag'] ); ?>">
+			</p>
+			<p class="description"><?php esc_html_e( 'Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name.', 'profotograaf' ); ?></p>
 			<table class="profotograaf-leads-map" data-profotograaf-map>
 				<?php foreach ( $targets as $target => $title ) : ?>
 					<?php
@@ -347,12 +395,7 @@ class Leads_Settings {
 	 * Whether a failed lead was exported.
 	 */
 	private function has_exported(): bool {
-		foreach ( $this->queue->failed_jobs() as $job ) {
-			if ( isset( $job['exported_at'] ) ) {
-				return true;
-			}
-		}
-		return false;
+		return array() !== array_filter( $this->queue->failed_jobs(), static fn( array $job ): bool => isset( $job['exported_at'] ) );
 	}
 
 	/**
@@ -372,19 +415,44 @@ class Leads_Settings {
 	 * Shows the result of the last action.
 	 */
 	private function render_notice(): void {
-		$done = isset( $_GET['done'] ) ? sanitize_key( wp_unslash( $_GET['done'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks which notice to show.
+		$class = 'notice-success';
+		$done  = isset( $_GET['done'] ) ? sanitize_key( wp_unslash( $_GET['done'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks which notice to show.
 		if ( 'saved' === $done ) {
 			$message = __( 'Changes saved.', 'profotograaf' );
 		} elseif ( 'retried' === $done ) {
 			$message = __( 'The enquiries are queued again.', 'profotograaf' );
 		} elseif ( 'dismissed' === $done ) {
 			$message = __( 'The exported enquiries were removed.', 'profotograaf' );
+		} elseif ( 'tools' === $done ) {
+			$result = Site_Tools::take();
+			if ( null === $result ) {
+				return;
+			}
+			$message = $result['message'];
+			$class   = 'error' === $result['type'] ? 'notice-error' : 'notice-success';
 		} else {
 			return;
 		}
 		?>
-		<div class="notice notice-success is-dismissible"><p><?php echo esc_html( $message ); ?></p></div>
+		<div class="notice <?php echo esc_attr( $class ); ?> is-dismissible"><p><?php echo esc_html( $message ); ?></p></div>
 		<?php
+	}
+
+	/**
+	 * The maintenance actions.
+	 */
+	private function tools(): Site_Tools {
+		return new Site_Tools( $this->plugin->api(), new Embed_Script() );
+	}
+
+	/**
+	 * Keeps the result of a tool button and sends the browser back.
+	 *
+	 * @param array{type:string,message:string} $result Result of the action.
+	 */
+	private function finish_tool( array $result ): void {
+		Site_Tools::remember( $result );
+		$this->finish( 'tools' );
 	}
 
 	/**

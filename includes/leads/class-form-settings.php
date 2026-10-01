@@ -14,17 +14,22 @@ defined( 'ABSPATH' ) || exit;
  * mapping. Nothing is sent for a form that has no entry here.
  *
  * The option is `profotograaf_leads` (`forms` maps a form key such as
- * `cf7:12` to `enabled` and `map`), not autoloaded.
+ * `cf7:12` to `enabled`, `map` and an optional `source_tag`), not autoloaded.
+ *
+ * The source tag is a short label the photographer gives a form. It is sent
+ * as the lead's `source_form`, in place of the form plugin's own label.
  */
 final class Form_Settings {
 
 	public const OPTION = 'profotograaf_leads';
 
+	public const MAX_TAG = 100;
+
 	/**
 	 * Settings of one form.
 	 *
 	 * @param string $form_key Form key.
-	 * @return array{enabled:bool,map:array<string,string>}
+	 * @return array{enabled:bool,map:array<string,string>,source_tag:string}
 	 */
 	public function get( string $form_key ): array {
 		$stored = get_option( self::OPTION, array() );
@@ -37,8 +42,9 @@ final class Form_Settings {
 			}
 		}
 		return array(
-			'enabled' => ! empty( $form['enabled'] ),
-			'map'     => $map,
+			'enabled'    => ! empty( $form['enabled'] ),
+			'map'        => $map,
+			'source_tag' => self::clean_tag( $form['source_tag'] ?? '' ),
 		);
 	}
 
@@ -58,7 +64,7 @@ final class Form_Settings {
 	 *
 	 * @param array<mixed>      $raw        Submitted `forms` array, unslashed.
 	 * @param array<int,string> $known_keys Keys of the forms that exist.
-	 * @return array<string,array{enabled:bool,map:array<string,string>}> What was stored.
+	 * @return array<string,array{enabled:bool,map:array<string,string>,source_tag?:string}> What was stored.
 	 */
 	public function save( array $raw, array $known_keys ): array {
 		$forms = array();
@@ -75,8 +81,25 @@ final class Form_Settings {
 				'enabled' => ! empty( $row['enabled'] ),
 				'map'     => $map,
 			);
+			$tag           = self::clean_tag( $row['source_tag'] ?? '' );
+			if ( '' !== $tag ) {
+				$forms[ $key ]['source_tag'] = $tag;
+			}
 		}
 		update_option( self::OPTION, array( 'forms' => $forms ), false );
 		return $forms;
+	}
+
+	/**
+	 * Cleans a source tag: plain text of at most MAX_TAG characters.
+	 *
+	 * @param mixed $value Raw value.
+	 */
+	public static function clean_tag( $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+		$tag = trim( sanitize_text_field( $value ) );
+		return mb_strlen( $tag ) > self::MAX_TAG ? trim( mb_substr( $tag, 0, self::MAX_TAG ) ) : $tag;
 	}
 }

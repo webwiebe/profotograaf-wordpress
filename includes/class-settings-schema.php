@@ -17,14 +17,16 @@ defined( 'ABSPATH' ) || exit;
  * An entry has these keys:
  *
  * - tab: General, Galleries, Enquiry forms or Advanced (see tabs()).
- * - type: `enum` (needs `choices`), `bool` or `text`.
+ * - type: `enum` (needs `choices`), `bool`, `int` (needs `min` and `max`) or `text`.
  * - default: the built-in value, last in the resolution order.
  * - label and description: shown on the screen.
  * - choices: value => label, for `enum`.
+ * - min and max: inclusive bounds for `int`. A number outside them is
+ *   stored as the nearest bound.
  * - sanitize: optional callable that replaces the type's own parsing. It
  *   returns the clean value, or null when the input is not usable.
  *
- * @phpstan-type Entry array{tab:string,type:string,default:mixed,label:string,description:string,choices?:array<int|string,string>,sanitize?:callable}
+ * @phpstan-type Entry array{tab:string,type:string,default:mixed,label:string,description:string,choices?:array<int|string,string>,min?:int,max?:int,sanitize?:callable}
  */
 final class Settings_Schema {
 
@@ -32,7 +34,7 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 1;
+	public const VERSION = 2;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
@@ -104,16 +106,12 @@ final class Settings_Schema {
 			),
 			'leads_failed_retention' => array(
 				'tab'         => self::TAB_ENQUIRY,
-				'type'        => 'enum',
-				'default'     => '30',
-				'label'       => __( 'Keep undeliverable enquiries for', 'profotograaf' ),
-				'description' => __( 'Enquiries that could not be delivered stay in the database until you export them or this time has passed. You get an email before they are removed.', 'profotograaf' ),
-				'choices'     => array(
-					'7'   => __( '7 days', 'profotograaf' ),
-					'30'  => __( '30 days', 'profotograaf' ),
-					'90'  => __( '90 days', 'profotograaf' ),
-					'365' => __( '1 year', 'profotograaf' ),
-				),
+				'type'        => 'int',
+				'default'     => 7,
+				'min'         => 1,
+				'max'         => 90,
+				'label'       => __( 'Keep undeliverable enquiries for (days)', 'profotograaf' ),
+				'description' => __( 'Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed.', 'profotograaf' ),
 			),
 			'keep_data_on_uninstall' => array(
 				'tab'         => self::TAB_ADVANCED,
@@ -176,6 +174,11 @@ final class Settings_Schema {
 			case 'enum':
 				$choice = is_scalar( $value ) ? sanitize_key( (string) $value ) : '';
 				return array_key_exists( $choice, $entry['choices'] ?? array() ) ? $choice : null;
+			case 'int':
+				if ( ! is_scalar( $value ) || ! is_numeric( $value ) ) {
+					return null;
+				}
+				return max( (int) ( $entry['min'] ?? PHP_INT_MIN ), min( (int) ( $entry['max'] ?? PHP_INT_MAX ), (int) $value ) );
 			case 'bool':
 				return filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 			default:
@@ -208,13 +211,21 @@ final class Settings_Schema {
 	public static function rest_schema(): array {
 		$properties = array();
 		foreach ( self::entries() as $key => $entry ) {
+			$types    = array(
+				'bool' => 'boolean',
+				'int'  => 'integer',
+			);
 			$property = array(
-				'type'        => 'bool' === $entry['type'] ? 'boolean' : 'string',
+				'type'        => $types[ $entry['type'] ] ?? 'string',
 				'description' => $entry['description'],
 				'default'     => $entry['default'],
 			);
 			if ( 'enum' === $entry['type'] ) {
 				$property['enum'] = array_keys( $entry['choices'] ?? array() );
+			}
+			if ( 'int' === $entry['type'] ) {
+				$property['minimum'] = $entry['min'] ?? null;
+				$property['maximum'] = $entry['max'] ?? null;
 			}
 			$properties[ $key ] = $property;
 		}

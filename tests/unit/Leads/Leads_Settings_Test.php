@@ -11,6 +11,7 @@ use Brain\Monkey\Functions;
 use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Form_Settings;
+use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Plugin;
 
 /**
@@ -276,5 +277,69 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		} catch ( \RuntimeException $e ) {
 			$this->assertCount( 1, $this->store->jobs );
 		}
+	}
+
+	public function test_saving_stores_a_cleaned_source_tag_and_leaves_it_out_when_empty(): void {
+		$this->allow( true );
+		$_POST = array(
+			'forms' => array(
+				'stub:1' => array(
+					'enabled'    => '1',
+					'source_tag' => '  <b>Wedding</b> page ',
+				),
+			),
+		);
+
+		$this->page->handle_save();
+
+		$this->assertSame( 'Wedding page', $this->options[ Form_Settings::OPTION ]['forms']['stub:1']['source_tag'] );
+		$this->assertSame( 'Wedding page', ( new Form_Settings() )->get( 'stub:1' )['source_tag'] );
+
+		$_POST['forms']['stub:1']['source_tag'] = '   ';
+		$this->page->handle_save();
+
+		$this->assertArrayNotHasKey( 'source_tag', $this->options[ Form_Settings::OPTION ]['forms']['stub:1'] );
+		$this->assertSame( '', ( new Form_Settings() )->get( 'stub:1' )['source_tag'] );
+	}
+
+	public function test_a_long_source_tag_is_cut(): void {
+		$this->allow( true );
+		$_POST = array( 'forms' => array( 'stub:1' => array( 'source_tag' => str_repeat( 'a', 150 ) ) ) );
+
+		$this->page->handle_save();
+
+		$this->assertSame( Form_Settings::MAX_TAG, strlen( $this->options[ Form_Settings::OPTION ]['forms']['stub:1']['source_tag'] ) );
+	}
+
+	public function test_the_tool_buttons_need_the_capability_and_a_nonce(): void {
+		foreach ( array( 'handle_sync_galleries', 'handle_clear_gallery_index', 'handle_check_embed_version' ) as $handler ) {
+			$this->allow( false );
+			try {
+				$this->page->$handler();
+				$this->fail( $handler . ' ran without the capability.' );
+			} catch ( \RuntimeException $e ) {
+				$this->assertSame( 'forbidden', $e->getMessage() );
+			}
+
+			$this->allow( true, false );
+			try {
+				$this->page->$handler();
+				$this->fail( $handler . ' ran without a valid nonce.' );
+			} catch ( \RuntimeException $e ) {
+				$this->assertSame( 'bad nonce', $e->getMessage() );
+			}
+		}
+	}
+
+	public function test_clearing_the_gallery_index_leaves_a_result_and_returns_to_the_page(): void {
+		$this->allow( true );
+		Functions\when( 'get_current_user_id' )->justReturn( 3 );
+		$this->options['profotograaf_gallery_index'] = array( 'g1' => array() );
+
+		$this->page->handle_clear_gallery_index();
+
+		$this->assertArrayNotHasKey( 'profotograaf_gallery_index', $this->options );
+		$this->assertSame( array( 'tools' ), $this->page->finished );
+		$this->assertSame( 'success', Site_Tools::take()['type'] );
 	}
 }

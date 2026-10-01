@@ -103,11 +103,15 @@ final class Settings_Fields {
 				<?php echo esc_html( (string) $entry['label'] ); ?>
 			</label>
 			<?php
+		} elseif ( 'int' === $entry['type'] ) {
+			?>
+			<input type="number" class="small-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $value ); ?>" min="<?php echo esc_attr( (string) ( $entry['min'] ?? '' ) ); ?>" max="<?php echo esc_attr( (string) ( $entry['max'] ?? '' ) ); ?>" step="1" />
+			<?php
 		} else {
 			?>
 			<input type="text" class="regular-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $value ); ?>" />
 			<?php
-		}
+		}//end if
 	}
 
 	/**

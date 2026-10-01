@@ -68,6 +68,10 @@ final class Dispatcher {
 				return 'no_email';
 			}
 
+			if ( '' !== $config['source_tag'] ) {
+				$payload['source_form'] = $config['source_tag'];
+			}
+
 			/**
 			 * Filters the lead before it is queued.
 			 *

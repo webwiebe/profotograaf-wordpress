@@ -72,7 +72,7 @@ class Settings_Test extends Wp_Test_Case {
 				'leads_enabled'          => false,
 				'leads_alert_email'      => '',
 				'leads_fallback_email'   => '',
-				'leads_failed_retention' => '30',
+				'leads_failed_retention' => 7,
 				'keep_data_on_uninstall' => true,
 			),
 			$clean
@@ -179,7 +179,7 @@ class Settings_Test extends Wp_Test_Case {
 				'leads_enabled'          => true,
 				'leads_alert_email'      => '',
 				'leads_fallback_email'   => '',
-				'leads_failed_retention' => '30',
+				'leads_failed_retention' => 7,
 				'keep_data_on_uninstall' => false,
 			),
 			$this->options['profotograaf_settings']
