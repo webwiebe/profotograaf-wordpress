@@ -194,10 +194,6 @@ msgstr "Profotograaf antwoordde met HTTP %d."
 msgid "This site is not connected to Profotograaf."
 msgstr "Deze site is niet verbonden met Profotograaf."
 
-#: includes/class-gallery-renderer.php:120
-msgid "View the gallery"
-msgstr "Bekijk de galerij"
-
 #: includes/class-pairing.php:93
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr "Profotograaf heeft de verbinding niet gestart. Probeer het zo opnieuw."
@@ -783,4 +779,28 @@ msgstr ""
 
 #: includes/cli/class-status-command.php:111
 msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
+msgstr ""
+
+#: includes/class-embed-script.php:130
+msgid "This gallery could not be loaded. Please try again later."
+msgstr ""
+
+#: includes/class-gallery-renderer.php:82
+msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
+msgstr ""
+
+#: includes/class-gallery-renderer.php:93
+msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
+msgstr ""
+
+#: includes/class-gallery-renderer.php:102
+msgid "This gallery needs JavaScript to be shown here."
+msgstr ""
+
+#: includes/class-gallery-renderer.php:163
+msgid "View this gallery on Profotograaf"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr ""
