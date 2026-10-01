@@ -179,7 +179,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$module->register( $this->plugin_with( $http ) );
 		$module->sync();
 		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
-		$this->assertSame( 'boom', Origin_Sync::status()['message'] );
+		$this->assertSame( 'The platform reported an error (HTTP 500). Try again later.', Origin_Sync::status()['message'] );
 
 		$http = new Fake_Transport();
 		$http->reply( 200, $this->gallery_row() );
