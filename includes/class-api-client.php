@@ -293,8 +293,7 @@ class Api_Client {
 	 * @return bool|WP_Error True when listed, false when the page names other origins or none.
 	 */
 	public function framing_allows( string $url, string $origin ) {
-		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
-		if ( strtolower( (string) wp_parse_url( Config::platform_url(), PHP_URL_HOST ) ) !== $host ) {
+		if ( strtolower( (string) wp_parse_url( Config::platform_url(), PHP_URL_HOST ) ) !== strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) ) ) {
 			return $this->error( 'profotograaf_invalid', __( 'That page is not on the Profotograaf platform.', 'profotograaf' ), 0, false );
 		}
 		try {
