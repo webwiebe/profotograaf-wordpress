@@ -209,22 +209,22 @@ msgstr "De verbinding kon niet worden gecontroleerd. Nieuwe poging."
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin opnieuw."
 
-#: includes/modules/class-client-galleries.php:151
+#: includes/modules/class-client-galleries.php:202
 #: build/client-galleries/index.js:1
 msgid "Find your gallery"
 msgstr "Vind je galerij"
 
-#: includes/modules/class-client-galleries.php:152
+#: includes/modules/class-client-galleries.php:203
 #: build/client-galleries/index.js:1
 msgid "Sign in to the client portal to see your photos."
 msgstr "Log in op het klantportaal om je foto's te bekijken."
 
-#: includes/modules/class-client-galleries.php:153
+#: includes/modules/class-client-galleries.php:204
 #: build/client-galleries/index.js:1
 msgid "Open my gallery"
 msgstr "Open mijn galerij"
 
-#: includes/modules/class-client-galleries.php:180
+#: includes/modules/class-client-galleries.php:258
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
@@ -308,25 +308,25 @@ msgstr "Verbind deze site met je Profotograaf-account om galerijen te plaatsen e
 msgid "Connect to Profotograaf"
 msgstr "Verbinden met Profotograaf"
 
-#: includes/class-settings-schema.php:74
+#: includes/class-settings-schema.php:82
 msgid "Default gallery layout"
 msgstr "Standaardindeling van galerijen"
 
-#: includes/class-settings-schema.php:75
+#: includes/class-settings-schema.php:83
 msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr "Wordt gebruikt als een galerijblok of shortcode geen indeling kiest."
 
-#: includes/class-settings-schema.php:77
+#: includes/class-settings-schema.php:85
 #: build/gallery/index.js:2
 msgid "Grid"
 msgstr "Raster"
 
-#: includes/class-settings-schema.php:78
+#: includes/class-settings-schema.php:86
 #: build/gallery/index.js:2
 msgid "Masonry"
 msgstr "Metselwerk"
 
-#: includes/class-settings-schema.php:79
+#: includes/class-settings-schema.php:87
 #: build/gallery/index.js:2
 msgid "Slideshow"
 msgstr "Diavoorstelling"
@@ -535,19 +535,19 @@ msgstr ""
 msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
 msgstr ""
 
-#: includes/class-settings-schema.php:86
+#: includes/class-settings-schema.php:94
 msgid "Collect enquiries"
 msgstr ""
 
-#: includes/class-settings-schema.php:87
+#: includes/class-settings-schema.php:95
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:122
+#: includes/class-settings-schema.php:130
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:123
+#: includes/class-settings-schema.php:131
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
@@ -621,43 +621,43 @@ msgstr ""
 msgid "The exported enquiries were removed."
 msgstr ""
 
-#: includes/class-settings-schema.php:93
+#: includes/class-settings-schema.php:101
 msgid "Failure alerts go to"
 msgstr ""
 
-#: includes/class-settings-schema.php:94
+#: includes/class-settings-schema.php:102
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr ""
 
-#: includes/class-settings-schema.php:101
+#: includes/class-settings-schema.php:109
 msgid "Mail undeliverable enquiries to"
 msgstr ""
 
-#: includes/class-settings-schema.php:102
+#: includes/class-settings-schema.php:110
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr ""
 
-#: includes/class-settings-schema.php:109
+#: includes/class-settings-schema.php:117
 msgid "Keep undeliverable enquiries for"
 msgstr ""
 
-#: includes/class-settings-schema.php:110
+#: includes/class-settings-schema.php:118
 msgid "Enquiries that could not be delivered stay in the database until you export them or this time has passed. You get an email before they are removed."
 msgstr ""
 
-#: includes/class-settings-schema.php:112
+#: includes/class-settings-schema.php:120
 msgid "7 days"
 msgstr ""
 
-#: includes/class-settings-schema.php:113
+#: includes/class-settings-schema.php:121
 msgid "30 days"
 msgstr ""
 
-#: includes/class-settings-schema.php:114
+#: includes/class-settings-schema.php:122
 msgid "90 days"
 msgstr ""
 
-#: includes/class-settings-schema.php:115
+#: includes/class-settings-schema.php:123
 msgid "1 year"
 msgstr ""
 
@@ -1058,4 +1058,48 @@ msgstr ""
 
 #: includes/modules/class-site-health.php:407
 msgid "Open the leads screen"
+msgstr ""
+
+#: includes/class-settings-schema.php:74
+msgid "Client portal path"
+msgstr ""
+
+#: includes/class-settings-schema.php:75
+msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Portal path"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it."
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Heading level"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Heading 2"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Heading 3"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Heading 4"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Heading 5"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Heading 6"
+msgstr ""
+
+#: build/client-galleries/index.js:1
+msgid "Paragraph"
 msgstr ""
