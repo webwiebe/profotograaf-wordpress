@@ -21,6 +21,8 @@ function profotograaf_uninstall_site(): void {
 	foreach ( (array) $names as $name ) {
 		delete_option( (string) $name );
 	}
+	// The log ring buffer (Logger::OPTION) is one of these options. Naming it keeps the removal explicit.
+	delete_option( 'profotograaf_log' );
 
 	$transients = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_profotograaf_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
 	foreach ( (array) $transients as $name ) {
