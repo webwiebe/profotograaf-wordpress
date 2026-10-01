@@ -42,6 +42,24 @@ class Rest_Request_Stub {
 	}
 }
 
+if ( ! class_exists( '\\WP_REST_Response' ) ) {
+	/**
+	 * Just enough of a REST response.
+	 */
+	class Rest_Response_Stub {
+
+		/**
+		 * Constructor.
+		 *
+		 * @param mixed                $data    Data.
+		 * @param int                  $status  Status.
+		 * @param array<string,string> $headers Headers.
+		 */
+		public function __construct( public $data = null, public int $status = 200, public array $headers = array() ) {}
+	}
+	class_alias( Rest_Response_Stub::class, 'WP_REST_Response' );
+}
+
 class Gallery_Rest_Test extends Gallery_Test_Case {
 
 	private Gallery_Rest $rest;
@@ -101,6 +119,64 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$error = $this->rest->list_galleries();
 
 		$this->assertSame( 502, $error->data['status'] );
+	}
+
+	public function test_a_platform_rate_limit_is_a_429_with_a_retry_after_header(): void {
+		$this->http->reply( 429, array( 'error' => 'slow down' ), array( 'retry-after' => '42' ) );
+
+		$response = $this->rest->list_galleries();
+
+		$this->assertInstanceOf( \WP_REST_Response::class, $response );
+		$this->assertSame( 429, $response->status );
+		$this->assertSame( array( 'Retry-After' => '42' ), $response->headers );
+		$this->assertSame( 'profotograaf_http', $response->data['code'] );
+		$this->assertSame( 42, $response->data['data']['retry_after'] );
+		$this->assertTrue( $response->data['data']['retryable'] );
+	}
+
+	public function test_a_rate_limit_without_a_retry_after_gets_a_default_wait(): void {
+		$this->http->reply( 429, array( 'error' => 'slow down' ) );
+
+		$response = $this->rest->list_galleries();
+
+		$this->assertSame( 429, $response->status );
+		$this->assertSame( array( 'Retry-After' => '60' ), $response->headers );
+	}
+
+	public function test_marking_passes_a_rate_limit_on_too(): void {
+		$this->http->reply( 429, null, array( 'retry-after' => '5' ) );
+
+		$response = $this->rest->mark_embeddable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
+
+		$this->assertSame( 429, $response->status );
+		$this->assertSame( '5', $response->headers['Retry-After'] );
+	}
+
+	public function test_a_network_failure_is_a_504(): void {
+		$this->http->fail( new \WP_Error( 'http_request_failed', 'cURL error 28: timed out' ) );
+
+		$error = $this->rest->list_galleries();
+
+		$this->assertInstanceOf( \WP_Error::class, $error );
+		$this->assertSame( 'profotograaf_network', $error->get_error_code() );
+		$this->assertSame( 504, $error->data['status'] );
+		$this->assertTrue( $error->data['retryable'] );
+	}
+
+	public function test_a_platform_gateway_timeout_is_a_504(): void {
+		$this->http->reply( 504, null );
+
+		$error = $this->rest->list_galleries();
+
+		$this->assertSame( 504, $error->data['status'] );
+	}
+
+	public function test_a_platform_request_timeout_is_a_504(): void {
+		$this->http->reply( 408, null );
+
+		$error = $this->rest->list_galleries();
+
+		$this->assertSame( 504, $error->data['status'] );
 	}
 
 	public function test_marking_a_gallery_returns_the_platform_answer(): void {

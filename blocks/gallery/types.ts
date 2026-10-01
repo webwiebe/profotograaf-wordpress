@@ -22,4 +22,5 @@ export type GalleryAttributes = {
 export interface RestError {
 	code?: string;
 	message?: string;
+	data?: { status?: number; retry_after?: number; retryable?: boolean };
 }
