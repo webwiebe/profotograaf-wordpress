@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
  * page builders. It renders through Gallery_Renderer, like the block.
  *
  * Optional `title` and `url` set the fallback link and save the lookup.
+ * Optional `class` adds CSS classes to the wrapper and `align` (wide or full)
+ * adds the matching alignment class.
  */
 class Shortcode {
 
@@ -49,16 +51,43 @@ class Shortcode {
 	 * @return string HTML.
 	 */
 	public function render( $atts ): string {
-		$atts = shortcode_atts(
+		$atts  = shortcode_atts(
 			array(
 				'id'     => '',
 				'layout' => '',
 				'title'  => '',
 				'url'    => '',
+				'class'  => '',
+				'align'  => '',
 			),
 			is_array( $atts ) ? $atts : array(),
 			self::TAG
 		);
-		return $this->renderer->render( $atts );
+		$extra = $this->classes( (string) $atts['class'], (string) $atts['align'] );
+		unset( $atts['align'] );
+		return $this->renderer->render( array_merge( $atts, array( 'class' => $extra ) ) );
+	}
+
+	/**
+	 * The extra classes for the wrapper: the `class` value cleaned per class,
+	 * plus `alignwide` or `alignfull` for the `align` value.
+	 *
+	 * @param string $extra Space separated classes.
+	 * @param string $align Alignment: wide or full.
+	 */
+	private function classes( string $extra, string $align ): string {
+		$classes = array();
+		$names   = preg_split( '/\s+/', trim( $extra ) );
+		foreach ( false === $names ? array() : $names as $name ) {
+			$name = sanitize_html_class( $name );
+			if ( '' !== $name ) {
+				$classes[] = $name;
+			}
+		}
+		$align = strtolower( trim( $align ) );
+		if ( in_array( $align, array( 'wide', 'full' ), true ) ) {
+			$classes[] = 'align' . $align;
+		}
+		return implode( ' ', array_unique( $classes ) );
 	}
 }
