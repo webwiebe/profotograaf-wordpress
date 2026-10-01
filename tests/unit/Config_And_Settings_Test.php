@@ -191,4 +191,42 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( '', $origin ) );
 		$this->assertFalse( \Profotograaf\Frame_Ancestors::allow( "frame-ancestors {$origin}, frame-ancestors 'self'", $origin ) );
 	}
+
+	public function test_origin_sync_records_why_the_check_failed(): void {
+		$http = new Fake_Transport();
+		$http->reply( 500, array( 'error' => 'boom' ) );
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
+		$this->assertSame( 'boom', Origin_Sync::status()['message'] );
+
+		$http = new Fake_Transport();
+		$http->reply( 200, $this->gallery_row() );
+		$http->reply( 404 );
+		$module = new Origin_Sync();
+		$module->register( $this->plugin_with( $http ) );
+		$module->sync();
+		$this->assertSame( 'manual', Origin_Sync::status()['state'] );
+		$this->assertNotSame( '', Origin_Sync::status()['message'] );
+	}
+
+	public function test_framing_check_refuses_other_hosts_and_reports_network_failures(): void {
+		$http = new Fake_Transport();
+		$api  = $this->plugin_with( $http )->api();
+
+		$this->assertWPError( $api->framing_allows( 'https://evil.example.net/x', 'https://photos.example.com' ) );
+		$this->assertCount( 0, $http->requests );
+
+		$http->fail( new \RuntimeException( 'down' ) );
+		$this->assertWPError( $api->framing_allows( 'https://profotograaf.nl/x', 'https://photos.example.com' ) );
+		$http->fail( new \WP_Error( 'http_request_failed' ) );
+		$this->assertWPError( $api->framing_allows( 'https://profotograaf.nl/x', 'https://photos.example.com' ) );
+		$http->reply( 503 );
+		$this->assertWPError( $api->framing_allows( 'https://profotograaf.nl/x', 'https://photos.example.com' ) );
+	}
+
+	private function assertWPError( $value ): void {
+		$this->assertInstanceOf( \WP_Error::class, $value );
+	}
 }
