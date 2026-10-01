@@ -42,10 +42,13 @@ final class Wp_Transport implements Transport {
 			return $response;
 		}
 
+		$csp = wp_remote_retrieve_header( $response, 'content-security-policy' );
+
 		return array(
 			'status'  => (int) wp_remote_retrieve_response_code( $response ),
 			'headers' => array(
-				'retry-after' => (string) wp_remote_retrieve_header( $response, 'retry-after' ),
+				'retry-after'             => (string) wp_remote_retrieve_header( $response, 'retry-after' ),
+				'content-security-policy' => is_array( $csp ) ? implode( ', ', array_map( 'strval', $csp ) ) : (string) $csp,
 			),
 			'body'    => (string) wp_remote_retrieve_body( $response ),
 		);

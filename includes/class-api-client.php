@@ -283,6 +283,64 @@ class Api_Client {
 	}
 
 	/**
+	 * Whether a public platform page lets `$origin` frame it.
+	 *
+	 * Requests the page without credentials and reads the `frame-ancestors`
+	 * directive of its Content-Security-Policy. Only pages on the platform's own
+	 * host are requested.
+	 *
+	 * @param string $url    Public page URL.
+	 * @param string $origin Origin that wants to frame the page.
+	 * @return bool|WP_Error True when listed, false when the page names other origins or none.
+	 */
+	public function framing_allows( string $url, string $origin ) {
+		$host = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		if ( '' === $host || strtolower( (string) wp_parse_url( Config::platform_url(), PHP_URL_HOST ) ) !== $host ) {
+			return $this->error( 'profotograaf_invalid', __( 'That page is not on the Profotograaf platform.', 'profotograaf' ), 0, false );
+		}
+
+		try {
+			$result = $this->transport->send( 'GET', $url, array( 'Accept' => 'text/html' ), null, Config::http_timeout() );
+		} catch ( \Throwable $e ) {
+			return $this->error( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
+		}
+		if ( is_wp_error( $result ) ) {
+			return $this->error( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
+		}
+		if ( (int) $result['status'] >= 400 ) {
+			return $this->error( 'profotograaf_http', __( 'The public page could not be loaded.', 'profotograaf' ), (int) $result['status'], (int) $result['status'] >= 500 );
+		}
+
+		return self::frame_ancestors_allow( (string) ( $result['headers']['content-security-policy'] ?? '' ), $origin );
+	}
+
+	/**
+	 * Whether every policy in a Content-Security-Policy header that has a
+	 * frame-ancestors directive lists `$origin` (or `*`, or its scheme).
+	 *
+	 * @param string $header Header value, several policies separated by commas.
+	 * @param string $origin Origin to look for.
+	 */
+	public static function frame_ancestors_allow( string $header, string $origin ): bool {
+		$origin = strtolower( $origin );
+		$scheme = (string) strstr( $origin, '://', true ) . ':';
+		$found  = false;
+		foreach ( explode( ',', $header ) as $policy ) {
+			foreach ( explode( ';', $policy ) as $directive ) {
+				$tokens = preg_split( '/\s+/', trim( strtolower( $directive ) ) );
+				if ( 'frame-ancestors' !== $tokens[0] ) {
+					continue;
+				}
+				$found = true;
+				if ( array() === array_intersect( array_slice( $tokens, 1 ), array( $origin, '*', $scheme ) ) ) {
+					return false;
+				}
+			}
+		}
+		return $found;
+	}
+
+	/**
 	 * Exchanges the refresh token for a new pair.
 	 *
 	 * Called by request() and by the background refresh. A 401 from the
