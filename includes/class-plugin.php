@@ -87,6 +87,10 @@ final class Plugin {
 	 */
 	public function boot(): void {
 		add_action( 'plugins_loaded', array( $this, 'load_modules' ) );
+		register_activation_hook( PROFOTOGRAAF_FILE, array( self::class, 'activate' ) );
+		if ( is_multisite() ) {
+			( new Multisite() )->register();
+		}
 	}
 
 	/**
@@ -147,9 +151,22 @@ final class Plugin {
 	}
 
 	/**
-	 * Deactivation: stops background work. Options stay until uninstall.
+	 * Activation: gives the site, or every subsite on network activation, its
+	 * defaults and schedule. The site stays disconnected until it pairs.
+	 *
+	 * @param bool $network_wide Whether the plugin was activated for the whole network.
 	 */
-	public static function deactivate(): void {
-		wp_clear_scheduled_hook( Modules\Token_Refresh::HOOK );
+	public static function activate( $network_wide = false ): void {
+		( new Multisite() )->activate( (bool) $network_wide );
+	}
+
+	/**
+	 * Deactivation: stops background work on this site, or on every subsite
+	 * when the whole network is deactivated. Options stay until uninstall.
+	 *
+	 * @param bool $network_wide Whether the plugin was deactivated for the whole network.
+	 */
+	public static function deactivate( $network_wide = false ): void {
+		( new Multisite() )->deactivate( (bool) $network_wide );
 	}
 }
