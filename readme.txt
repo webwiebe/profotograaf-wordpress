@@ -67,6 +67,10 @@ The "Find your gallery" block is a plain link. It sends nothing to Profotograaf 
 
 When you switch on a form in the lead settings, every submission of that form is sent to `https://profotograaf.nl/api/v1/leads`: the name, email address, phone, date, message and the other fields of the form, the address of the page it was sent from, and the name of the form. Nothing is sent for forms you have not switched on.
 
+= Help translate Profotograaf =
+
+The plugin ships in English, Dutch, German, French, Spanish and Italian. The German, French, Spanish and Italian texts are machine drafts that a native speaker has not reviewed yet, so corrections are welcome. To translate or improve a language, join the project on translate.wordpress.org, or send a pull request with a `.po` file. The steps are in CONTRIBUTING.md in the public repository: https://github.com/webwiebe/profotograaf-wordpress.
+
 == Installation ==
 
 1. Install the plugin from the Plugins screen, or upload the zip.
