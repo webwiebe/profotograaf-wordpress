@@ -8,6 +8,7 @@
 namespace Profotograaf\Leads;
 
 use Profotograaf\Api_Client;
+use Profotograaf\Logger;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -135,12 +136,20 @@ final class Delivery {
 		$message   = $response->get_error_message();
 		$temporary = ! empty( $data['retryable'] ) || in_array( $response->get_error_code(), array( 'profotograaf_not_connected', 'profotograaf_refresh_busy' ), true );
 
+		$log = array(
+			'job'    => substr( (string) $job['id'], 0, 8 ),
+			'status' => $status,
+			'error'  => $response->get_error_code(),
+			'reason' => $message,
+		);
 		if ( $temporary && 'retry' === $this->queue->retry_later( $job, $message, $status, (int) ( $data['retry_after'] ?? 0 ) ) ) {
+			Logger::warning( 'A lead delivery failed and will be retried.', $log );
 			return 'retry';
 		}
 		if ( ! $temporary ) {
 			$this->queue->fail( $job, $message, $status );
 		}
+		Logger::error( 'A lead delivery failed for good.', $log );
 		do_action( 'profotograaf_lead_failed', (array) $job['payload'], $response );
 		return 'failed';
 	}

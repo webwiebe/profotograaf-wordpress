@@ -141,7 +141,7 @@ class Api_Client {
 	 */
 	public function mark_embeddable( string $gallery_id ) {
 		if ( '' === trim( $gallery_id ) ) {
-			return $this->error( 'profotograaf_invalid', __( 'A gallery id is required.', 'profotograaf' ), 0, false );
+			return Api_Errors::make( 'profotograaf_invalid', __( 'A gallery id is required.', 'profotograaf' ), 0, false );
 		}
 
 		$request = array(
@@ -158,7 +158,7 @@ class Api_Client {
 		 */
 		$request = apply_filters( 'profotograaf_mark_embeddable_request', $request, $gallery_id );
 		if ( ! is_array( $request ) || empty( $request['method'] ) || empty( $request['path'] ) ) {
-			return $this->error( 'profotograaf_invalid', __( 'The request to switch embedding on is not valid.', 'profotograaf' ), 0, false );
+			return Api_Errors::make( 'profotograaf_invalid', __( 'The request to switch embedding on is not valid.', 'profotograaf' ), 0, false );
 		}
 
 		$result = $this->request( (string) $request['method'], (string) $request['path'], isset( $request['body'] ) && is_array( $request['body'] ) ? $request['body'] : null );
@@ -166,7 +166,7 @@ class Api_Client {
 			$data = $result->get_error_data();
 			if ( 'profotograaf_http' === $result->get_error_code() && is_array( $data ) && 403 === ( $data['status'] ?? 0 ) ) {
 				$this->connection->flag_embed_denied();
-				return $this->error(
+				return Api_Errors::make(
 					'profotograaf_reconnect',
 					__( 'This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission.', 'profotograaf' ),
 					403,
@@ -207,7 +207,7 @@ class Api_Client {
 			}
 		}
 		if ( empty( $lead['name'] ) || empty( $lead['email'] ) ) {
-			return $this->error( 'profotograaf_invalid', __( 'A lead needs a name and an email address.', 'profotograaf' ), 0, false );
+			return Api_Errors::make( 'profotograaf_invalid', __( 'A lead needs a name and an email address.', 'profotograaf' ), 0, false );
 		}
 		$lead['source'] = Config::CLIENT_ID;
 
@@ -234,7 +234,7 @@ class Api_Client {
 	 */
 	public function request( string $method, string $path, ?array $body = null ) {
 		if ( ! $this->connection->is_connected() ) {
-			return $this->not_connected();
+			return Api_Errors::not_connected();
 		}
 
 		if ( $this->connection->access_expires_at() <= $this->now() + self::SKEW ) {
@@ -257,7 +257,16 @@ class Api_Client {
 			return $response;
 		}
 		if ( $response['status'] >= 400 ) {
-			return $this->http_error( $response );
+			Logger::warning(
+				'The platform answered a request with an error.',
+				array(
+					'method' => $method,
+					'path'   => $path,
+					'status' => $response['status'],
+					'code'   => is_array( $response['body'] ) && isset( $response['body']['code'] ) && is_string( $response['body']['code'] ) ? $response['body']['code'] : '',
+				)
+			);
+			return Api_Errors::http( $response );
 		}
 		return $response['body'];
 	}
@@ -294,18 +303,24 @@ class Api_Client {
 	 */
 	public function framing_allows( string $url, string $origin ) {
 		if ( strtolower( (string) wp_parse_url( Config::platform_url(), PHP_URL_HOST ) ) !== strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) ) ) {
-			return $this->error( 'profotograaf_invalid', __( 'That page is not on the Profotograaf platform.', 'profotograaf' ), 0, false );
+			return Api_Errors::make( 'profotograaf_invalid', __( 'That page is not on the Profotograaf platform.', 'profotograaf' ), 0, false );
 		}
 		try {
 			$result = $this->transport->send( 'GET', $url, array( 'Accept' => 'text/html' ), null, Config::http_timeout() );
 		} catch ( \Throwable $e ) {
+			Logger::exception( 'The framing check threw.', $e, array( 'method' => 'GET' ) );
 			$result = new WP_Error( 'profotograaf_network' );
 		}
 		if ( is_wp_error( $result ) ) {
-			return $this->error( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
+			Api_Errors::log_transport( $result, 'GET', 'framing check' );
+			return Api_Errors::make( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
 		}
 		if ( (int) $result['status'] >= 400 ) {
-			return $this->error( 'profotograaf_http', __( 'The public page could not be loaded.', 'profotograaf' ), (int) $result['status'], (int) $result['status'] >= 500 );
+			Logger::warning(
+				'The public page for the framing check answered with an error.',
+				array( 'status' => (int) $result['status'] )
+			);
+			return Api_Errors::make( 'profotograaf_http', __( 'The public page could not be loaded.', 'profotograaf' ), (int) $result['status'], (int) $result['status'] >= 500 );
 		}
 		return Frame_Ancestors::allow( (string) ( $result['headers']['content-security-policy'] ?? '' ), $origin );
 	}
@@ -329,7 +344,8 @@ class Api_Client {
 			if ( $this->tokens_usable( $now, $rejected_token ) ) {
 				return true;
 			}
-			return $this->error( 'profotograaf_refresh_busy', __( 'The connection is being refreshed. Try again in a moment.', 'profotograaf' ), 0, true );
+			Logger::info( 'Token refresh skipped because another request holds the lock.' );
+			return Api_Errors::make( 'profotograaf_refresh_busy', __( 'The connection is being refreshed. Try again in a moment.', 'profotograaf' ), 0, true );
 		}
 
 		try {
@@ -339,11 +355,12 @@ class Api_Client {
 			}
 			$refresh = $this->connection->refresh_token();
 			if ( '' === $refresh ) {
-				return $this->not_connected();
+				return Api_Errors::not_connected();
 			}
 
 			$response = $this->send( 'POST', '/api/v1/auth/devices/refresh', array( 'refresh_token' => $refresh ), '' );
 			if ( is_wp_error( $response ) ) {
+				Logger::error( 'Token refresh failed: the platform could not be reached.' );
 				return $response;
 			}
 			if ( 200 === $response['status'] && is_array( $response['body'] ) && ! empty( $response['body']['access_token'] ) && ! empty( $response['body']['refresh_token'] ) ) {
@@ -351,6 +368,7 @@ class Api_Client {
 				return true;
 			}
 			if ( 400 === $response['status'] || 401 === $response['status'] ) {
+				Logger::warning( 'Token refresh refused, the connection was ended on the platform.', array( 'status' => $response['status'] ) );
 				$this->connection->clear( __( 'The connection was ended in your Profotograaf account.', 'profotograaf' ) );
 				/**
 				 * Fires when the platform ended the connection.
@@ -358,9 +376,10 @@ class Api_Client {
 				 * @param string $reason Why the connection ended.
 				 */
 				do_action( 'profotograaf_disconnected', 'revoked' );
-				return $this->not_connected();
+				return Api_Errors::not_connected();
 			}
-			return $this->http_error( $response );
+			Logger::error( 'Token refresh failed.', array( 'status' => $response['status'] ) );
+			return Api_Errors::http( $response );
 		} finally {
 			$this->connection->release_lock();
 		}//end try
@@ -419,18 +438,27 @@ class Api_Client {
 			$headers['Content-Type'] = 'application/json';
 			$encoded                 = wp_json_encode( $body );
 			if ( false === $encoded ) {
-				return $this->error( 'profotograaf_invalid', __( 'The request could not be encoded.', 'profotograaf' ), 0, false );
+				return Api_Errors::make( 'profotograaf_invalid', __( 'The request could not be encoded.', 'profotograaf' ), 0, false );
 			}
 		}
 
 		try {
 			$result = $this->transport->send( $method, Config::platform_endpoint( $path ), $headers, $encoded, Config::http_timeout() );
 		} catch ( \Throwable $e ) {
-			return $this->error( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
+			Logger::exception(
+				'The transport threw.',
+				$e,
+				array(
+					'method' => $method,
+					'path'   => $path,
+				)
+			);
+			return Api_Errors::make( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
 		}
 
 		if ( is_wp_error( $result ) ) {
-			return $this->error( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
+			Api_Errors::log_transport( $result, $method, $path );
+			return Api_Errors::make( 'profotograaf_network', __( 'Profotograaf could not be reached.', 'profotograaf' ), 0, true );
 		}
 
 		$raw     = (string) $result['body'];
@@ -440,55 +468,6 @@ class Api_Client {
 			'retry_after' => isset( $result['headers']['retry-after'] ) ? max( 0, (int) $result['headers']['retry-after'] ) : 0,
 			'body'        => $decoded,
 		);
-	}
-
-	/**
-	 * Builds the error for an HTTP status of 400 or above.
-	 *
-	 * @param array{status:int,retry_after:int,body:mixed} $response Response.
-	 */
-	private function http_error( array $response ): WP_Error {
-		$status = $response['status'];
-		$body   = is_array( $response['body'] ) ? $response['body'] : array();
-		/* translators: %d: HTTP status code. */
-		$message = isset( $body['error'] ) && is_string( $body['error'] ) && '' !== $body['error'] ? $body['error'] : sprintf( __( 'Profotograaf answered with HTTP %d.', 'profotograaf' ), $status );
-
-		return new WP_Error(
-			'profotograaf_http',
-			$message,
-			array(
-				'status'      => $status,
-				'code'        => isset( $body['code'] ) && is_string( $body['code'] ) ? $body['code'] : '',
-				'retryable'   => 408 === $status || 429 === $status || $status >= 500,
-				'retry_after' => $response['retry_after'],
-			)
-		);
-	}
-
-	/**
-	 * Builds an error with the standard data shape.
-	 *
-	 * @param string $code      Error code.
-	 * @param string $message   Message.
-	 * @param int    $status    HTTP status, 0 when none.
-	 * @param bool   $retryable Whether a later attempt can succeed.
-	 */
-	private function error( string $code, string $message, int $status, bool $retryable ): WP_Error {
-		return new WP_Error(
-			$code,
-			$message,
-			array(
-				'status'    => $status,
-				'retryable' => $retryable,
-			)
-		);
-	}
-
-	/**
-	 * Error for a site without a connection.
-	 */
-	private function not_connected(): WP_Error {
-		return $this->error( 'profotograaf_not_connected', __( 'This site is not connected to Profotograaf.', 'profotograaf' ), 0, false );
 	}
 
 	/**
