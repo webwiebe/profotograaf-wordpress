@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T13:00:24+00:00\n"
+"POT-Creation-Date: 2026-10-01T13:47:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -19,6 +19,7 @@ msgstr ""
 #: profotograaf.php
 #: includes/class-cron-health.php:160
 #: includes/class-cron-health.php:175
+#: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:74
 #: includes/modules/class-settings-page.php:75
 #: includes/modules/class-settings-page.php:269
@@ -44,6 +45,9 @@ msgstr ""
 
 #: includes/admin/class-leads-settings.php:105
 #: includes/admin/class-leads-settings.php:211
+#: includes/modules/class-privacy.php:79
+#: includes/modules/class-privacy.php:96
+#: includes/modules/class-privacy.php:117
 msgid "Profotograaf enquiries"
 msgstr ""
 
@@ -120,6 +124,7 @@ msgid "Re-check the embed version"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:282
+#: includes/modules/class-privacy.php:187
 msgid "Name"
 msgstr ""
 
@@ -128,6 +133,7 @@ msgid "Email address"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:284
+#: includes/modules/class-privacy.php:189
 msgid "Phone"
 msgstr ""
 
@@ -136,6 +142,7 @@ msgid "Event date"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:286
+#: includes/modules/class-privacy.php:191
 msgid "Message"
 msgstr ""
 
@@ -364,6 +371,7 @@ msgid "General"
 msgstr ""
 
 #: includes/class-settings-schema.php:52
+#: includes/modules/class-privacy.php:229
 msgid "Galleries"
 msgstr ""
 
@@ -597,6 +605,66 @@ msgstr ""
 
 #: includes/modules/class-client-galleries.php:258
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
+msgstr ""
+
+#: includes/modules/class-privacy.php:118
+msgid "Enquiries sent through your forms that are waiting for delivery to Profotograaf, or could not be delivered."
+msgstr ""
+
+#: includes/modules/class-privacy.php:188
+msgid "Email"
+msgstr ""
+
+#: includes/modules/class-privacy.php:190
+msgid "Date"
+msgstr ""
+
+#: includes/modules/class-privacy.php:192
+msgid "Form"
+msgstr ""
+
+#: includes/modules/class-privacy.php:193
+msgid "Page"
+msgstr ""
+
+#: includes/modules/class-privacy.php:213
+msgid "Delivery status"
+msgstr ""
+
+#: includes/modules/class-privacy.php:214
+msgid "Failed"
+msgstr ""
+
+#: includes/modules/class-privacy.php:214
+msgid "Waiting"
+msgstr ""
+
+#: includes/modules/class-privacy.php:218
+msgid "Received"
+msgstr ""
+
+#: includes/modules/class-privacy.php:230
+msgid "Pages that show a Profotograaf gallery make the visitor's browser load a script, the gallery data and the photos from profotograaf.nl, a service operated by the plugin author. Profotograaf receives the visitor's IP address and browser details, as any web server does. When a gallery scrolls into view the script reports one anonymous view, with the gallery and the host name of this site. No view is reported when the browser sends Do Not Track or Global Privacy Control. The plugin sets no cookies."
+msgstr ""
+
+#: includes/modules/class-privacy.php:231
+msgid "Enquiries"
+msgstr ""
+
+#: includes/modules/class-privacy.php:232
+msgid "When a contact form is switched on for Profotograaf, each submission is stored on this site and then sent to profotograaf.nl: the name, email address, phone number, date, message and other fields of the form, the address of the page and the name of the form. A submission waits in the queue until it is delivered. One that cannot be delivered is kept for a limited time, so the site owner can export or retry it. The personal data tools export and erase these submissions by the email address of the sender."
+msgstr ""
+
+#: includes/modules/class-privacy.php:233
+msgid "Connection and diagnostics"
+msgstr ""
+
+#: includes/modules/class-privacy.php:234
+msgid "When the site owner connects the site, the plugin sends the site title, the host name, the plugin version and a random identifier of this installation to profotograaf.nl. The plugin sends no usage statistics or error reports."
+msgstr ""
+
+#: includes/modules/class-privacy.php:235
+msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:105
