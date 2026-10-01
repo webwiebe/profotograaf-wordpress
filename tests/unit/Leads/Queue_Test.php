@@ -116,14 +116,14 @@ class Queue_Test extends Leads_Test_Case {
 		$this->assertSame( array( 'a' ), array_keys( $this->queue->due( 10 ) ) );
 	}
 
-	private const THIRTY_DAYS = 30 * 86400;
+	private const SEVEN_DAYS = 7 * 86400;
 
 	public function test_a_failed_job_is_kept_for_the_retention_and_then_removed_with_a_warning(): void {
 		$this->queue->enqueue( 'a', self::PAYLOAD + array( 'source_form' => 'CF7: Wedding' ) );
 		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
 		$this->mails = array();
 
-		$this->now += self::THIRTY_DAYS - 1;
+		$this->now += self::SEVEN_DAYS - 1;
 		$this->assertSame( 0, $this->queue->prune() );
 		$this->assertCount( 1, $this->store->jobs );
 
@@ -135,13 +135,49 @@ class Queue_Test extends Leads_Test_Case {
 		$this->assertStringNotContainsString( 'anna@example.com', $this->mails[0][2] );
 	}
 
-	public function test_the_retention_follows_the_setting(): void {
-		$this->options['profotograaf_settings']['leads_failed_retention'] = '7';
+	/**
+	 * Retention days stored in the settings and whether a job failed 'days' ago is removed.
+	 *
+	 * @return array<string,array{0:mixed,1:int,2:int}> Stored value, days of age, jobs removed.
+	 */
+	public static function retention_cases(): array {
+		return array(
+			'one day, just reached'           => array( 1, 1, 1 ),
+			'one day, one second short'       => array( 1, 0, 0 ),
+			'ten days, kept at nine'          => array( 10, 9, 0 ),
+			'ten days, removed at ten'        => array( 10, 10, 1 ),
+			'ninety days, kept at 89'         => array( 90, 89, 0 ),
+			'a stored year counts as 90 days' => array( '365', 90, 1 ),
+			'a stored zero counts as one day' => array( 0, 1, 1 ),
+			'junk falls back to seven days'   => array( 'soon', 6, 0 ),
+			'junk, seven days reached'        => array( 'soon', 7, 1 ),
+		);
+	}
+
+	/**
+	 * @dataProvider retention_cases
+	 *
+	 * @param mixed $stored  Stored setting.
+	 * @param int   $days    Days since the job failed.
+	 * @param int   $removed Jobs the prune removes.
+	 */
+	public function test_the_retention_follows_the_setting( $stored, int $days, int $removed ): void {
+		$this->options['profotograaf_settings']['leads_failed_retention'] = $stored;
 		$this->queue->enqueue( 'a', self::PAYLOAD );
 		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
 
-		$this->now += 7 * 86400;
+		$this->now += 0 === $days ? 86399 : $days * 86400;
 
+		$this->assertSame( $removed, $this->queue->prune() );
+	}
+
+	public function test_the_retention_defaults_to_seven_days(): void {
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$this->now += 7 * 86400 - 1;
+		$this->assertSame( 0, $this->queue->prune() );
+		$this->now += 1;
 		$this->assertSame( 1, $this->queue->prune() );
 	}
 
@@ -150,7 +186,7 @@ class Queue_Test extends Leads_Test_Case {
 		$this->queue->enqueue( 'a', self::PAYLOAD );
 		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
 
-		$this->now += 10 * self::THIRTY_DAYS;
+		$this->now += 10 * self::SEVEN_DAYS;
 
 		$this->assertSame( 0, $this->queue->prune() );
 		$this->assertCount( 1, $this->store->jobs );
@@ -161,7 +197,7 @@ class Queue_Test extends Leads_Test_Case {
 		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
 		$this->mail_works = false;
 
-		$this->now += self::THIRTY_DAYS;
+		$this->now += self::SEVEN_DAYS;
 
 		$this->assertSame( 0, $this->queue->prune() );
 		$this->assertCount( 1, $this->store->jobs );
@@ -176,7 +212,7 @@ class Queue_Test extends Leads_Test_Case {
 		$this->queue->mark_exported( array( 'a' ) );
 		$this->mails = array();
 
-		$this->now += self::THIRTY_DAYS;
+		$this->now += self::SEVEN_DAYS;
 
 		$this->assertSame( 1, $this->queue->prune() );
 		$this->assertSame( array(), $this->mails );
@@ -312,7 +348,7 @@ class Queue_Test extends Leads_Test_Case {
 		$queue->enqueue( 'a', self::PAYLOAD );
 		$queue->fail( $this->store->jobs['a'], 'bad input', 400 );
 
-		$this->now += 10 * self::THIRTY_DAYS;
+		$this->now += 10 * self::SEVEN_DAYS;
 
 		$this->assertSame( 0, $queue->prune() );
 		$this->assertSame( 0, $queue->alert_pending() );

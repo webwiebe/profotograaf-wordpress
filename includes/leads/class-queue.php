@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * days, or that the platform rejects for good (a 4xx other than 408 and 429),
  * becomes `failed`. Lead_Alerts mails the admin once at that moment. A failed
  * job is kept until the photographer exports it and removes it, or until the
- * retention in the settings has passed (30 days by default). Removal after the
+ * retention in the settings has passed (7 days by default). Removal after the
  * retention happens only for jobs that were alerted or exported, and sends a
  * summary mail. A lead that does not fit in a full queue is reported to
  * Lead_Alerts as dropped.
@@ -34,7 +34,7 @@ final class Queue {
 
 	public const MAX_ATTEMPTS = 10;
 	public const MAX_AGE      = 259200;
-	public const KEEP_FAILED  = 2592000;
+	public const KEEP_FAILED  = 604800;
 	public const MAX_PENDING  = 500;
 	public const BASE_DELAY   = 60;
 	public const MAX_DELAY    = 21600;

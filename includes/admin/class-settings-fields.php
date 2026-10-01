@@ -38,9 +38,10 @@ final class Settings_Fields {
 	 * Prints the form of a tab. It posts to options.php and names the tab, so
 	 * saving one tab leaves the others as they are.
 	 *
-	 * @param string $tab Tab slug.
+	 * @param string $tab    Tab slug.
+	 * @param string $submit Label of the save button, empty for the WordPress default.
 	 */
-	public function render_form( string $tab ): void {
+	public function render_form( string $tab, string $submit = '' ): void {
 		?>
 		<form method="post" action="options.php">
 			<?php settings_fields( Settings::GROUP ); ?>
@@ -56,7 +57,7 @@ final class Settings_Fields {
 					</tr>
 				<?php endforeach; ?>
 			</table>
-			<?php submit_button(); ?>
+			<?php '' === $submit ? submit_button() : submit_button( $submit ); ?>
 		</form>
 		<?php
 	}
@@ -103,11 +104,15 @@ final class Settings_Fields {
 				<?php echo esc_html( (string) $entry['label'] ); ?>
 			</label>
 			<?php
+		} elseif ( 'int' === $entry['type'] ) {
+			?>
+			<input type="number" class="small-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $value ); ?>" min="<?php echo esc_attr( (string) ( $entry['min'] ?? '' ) ); ?>" max="<?php echo esc_attr( (string) ( $entry['max'] ?? '' ) ); ?>" step="1" />
+			<?php
 		} else {
 			?>
 			<input type="text" class="regular-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( (string) $value ); ?>" />
 			<?php
-		}
+		}//end if
 	}
 
 	/**
