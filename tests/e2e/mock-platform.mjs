@@ -143,8 +143,27 @@ const routes = {
 };
 
 const EMBEDDABLE = /^\/api\/v1\/embed\/galleries\/[^/]+\/embeddable$/;
+const PHOTOS = /^\/api\/v1\/embed\/galleries\/g-e2e\/photos$/;
+
+// The photo shape of the public gallery payload (docs/embed-api.md). The token
+// list route is the one wiebe-xyz/professionals#1868 asks for.
+const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
+	id,
+	width: 3000,
+	height: 2000,
+	alt: '',
+	title: [ 'Bride', 'Groom', 'Rings' ][ index ],
+	caption: '',
+	images: [
+		{ variant: 'thumb', url: `http://localhost:8090/img/${ id }/thumb.jpg`, width: 400, height: 400 },
+		{ variant: 'web', url: `http://localhost:8090/img/${ id }/web.jpg`, width: 1600, height: 1067 },
+	],
+} ) );
 
 function findRoute( method, pathname ) {
+	if ( method === 'GET' && PHOTOS.test( pathname ) ) {
+		return authed( ( { res } ) => json( res, 200, { photos: PHOTO_LIST } ) );
+	}
 	if ( method === 'PUT' && EMBEDDABLE.test( pathname ) ) {
 		return authed( ( { res } ) =>
 			json( res, 200, { id: pathname.split( '/' )[ 5 ], embeddable: true, available: true } )

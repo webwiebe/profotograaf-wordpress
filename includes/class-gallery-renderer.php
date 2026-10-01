@@ -22,9 +22,18 @@ class Gallery_Renderer {
 	/**
 	 * The display options. Each key is the render argument and the shortcode
 	 * attribute. `setting` is the Settings_Schema entry that holds the site
-	 * default, `attribute` the block attribute and `data` the name of the
-	 * data-* attribute that embed.js reads. To pass one more option through,
-	 * add an entry here, a schema entry and a block.json attribute.
+	 * default (null when the option has none), `attribute` the block attribute
+	 * (null when core supplies the value, see options_from_block()) and `data`
+	 * the name of the data-* attribute that embed.js reads. To pass one more
+	 * option through, add an entry here, a schema entry and a block.json
+	 * attribute.
+	 *
+	 * An entry with `list` set holds photo ids, has no site default and is
+	 * written comma separated (an array from the block, a string from the
+	 * shortcode). Cropping is the `ratio` option and the corner radius is the
+	 * border radius block support, so neither has an entry of its own.
+	 *
+	 * @var array<string,array{setting:string|null,attribute:string|null,data:string,list?:bool}>
 	 */
 	public const OPTIONS = array(
 		'columns'        => array(
@@ -77,7 +86,43 @@ class Gallery_Renderer {
 			'attribute' => 'lightbox',
 			'data'      => 'data-lightbox',
 		),
+		'exclude'        => array(
+			'list'      => true,
+			'setting'   => null,
+			'attribute' => 'excludedPhotoIds',
+			'data'      => 'data-exclude',
+		),
+		'duotone'        => array(
+			'setting'   => 'gallery_duotone',
+			'attribute' => null,
+			'data'      => 'data-duotone',
+		),
+		'link_to'        => array(
+			'setting'   => 'gallery_link_to',
+			'attribute' => 'linkTo',
+			'data'      => 'data-link-to',
+		),
+		'image_text'     => array(
+			'setting'   => null,
+			'attribute' => 'imageText',
+			'data'      => 'data-image-text',
+		),
 	);
+
+	/**
+	 * Most photo ids one gallery block can leave out.
+	 */
+	public const MAX_EXCLUDED = 500;
+
+	/**
+	 * Most per-image entries kept.
+	 */
+	public const IMAGE_TEXT_LIMIT = 200;
+
+	/**
+	 * Longest caption or alt text kept, in characters.
+	 */
+	public const IMAGE_TEXT_LENGTH = 500;
 
 	/**
 	 * Script handling.
@@ -124,6 +169,30 @@ class Gallery_Renderer {
 	}
 
 	/**
+	 * Photo ids from a list or a comma separated string. Ids that are not valid,
+	 * repeated or beyond MAX_EXCLUDED are dropped.
+	 *
+	 * @param mixed $value Array of ids or comma separated string.
+	 * @return string[]
+	 */
+	public static function clean_ids( $value ): array {
+		if ( is_string( $value ) ) {
+			$value = explode( ',', $value );
+		}
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+		$ids = array();
+		foreach ( $value as $id ) {
+			$id = is_scalar( $id ) ? trim( (string) $id ) : '';
+			if ( self::valid_id( $id ) ) {
+				$ids[ $id ] = $id;
+			}
+		}
+		return array_slice( array_values( $ids ), 0, self::MAX_EXCLUDED );
+	}
+
+	/**
 	 * The shortcode attributes and render arguments of the display options,
 	 * each with an empty string, which stands for "not set here".
 	 *
@@ -136,15 +205,96 @@ class Gallery_Renderer {
 	/**
 	 * Render arguments for the display options of a block.
 	 *
+	 * A duotone chosen with the block's own color support is drawn by WordPress
+	 * as a filter on the photos, so it switches the site-wide duotone off for
+	 * that block (value `none`) to avoid applying two filters.
+	 *
 	 * @param array<string,mixed> $attributes Block attributes.
 	 * @return array<string,mixed>
 	 */
 	public static function options_from_block( array $attributes ): array {
 		$args = array();
 		foreach ( self::OPTIONS as $key => $option ) {
-			$args[ $key ] = $attributes[ $option['attribute'] ] ?? '';
+			$args[ $key ] = null === $option['attribute'] ? '' : ( $attributes[ $option['attribute'] ] ?? '' );
+		}
+		if ( ! empty( $attributes['style']['color']['duotone'] ) ) {
+			$args['duotone'] = 'none';
+		}
+		if ( is_array( $args['image_text'] ) ) {
+			$args['image_text'] = self::clean_image_text( $args['image_text'] );
 		}
 		return $args;
+	}
+
+	/**
+	 * Cleans two hex colours such as `#1a1a2e,#f5c542`, the duotone shadow and
+	 * highlight.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string|null The colours in lower case, an empty string for an empty
+	 *                     value, or null when the value is not two hex colours.
+	 */
+	public static function clean_duotone( $value ): ?string {
+		if ( ! is_scalar( $value ) ) {
+			return null;
+		}
+		$value = strtolower( trim( (string) $value ) );
+		if ( '' === $value ) {
+			return '';
+		}
+		$hex = '#[0-9a-f]{6}|#[0-9a-f]{3}';
+		return 1 === preg_match( '/^(?:' . $hex . '),(?:' . $hex . ')$/', $value ) ? $value : null;
+	}
+
+	/**
+	 * Cleans the per-image captions and alt texts into the JSON that embed.js
+	 * reads: a list of objects with `id` and a `caption` and/or `alt`.
+	 *
+	 * @param mixed $raw A list of arrays, or the same as a JSON string (from the shortcode).
+	 * @return string JSON, or an empty string when nothing usable is left.
+	 */
+	public static function clean_image_text( $raw ): string {
+		if ( is_string( $raw ) ) {
+			$raw = '' === trim( $raw ) ? array() : json_decode( $raw, true );
+		}
+		if ( ! is_array( $raw ) ) {
+			return '';
+		}
+		$clean = array();
+		foreach ( $raw as $item ) {
+			$entry = self::clean_image_entry( $item );
+			if ( null !== $entry ) {
+				$clean[] = $entry;
+			}
+			if ( count( $clean ) >= self::IMAGE_TEXT_LIMIT ) {
+				break;
+			}
+		}
+		return array() === $clean ? '' : (string) wp_json_encode( $clean );
+	}
+
+	/**
+	 * Cleans one per-image entry.
+	 *
+	 * @param mixed $item Raw entry.
+	 * @return array<string,string>|null The entry, or null without a valid id or any text.
+	 */
+	private static function clean_image_entry( $item ): ?array {
+		if ( ! is_array( $item ) || ! isset( $item['id'] ) || ! is_scalar( $item['id'] ) ) {
+			return null;
+		}
+		$id = trim( (string) $item['id'] );
+		if ( ! self::valid_id( $id ) ) {
+			return null;
+		}
+		$entry = array( 'id' => $id );
+		foreach ( array( 'caption', 'alt' ) as $field ) {
+			$text = isset( $item[ $field ] ) && is_scalar( $item[ $field ] ) ? trim( sanitize_text_field( (string) $item[ $field ] ) ) : '';
+			if ( '' !== $text ) {
+				$entry[ $field ] = mb_substr( $text, 0, self::IMAGE_TEXT_LENGTH );
+			}
+		}
+		return count( $entry ) > 1 ? $entry : null;
 	}
 
 	/**
@@ -205,11 +355,10 @@ class Gallery_Renderer {
 	private function data_attributes( array $block, array $shortcode ): array {
 		$attributes = array();
 		foreach ( self::OPTIONS as $key => $option ) {
-			$layers = array();
-			foreach ( array( $block, $shortcode ) as $layer ) {
-				$layers[] = array( $option['setting'] => $layer[ $key ] ?? '' );
-			}
-			$value = (string) $this->settings->resolve( $option['setting'], ...$layers );
+			$ids   = ! empty( $option['list'] ) ? self::clean_ids( $block[ $key ] ?? '' ) : array();
+			$value = ! empty( $option['list'] )
+				? implode( ',', array() !== $ids ? $ids : self::clean_ids( $shortcode[ $key ] ?? '' ) )
+				: $this->option_value( $key, $option['setting'], $block, $shortcode );
 			if ( '' === $value ) {
 				continue;
 			}
@@ -217,6 +366,29 @@ class Gallery_Renderer {
 			$attributes[ $option['data'] ] = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
 		}
 		return $attributes;
+	}
+
+	/**
+	 * One option resolved: block, then shortcode, then the site default.
+	 *
+	 * @param string              $key       Render argument.
+	 * @param string|null         $setting   Schema key of the site default, if any.
+	 * @param array<string,mixed> $block     Block layer.
+	 * @param array<string,mixed> $shortcode Shortcode layer.
+	 */
+	private function option_value( string $key, ?string $setting, array $block, array $shortcode ): string {
+		if ( null === $setting ) {
+			$text = self::clean_image_text( $block[ $key ] ?? '' );
+			return '' !== $text ? $text : self::clean_image_text( $shortcode[ $key ] ?? '' );
+		}
+		if ( 'duotone' === $key && 'none' === ( $block[ $key ] ?? '' ) ) {
+			return '';
+		}
+		$layers = array();
+		foreach ( array( $block, $shortcode ) as $layer ) {
+			$layers[] = array( $setting => $layer[ $key ] ?? '' );
+		}
+		return (string) $this->settings->resolve( $setting, ...$layers );
 	}
 
 	/**

@@ -14,6 +14,7 @@ define( 'PROFOTOGRAAF_DIR', dirname( __DIR__, 2 ) . '/' );
 define( 'PROFOTOGRAAF_URL', 'https://example.test/wp-content/plugins/profotograaf/' );
 define( 'HOUR_IN_SECONDS', 3600 );
 define( 'MINUTE_IN_SECONDS', 60 );
+define( 'DAY_IN_SECONDS', 86400 );
 
 require_once dirname( __DIR__ ) . '/wp-stubs.php';
 require_once dirname( __DIR__, 2 ) . '/includes/class-autoloader.php';

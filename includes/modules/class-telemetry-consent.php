@@ -51,13 +51,33 @@ class Telemetry_Consent implements Module {
 		add_action( 'admin_post_' . self::ACTION, array( $this, 'handle_choice' ) );
 		add_action( 'update_option_' . Settings::OPTION, array( $this, 'on_settings_updated' ), 10, 2 );
 		add_action( 'profotograaf_disconnected', array( $this, 'on_disconnected' ) );
+		add_action( 'init', array( $this, 'ensure_scheduled' ) );
+		add_action( Telemetry_Sender::BATCH_HOOK, array( $this->sender(), 'cron_run' ) );
+		add_action( Telemetry_Sender::RETRY_HOOK, array( $this->sender(), 'cron_retry' ) );
+		$this->sender()->listen();
+	}
+
+	/**
+	 * Keeps the daily batch scheduled while telemetry is on and removes it
+	 * when telemetry is off.
+	 */
+	public function ensure_scheduled(): void {
+		$next = wp_next_scheduled( Telemetry_Sender::BATCH_HOOK );
+		if ( $this->sender()->is_enabled() ) {
+			if ( ! $next ) {
+				wp_schedule_event( $this->now() + DAY_IN_SECONDS, 'daily', Telemetry_Sender::BATCH_HOOK );
+			}
+		} elseif ( $next ) {
+			wp_clear_scheduled_hook( Telemetry_Sender::BATCH_HOOK );
+			wp_clear_scheduled_hook( Telemetry_Sender::RETRY_HOOK );
+		}
 	}
 
 	/**
 	 * The sender that holds the queue.
 	 */
 	public function sender(): Telemetry_Sender {
-		return new Telemetry_Sender( $this->plugin()->settings() );
+		return new Telemetry_Sender( $this->plugin()->settings(), $this->plugin()->connection() );
 	}
 
 	/**
@@ -150,10 +170,11 @@ class Telemetry_Consent implements Module {
 	}
 
 	/**
-	 * A disconnect discards queued telemetry.
+	 * A disconnect discards queued telemetry and rotates the install id.
 	 */
 	public function on_disconnected(): void {
 		$this->sender()->clear_queue();
+		$this->sender()->rotate_install_id();
 	}
 
 	/**
