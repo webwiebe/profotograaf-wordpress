@@ -28,6 +28,14 @@ The block editor scripts are built from the source in the `blocks` folder of the
 
 The plugin sets no cookies and does not track your visitors. See "External services" for exactly what is sent and when.
 
+**What the plugin stores.** The connection to Profotograaf (tokens and a random identifier of this installation) and your settings are stored in the WordPress options table. When you switch on a form, each submission is stored there as well, with the name, email address, phone, date, message and other fields of the form, until it is delivered to Profotograaf. A submission that cannot be delivered is kept for the retention period in the lead settings (7 days by default), so you can export or retry it.
+
+**Suggested policy text.** The plugin adds text for your privacy policy under Settings, Privacy, Policy Guide. It covers the galleries, enquiries and the connection.
+
+**Export and erase.** Tools, Export Personal Data includes the waiting and failed enquiries of an email address, and Tools, Erase Personal Data removes them. The email address is matched without regard to case. Enquiries that were already delivered are held by Profotograaf and covered by its privacy policy.
+
+**Uninstall.** Deleting the plugin removes the stored connection, settings and queued enquiries, unless you chose to keep the data on uninstall in the settings.
+
 == External services ==
 
 This plugin connects to Profotograaf (https://profotograaf.nl), the photography platform you sign in to. The plugin needs it to work. Profotograaf is operated by the plugin author.
