@@ -38,44 +38,63 @@ function createPage( title, content ) {
 async function openEditor( page, id ) {
 	await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
 	await page.locator( 'iframe[name="editor-canvas"]' ).waitFor();
-	const close = page.getByRole( 'button', { name: /^(Close|Sluiten)$/ } );
+	const close = page.getByRole( 'button', { name: /^(Close|Sluiten|Schließen)$/ } );
 	if ( await close.first().isVisible().catch( () => false ) ) {
 		await close.first().click();
 	}
 }
 
-test.describe( 'Block editor in nl_NL', () => {
-	test.beforeAll( () => {
-		wp( 'user', 'update', 'admin', '--locale=nl_NL' );
+const LOCALES = [
+	{
+		locale: 'nl_NL',
+		galleryHint: 'Kies een van je galerijen.',
+		galleryTitle: 'Profotograaf-galerij',
+		portalButton: 'Klantportaal',
+		portalLabel: 'Portaaladres',
+	},
+	{
+		locale: 'de_DE',
+		galleryHint: 'Wähle eine deiner Galerien.',
+		galleryTitle: 'Profotograaf-Galerie',
+		portalButton: 'Kundenportal',
+		portalLabel: 'Portaladresse',
+	},
+];
+
+for ( const { locale, galleryHint, galleryTitle, portalButton, portalLabel } of LOCALES ) {
+	test.describe( `Block editor in ${ locale }`, () => {
+		test.beforeAll( () => {
+			wp( 'user', 'update', 'admin', `--locale=${ locale }` );
+		} );
+
+		test.afterAll( () => {
+			wp( 'user', 'update', 'admin', '--locale=' );
+		} );
+
+		test.beforeEach( async ( { page } ) => {
+			await login( page );
+		} );
+
+		test( `the gallery block shows ${ locale } strings from the JSON translations`, async ( { page } ) => {
+			const id = createPage( `Gallery editor ${ locale } E2E`, '<!-- wp:profotograaf/gallery /-->' );
+			await openEditor( page, id );
+
+			const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
+			await expect( canvas.getByText( galleryHint ) ).toBeVisible();
+			await expect( canvas.getByText( galleryTitle ).first() ).toBeVisible();
+			await expect( canvas.getByText( 'Choose one of your galleries.' ) ).toHaveCount( 0 );
+		} );
+
+		test( `the client galleries block shows ${ locale } strings from the JSON translations`, async ( { page } ) => {
+			const id = createPage( `Client galleries editor ${ locale } E2E`, '<!-- wp:profotograaf/client-galleries {"portal":"studio"} /-->' );
+			await openEditor( page, id );
+
+			const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
+			await canvas.locator( '.wp-block-profotograaf-client-galleries' ).click();
+
+			await expect( page.getByRole( 'button', { name: portalButton } ) ).toBeVisible();
+			await expect( page.getByLabel( portalLabel ) ).toBeVisible();
+			await expect( page.getByText( 'Portal address' ) ).toHaveCount( 0 );
+		} );
 	} );
-
-	test.afterAll( () => {
-		wp( 'user', 'update', 'admin', '--locale=' );
-	} );
-
-	test.beforeEach( async ( { page } ) => {
-		await login( page );
-	} );
-
-	test( 'the gallery block shows Dutch strings from the JSON translations', async ( { page } ) => {
-		const id = createPage( 'Gallery editor nl E2E', '<!-- wp:profotograaf/gallery /-->' );
-		await openEditor( page, id );
-
-		const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
-		await expect( canvas.getByText( 'Kies een van je galerijen.' ) ).toBeVisible();
-		await expect( canvas.getByText( 'Profotograaf-galerij' ).first() ).toBeVisible();
-		await expect( canvas.getByText( 'Choose one of your galleries.' ) ).toHaveCount( 0 );
-	} );
-
-	test( 'the client galleries block shows Dutch strings from the JSON translations', async ( { page } ) => {
-		const id = createPage( 'Client galleries editor nl E2E', '<!-- wp:profotograaf/client-galleries {"portal":"studio"} /-->' );
-		await openEditor( page, id );
-
-		const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
-		await canvas.locator( '.wp-block-profotograaf-client-galleries' ).click();
-
-		await expect( page.getByRole( 'button', { name: 'Klantportaal' } ) ).toBeVisible();
-		await expect( page.getByLabel( 'Portaaladres' ) ).toBeVisible();
-		await expect( page.getByText( 'Portal address' ) ).toHaveCount( 0 );
-	} );
-} );
+}

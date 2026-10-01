@@ -1,17 +1,17 @@
-# Copyright (C) 2026 Profotograaf
-# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
 "Project-Id-Version: Profotograaf 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/profotograaf\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: Machine draft, needs human review\n"
+"Language-Team: Spanish (machine drafted, needs human review)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T18:17:59+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2026-09-30T11:20:42+00:00\n"
+"PO-Revision-Date: 2026-10-01 12:00+0000\n"
+"Language: es_ES\n"
 "X-Generator: WP-CLI 2.12.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: profotograaf\n"
 
 #. Plugin Name of the plugin
@@ -40,7 +40,7 @@ msgstr ""
 #. Description of the plugin
 #: profotograaf.php
 msgid "Show your Profotograaf galleries on your own site, offer clients a way in, and send form enquiries to your Profotograaf inbox."
-msgstr ""
+msgstr "Muestra tus galerías de Profotograaf en tu propio sitio, ofrece a tus clientes una forma de entrar y envía las consultas de formularios a tu bandeja de entrada de Profotograaf."
 
 #. Author URI of the plugin
 #: profotograaf.php
@@ -53,12 +53,12 @@ msgstr ""
 #: includes/modules/class-privacy.php:96
 #: includes/modules/class-privacy.php:117
 msgid "Profotograaf enquiries"
-msgstr ""
+msgstr "Consultas de Profotograaf"
 
 #: includes/admin/class-leads-settings.php:106
 #: includes/class-settings-schema.php:62
 msgid "Enquiry forms"
-msgstr ""
+msgstr "Formularios de consulta"
 
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
@@ -68,158 +68,1383 @@ msgstr ""
 #: includes/modules/class-settings-page.php:457
 #: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
-msgstr ""
+msgstr "No tienes permiso para hacer esto."
 
 #: includes/admin/class-leads-settings.php:214
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
-msgstr ""
+msgstr "Envía las consultas de tus formularios de contacto a tu bandeja de entrada de Profotograaf. Activa un formulario y comprueba qué campo alimenta cada parte de la consulta. No se envía nada de un formulario que dejes desactivado."
 
 #: includes/admin/class-leads-settings.php:219
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
-msgstr ""
+msgstr "Este sitio no está conectado a Profotograaf, así que las consultas esperan en una cola."
 
 #: includes/admin/class-leads-settings.php:220
 msgid "Connect this site"
-msgstr ""
+msgstr "Conectar este sitio"
 
 #: includes/admin/class-leads-settings.php:225
 msgid "Site defaults"
-msgstr ""
+msgstr "Valores predeterminados del sitio"
 
 #: includes/admin/class-leads-settings.php:226
 msgid "Save defaults"
-msgstr ""
+msgstr "Guardar valores predeterminados"
 
 #: includes/admin/class-leads-settings.php:228
 msgid "Forms"
-msgstr ""
+msgstr "Formularios"
 
 #: includes/admin/class-leads-settings.php:230
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
-msgstr ""
+msgstr "No se encontró ningún plugin de formularios compatible. Instala Contact Form 7, WPForms o Gravity Forms y crea un formulario."
 
 #: includes/admin/class-leads-settings.php:238
 msgid "Save changes"
-msgstr ""
+msgstr "Guardar cambios"
 
 #: includes/admin/class-leads-settings.php:242
 msgid "Delivery"
-msgstr ""
+msgstr "Entrega"
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
 #: includes/admin/class-leads-settings.php:248
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
-msgstr ""
+msgstr "Pendientes de envío: %1$d. No se pudieron enviar: %2$d."
 
 #: includes/admin/class-leads-settings.php:257
 msgid "Galleries and embed script"
-msgstr ""
+msgstr "Galerías y script de inserción"
 
 #: includes/admin/class-leads-settings.php:260
 msgid "Sync galleries now"
-msgstr ""
+msgstr "Sincronizar galerías ahora"
 
 #: includes/admin/class-leads-settings.php:261
 msgid "Clear the gallery index"
-msgstr ""
+msgstr "Vaciar el índice de galerías"
 
 #: includes/admin/class-leads-settings.php:262
 msgid "Re-check the embed version"
-msgstr ""
+msgstr "Volver a comprobar la versión de inserción"
 
 #: includes/admin/class-leads-settings.php:282
 #: includes/modules/class-privacy.php:187
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: includes/admin/class-leads-settings.php:283
 msgid "Email address"
-msgstr ""
+msgstr "Dirección de correo electrónico"
 
 #: includes/admin/class-leads-settings.php:284
 #: includes/modules/class-privacy.php:189
 msgid "Phone"
-msgstr ""
+msgstr "Teléfono"
 
 #: includes/admin/class-leads-settings.php:285
 msgid "Event date"
-msgstr ""
+msgstr "Fecha del evento"
 
 #: includes/admin/class-leads-settings.php:286
 #: includes/modules/class-privacy.php:191
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: includes/admin/class-leads-settings.php:296
 msgid "Send submissions of this form to Profotograaf"
-msgstr ""
+msgstr "Enviar los envíos de este formulario a Profotograaf"
 
 #: includes/admin/class-leads-settings.php:300
 msgid "Source tag"
-msgstr ""
+msgstr "Etiqueta de origen"
 
 #: includes/admin/class-leads-settings.php:303
 msgid "Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name."
-msgstr ""
+msgstr "Se muestra como origen de la consulta en tu bandeja de entrada de Profotograaf. Déjalo vacío para usar el plugin de formularios y el nombre del formulario."
 
 #. translators: %s: name of the form field that is picked automatically.
 #: includes/admin/class-leads-settings.php:320
 #, php-format
 msgid "Automatic (%s)"
-msgstr ""
+msgstr "Automático (%s)"
 
 #: includes/admin/class-leads-settings.php:321
 msgid "Automatic (no field found)"
-msgstr ""
+msgstr "Automático (no se encontró ningún campo)"
 
 #: includes/admin/class-leads-settings.php:325
 msgid "Do not send"
-msgstr ""
+msgstr "No enviar"
 
 #: includes/admin/class-leads-settings.php:334
 msgid "Every other field is sent along as a label and value."
-msgstr ""
+msgstr "Cada uno de los demás campos se envía con su etiqueta y su valor."
 
 #. translators: 1: form name, 2: error message.
 #: includes/admin/class-leads-settings.php:356
 #, php-format
 msgid "%1$s: %2$s"
-msgstr ""
+msgstr "%1$s: %2$s"
 
 #: includes/admin/class-leads-settings.php:365
 msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
-msgstr ""
+msgstr "Las consultas que no se pudieron enviar se conservan en este sitio hasta que las exportes y las elimines o hasta que pase el periodo de conservación de los ajustes."
 
 #: includes/admin/class-leads-settings.php:368
 #: build/gallery/index.js:3
 msgid "Try again"
-msgstr ""
+msgstr "Reintentar"
 
 #: includes/admin/class-leads-settings.php:369
 msgid "Download as CSV"
-msgstr ""
+msgstr "Descargar como CSV"
 
 #: includes/admin/class-leads-settings.php:371
 msgid "Remove exported enquiries"
-msgstr ""
+msgstr "Eliminar consultas exportadas"
 
 #: includes/admin/class-leads-settings.php:421
 msgid "Changes saved."
-msgstr ""
+msgstr "Cambios guardados."
 
 #: includes/admin/class-leads-settings.php:423
 msgid "The enquiries are queued again."
-msgstr ""
+msgstr "Las consultas se han puesto de nuevo en cola."
 
 #: includes/admin/class-leads-settings.php:425
 msgid "The exported enquiries were removed."
-msgstr ""
+msgstr "Se eliminaron las consultas exportadas."
+
+#: includes/class-api-client.php:146
+#: includes/class-gallery-rest.php:145
+#: includes/class-gallery-rest.php:163
+#: includes/class-photo-list.php:49
+msgid "A gallery id is required."
+msgstr "Se necesita un ID de galería."
+
+#: includes/class-api-client.php:163
+msgid "The request to switch embedding on is not valid."
+msgstr "La solicitud para activar la inserción no es válida."
+
+#: includes/class-api-client.php:173
+msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
+msgstr "Esta conexión aún no puede activar galerías. Vuelve a conectar este sitio en Ajustes > Profotograaf para conceder el nuevo permiso."
+
+#: includes/class-api-client.php:212
+msgid "A lead needs a name and an email address."
+msgstr "Un contacto necesita un nombre y una dirección de correo electrónico."
+
+#: includes/class-api-client.php:308
+msgid "That page is not on the Profotograaf platform."
+msgstr "Esa página no pertenece a la plataforma Profotograaf."
+
+#: includes/class-api-client.php:318
+#: includes/class-api-client.php:458
+#: includes/class-api-client.php:463
+msgid "Profotograaf could not be reached."
+msgstr "No se pudo contactar con Profotograaf."
+
+#: includes/class-api-client.php:325
+msgid "The public page could not be loaded."
+msgstr "No se pudo cargar la página pública."
+
+#: includes/class-api-client.php:350
+msgid "The connection is being refreshed. Try again in a moment."
+msgstr "La conexión se está renovando. Inténtalo de nuevo en un momento."
+
+#: includes/class-api-client.php:374
+msgid "The connection was ended in your Profotograaf account."
+msgstr "La conexión se terminó en tu cuenta de Profotograaf."
+
+#: includes/class-api-client.php:443
+msgid "The request could not be encoded."
+msgstr "No se pudo codificar la solicitud."
+
+#: includes/class-api-errors.php:62
+msgid "The connection to Profotograaf has expired. Connect this site again."
+msgstr "La conexión con Profotograaf ha caducado. Vuelve a conectar este sitio."
+
+#: includes/class-api-errors.php:64
+msgid "Profotograaf asked for fewer connection checks. Trying again shortly."
+msgstr "Profotograaf pidió menos comprobaciones de conexión. Se volverá a intentar en breve."
+
+#: includes/class-api-errors.php:66
+msgid "Profotograaf does not know this connection code. Start the connection again."
+msgstr "Profotograaf no reconoce este código de conexión. Inicia la conexión de nuevo."
+
+#: includes/class-api-errors.php:68
+msgid "Profotograaf does not recognise this site. Start the connection again."
+msgstr "Profotograaf no reconoce este sitio. Inicia la conexión de nuevo."
+
+#: includes/class-api-errors.php:70
+msgid "Profotograaf rejected the enquiry because it is incomplete or invalid."
+msgstr "Profotograaf rechazó la consulta porque está incompleta o no es válida."
+
+#: includes/class-api-errors.php:80
+msgid "This site is not connected to Profotograaf."
+msgstr "Este sitio no está conectado a Profotograaf."
+
+#. translators: %d: HTTP status code.
+#: includes/class-api-errors.php:105
+#, php-format
+msgid "The platform reported an error (HTTP %d). Try again later."
+msgstr "La plataforma informó de un error (HTTP %d). Inténtalo de nuevo más tarde."
+
+#. translators: %d: HTTP status code.
+#: includes/class-api-errors.php:109
+#, php-format
+msgid "Profotograaf answered with HTTP %d."
+msgstr "Profotograaf respondió con HTTP %d."
+
+#: includes/class-cron-health.php:142
+msgid "Profotograaf lead delivery"
+msgstr "Entrega de contactos de Profotograaf"
+
+#: includes/class-cron-health.php:157
+msgid "Profotograaf can deliver leads"
+msgstr "Profotograaf puede entregar contactos"
+
+#: includes/class-cron-health.php:163
+msgid "WP-Cron has run recently, so queued leads are delivered on time."
+msgstr "WP-Cron se ha ejecutado recientemente, por lo que los contactos en cola se entregan a tiempo."
+
+#: includes/class-cron-health.php:171
+msgid "WP-Cron is disabled and leads cannot be delivered"
+msgstr "WP-Cron está desactivado y no se pueden entregar contactos"
+
+#: includes/class-cron-health.php:172
+msgid "WP-Cron has stopped running and leads cannot be delivered"
+msgstr "WP-Cron ha dejado de ejecutarse y no se pueden entregar contactos"
+
+#: includes/class-cron-health.php:179
+msgid "Run WordPress cron from the server. Add this line to the crontab of the site:"
+msgstr "Ejecuta el cron de WordPress desde el servidor. Añade esta línea al crontab del sitio:"
+
+#: includes/class-cron-health.php:195
+msgid "Run WordPress cron from the server with this crontab line:"
+msgstr "Ejecuta el cron de WordPress desde el servidor con esta línea de crontab:"
+
+#: includes/class-cron-health.php:214
+msgid "This site sets DISABLE_WP_CRON and no scheduled run has been seen."
+msgstr "Este sitio define DISABLE_WP_CRON y no se ha visto ninguna ejecución programada."
+
+#: includes/class-cron-health.php:215
+msgid "No scheduled run has been seen for more than three hours."
+msgstr "No se ha visto ninguna ejecución programada desde hace más de tres horas."
+
+#. translators: %d: number of leads waiting for delivery.
+#: includes/class-cron-health.php:221
+#, php-format
+msgid "%d lead is waiting for delivery."
+msgid_plural "%d leads are waiting for delivery."
+msgstr[0] "%d contacto espera su entrega."
+msgstr[1] "%d contactos esperan su entrega."
+
+#: includes/class-embed-script.php:163
+msgid "This gallery could not be loaded. Please try again later."
+msgstr "No se pudo cargar esta galería. Inténtalo de nuevo más tarde."
+
+#: includes/class-gallery-renderer.php:324
+msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
+msgstr "La galería de Profotograaf no se puede mostrar porque falta su ID o no es válido. Elige la galería de nuevo."
+
+#: includes/class-gallery-renderer.php:335
+msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
+msgstr "Esta galería de Profotograaf no se encontró en tu cuenta. Puede que se haya eliminado. Elige otra galería."
+
+#: includes/class-gallery-renderer.php:344
+msgid "This gallery needs JavaScript to be shown here."
+msgstr "Esta galería necesita JavaScript para mostrarse aquí."
+
+#: includes/class-gallery-renderer.php:483
+msgid "View this gallery on Profotograaf"
+msgstr "Ver esta galería en Profotograaf"
+
+#: includes/class-pairing.php:93
+msgid "Profotograaf did not start the connection. Try again in a moment."
+msgstr "Profotograaf no inició la conexión. Inténtalo de nuevo en un momento."
+
+#: includes/class-pairing.php:185
+msgid "Could not check the connection. Trying again."
+msgstr "No se pudo comprobar la conexión. Se volverá a intentar."
+
+#: includes/class-pairing.php:207
+msgid "Profotograaf approved the connection but sent no tokens. Start again."
+msgstr "Profotograaf aprobó la conexión pero no envió tokens. Empieza de nuevo."
+
+#: includes/class-settings-schema.php:60
+msgid "General"
+msgstr "General"
+
+#: includes/class-settings-schema.php:61
+#: includes/modules/class-privacy.php:229
+msgid "Galleries"
+msgstr "Galerías"
+
+#: includes/class-settings-schema.php:63
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: includes/class-settings-schema.php:87
+msgid "Gallery link text"
+msgstr "Texto del enlace de la galería"
+
+#: includes/class-settings-schema.php:88
+msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
+msgstr "Texto del enlace que se muestra hasta que se carga una galería, para galerías sin título. Déjalo vacío para usar \"Ver la galería\"."
+
+#: includes/class-settings-schema.php:94
+msgid "Client portal path"
+msgstr "Ruta del portal de clientes"
+
+#: includes/class-settings-schema.php:95
+msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
+msgstr "La ruta del portal de clientes en tu dirección de Profotograaf, usada por el bloque \"Encuentra tu galería\". Un bloque puede definir la suya. El valor predeterminado es /client."
+
+#: includes/class-settings-schema.php:102
+msgid "Default gallery layout"
+msgstr "Diseño de galería predeterminado"
+
+#: includes/class-settings-schema.php:103
+msgid "Used when a gallery block or shortcode does not choose a layout."
+msgstr "Se usa cuando un bloque de galería o un shortcode no elige un diseño."
+
+#: includes/class-settings-schema.php:105
+#: build/gallery/index.js:2
+msgid "Grid"
+msgstr "Cuadrícula"
+
+#: includes/class-settings-schema.php:106
+#: build/gallery/index.js:2
+msgid "Masonry"
+msgstr "Mosaico"
+
+#: includes/class-settings-schema.php:107
+#: build/gallery/index.js:2
+msgid "Slideshow"
+msgstr "Presentación"
+
+#: includes/class-settings-schema.php:114
+msgid "Collect enquiries"
+msgstr "Recoger consultas"
+
+#: includes/class-settings-schema.php:115
+msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
+msgstr "Escucha los envíos de los plugins de formularios compatibles. Cada formulario sigue teniendo su propio interruptor en la pantalla de formularios de consulta."
+
+#: includes/class-settings-schema.php:121
+msgid "Failure alerts go to"
+msgstr "Las alertas de fallo van a"
+
+#: includes/class-settings-schema.php:122
+msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
+msgstr "Recibe un correo, sin datos personales, cuando una consulta no se puede entregar o se descarta. Déjalo vacío para usar la dirección de correo del administrador del sitio."
+
+#: includes/class-settings-schema.php:129
+msgid "Mail undeliverable enquiries to"
+msgstr "Enviar por correo las consultas no entregables a"
+
+#: includes/class-settings-schema.php:130
+msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
+msgstr "Cuando una consulta no se puede entregar a Profotograaf, se envía por correo a esta dirección. El correo contiene la consulta. Déjalo vacío para desactivarlo."
+
+#: includes/class-settings-schema.php:139
+msgid "Keep undeliverable enquiries for (days)"
+msgstr "Conservar las consultas no entregables durante (días)"
+
+#: includes/class-settings-schema.php:140
+msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
+msgstr "Las consultas que no se pudieron entregar permanecen en la base de datos hasta que las exportes o pase este número de días, de 1 a 90. Recibes un correo antes de que se eliminen."
+
+#: includes/class-settings-schema.php:146
+msgid "Share anonymous usage data"
+msgstr "Compartir datos de uso anónimos"
+
+#: includes/class-settings-schema.php:147
+msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
+msgstr "Ayuda a mejorar Profotograaf compartiendo datos anónimos de uso y de errores. Es opcional y puedes desactivarlo en cualquier momento. No se recoge información personal. Al desactivarlo se detiene el envío de inmediato y se eliminan los datos pendientes de enviar."
+
+#: includes/class-settings-schema.php:150
+#: includes/modules/class-telemetry-consent.php:108
+msgid "What is shared"
+msgstr "Qué se comparte"
+
+#: includes/class-settings-schema.php:157
+msgid "Keep my data when the plugin is deleted"
+msgstr "Conservar mis datos al eliminar el plugin"
+
+#: includes/class-settings-schema.php:158
+msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
+msgstr "Deja los ajustes y la conexión en la base de datos cuando elimines el plugin, por ejemplo para reinstalarlo más tarde."
+
+#: includes/class-settings-schema.php:172
+msgid "Profotograaf default"
+msgstr "Predeterminado de Profotograaf"
+
+#: includes/class-settings-schema.php:174
+#: build/gallery/index.js:3
+msgid "On"
+msgstr "Activado"
+
+#: includes/class-settings-schema.php:175
+#: build/gallery/index.js:3
+msgid "Off"
+msgstr "Desactivado"
+
+#: includes/class-settings-schema.php:177
+msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
+msgstr "Un bloque o shortcode puede definir el suyo. Déjalo vacío para el valor predeterminado de Profotograaf."
+
+#: includes/class-settings-schema.php:186
+#: build/gallery/index.js:3
+msgid "Columns"
+msgstr "Columnas"
+
+#: includes/class-settings-schema.php:187
+msgid "Columns on wide screens, from 1 to 8."
+msgstr "Columnas en pantallas anchas, de 1 a 8."
+
+#: includes/class-settings-schema.php:195
+#: build/gallery/index.js:3
+msgid "Columns on tablets"
+msgstr "Columnas en tablets"
+
+#: includes/class-settings-schema.php:196
+msgid "Columns on medium screens, from 1 to 8."
+msgstr "Columnas en pantallas medianas, de 1 a 8."
+
+#: includes/class-settings-schema.php:204
+#: build/gallery/index.js:3
+msgid "Columns on phones"
+msgstr "Columnas en móviles"
+
+#: includes/class-settings-schema.php:205
+msgid "Columns on narrow screens, from 1 to 4."
+msgstr "Columnas en pantallas estrechas, de 1 a 4."
+
+#: includes/class-settings-schema.php:213
+#: build/gallery/index.js:3
+msgid "Gap between photos (pixels)"
+msgstr "Espacio entre fotos (píxeles)"
+
+#: includes/class-settings-schema.php:214
+msgid "Space between photos, from 0 to 96 pixels."
+msgstr "Espacio entre las fotos, de 0 a 96 píxeles."
+
+#: includes/class-settings-schema.php:220
+#: build/gallery/index.js:3
+msgid "Photo shape"
+msgstr "Forma de las fotos"
+
+#: includes/class-settings-schema.php:221
+msgid "Crop every photo to one aspect ratio, or keep each photo as shot."
+msgstr "Recorta cada foto a una sola proporción o conserva cada foto tal como se tomó."
+
+#: includes/class-settings-schema.php:223
+#: build/gallery/index.js:3
+msgid "Original"
+msgstr "Original"
+
+#: includes/class-settings-schema.php:224
+#: build/gallery/index.js:3
+msgid "Square (1:1)"
+msgstr "Cuadrada (1:1)"
+
+#: includes/class-settings-schema.php:236
+#: build/gallery/index.js:3
+msgid "Captions"
+msgstr "Pies de foto"
+
+#: includes/class-settings-schema.php:237
+msgid "Whether photo captions show and where."
+msgstr "Si se muestran los pies de foto y dónde."
+
+#: includes/class-settings-schema.php:239
+#: build/gallery/index.js:3
+msgid "Hidden"
+msgstr "Ocultos"
+
+#: includes/class-settings-schema.php:240
+#: build/gallery/index.js:3
+msgid "Below the photo"
+msgstr "Debajo de la foto"
+
+#: includes/class-settings-schema.php:241
+#: build/gallery/index.js:3
+msgid "On top of the photo"
+msgstr "Sobre la foto"
+
+#: includes/class-settings-schema.php:248
+#: build/gallery/index.js:3
+msgid "Sort order"
+msgstr "Orden"
+
+#: includes/class-settings-schema.php:249
+msgid "The order of the photos."
+msgstr "El orden de las fotos."
+
+#: includes/class-settings-schema.php:251
+#: build/gallery/index.js:3
+msgid "Newest first"
+msgstr "Más recientes primero"
+
+#: includes/class-settings-schema.php:252
+#: build/gallery/index.js:3
+msgid "Oldest first"
+msgstr "Más antiguas primero"
+
+#: includes/class-settings-schema.php:253
+#: build/gallery/index.js:3
+msgid "By file name"
+msgstr "Por nombre de archivo"
+
+#: includes/class-settings-schema.php:254
+#: build/gallery/index.js:3
+msgid "Random"
+msgstr "Aleatorio"
+
+#: includes/class-settings-schema.php:263
+#: build/gallery/index.js:3
+msgid "Photos per page"
+msgstr "Fotos por página"
+
+#: includes/class-settings-schema.php:264
+msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
+msgstr "Muestra al principio este número de fotos, de 1 a 200. Déjalo vacío para mostrarlas todas."
+
+#: includes/class-settings-schema.php:270
+#: build/gallery/index.js:3
+msgid "Load more button"
+msgstr "Botón de cargar más"
+
+#: includes/class-settings-schema.php:271
+msgid "Add a button that shows the next photos when \"Photos per page\" is set."
+msgstr "Añade un botón que muestra las siguientes fotos cuando \"Fotos por página\" está definido."
+
+#: includes/class-settings-schema.php:278
+#: build/gallery/index.js:3
+msgid "Lightbox"
+msgstr "Lightbox"
+
+#: includes/class-settings-schema.php:279
+msgid "Open a photo in a larger view when a visitor clicks it."
+msgstr "Abre una foto en una vista más grande cuando un visitante hace clic en ella."
+
+#. translators: %d: number of failed leads put back in line.
+#: includes/cli/class-leads-command.php:77
+#, php-format
+msgid "Requeued %d failed lead."
+msgid_plural "Requeued %d failed leads."
+msgstr[0] "Se volvió a poner en cola %d contacto fallido."
+msgstr[1] "Se volvieron a poner en cola %d contactos fallidos."
+
+#: includes/cli/class-leads-command.php:91
+msgid "Delivery is already running elsewhere, or nothing could be sent."
+msgstr "La entrega ya se está ejecutando en otro lugar o no se pudo enviar nada."
+
+#. translators: 1: leads delivered, 2: leads that will be retried, 3: leads that failed for good, 4: leads still pending.
+#: includes/cli/class-leads-command.php:103
+#, php-format
+msgid "Delivered %1$d, retrying %2$d, failed %3$d. %4$d pending."
+msgstr "Entregados %1$d, reintentando %2$d, fallidos %3$d. Pendientes %4$d."
+
+#: includes/cli/class-status-command.php:111
+msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
+msgstr "WP-Cron no está entregando contactos. Ejecuta `wp profotograaf leads flush` desde un cron del sistema."
+
+#: includes/leads/class-lead-alerts.php:61
+msgid "An enquiry could not be delivered"
+msgstr "No se pudo entregar una consulta"
+
+#: includes/leads/class-lead-alerts.php:64
+msgid "It is kept on this site. Export it or try again on the Enquiry forms page."
+msgstr "Se conserva en este sitio. Expórtala o inténtalo de nuevo en la página Formularios de consulta."
+
+#: includes/leads/class-lead-alerts.php:89
+msgid "The queue of enquiries is full, so this enquiry was not saved. More enquiries are lost until the queue is empty. Check the connection to Profotograaf."
+msgstr "La cola de consultas está llena, así que esta consulta no se guardó. Se perderán más consultas hasta que la cola se vacíe. Comprueba la conexión con Profotograaf."
+
+#: includes/leads/class-lead-alerts.php:92
+msgid "The enquiry was sent to your fallback email address."
+msgstr "La consulta se envió a tu dirección de correo de reserva."
+
+#: includes/leads/class-lead-alerts.php:94
+msgid "An enquiry was dropped"
+msgstr "Se descartó una consulta"
+
+#. translators: %d: number of enquiries.
+#: includes/leads/class-lead-alerts.php:109
+#, php-format
+msgid "%d enquiry that could not be delivered was removed because it was kept longer than the retention period."
+msgid_plural "%d enquiries that could not be delivered were removed because they were kept longer than the retention period."
+msgstr[0] "Se eliminó %d consulta no entregable porque se conservó más tiempo que el periodo de conservación."
+msgstr[1] "Se eliminaron %d consultas no entregables porque se conservaron más tiempo que el periodo de conservación."
+
+#: includes/leads/class-lead-alerts.php:114
+#: includes/leads/class-lead-alerts.php:137
+msgid "Unknown form"
+msgstr "Formulario desconocido"
+
+#: includes/leads/class-lead-alerts.php:116
+msgid "Undeliverable enquiries were removed"
+msgstr "Se eliminaron las consultas no entregables"
+
+#. translators: 1: form name, 2: date and time in UTC.
+#: includes/leads/class-lead-alerts.php:136
+#, php-format
+msgid "Form: %1$s. Time: %2$s UTC."
+msgstr "Formulario: %1$s. Hora: %2$s UTC."
+
+#: includes/leads/class-lead-alerts.php:193
+msgid "Enquiry that could not be delivered"
+msgstr "Consulta que no se pudo entregar"
+
+#. translators: %s: reason the galleries could not be loaded.
+#: includes/leads/class-site-tools.php:62
+#, php-format
+msgid "The galleries could not be synced: %s"
+msgstr "No se pudieron sincronizar las galerías: %s"
+
+#. translators: %s: number of galleries.
+#: includes/leads/class-site-tools.php:72
+#, php-format
+msgid "Synced %s gallery."
+msgid_plural "Synced %s galleries."
+msgstr[0] "Se sincronizó %s galería."
+msgstr[1] "Se sincronizaron %s galerías."
+
+#: includes/leads/class-site-tools.php:86
+msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
+msgstr "Se vació el índice de galerías. Se vuelve a llenar cuando se muestra o sincroniza una galería."
+
+#: includes/leads/class-site-tools.php:99
+msgid "The embed script version could not be read. Galleries keep using the address without a version. Try again later."
+msgstr "No se pudo leer la versión del script de inserción. Las galerías siguen usando la dirección sin versión. Inténtalo de nuevo más tarde."
+
+#. translators: %s: version of the embed script, 12 characters.
+#: includes/leads/class-site-tools.php:105
+#, php-format
+msgid "The embed script is at version %s."
+msgstr "El script de inserción está en la versión %s."
+
+#: includes/modules/class-admin-notices.php:120
+msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
+msgstr "Profotograaf ya no está conectado. La conexión se terminó en tu cuenta de Profotograaf."
+
+#: includes/modules/class-admin-notices.php:122
+#: includes/modules/class-settings-page.php:177
+msgid "Connect this site again"
+msgstr "Volver a conectar este sitio"
+
+#: includes/modules/class-admin-notices.php:130
+msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
+msgstr "Profotograaf no pudo renovar la conexión. Las galerías y las consultas dejan de funcionar cuando caduca."
+
+#: includes/modules/class-admin-notices.php:132
+msgid "Check the connection"
+msgstr "Comprobar la conexión"
+
+#. translators: %d: number of enquiries.
+#: includes/modules/class-admin-notices.php:143
+#, php-format
+msgid "%d enquiry could not be delivered to Profotograaf."
+msgid_plural "%d enquiries could not be delivered to Profotograaf."
+msgstr[0] "No se pudo entregar %d consulta a Profotograaf."
+msgstr[1] "No se pudieron entregar %d consultas a Profotograaf."
+
+#: includes/modules/class-admin-notices.php:147
+msgid "Retry or export the enquiries"
+msgstr "Reintentar o exportar las consultas"
+
+#: includes/modules/class-admin-notices.php:174
+msgid "Dismiss"
+msgstr "Descartar"
+
+#: includes/modules/class-client-galleries.php:202
+#: patterns/client-portal-cta.php:21
+#: build/client-galleries/index.js:1
+msgid "Find your gallery"
+msgstr "Encuentra tu galería"
+
+#: includes/modules/class-client-galleries.php:203
+#: patterns/client-portal-cta.php:22
+#: build/client-galleries/index.js:1
+msgid "Sign in to the client portal to see your photos."
+msgstr "Inicia sesión en el portal de clientes para ver tus fotos."
+
+#: includes/modules/class-client-galleries.php:204
+#: patterns/client-portal-cta.php:23
+#: build/client-galleries/index.js:1
+msgid "Open my gallery"
+msgstr "Abrir mi galería"
+
+#: includes/modules/class-client-galleries.php:258
+msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
+msgstr "Solo los editores ven esta nota. El bloque \"Encuentra tu galería\" aún no tiene una dirección de Profotograaf. Introdúcela en los ajustes del bloque. Hasta entonces los visitantes no ven este bloque."
+
+#: includes/modules/class-privacy.php:118
+msgid "Enquiries sent through your forms that are waiting for delivery to Profotograaf, or could not be delivered."
+msgstr "Consultas enviadas a través de tus formularios que esperan su entrega a Profotograaf o que no se pudieron entregar."
+
+#: includes/modules/class-privacy.php:188
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: includes/modules/class-privacy.php:190
+msgid "Date"
+msgstr "Fecha"
+
+#: includes/modules/class-privacy.php:192
+msgid "Form"
+msgstr "Formulario"
+
+#: includes/modules/class-privacy.php:193
+msgid "Page"
+msgstr "Página"
+
+#: includes/modules/class-privacy.php:213
+msgid "Delivery status"
+msgstr "Estado de entrega"
+
+#: includes/modules/class-privacy.php:214
+msgid "Failed"
+msgstr "Fallida"
+
+#: includes/modules/class-privacy.php:214
+msgid "Waiting"
+msgstr "En espera"
+
+#: includes/modules/class-privacy.php:218
+msgid "Received"
+msgstr "Recibida"
+
+#: includes/modules/class-privacy.php:230
+msgid "Pages that show a Profotograaf gallery make the visitor's browser load a script, the gallery data and the photos from profotograaf.nl, a service operated by the plugin author. Profotograaf receives the visitor's IP address and browser details, as any web server does. When a gallery scrolls into view the script reports one anonymous view, with the gallery and the host name of this site. No view is reported when the browser sends Do Not Track or Global Privacy Control. The plugin sets no cookies."
+msgstr "Las páginas que muestran una galería de Profotograaf hacen que el navegador del visitante cargue un script, los datos de la galería y las fotos desde profotograaf.nl, un servicio operado por el autor del plugin. Profotograaf recibe la dirección IP y los datos del navegador del visitante, como cualquier servidor web. Cuando una galería aparece en pantalla al desplazarse, el script informa de una visita anónima, con la galería y el nombre de host de este sitio. No se informa de ninguna visita cuando el navegador envía Do Not Track o Global Privacy Control. El plugin no establece cookies."
+
+#: includes/modules/class-privacy.php:231
+msgid "Enquiries"
+msgstr "Consultas"
+
+#: includes/modules/class-privacy.php:232
+msgid "When a contact form is switched on for Profotograaf, each submission is stored on this site and then sent to profotograaf.nl: the name, email address, phone number, date, message and other fields of the form, the address of the page and the name of the form. A submission waits in the queue until it is delivered. One that cannot be delivered is kept for a limited time, so the site owner can export or retry it. The personal data tools export and erase these submissions by the email address of the sender."
+msgstr "Cuando un formulario de contacto está activado para Profotograaf, cada envío se guarda en este sitio y luego se envía a profotograaf.nl: el nombre, la dirección de correo electrónico, el número de teléfono, la fecha, el mensaje y otros campos del formulario, la dirección de la página y el nombre del formulario. Un envío espera en la cola hasta que se entrega. Uno que no se puede entregar se conserva durante un tiempo limitado para que el propietario del sitio pueda exportarlo o reintentarlo. Las herramientas de datos personales exportan y borran estos envíos según la dirección de correo del remitente."
+
+#: includes/modules/class-privacy.php:233
+msgid "Connection and diagnostics"
+msgstr "Conexión y diagnóstico"
+
+#: includes/modules/class-privacy.php:234
+msgid "When the site owner connects the site, the plugin sends the site title, the host name, the plugin version and a random identifier of this installation to profotograaf.nl. The plugin sends no usage statistics or error reports."
+msgstr "Cuando el propietario del sitio conecta el sitio, el plugin envía a profotograaf.nl el título del sitio, el nombre de host, la versión del plugin y un identificador aleatorio de esta instalación. El plugin no envía estadísticas de uso ni informes de errores."
+
+#: includes/modules/class-privacy.php:235
+msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
+msgstr "La política de privacidad de Profotograaf está en https://profotograaf.nl/privacy."
+
+#: includes/admin/class-network-page.php:109
+#: includes/modules/class-settings-page.php:105
+msgid "Settings"
+msgstr "Ajustes"
+
+#: includes/modules/class-settings-page.php:175
+msgid "Profotograaf needs a new permission to switch galleries on for embedding."
+msgstr "Profotograaf necesita un nuevo permiso para activar galerías para la inserción."
+
+#: includes/modules/class-settings-page.php:209
+msgid "Disconnected from Profotograaf."
+msgstr "Desconectado de Profotograaf."
+
+#: includes/modules/class-settings-page.php:213
+msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
+msgstr "Desconectado. Este sitio ya no tiene acceso. Para quitarlo también de tu cuenta, abre Aplicaciones conectadas en los ajustes de tu cuenta de Profotograaf."
+
+#: includes/modules/class-settings-page.php:244
+msgid "Connected to Profotograaf."
+msgstr "Conectado a Profotograaf."
+
+#: includes/modules/class-settings-page.php:247
+msgid "The connection was declined in Profotograaf."
+msgstr "La conexión fue rechazada en Profotograaf."
+
+#: includes/modules/class-settings-page.php:250
+msgid "The code expired. Start the connection again."
+msgstr "El código caducó. Inicia la conexión de nuevo."
+
+#: includes/admin/class-network-page.php:98
+#: includes/modules/class-settings-page.php:274
+#: includes/modules/class-site-health.php:329
+msgid "Connection"
+msgstr "Conexión"
 
 #: includes/admin/class-network-page.php:69
 #: includes/modules/class-settings-page.php:279
 msgid "Connected"
+msgstr "Conectado"
+
+#. translators: %s: date the site was connected.
+#: includes/modules/class-settings-page.php:283
+#, php-format
+msgid "since %s."
+msgstr "desde %s."
+
+#: includes/modules/class-settings-page.php:289
+msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
+msgstr "Esta conexión se hizo antes de que Profotograaf pudiera permitir que este sitio active galerías para la inserción. Vuelve a conectar para conceder ese permiso. Tus galerías y ajustes se quedan como están."
+
+#: includes/modules/class-settings-page.php:291
+msgid "Connect again"
+msgstr "Volver a conectar"
+
+#: includes/modules/class-settings-page.php:293
+msgid "Disconnect"
+msgstr "Desconectar"
+
+#: includes/admin/class-network-page.php:75
+#: includes/modules/class-settings-page.php:296
+msgid "Not connected"
+msgstr "No conectado"
+
+#: includes/modules/class-settings-page.php:301
+msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
+msgstr "Conecta este sitio a tu cuenta de Profotograaf para colocar galerías y recibir consultas. Apruebas la conexión en Profotograaf, así que tu contraseña nunca llega a este sitio."
+
+#: includes/modules/class-settings-page.php:302
+msgid "Connect to Profotograaf"
+msgstr "Conectar con Profotograaf"
+
+#: includes/modules/class-settings-page.php:307
+msgid "Set up the enquiry forms"
+msgstr "Configurar los formularios de consulta"
+
+#: includes/modules/class-settings-page.php:349
+msgid "Confirm this code in Profotograaf to finish connecting:"
+msgstr "Confirma este código en Profotograaf para terminar de conectar:"
+
+#: includes/modules/class-settings-page.php:352
+msgid "Open the approval page"
+msgstr "Abrir la página de aprobación"
+
+#: includes/modules/class-settings-page.php:354
+msgid "Waiting for you to approve the connection in Profotograaf."
+msgstr "Esperando a que apruebes la conexión en Profotograaf."
+
+#: includes/modules/class-settings-page.php:355
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: includes/modules/class-settings-page.php:366
+msgid "Embedding on this site"
+msgstr "Inserción en este sitio"
+
+#. translators: %s: site address, for example https://example.com.
+#: includes/modules/class-settings-page.php:371
+#, php-format
+msgid "%s is allowed to show your Profotograaf pages in a frame."
+msgstr "%s puede mostrar tus páginas de Profotograaf en un marco."
+
+#: includes/modules/class-settings-page.php:375
+msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
+msgstr "Profotograaf solo permite la inserción en sitios servidos por https. Sirve este sitio por https para insertar tus páginas en un marco."
+
+#. translators: %s: site address, for example https://example.com.
+#: includes/modules/class-settings-page.php:380
+#, php-format
+msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
+msgstr "Para mostrar tus páginas de Profotograaf en un marco en este sitio, añade %s en \"Sitios autorizados para insertar mis páginas\" en los ajustes de tu cuenta de Profotograaf."
+
+#: includes/modules/class-settings-page.php:388
+msgid "Check again"
+msgstr "Comprobar de nuevo"
+
+#: includes/modules/class-site-health.php:135
+msgid "Profotograaf connection"
+msgstr "Conexión de Profotograaf"
+
+#: includes/modules/class-site-health.php:139
+msgid "Profotograaf token refresh"
+msgstr "Renovación del token de Profotograaf"
+
+#: includes/modules/class-site-health.php:143
+msgid "Profotograaf lead queue"
+msgstr "Cola de contactos de Profotograaf"
+
+#: includes/modules/class-site-health.php:147
+msgid "Profotograaf failed leads"
+msgstr "Contactos fallidos de Profotograaf"
+
+#: includes/modules/class-site-health.php:151
+msgid "Profotograaf gallery script"
+msgstr "Script de galería de Profotograaf"
+
+#: includes/modules/class-site-health.php:189
+msgid "Open the Profotograaf settings"
+msgstr "Abrir los ajustes de Profotograaf"
+
+#: includes/modules/class-site-health.php:192
+msgid "Profotograaf is connected"
+msgstr "Profotograaf está conectado"
+
+#: includes/modules/class-site-health.php:192
+msgid "This site is linked to a Profotograaf account."
+msgstr "Este sitio está vinculado a una cuenta de Profotograaf."
+
+#: includes/modules/class-site-health.php:195
+msgid "Profotograaf needs to be connected again"
+msgstr "Profotograaf debe volver a conectarse"
+
+#: includes/modules/class-site-health.php:195
+msgid "The stored connection lacks a permission the plugin needs to switch galleries on for embedding."
+msgstr "A la conexión guardada le falta un permiso que el plugin necesita para activar galerías para la inserción."
+
+#: includes/modules/class-site-health.php:195
+msgid "Disconnect and connect again on the settings page."
+msgstr "Desconecta y vuelve a conectar en la página de ajustes."
+
+#: includes/modules/class-site-health.php:198
+msgid "Profotograaf ended the connection"
+msgstr "Profotograaf terminó la conexión"
+
+#: includes/modules/class-site-health.php:198
+msgid "The account ended the connection, so galleries and lead delivery stopped working."
+msgstr "La cuenta terminó la conexión, por lo que las galerías y la entrega de contactos dejaron de funcionar."
+
+#: includes/modules/class-site-health.php:198
+msgid "Connect the site again on the settings page."
+msgstr "Vuelve a conectar el sitio en la página de ajustes."
+
+#: includes/modules/class-site-health.php:200
+msgid "Profotograaf is not connected"
+msgstr "Profotograaf no está conectado"
+
+#: includes/modules/class-site-health.php:200
+msgid "Connect this site to a Profotograaf account to show galleries and deliver leads."
+msgstr "Conecta este sitio a una cuenta de Profotograaf para mostrar galerías y entregar contactos."
+
+#: includes/modules/class-site-health.php:213
+msgid "Profotograaf tokens are refreshed"
+msgstr "Los tokens de Profotograaf se renuevan"
+
+#: includes/modules/class-site-health.php:213
+msgid "The connection token is current, or nothing needs refreshing yet."
+msgstr "El token de conexión está al día o todavía no hace falta renovar nada."
+
+#: includes/modules/class-site-health.php:218
+msgid "Profotograaf tokens are not refreshed"
+msgstr "Los tokens de Profotograaf no se renuevan"
+
+#: includes/modules/class-site-health.php:219
+msgid "The access token expired more than three hours ago, so the hourly background refresh did not run. WP-Cron may be disabled or blocked. The 60 day refresh token lapses when nothing refreshes it."
+msgstr "El token de acceso caducó hace más de tres horas, así que la renovación horaria en segundo plano no se ejecutó. Puede que WP-Cron esté desactivado o bloqueado. El token de renovación de 60 días caduca si nada lo renueva."
+
+#: includes/modules/class-site-health.php:220
+msgid "Check the WP-Cron test on this page and fix it first. A visit to a gallery page refreshes the token on demand."
+msgstr "Revisa primero la prueba de WP-Cron en esta página y corrígela. Una visita a una página de galería renueva el token bajo demanda."
+
+#: includes/modules/class-site-health.php:235
+msgid "The Profotograaf gallery script is reachable"
+msgstr "El script de galería de Profotograaf es accesible"
+
+#: includes/modules/class-site-health.php:235
+msgid "This server can load embed.js from the platform."
+msgstr "Este servidor puede cargar embed.js desde la plataforma."
+
+#: includes/modules/class-site-health.php:240
+msgid "The Profotograaf gallery script cannot be reached"
+msgstr "El script de galería de Profotograaf no es accesible"
+
+#. translators: %s: address of embed.js.
+#: includes/modules/class-site-health.php:243
+#, php-format
+msgid "Galleries only show their fallback link while %s cannot be loaded."
+msgstr "Las galerías solo muestran su enlace alternativo mientras no se pueda cargar %s."
+
+#: includes/modules/class-site-health.php:246
+msgid "Check that the platform is online and that no firewall, proxy or Content-Security-Policy script-src rule blocks the address."
+msgstr "Comprueba que la plataforma está en línea y que ningún cortafuegos, proxy o regla script-src de la Content-Security-Policy bloquea la dirección."
+
+#: includes/modules/class-site-health.php:261
+msgid "Profotograaf leads are delivered on time"
+msgstr "Los contactos de Profotograaf se entregan a tiempo"
+
+#: includes/modules/class-site-health.php:261
+msgid "No lead is waiting longer than expected."
+msgstr "Ningún contacto espera más de lo previsto."
+
+#: includes/modules/class-site-health.php:266
+msgid "Profotograaf leads are waiting for delivery"
+msgstr "Hay contactos de Profotograaf esperando entrega"
+
+#. translators: %d: number of leads waiting for delivery.
+#: includes/modules/class-site-health.php:269
+#, php-format
+msgid "%d lead is overdue for delivery."
+msgid_plural "%d leads are overdue for delivery."
+msgstr[0] "%d contacto tiene la entrega retrasada."
+msgstr[1] "%d contactos tienen la entrega retrasada."
+
+#: includes/modules/class-site-health.php:272
+msgid "Check the WP-Cron test and the gallery script test on this page."
+msgstr "Revisa la prueba de WP-Cron y la prueba del script de galería en esta página."
+
+#: includes/modules/class-site-health.php:285
+msgid "No Profotograaf leads failed"
+msgstr "Ningún contacto de Profotograaf ha fallado"
+
+#: includes/modules/class-site-health.php:285
+msgid "Every lead was delivered or is still being retried."
+msgstr "Cada contacto se entregó o aún se está reintentando."
+
+#: includes/modules/class-site-health.php:290
+msgid "Profotograaf leads failed to deliver"
+msgstr "Fallaron contactos de Profotograaf al entregarse"
+
+#. translators: %d: number of failed leads.
+#: includes/modules/class-site-health.php:293
+#, php-format
+msgid "%d lead could not be delivered."
+msgid_plural "%d leads could not be delivered."
+msgstr[0] "No se pudo entregar %d contacto."
+msgstr[1] "No se pudieron entregar %d contactos."
+
+#: includes/modules/class-site-health.php:296
+msgid "Open the leads screen to retry them or export them before they are removed."
+msgstr "Abre la pantalla de contactos para reintentarlos o exportarlos antes de que se eliminen."
+
+#: includes/modules/class-site-health.php:321
+msgid "never"
+msgstr "nunca"
+
+#: includes/modules/class-site-health.php:326
+msgid "Plugin version"
+msgstr "Versión del plugin"
+
+#: includes/modules/class-site-health.php:327
+msgid "WordPress version"
+msgstr "Versión de WordPress"
+
+#: includes/modules/class-site-health.php:328
+msgid "PHP version"
+msgstr "Versión de PHP"
+
+#: includes/modules/class-site-health.php:330
+msgid "Connected since"
+msgstr "Conectado desde"
+
+#: includes/modules/class-site-health.php:331
+msgid "Active modules"
+msgstr "Módulos activos"
+
+#: includes/modules/class-site-health.php:332
+msgid "Leads waiting"
+msgstr "Contactos en espera"
+
+#: includes/modules/class-site-health.php:333
+msgid "Leads failed"
+msgstr "Contactos fallidos"
+
+#: includes/modules/class-site-health.php:334
+msgid "Embed script version"
+msgstr "Versión del script de inserción"
+
+#: includes/modules/class-site-health.php:334
+msgid "unknown"
+msgstr "desconocida"
+
+#: includes/modules/class-site-health.php:336
+msgid "WP-Cron"
+msgstr "WP-Cron"
+
+#: includes/modules/class-site-health.php:337
+msgid "disabled"
+msgstr "desactivado"
+
+#: includes/modules/class-site-health.php:337
+msgid "enabled"
+msgstr "activado"
+
+#: includes/modules/class-site-health.php:338
+msgid "last delivery run"
+msgstr "última ejecución de entrega"
+
+#: includes/modules/class-site-health.php:340
+msgid "Recent errors"
+msgstr "Errores recientes"
+
+#: includes/modules/class-site-health.php:340
+msgid "none"
+msgstr "ninguno"
+
+#: includes/modules/class-site-health.php:407
+msgid "Open the leads screen"
+msgstr "Abrir la pantalla de contactos"
+
+#: includes/modules/class-telemetry-consent.php:107
+msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
+msgstr "¿Quieres ayudar a mejorar Profotograaf? Puedes compartir datos anónimos de uso y de errores: versiones del plugin, de WordPress y de PHP, idioma, módulos activados y recuentos de éxitos y fallos. La dirección de tu sitio, tus visitantes, tus galerías y tus consultas nunca se comparten. Puedes desactivarlo en cualquier momento."
+
+#: includes/modules/class-telemetry-consent.php:113
+msgid "Enable telemetry"
+msgstr "Activar telemetría"
+
+#: includes/modules/class-telemetry-consent.php:114
+msgid "Not now"
+msgstr "Ahora no"
+
+#: uninstall.php:32
+msgid "Undeliverable enquiries were deleted"
+msgstr "Se eliminaron las consultas no entregables"
+
+#. translators: %d: number of enquiries.
+#: uninstall.php:35
+#, php-format
+msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
+msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
+msgstr[0] "Se eliminó %d consulta que no se pudo entregar a Profotograaf junto con el plugin."
+msgstr[1] "Se eliminaron %d consultas que no se pudieron entregar a Profotograaf junto con el plugin."
+
+#: assets/admin/settings.js:16
+msgid "Could not check the connection. Reload this page to try again."
+msgstr "No se pudo comprobar la conexión. Recarga esta página para intentarlo de nuevo."
+
+#: build/client-galleries/index.js:1
+msgid "Client portal"
+msgstr "Portal de clientes"
+
+#: build/client-galleries/index.js:1
+msgid "Portal address"
+msgstr "Dirección del portal"
+
+#: build/client-galleries/index.js:1
+msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
+msgstr "Tu dirección de Profotograaf (por ejemplo studio), tu subdominio o tu propio dominio."
+
+#: build/client-galleries/index.js:1
+msgid "Portal path"
+msgstr "Ruta del portal"
+
+#: build/client-galleries/index.js:1
+msgid "Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it."
+msgstr "Dónde está el portal en esa dirección. Déjalo vacío para usar el ajuste del sitio, que es /client salvo que lo hayas cambiado."
+
+#: build/client-galleries/index.js:1
+msgid "Open in a new tab"
+msgstr "Abrir en una pestaña nueva"
+
+#: build/client-galleries/index.js:1
+msgid "Text"
+msgstr "Texto"
+
+#: build/client-galleries/index.js:1
+msgid "Heading"
+msgstr "Encabezado"
+
+#: build/client-galleries/index.js:1
+msgid "Heading level"
+msgstr "Nivel de encabezado"
+
+#: build/client-galleries/index.js:1
+msgid "Heading 2"
+msgstr "Encabezado 2"
+
+#: build/client-galleries/index.js:1
+msgid "Heading 3"
+msgstr "Encabezado 3"
+
+#: build/client-galleries/index.js:1
+msgid "Heading 4"
+msgstr "Encabezado 4"
+
+#: build/client-galleries/index.js:1
+msgid "Heading 5"
+msgstr "Encabezado 5"
+
+#: build/client-galleries/index.js:1
+msgid "Heading 6"
+msgstr "Encabezado 6"
+
+#: build/client-galleries/index.js:1
+msgid "Paragraph"
+msgstr "Párrafo"
+
+#: build/client-galleries/index.js:1
+msgid "Button label"
+msgstr "Etiqueta del botón"
+
+#: build/client-galleries/index.js:1
+msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
+msgstr "Solo los editores ven esta nota. Introduce tu dirección de Profotograaf en los ajustes del bloque. Hasta entonces los visitantes no ven este bloque."
+
+#. translators: %d: number of photos in a gallery.
+#: build/gallery/index.js:2
+#, js-format
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] "%d foto"
+msgstr[1] "%d fotos"
+
+#: build/gallery/index.js:2
+#: build/gallery/index.js:3
+msgid "Site default"
+msgstr "Predeterminado del sitio"
+
+#: build/gallery/index.js:2
+msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
+msgstr "Conecta este sitio a Profotograaf en Ajustes > Profotograaf para elegir una galería."
+
+#: build/gallery/index.js:2
+msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
+msgstr "Vuelve a conectar este sitio a Profotograaf en Ajustes > Profotograaf. La conexión necesita un nuevo permiso."
+
+#: build/gallery/index.js:2
+msgid "Profotograaf is receiving too many requests. Try again in a moment."
+msgstr "Profotograaf está recibiendo demasiadas solicitudes. Inténtalo de nuevo en un momento."
+
+#. translators: %d: number of seconds to wait.
+#: build/gallery/index.js:3
+#, js-format
+msgid "Profotograaf is receiving too many requests. Try again in %d second."
+msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
+msgstr[0] "Profotograaf está recibiendo demasiadas solicitudes. Inténtalo de nuevo en %d segundo."
+msgstr[1] "Profotograaf está recibiendo demasiadas solicitudes. Inténtalo de nuevo en %d segundos."
+
+#: build/gallery/index.js:3
+msgid "Profotograaf could not be reached. Check your connection and try again."
+msgstr "No se pudo contactar con Profotograaf. Comprueba tu conexión e inténtalo de nuevo."
+
+#: build/gallery/index.js:3
+msgid "Profotograaf reported a problem. Try again later."
+msgstr "Profotograaf informó de un problema. Inténtalo de nuevo más tarde."
+
+#: build/gallery/index.js:3
+msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
+msgstr "Esta galería no se puede mostrar ahora en otros sitios. Una contraseña, una fecha de caducidad, el modo de revisión o un ajuste solo para clientes impide la inserción."
+
+#: build/gallery/index.js:3
+msgid "There are no galleries in your Profotograaf account yet."
+msgstr "Todavía no hay galerías en tu cuenta de Profotograaf."
+
+#: build/gallery/index.js:3
+msgid "Display"
+msgstr "Visualización"
+
+#: build/gallery/index.js:3
+msgid "Leave empty for the site default."
+msgstr "Déjalo vacío para el valor predeterminado del sitio."
+
+#. translators: %d: number of photos shown at first.
+#: build/gallery/index.js:5
+#, js-format
+msgid "%d photo per page"
+msgid_plural "%d photos per page"
+msgstr[0] "%d foto por página"
+msgstr[1] "%d fotos por página"
+
+#: build/gallery/index.js:5
+msgid "load more button"
+msgstr "botón de cargar más"
+
+#: build/gallery/index.js:5
+msgid "lightbox on"
+msgstr "lightbox activado"
+
+#: build/gallery/index.js:5
+msgid "lightbox off"
+msgstr "lightbox desactivado"
+
+#: build/gallery/index.js:4
+#: build/gallery/index.js:6
+msgid "Caption"
+msgstr "Pie de foto"
+
+#: build/gallery/index.js:6
+#: build/gallery/index.js:7
+msgid "Profotograaf gallery"
+msgstr "Galería de Profotograaf"
+
+#. translators: %s: layout name such as grid.
+#: build/gallery/index.js:7
+#, js-format
+msgid "layout: %s"
+msgstr "diseño: %s"
+
+#: build/gallery/index.js:7
+msgid "Gallery"
+msgstr "Galería"
+
+#: build/gallery/index.js:7
+msgid "Layout"
+msgstr "Diseño"
+
+#: build/gallery/index.js:7
+msgid "Choose another gallery"
+msgstr "Elegir otra galería"
+
+#: build/gallery/index.js:7
+msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
+msgstr "Esta galería no se encontró en tu cuenta de Profotograaf. Puede que se haya eliminado. Elige otra galería."
+
+#: build/gallery/index.js:7
+msgid "Choose one of your galleries."
+msgstr "Elige una de tus galerías."
+
+#: blocks/client-galleries/block.json
+msgctxt "block title"
+msgid "Find your gallery"
+msgstr "Encuentra tu galería"
+
+#: blocks/client-galleries/block.json
+msgctxt "block description"
+msgid "A button that takes your clients to their private galleries in the Profotograaf client portal."
+msgstr "Un botón que lleva a tus clientes a sus galerías privadas en el portal de clientes de Profotograaf."
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "client"
+msgstr "cliente"
+
+#: blocks/client-galleries/block.json
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "gallery"
+msgstr "galería"
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "login"
+msgstr "inicio de sesión"
+
+#: blocks/client-galleries/block.json
+msgctxt "block keyword"
+msgid "photography"
+msgstr "fotografía"
+
+#: blocks/client-galleries/block.json
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "profotograaf"
 msgstr ""
+
+#: blocks/gallery/block.json
+msgctxt "block title"
+msgid "Profotograaf gallery"
+msgstr "Galería de Profotograaf"
+
+#: blocks/gallery/block.json
+msgctxt "block description"
+msgid "Show one of your Profotograaf galleries as a grid, masonry or slideshow."
+msgstr "Muestra una de tus galerías de Profotograaf como cuadrícula, mosaico o presentación."
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "photos"
+msgstr "fotos"
+
+#: blocks/gallery/block.json
+msgctxt "block keyword"
+msgid "portfolio"
+msgstr "portafolio"
 
 #: includes/admin/class-network-page.php:71
 msgid "Connection ended"
@@ -227,11 +1452,6 @@ msgstr ""
 
 #: includes/admin/class-network-page.php:73
 msgid "Plugin not active"
-msgstr ""
-
-#: includes/admin/class-network-page.php:75
-#: includes/modules/class-settings-page.php:296
-msgid "Not connected"
 msgstr ""
 
 #: includes/admin/class-network-page.php:84
@@ -246,434 +1466,8 @@ msgstr ""
 msgid "Site"
 msgstr ""
 
-#: includes/admin/class-network-page.php:98
-#: includes/modules/class-settings-page.php:274
-#: includes/modules/class-site-health.php:329
-msgid "Connection"
-msgstr ""
-
 #: includes/admin/class-network-page.php:99
 msgid "Failed enquiries"
-msgstr ""
-
-#: includes/admin/class-network-page.php:109
-#: includes/modules/class-settings-page.php:105
-msgid "Settings"
-msgstr ""
-
-#: includes/class-api-client.php:146
-#: includes/class-gallery-rest.php:145
-#: includes/class-gallery-rest.php:163
-#: includes/class-photo-list.php:49
-msgid "A gallery id is required."
-msgstr ""
-
-#: includes/class-api-client.php:163
-msgid "The request to switch embedding on is not valid."
-msgstr ""
-
-#: includes/class-api-client.php:173
-msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
-msgstr ""
-
-#: includes/class-api-client.php:212
-msgid "A lead needs a name and an email address."
-msgstr ""
-
-#: includes/class-api-client.php:308
-msgid "That page is not on the Profotograaf platform."
-msgstr ""
-
-#: includes/class-api-client.php:318
-#: includes/class-api-client.php:458
-#: includes/class-api-client.php:463
-msgid "Profotograaf could not be reached."
-msgstr ""
-
-#: includes/class-api-client.php:325
-msgid "The public page could not be loaded."
-msgstr ""
-
-#: includes/class-api-client.php:350
-msgid "The connection is being refreshed. Try again in a moment."
-msgstr ""
-
-#: includes/class-api-client.php:374
-msgid "The connection was ended in your Profotograaf account."
-msgstr ""
-
-#: includes/class-api-client.php:443
-msgid "The request could not be encoded."
-msgstr ""
-
-#: includes/class-api-errors.php:62
-msgid "The connection to Profotograaf has expired. Connect this site again."
-msgstr ""
-
-#: includes/class-api-errors.php:64
-msgid "Profotograaf asked for fewer connection checks. Trying again shortly."
-msgstr ""
-
-#: includes/class-api-errors.php:66
-msgid "Profotograaf does not know this connection code. Start the connection again."
-msgstr ""
-
-#: includes/class-api-errors.php:68
-msgid "Profotograaf does not recognise this site. Start the connection again."
-msgstr ""
-
-#: includes/class-api-errors.php:70
-msgid "Profotograaf rejected the enquiry because it is incomplete or invalid."
-msgstr ""
-
-#: includes/class-api-errors.php:80
-msgid "This site is not connected to Profotograaf."
-msgstr ""
-
-#. translators: %d: HTTP status code.
-#: includes/class-api-errors.php:105
-#, php-format
-msgid "The platform reported an error (HTTP %d). Try again later."
-msgstr ""
-
-#. translators: %d: HTTP status code.
-#: includes/class-api-errors.php:109
-#, php-format
-msgid "Profotograaf answered with HTTP %d."
-msgstr ""
-
-#: includes/class-cron-health.php:142
-msgid "Profotograaf lead delivery"
-msgstr ""
-
-#: includes/class-cron-health.php:157
-msgid "Profotograaf can deliver leads"
-msgstr ""
-
-#: includes/class-cron-health.php:163
-msgid "WP-Cron has run recently, so queued leads are delivered on time."
-msgstr ""
-
-#: includes/class-cron-health.php:171
-msgid "WP-Cron is disabled and leads cannot be delivered"
-msgstr ""
-
-#: includes/class-cron-health.php:172
-msgid "WP-Cron has stopped running and leads cannot be delivered"
-msgstr ""
-
-#: includes/class-cron-health.php:179
-msgid "Run WordPress cron from the server. Add this line to the crontab of the site:"
-msgstr ""
-
-#: includes/class-cron-health.php:195
-msgid "Run WordPress cron from the server with this crontab line:"
-msgstr ""
-
-#: includes/class-cron-health.php:214
-msgid "This site sets DISABLE_WP_CRON and no scheduled run has been seen."
-msgstr ""
-
-#: includes/class-cron-health.php:215
-msgid "No scheduled run has been seen for more than three hours."
-msgstr ""
-
-#. translators: %d: number of leads waiting for delivery.
-#: includes/class-cron-health.php:221
-#, php-format
-msgid "%d lead is waiting for delivery."
-msgid_plural "%d leads are waiting for delivery."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/class-embed-script.php:163
-msgid "This gallery could not be loaded. Please try again later."
-msgstr ""
-
-#: includes/class-gallery-renderer.php:324
-msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
-msgstr ""
-
-#: includes/class-gallery-renderer.php:335
-msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
-msgstr ""
-
-#: includes/class-gallery-renderer.php:344
-msgid "This gallery needs JavaScript to be shown here."
-msgstr ""
-
-#: includes/class-gallery-renderer.php:483
-msgid "View this gallery on Profotograaf"
-msgstr ""
-
-#: includes/class-pairing.php:93
-msgid "Profotograaf did not start the connection. Try again in a moment."
-msgstr ""
-
-#: includes/class-pairing.php:185
-msgid "Could not check the connection. Trying again."
-msgstr ""
-
-#: includes/class-pairing.php:207
-msgid "Profotograaf approved the connection but sent no tokens. Start again."
-msgstr ""
-
-#: includes/class-settings-schema.php:60
-msgid "General"
-msgstr ""
-
-#: includes/class-settings-schema.php:61
-#: includes/modules/class-privacy.php:229
-msgid "Galleries"
-msgstr ""
-
-#: includes/class-settings-schema.php:63
-msgid "Advanced"
-msgstr ""
-
-#: includes/class-settings-schema.php:87
-msgid "Gallery link text"
-msgstr ""
-
-#: includes/class-settings-schema.php:88
-msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
-msgstr ""
-
-#: includes/class-settings-schema.php:94
-msgid "Client portal path"
-msgstr ""
-
-#: includes/class-settings-schema.php:95
-msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
-msgstr ""
-
-#: includes/class-settings-schema.php:102
-msgid "Default gallery layout"
-msgstr ""
-
-#: includes/class-settings-schema.php:103
-msgid "Used when a gallery block or shortcode does not choose a layout."
-msgstr ""
-
-#: includes/class-settings-schema.php:105
-#: build/gallery/index.js:2
-msgid "Grid"
-msgstr ""
-
-#: includes/class-settings-schema.php:106
-#: build/gallery/index.js:2
-msgid "Masonry"
-msgstr ""
-
-#: includes/class-settings-schema.php:107
-#: build/gallery/index.js:2
-msgid "Slideshow"
-msgstr ""
-
-#: includes/class-settings-schema.php:114
-msgid "Collect enquiries"
-msgstr ""
-
-#: includes/class-settings-schema.php:115
-msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
-msgstr ""
-
-#: includes/class-settings-schema.php:121
-msgid "Failure alerts go to"
-msgstr ""
-
-#: includes/class-settings-schema.php:122
-msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
-msgstr ""
-
-#: includes/class-settings-schema.php:129
-msgid "Mail undeliverable enquiries to"
-msgstr ""
-
-#: includes/class-settings-schema.php:130
-msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
-msgstr ""
-
-#: includes/class-settings-schema.php:139
-msgid "Keep undeliverable enquiries for (days)"
-msgstr ""
-
-#: includes/class-settings-schema.php:140
-msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
-msgstr ""
-
-#: includes/class-settings-schema.php:146
-msgid "Share anonymous usage data"
-msgstr ""
-
-#: includes/class-settings-schema.php:147
-msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
-msgstr ""
-
-#: includes/class-settings-schema.php:150
-#: includes/modules/class-telemetry-consent.php:108
-msgid "What is shared"
-msgstr ""
-
-#: includes/class-settings-schema.php:157
-msgid "Keep my data when the plugin is deleted"
-msgstr ""
-
-#: includes/class-settings-schema.php:158
-msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
-msgstr ""
-
-#: includes/class-settings-schema.php:172
-msgid "Profotograaf default"
-msgstr ""
-
-#: includes/class-settings-schema.php:174
-#: build/gallery/index.js:3
-msgid "On"
-msgstr ""
-
-#: includes/class-settings-schema.php:175
-#: build/gallery/index.js:3
-msgid "Off"
-msgstr ""
-
-#: includes/class-settings-schema.php:177
-msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
-msgstr ""
-
-#: includes/class-settings-schema.php:186
-#: build/gallery/index.js:3
-msgid "Columns"
-msgstr ""
-
-#: includes/class-settings-schema.php:187
-msgid "Columns on wide screens, from 1 to 8."
-msgstr ""
-
-#: includes/class-settings-schema.php:195
-#: build/gallery/index.js:3
-msgid "Columns on tablets"
-msgstr ""
-
-#: includes/class-settings-schema.php:196
-msgid "Columns on medium screens, from 1 to 8."
-msgstr ""
-
-#: includes/class-settings-schema.php:204
-#: build/gallery/index.js:3
-msgid "Columns on phones"
-msgstr ""
-
-#: includes/class-settings-schema.php:205
-msgid "Columns on narrow screens, from 1 to 4."
-msgstr ""
-
-#: includes/class-settings-schema.php:213
-#: build/gallery/index.js:3
-msgid "Gap between photos (pixels)"
-msgstr ""
-
-#: includes/class-settings-schema.php:214
-msgid "Space between photos, from 0 to 96 pixels."
-msgstr ""
-
-#: includes/class-settings-schema.php:220
-#: build/gallery/index.js:3
-msgid "Photo shape"
-msgstr ""
-
-#: includes/class-settings-schema.php:221
-msgid "Crop every photo to one aspect ratio, or keep each photo as shot."
-msgstr ""
-
-#: includes/class-settings-schema.php:223
-#: build/gallery/index.js:3
-msgid "Original"
-msgstr ""
-
-#: includes/class-settings-schema.php:224
-#: build/gallery/index.js:3
-msgid "Square (1:1)"
-msgstr ""
-
-#: includes/class-settings-schema.php:236
-#: build/gallery/index.js:3
-msgid "Captions"
-msgstr ""
-
-#: includes/class-settings-schema.php:237
-msgid "Whether photo captions show and where."
-msgstr ""
-
-#: includes/class-settings-schema.php:239
-#: build/gallery/index.js:3
-msgid "Hidden"
-msgstr ""
-
-#: includes/class-settings-schema.php:240
-#: build/gallery/index.js:3
-msgid "Below the photo"
-msgstr ""
-
-#: includes/class-settings-schema.php:241
-#: build/gallery/index.js:3
-msgid "On top of the photo"
-msgstr ""
-
-#: includes/class-settings-schema.php:248
-#: build/gallery/index.js:3
-msgid "Sort order"
-msgstr ""
-
-#: includes/class-settings-schema.php:249
-msgid "The order of the photos."
-msgstr ""
-
-#: includes/class-settings-schema.php:251
-#: build/gallery/index.js:3
-msgid "Newest first"
-msgstr ""
-
-#: includes/class-settings-schema.php:252
-#: build/gallery/index.js:3
-msgid "Oldest first"
-msgstr ""
-
-#: includes/class-settings-schema.php:253
-#: build/gallery/index.js:3
-msgid "By file name"
-msgstr ""
-
-#: includes/class-settings-schema.php:254
-#: build/gallery/index.js:3
-msgid "Random"
-msgstr ""
-
-#: includes/class-settings-schema.php:263
-#: build/gallery/index.js:3
-msgid "Photos per page"
-msgstr ""
-
-#: includes/class-settings-schema.php:264
-msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
-msgstr ""
-
-#: includes/class-settings-schema.php:270
-#: build/gallery/index.js:3
-msgid "Load more button"
-msgstr ""
-
-#: includes/class-settings-schema.php:271
-msgid "Add a button that shows the next photos when \"Photos per page\" is set."
-msgstr ""
-
-#: includes/class-settings-schema.php:278
-#: build/gallery/index.js:3
-msgid "Lightbox"
-msgstr ""
-
-#: includes/class-settings-schema.php:279
-msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr ""
 
 #: includes/class-settings-schema.php:286
@@ -708,548 +1502,8 @@ msgstr ""
 msgid "The photo page on Profotograaf"
 msgstr ""
 
-#. translators: %d: number of failed leads put back in line.
-#: includes/cli/class-leads-command.php:77
-#, php-format
-msgid "Requeued %d failed lead."
-msgid_plural "Requeued %d failed leads."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/cli/class-leads-command.php:91
-msgid "Delivery is already running elsewhere, or nothing could be sent."
-msgstr ""
-
-#. translators: 1: leads delivered, 2: leads that will be retried, 3: leads that failed for good, 4: leads still pending.
-#: includes/cli/class-leads-command.php:103
-#, php-format
-msgid "Delivered %1$d, retrying %2$d, failed %3$d. %4$d pending."
-msgstr ""
-
-#: includes/cli/class-status-command.php:111
-msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:61
-msgid "An enquiry could not be delivered"
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:64
-msgid "It is kept on this site. Export it or try again on the Enquiry forms page."
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:89
-msgid "The queue of enquiries is full, so this enquiry was not saved. More enquiries are lost until the queue is empty. Check the connection to Profotograaf."
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:92
-msgid "The enquiry was sent to your fallback email address."
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:94
-msgid "An enquiry was dropped"
-msgstr ""
-
-#. translators: %d: number of enquiries.
-#: includes/leads/class-lead-alerts.php:109
-#, php-format
-msgid "%d enquiry that could not be delivered was removed because it was kept longer than the retention period."
-msgid_plural "%d enquiries that could not be delivered were removed because they were kept longer than the retention period."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/leads/class-lead-alerts.php:114
-#: includes/leads/class-lead-alerts.php:137
-msgid "Unknown form"
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:116
-msgid "Undeliverable enquiries were removed"
-msgstr ""
-
-#. translators: 1: form name, 2: date and time in UTC.
-#: includes/leads/class-lead-alerts.php:136
-#, php-format
-msgid "Form: %1$s. Time: %2$s UTC."
-msgstr ""
-
-#: includes/leads/class-lead-alerts.php:193
-msgid "Enquiry that could not be delivered"
-msgstr ""
-
-#. translators: %s: reason the galleries could not be loaded.
-#: includes/leads/class-site-tools.php:62
-#, php-format
-msgid "The galleries could not be synced: %s"
-msgstr ""
-
-#. translators: %s: number of galleries.
-#: includes/leads/class-site-tools.php:72
-#, php-format
-msgid "Synced %s gallery."
-msgid_plural "Synced %s galleries."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/leads/class-site-tools.php:86
-msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
-msgstr ""
-
-#: includes/leads/class-site-tools.php:99
-msgid "The embed script version could not be read. Galleries keep using the address without a version. Try again later."
-msgstr ""
-
-#. translators: %s: version of the embed script, 12 characters.
-#: includes/leads/class-site-tools.php:105
-#, php-format
-msgid "The embed script is at version %s."
-msgstr ""
-
-#: includes/modules/class-admin-notices.php:120
-msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
-msgstr ""
-
-#: includes/modules/class-admin-notices.php:122
-#: includes/modules/class-settings-page.php:177
-msgid "Connect this site again"
-msgstr ""
-
-#: includes/modules/class-admin-notices.php:130
-msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
-msgstr ""
-
-#: includes/modules/class-admin-notices.php:132
-msgid "Check the connection"
-msgstr ""
-
-#. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:143
-#, php-format
-msgid "%d enquiry could not be delivered to Profotograaf."
-msgid_plural "%d enquiries could not be delivered to Profotograaf."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/modules/class-admin-notices.php:147
-msgid "Retry or export the enquiries"
-msgstr ""
-
-#: includes/modules/class-admin-notices.php:174
-msgid "Dismiss"
-msgstr ""
-
-#: includes/modules/class-client-galleries.php:202
-#: patterns/client-portal-cta.php:21
-#: build/client-galleries/index.js:1
-msgid "Find your gallery"
-msgstr ""
-
-#: includes/modules/class-client-galleries.php:203
-#: patterns/client-portal-cta.php:22
-#: build/client-galleries/index.js:1
-msgid "Sign in to the client portal to see your photos."
-msgstr ""
-
-#: includes/modules/class-client-galleries.php:204
-#: patterns/client-portal-cta.php:23
-#: build/client-galleries/index.js:1
-msgid "Open my gallery"
-msgstr ""
-
-#: includes/modules/class-client-galleries.php:258
-msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
-msgstr ""
-
 #: includes/modules/class-patterns.php:54
 msgid "Sections for galleries, the client portal and enquiries."
-msgstr ""
-
-#: includes/modules/class-privacy.php:118
-msgid "Enquiries sent through your forms that are waiting for delivery to Profotograaf, or could not be delivered."
-msgstr ""
-
-#: includes/modules/class-privacy.php:188
-msgid "Email"
-msgstr ""
-
-#: includes/modules/class-privacy.php:190
-msgid "Date"
-msgstr ""
-
-#: includes/modules/class-privacy.php:192
-msgid "Form"
-msgstr ""
-
-#: includes/modules/class-privacy.php:193
-msgid "Page"
-msgstr ""
-
-#: includes/modules/class-privacy.php:213
-msgid "Delivery status"
-msgstr ""
-
-#: includes/modules/class-privacy.php:214
-msgid "Failed"
-msgstr ""
-
-#: includes/modules/class-privacy.php:214
-msgid "Waiting"
-msgstr ""
-
-#: includes/modules/class-privacy.php:218
-msgid "Received"
-msgstr ""
-
-#: includes/modules/class-privacy.php:230
-msgid "Pages that show a Profotograaf gallery make the visitor's browser load a script, the gallery data and the photos from profotograaf.nl, a service operated by the plugin author. Profotograaf receives the visitor's IP address and browser details, as any web server does. When a gallery scrolls into view the script reports one anonymous view, with the gallery and the host name of this site. No view is reported when the browser sends Do Not Track or Global Privacy Control. The plugin sets no cookies."
-msgstr ""
-
-#: includes/modules/class-privacy.php:231
-msgid "Enquiries"
-msgstr ""
-
-#: includes/modules/class-privacy.php:232
-msgid "When a contact form is switched on for Profotograaf, each submission is stored on this site and then sent to profotograaf.nl: the name, email address, phone number, date, message and other fields of the form, the address of the page and the name of the form. A submission waits in the queue until it is delivered. One that cannot be delivered is kept for a limited time, so the site owner can export or retry it. The personal data tools export and erase these submissions by the email address of the sender."
-msgstr ""
-
-#: includes/modules/class-privacy.php:233
-msgid "Connection and diagnostics"
-msgstr ""
-
-#: includes/modules/class-privacy.php:234
-msgid "When the site owner connects the site, the plugin sends the site title, the host name, the plugin version and a random identifier of this installation to profotograaf.nl. The plugin sends no usage statistics or error reports."
-msgstr ""
-
-#: includes/modules/class-privacy.php:235
-msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:175
-msgid "Profotograaf needs a new permission to switch galleries on for embedding."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:209
-msgid "Disconnected from Profotograaf."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:213
-msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:244
-msgid "Connected to Profotograaf."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:247
-msgid "The connection was declined in Profotograaf."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:250
-msgid "The code expired. Start the connection again."
-msgstr ""
-
-#. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:283
-#, php-format
-msgid "since %s."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:289
-msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:291
-msgid "Connect again"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:293
-msgid "Disconnect"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:301
-msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:302
-msgid "Connect to Profotograaf"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:307
-msgid "Set up the enquiry forms"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:349
-msgid "Confirm this code in Profotograaf to finish connecting:"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:352
-msgid "Open the approval page"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:354
-msgid "Waiting for you to approve the connection in Profotograaf."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:355
-msgid "Cancel"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:366
-msgid "Embedding on this site"
-msgstr ""
-
-#. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:371
-#, php-format
-msgid "%s is allowed to show your Profotograaf pages in a frame."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:375
-msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
-msgstr ""
-
-#. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:380
-#, php-format
-msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:388
-msgid "Check again"
-msgstr ""
-
-#: includes/modules/class-site-health.php:135
-msgid "Profotograaf connection"
-msgstr ""
-
-#: includes/modules/class-site-health.php:139
-msgid "Profotograaf token refresh"
-msgstr ""
-
-#: includes/modules/class-site-health.php:143
-msgid "Profotograaf lead queue"
-msgstr ""
-
-#: includes/modules/class-site-health.php:147
-msgid "Profotograaf failed leads"
-msgstr ""
-
-#: includes/modules/class-site-health.php:151
-msgid "Profotograaf gallery script"
-msgstr ""
-
-#: includes/modules/class-site-health.php:189
-msgid "Open the Profotograaf settings"
-msgstr ""
-
-#: includes/modules/class-site-health.php:192
-msgid "Profotograaf is connected"
-msgstr ""
-
-#: includes/modules/class-site-health.php:192
-msgid "This site is linked to a Profotograaf account."
-msgstr ""
-
-#: includes/modules/class-site-health.php:195
-msgid "Profotograaf needs to be connected again"
-msgstr ""
-
-#: includes/modules/class-site-health.php:195
-msgid "The stored connection lacks a permission the plugin needs to switch galleries on for embedding."
-msgstr ""
-
-#: includes/modules/class-site-health.php:195
-msgid "Disconnect and connect again on the settings page."
-msgstr ""
-
-#: includes/modules/class-site-health.php:198
-msgid "Profotograaf ended the connection"
-msgstr ""
-
-#: includes/modules/class-site-health.php:198
-msgid "The account ended the connection, so galleries and lead delivery stopped working."
-msgstr ""
-
-#: includes/modules/class-site-health.php:198
-msgid "Connect the site again on the settings page."
-msgstr ""
-
-#: includes/modules/class-site-health.php:200
-msgid "Profotograaf is not connected"
-msgstr ""
-
-#: includes/modules/class-site-health.php:200
-msgid "Connect this site to a Profotograaf account to show galleries and deliver leads."
-msgstr ""
-
-#: includes/modules/class-site-health.php:213
-msgid "Profotograaf tokens are refreshed"
-msgstr ""
-
-#: includes/modules/class-site-health.php:213
-msgid "The connection token is current, or nothing needs refreshing yet."
-msgstr ""
-
-#: includes/modules/class-site-health.php:218
-msgid "Profotograaf tokens are not refreshed"
-msgstr ""
-
-#: includes/modules/class-site-health.php:219
-msgid "The access token expired more than three hours ago, so the hourly background refresh did not run. WP-Cron may be disabled or blocked. The 60 day refresh token lapses when nothing refreshes it."
-msgstr ""
-
-#: includes/modules/class-site-health.php:220
-msgid "Check the WP-Cron test on this page and fix it first. A visit to a gallery page refreshes the token on demand."
-msgstr ""
-
-#: includes/modules/class-site-health.php:235
-msgid "The Profotograaf gallery script is reachable"
-msgstr ""
-
-#: includes/modules/class-site-health.php:235
-msgid "This server can load embed.js from the platform."
-msgstr ""
-
-#: includes/modules/class-site-health.php:240
-msgid "The Profotograaf gallery script cannot be reached"
-msgstr ""
-
-#. translators: %s: address of embed.js.
-#: includes/modules/class-site-health.php:243
-#, php-format
-msgid "Galleries only show their fallback link while %s cannot be loaded."
-msgstr ""
-
-#: includes/modules/class-site-health.php:246
-msgid "Check that the platform is online and that no firewall, proxy or Content-Security-Policy script-src rule blocks the address."
-msgstr ""
-
-#: includes/modules/class-site-health.php:261
-msgid "Profotograaf leads are delivered on time"
-msgstr ""
-
-#: includes/modules/class-site-health.php:261
-msgid "No lead is waiting longer than expected."
-msgstr ""
-
-#: includes/modules/class-site-health.php:266
-msgid "Profotograaf leads are waiting for delivery"
-msgstr ""
-
-#. translators: %d: number of leads waiting for delivery.
-#: includes/modules/class-site-health.php:269
-#, php-format
-msgid "%d lead is overdue for delivery."
-msgid_plural "%d leads are overdue for delivery."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/modules/class-site-health.php:272
-msgid "Check the WP-Cron test and the gallery script test on this page."
-msgstr ""
-
-#: includes/modules/class-site-health.php:285
-msgid "No Profotograaf leads failed"
-msgstr ""
-
-#: includes/modules/class-site-health.php:285
-msgid "Every lead was delivered or is still being retried."
-msgstr ""
-
-#: includes/modules/class-site-health.php:290
-msgid "Profotograaf leads failed to deliver"
-msgstr ""
-
-#. translators: %d: number of failed leads.
-#: includes/modules/class-site-health.php:293
-#, php-format
-msgid "%d lead could not be delivered."
-msgid_plural "%d leads could not be delivered."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/modules/class-site-health.php:296
-msgid "Open the leads screen to retry them or export them before they are removed."
-msgstr ""
-
-#: includes/modules/class-site-health.php:321
-msgid "never"
-msgstr ""
-
-#: includes/modules/class-site-health.php:326
-msgid "Plugin version"
-msgstr ""
-
-#: includes/modules/class-site-health.php:327
-msgid "WordPress version"
-msgstr ""
-
-#: includes/modules/class-site-health.php:328
-msgid "PHP version"
-msgstr ""
-
-#: includes/modules/class-site-health.php:330
-msgid "Connected since"
-msgstr ""
-
-#: includes/modules/class-site-health.php:331
-msgid "Active modules"
-msgstr ""
-
-#: includes/modules/class-site-health.php:332
-msgid "Leads waiting"
-msgstr ""
-
-#: includes/modules/class-site-health.php:333
-msgid "Leads failed"
-msgstr ""
-
-#: includes/modules/class-site-health.php:334
-msgid "Embed script version"
-msgstr ""
-
-#: includes/modules/class-site-health.php:334
-msgid "unknown"
-msgstr ""
-
-#: includes/modules/class-site-health.php:336
-msgid "WP-Cron"
-msgstr ""
-
-#: includes/modules/class-site-health.php:337
-msgid "disabled"
-msgstr ""
-
-#: includes/modules/class-site-health.php:337
-msgid "enabled"
-msgstr ""
-
-#: includes/modules/class-site-health.php:338
-msgid "last delivery run"
-msgstr ""
-
-#: includes/modules/class-site-health.php:340
-msgid "Recent errors"
-msgstr ""
-
-#: includes/modules/class-site-health.php:340
-msgid "none"
-msgstr ""
-
-#: includes/modules/class-site-health.php:407
-msgid "Open the leads screen"
-msgstr ""
-
-#: includes/modules/class-telemetry-consent.php:107
-msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
-msgstr ""
-
-#: includes/modules/class-telemetry-consent.php:113
-msgid "Enable telemetry"
-msgstr ""
-
-#: includes/modules/class-telemetry-consent.php:114
-msgid "Not now"
 msgstr ""
 
 #: patterns/client-portal-cta.php:13
@@ -1357,147 +1611,6 @@ msgstr ""
 msgid "A selection of recent sessions. Choose a gallery in the block settings."
 msgstr ""
 
-#: uninstall.php:32
-msgid "Undeliverable enquiries were deleted"
-msgstr ""
-
-#. translators: %d: number of enquiries.
-#: uninstall.php:35
-#, php-format
-msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
-msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/admin/settings.js:16
-msgid "Could not check the connection. Reload this page to try again."
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Client portal"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Portal address"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Portal path"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it."
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Open in a new tab"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Text"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading level"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading 2"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading 3"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading 4"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading 5"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Heading 6"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Paragraph"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Button label"
-msgstr ""
-
-#: build/client-galleries/index.js:1
-msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
-msgstr ""
-
-#. translators: %d: number of photos in a gallery.
-#: build/gallery/index.js:2
-#, js-format
-msgid "%d photo"
-msgid_plural "%d photos"
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/gallery/index.js:2
-#: build/gallery/index.js:3
-msgid "Site default"
-msgstr ""
-
-#: build/gallery/index.js:2
-msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
-msgstr ""
-
-#: build/gallery/index.js:2
-msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
-msgstr ""
-
-#: build/gallery/index.js:2
-msgid "Profotograaf is receiving too many requests. Try again in a moment."
-msgstr ""
-
-#. translators: %d: number of seconds to wait.
-#: build/gallery/index.js:3
-#, js-format
-msgid "Profotograaf is receiving too many requests. Try again in %d second."
-msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/gallery/index.js:3
-msgid "Profotograaf could not be reached. Check your connection and try again."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Profotograaf reported a problem. Try again later."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "There are no galleries in your Profotograaf account yet."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Display"
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Leave empty for the site default."
-msgstr ""
-
 #. translators: %d: number of photos left out of the gallery.
 #: build/gallery/index.js:4
 #, js-format
@@ -1527,11 +1640,6 @@ msgid "Photo ID"
 msgstr ""
 
 #: build/gallery/index.js:4
-#: build/gallery/index.js:6
-msgid "Caption"
-msgstr ""
-
-#: build/gallery/index.js:4
 msgid "Alt text"
 msgstr ""
 
@@ -1547,118 +1655,10 @@ msgstr ""
 msgid "Add a photo"
 msgstr ""
 
-#. translators: %d: number of photos shown at first.
-#: build/gallery/index.js:5
-#, js-format
-msgid "%d photo per page"
-msgid_plural "%d photos per page"
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/gallery/index.js:5
-msgid "load more button"
-msgstr ""
-
-#: build/gallery/index.js:5
-msgid "lightbox on"
-msgstr ""
-
-#: build/gallery/index.js:5
-msgid "lightbox off"
-msgstr ""
-
 #. translators: %s: what a photo links to, such as "The photo file".
 #: build/gallery/index.js:6
 #, js-format
 msgid "links to: %s"
-msgstr ""
-
-#: build/gallery/index.js:6
-#: build/gallery/index.js:7
-msgid "Profotograaf gallery"
-msgstr ""
-
-#. translators: %s: layout name such as grid.
-#: build/gallery/index.js:7
-#, js-format
-msgid "layout: %s"
-msgstr ""
-
-#: build/gallery/index.js:7
-msgid "Gallery"
-msgstr ""
-
-#: build/gallery/index.js:7
-msgid "Layout"
-msgstr ""
-
-#: build/gallery/index.js:7
-msgid "Choose another gallery"
-msgstr ""
-
-#: build/gallery/index.js:7
-msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
-msgstr ""
-
-#: build/gallery/index.js:7
-msgid "Choose one of your galleries."
-msgstr ""
-
-#: blocks/client-galleries/block.json
-msgctxt "block title"
-msgid "Find your gallery"
-msgstr ""
-
-#: blocks/client-galleries/block.json
-msgctxt "block description"
-msgid "A button that takes your clients to their private galleries in the Profotograaf client portal."
-msgstr ""
-
-#: blocks/client-galleries/block.json
-msgctxt "block keyword"
-msgid "client"
-msgstr ""
-
-#: blocks/client-galleries/block.json
-#: blocks/gallery/block.json
-msgctxt "block keyword"
-msgid "gallery"
-msgstr ""
-
-#: blocks/client-galleries/block.json
-msgctxt "block keyword"
-msgid "login"
-msgstr ""
-
-#: blocks/client-galleries/block.json
-msgctxt "block keyword"
-msgid "photography"
-msgstr ""
-
-#: blocks/client-galleries/block.json
-#: blocks/gallery/block.json
-msgctxt "block keyword"
-msgid "profotograaf"
-msgstr ""
-
-#: blocks/gallery/block.json
-msgctxt "block title"
-msgid "Profotograaf gallery"
-msgstr ""
-
-#: blocks/gallery/block.json
-msgctxt "block description"
-msgid "Show one of your Profotograaf galleries as a grid, masonry or slideshow."
-msgstr ""
-
-#: blocks/gallery/block.json
-msgctxt "block keyword"
-msgid "photos"
-msgstr ""
-
-#: blocks/gallery/block.json
-msgctxt "block keyword"
-msgid "portfolio"
 msgstr ""
 
 #: blocks/gallery/block.json

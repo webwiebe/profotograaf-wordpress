@@ -162,4 +162,29 @@ make i18n-check    # what CI runs: hardcoded strings and a stale .pot
 
 CI fails when the committed `.pot` differs from a fresh one (the creation date is ignored). The `.po` and JSON files are not compared, so run `make i18n` before every commit that changes strings.
 
-Dutch lives in `languages/profotograaf-nl_NL.po`. To add a locale, add `languages/profotograaf-<locale>.po` (copy the `.pot` header, set `Language:` and `Plural-Forms:`), then run `make i18n`. Nothing else changes: `update-po` fills the new file from the `.pot` and the JSON files follow from the `.po`. Other languages come from translate.wordpress.org once the plugin is in the directory.
+### Shipped languages
+
+The plugin ships `nl_NL`, `de_DE`, `fr_FR`, `es_ES` and `it_IT` in `languages/`. Dutch is the reference translation. German, French, Spanish and Italian are machine drafts: the `Last-Translator` and `Language-Team` headers say so, and they stay until a native speaker has reviewed the file. A reviewer removes the "machine drafted" note from `Language-Team`, sets `Last-Translator` to their name and sends a pull request.
+
+### Contribute a translation
+
+There are two paths. Use the first for a language the plugin does not ship, or once the plugin is listed in the WordPress.org directory. Use the second to fix or add a shipped language in this repository.
+
+**1. translate.wordpress.org**
+
+1. Open the plugin's project at `https://translate.wordpress.org/projects/wp-plugins/profotograaf/`.
+2. Pick your locale and translate or approve strings in the browser. You need a WordPress.org account.
+3. Approved translations reach sites as language pack updates, without a plugin release.
+
+Translations approved there override the files in `languages/` for that locale on sites that install the language pack.
+
+**2. A local `.po` file**
+
+1. Run `make i18n` so `languages/profotograaf.pot` and the existing files are current.
+2. For a new locale, create `languages/profotograaf-<locale>.po` with the header of the `.pot`, set `Language:` to the WordPress locale (for example `pt_BR`) and set a correct `Plural-Forms:` line for the language. The `Language-Team` header should say "machine drafted, needs human review" when a tool wrote the text.
+3. Translate the `msgstr` entries in a `.po` editor such as Poedit, or by hand. Keep `%s`, `%d` and numbered placeholders such as `%1$s` exactly as in the source, and fill every plural form.
+4. Run `make i18n`. It merges the `.pot` into every `languages/*.po`, so a new locale needs no Makefile change. It also writes the `.mo` file and the JSON files the block editor loads.
+5. Check the result in a browser: run `tests/e2e/up.sh`, set the admin user locale with `wp user update admin --locale=<locale>`, and open the block editor or Settings > Profotograaf. `tests/e2e/editor-translations.spec.js` does this for `nl_NL` and `de_DE`. Add the new locale to its `LOCALES` list.
+6. Commit the `.po`, `.mo` and JSON files together and open a pull request.
+
+Other pull requests add strings, so a `.po` file can lag behind the `.pot`. Untranslated strings show in English until someone translates them.
