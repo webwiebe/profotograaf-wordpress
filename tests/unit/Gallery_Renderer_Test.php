@@ -16,6 +16,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 	protected function setUp(): void {
 		parent::setUp();
 		Functions\when( 'current_user_can' )->justReturn( false );
+		Functions\when( 'sanitize_text_field' )->alias( fn( $value ) => trim( strip_tags( (string) $value ) ) );
 	}
 
 	private const NOSCRIPT = '<noscript>This gallery needs JavaScript to be shown here.</noscript>';
@@ -80,6 +81,55 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( self::NOSCRIPT, $html );
 	}
 
+	public function test_the_platform_host_gets_a_preconnect_hint_once_per_page(): void {
+		$first  = $this->renderer->render( array( 'id' => 'g-1' ) );
+		$second = $this->renderer->render( array( 'id' => 'g-2' ) );
+
+		$this->assertStringStartsWith( self::HINT, $first );
+		$this->assertStringNotContainsString( 'preconnect', $second );
+	}
+
+	public function test_a_platform_url_with_a_port_keeps_it_in_the_hint(): void {
+		Functions\when( 'apply_filters' )->alias( fn( $hook, $value ) => 'profotograaf_platform_url' === $hook ? 'http://localhost:8090/base' : $value );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringStartsWith( '<link rel="preconnect" href="http://localhost:8090">', $html );
+	}
+
+	public function test_no_gallery_means_no_hint(): void {
+		$this->assertSame( '', $this->renderer->render( array( 'id' => '' ) ) );
+	}
+
+	public function test_the_photo_shape_reserves_space_with_an_aspect_ratio(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => '4-3' ) );
+
+		$this->assertStringContainsString( 'style="min-height:8em;aspect-ratio:4 / 3"', $html );
+	}
+
+	public function test_the_wrapper_callable_gets_the_aspect_ratio_too(): void {
+		$seen = '';
+		$this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'ratio'   => '16-9',
+				'wrapper' => function ( array $attributes ) use ( &$seen ) {
+					$seen = $attributes['style'];
+					return 'class="custom"';
+				},
+			)
+		);
+
+		$this->assertSame( 'min-height:8em;aspect-ratio:16 / 9', $seen );
+	}
+
+	public function test_an_original_ratio_keeps_the_fixed_minimum_only(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => 'original' ) );
+
+		$this->assertStringContainsString( 'style="min-height:8em"', $html );
+		$this->assertStringNotContainsString( 'aspect-ratio', $html );
+	}
+
 	public function test_it_writes_the_embed_div_with_the_fallback_link(): void {
 		$html = $this->renderer->render(
 			array(
@@ -91,7 +141,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			'<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			self::HINT . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
 			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
 			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
@@ -238,7 +288,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$html = $this->renderer->render( array( 'id' => 'g-2' ) );
 		$this->renderer->render( array( 'id' => 'g-2' ) );
 
-		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $html );
+		$this->assertSame( self::HINT . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $html );
 		$this->assertCount( 0, $this->http->requests, 'A render path must not call the platform.' );
 		$this->assertSame( array( Gallery_Index::LOOKUP_HOOK ), $scheduled->getArrayCopy() );
 	}
@@ -270,8 +320,8 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		( new Gallery_Index( $this->api ) )->lookup();
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
-		$this->assertSame( '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $first );
-		$this->assertSame( $first, $second );
+		$this->assertSame( self::HINT . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $first );
+		$this->assertSame( substr( $first, strlen( self::HINT ) ), $second );
 		$this->assertCount( 1, $scheduled );
 	}
 
@@ -307,7 +357,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		$this->assertStringStartsWith( '<div class="custom">', $html );
+		$this->assertStringStartsWith( self::HINT . '<div class="custom">', $html );
 		$this->assertSame( 'g-1', $seen['data-profotograaf-gallery'] );
 		$this->assertSame( 'profotograaf-gallery', $seen['class'] );
 	}
@@ -328,7 +378,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		foreach ( array( '<details', '<summary', '<ul', '<ol', '<li', '<img', '<svg', 'list-style' ) as $needle ) {
+		foreach ( array( '<details', '<summary', '<ul', '<ol', '<li>', '<li ', '<img', '<svg', 'list-style' ) as $needle ) {
 			$this->assertStringNotContainsString( $needle, $html, $needle );
 		}
 	}
@@ -344,6 +394,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( 1, substr_count( $html, '<a ' ) );
 		$this->assertSame( 1, substr_count( $html, '<noscript>' ) );
 		$this->assertSame( 1, substr_count( $html, '<div ' ) );
+		$this->assertStringStartsWith( self::HINT . '<div ', $html );
 		$this->assertStringEndsWith( '</noscript></div>', $html );
 	}
 
@@ -468,5 +519,147 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( '12', $args['per_page'] );
 		$this->assertSame( '', $args['lightbox'] );
 		$this->assertSame( array_keys( Gallery_Renderer::OPTIONS ), array_keys( $args ) );
+	}
+
+	public function test_excluded_photos_reach_embed_js_as_a_comma_separated_list(): void {
+		$html = $this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'exclude' => array( 'p-1', 'p_2', 'p-1', 'bad id', '"><script>', '' ),
+			)
+		);
+
+		$this->assertStringContainsString( ' data-exclude="p-1,p_2"', $html );
+		$this->assertStringNotContainsString( '<script>', $html );
+	}
+
+	public function test_no_excluded_photos_send_no_attribute(): void {
+		$this->assertStringNotContainsString( 'data-exclude', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+		$this->assertStringNotContainsString( 'data-exclude', $this->renderer->render( array( 'id' => 'g-1', 'exclude' => array() ), array( 'exclude' => ' , ' ) ) );
+	}
+
+	public function test_the_block_list_wins_over_the_shortcode_list(): void {
+		$block = $this->renderer->render( array( 'id' => 'g-1', 'exclude' => array( 'a' ) ), array( 'exclude' => 'b,c' ) );
+		$code  = $this->renderer->render( array( 'id' => 'g-1', 'exclude' => '' ), array( 'exclude' => 'b, c' ) );
+
+		$this->assertStringContainsString( ' data-exclude="a"', $block );
+		$this->assertStringContainsString( ' data-exclude="b,c"', $code );
+	}
+
+	public function test_the_excluded_list_is_capped(): void {
+		$ids = array();
+		for ( $i = 0; $i < Gallery_Renderer::MAX_EXCLUDED + 10; $i++ ) {
+			$ids[] = 'p' . $i;
+		}
+
+		$this->assertCount( Gallery_Renderer::MAX_EXCLUDED, Gallery_Renderer::clean_ids( $ids ) );
+		$this->assertSame( array(), Gallery_Renderer::clean_ids( 42 ) );
+	}
+
+	public function test_the_excluded_block_attribute_maps_to_the_exclude_argument(): void {
+		$args = Gallery_Renderer::options_from_block( array( 'excludedPhotoIds' => array( 'p-1' ) ) );
+
+		$this->assertSame( array( 'p-1' ), $args['exclude'] );
+	}
+
+	public function test_duotone_and_link_to_follow_the_same_layers_as_the_other_options(): void {
+		$this->options['profotograaf_settings'] = array(
+			'gallery_duotone' => '#111111,#EEEEEE',
+			'gallery_link_to' => 'file',
+		);
+
+		$site = $this->renderer->render( array( 'id' => 'g-1' ) );
+		$this->assertStringContainsString( ' data-duotone="#111111,#eeeeee"', $site );
+		$this->assertStringContainsString( ' data-link-to="file"', $site );
+
+		$shortcode = $this->renderer->render(
+			array( 'id' => 'g-1' ),
+			array(
+				'duotone' => '#000,#fff',
+				'link_to' => 'none',
+			)
+		);
+		$this->assertStringContainsString( ' data-duotone="#000,#fff"', $shortcode );
+		$this->assertStringContainsString( ' data-link-to="none"', $shortcode );
+	}
+
+	public function test_an_invalid_duotone_or_link_target_is_dropped(): void {
+		$html = $this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'duotone' => 'red,blue',
+				'link_to' => 'elsewhere',
+			)
+		);
+
+		$this->assertStringNotContainsString( 'data-duotone', $html );
+		$this->assertStringNotContainsString( 'data-link-to', $html );
+	}
+
+	public function test_a_block_duotone_from_core_replaces_the_site_duotone(): void {
+		$this->options['profotograaf_settings'] = array( 'gallery_duotone' => '#111111,#eeeeee' );
+
+		$args = Gallery_Renderer::options_from_block( array( 'style' => array( 'color' => array( 'duotone' => 'var:preset|duotone|midnight' ) ) ) );
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) + $args );
+
+		$this->assertSame( 'none', $args['duotone'] );
+		$this->assertStringNotContainsString( 'data-duotone', $html );
+		$this->assertSame( '', Gallery_Renderer::options_from_block( array() )['duotone'] );
+	}
+
+	public function test_per_image_text_reaches_embed_js_as_clean_json(): void {
+		$items = array(
+			array(
+				'id'      => 'p-1',
+				'caption' => 'Sunrise',
+				'alt'     => 'Sun over the sea',
+			),
+			array(
+				'id'      => 'bad id',
+				'caption' => 'Dropped',
+			),
+			array( 'id' => 'p-2' ),
+			array(
+				'id'      => 'p-3',
+				'caption' => 'Dunes at dusk',
+			),
+		);
+		$args  = Gallery_Renderer::options_from_block( array( 'imageText' => $items ) );
+		$html  = $this->renderer->render( array( 'id' => 'g-1' ) + $args );
+
+		$this->assertStringContainsString(
+			' data-image-text="[{&quot;id&quot;:&quot;p-1&quot;,&quot;caption&quot;:&quot;Sunrise&quot;,&quot;alt&quot;:&quot;Sun over the sea&quot;},{&quot;id&quot;:&quot;p-3&quot;,&quot;caption&quot;:&quot;Dunes at dusk&quot;}]"',
+			$html
+		);
+	}
+
+	public function test_per_image_text_from_the_shortcode_is_json_and_garbage_is_ignored(): void {
+		$json = '[{"id":"p-1","alt":"Boat"}]';
+		$html = $this->renderer->render( array( 'id' => 'g-1' ), array( 'image_text' => $json ) );
+		$this->assertStringContainsString( ' data-image-text="[{&quot;id&quot;:&quot;p-1&quot;,&quot;alt&quot;:&quot;Boat&quot;}]"', $html );
+
+		foreach ( array( 'not json', '{"id":"p-1"}', '[1,2]', '' ) as $garbage ) {
+			$this->assertStringNotContainsString( 'data-image-text', $this->renderer->render( array( 'id' => 'g-1' ), array( 'image_text' => $garbage ) ), $garbage );
+		}
+	}
+
+	public function test_per_image_text_is_limited_in_count_and_length(): void {
+		$items = array();
+		for ( $i = 0; $i < Gallery_Renderer::IMAGE_TEXT_LIMIT + 5; $i++ ) {
+			$items[] = array(
+				'id'      => 'p' . $i,
+				'caption' => str_repeat( 'x', Gallery_Renderer::IMAGE_TEXT_LENGTH + 50 ),
+			);
+		}
+		$decoded = json_decode( Gallery_Renderer::clean_image_text( $items ), true );
+
+		$this->assertCount( Gallery_Renderer::IMAGE_TEXT_LIMIT, $decoded );
+		$this->assertSame( Gallery_Renderer::IMAGE_TEXT_LENGTH, strlen( $decoded[0]['caption'] ) );
+	}
+
+	public function test_crop_and_radius_have_no_option_of_their_own(): void {
+		$this->assertArrayHasKey( 'ratio', Gallery_Renderer::OPTIONS );
+		$this->assertArrayNotHasKey( 'crop', Gallery_Renderer::OPTIONS );
+		$this->assertArrayNotHasKey( 'radius', Gallery_Renderer::OPTIONS );
 	}
 }

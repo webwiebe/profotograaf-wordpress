@@ -39,6 +39,11 @@ abstract class Gallery_Test_Case extends Wp_Test_Case {
 	 */
 	protected array $enqueued = array();
 
+	/**
+	 * The connection hint the first gallery on a page carries.
+	 */
+	protected const HINT = '<link rel="preconnect" href="https://profotograaf.nl"><link rel="preconnect" href="https://profotograaf.nl" crossorigin>';
+
 	protected function setUp(): void {
 		parent::setUp();
 		defined( 'DAY_IN_SECONDS' ) || define( 'DAY_IN_SECONDS', 86400 );

@@ -33,7 +33,7 @@ class Shortcode_Test extends Gallery_Test_Case {
 			'url'    => 'https://profotograaf.nl/share/g/spring-wedding',
 		);
 
-		$this->assertSame( $this->renderer->render( $atts ), $shortcode->render( $atts ) );
+		$this->assertSame( $shortcode->render( $atts ), self::HINT . $this->renderer->render( $atts ) );
 		$this->assertStringContainsString( 'data-layout="slideshow"', $shortcode->render( $atts ) );
 	}
 
@@ -104,5 +104,11 @@ class Shortcode_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertStringContainsString( 'class="profotograaf-gallery"', $html );
+	}
+
+	public function test_the_exclude_attribute_lists_photos_to_leave_out(): void {
+		$html = ( new Shortcode( $this->renderer ) )->render( array( 'id' => 'g-1', 'exclude' => 'p-1, p-2' ) );
+
+		$this->assertStringContainsString( ' data-exclude="p-1,p-2"', $html );
 	}
 }

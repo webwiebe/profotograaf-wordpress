@@ -2,6 +2,7 @@
 const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
+const AxeBuilder = require( '@axe-core/playwright' ).default;
 const { login, mock } = require( './helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
@@ -113,6 +114,48 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await visitor.close();
 	} );
 
+	test( 'photos left out in the editor reach the visitor as data-exclude, and the shortcode takes the same list', async ( { page, browser } ) => {
+		await login( page );
+		await page.goto( '/wp-admin/post-new.php' );
+		await page.waitForFunction( () => window.wp && window.wp.data && window.wp.blocks && window.wp.data.select( 'core/block-editor' ) );
+		await page.evaluate( () => {
+			window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-post', 'welcomeGuide', false );
+			window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-post', 'fullscreenMode', false );
+			window.wp.data.dispatch( 'core/block-editor' ).insertBlocks(
+				window.wp.blocks.createBlock( 'profotograaf/gallery', { galleryId: 'g-e2e', galleryTitle: 'Spring wedding' } )
+			);
+		} );
+
+		// The preview draws every photo, then drops the one the author selects in the sidebar.
+		const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
+		await expect( canvas.locator( '.profotograaf-gallery-grid img' ) ).toHaveCount( 3, { timeout: 20_000 } );
+		await page.evaluate( () => {
+			const [ block ] = window.wp.data.select( 'core/block-editor' ).getBlocks();
+			window.wp.data.dispatch( 'core/block-editor' ).selectBlock( block.clientId );
+		} );
+		await page.getByRole( 'button', { name: 'Photos', exact: true } ).click();
+		await page.getByRole( 'button', { name: 'Groom' } ).click();
+		await expect( canvas.locator( '.profotograaf-gallery-grid img' ) ).toHaveCount( 2 );
+		await expect( canvas.locator( '.profotograaf-gallery-grid img[src*="/p-2/"]' ) ).toHaveCount( 0 );
+
+		await page.evaluate( () => {
+			window.wp.data.dispatch( 'core/editor' ).editPost( { title: 'Exclude E2E', status: 'publish' } );
+			return window.wp.data.dispatch( 'core/editor' ).savePost();
+		} );
+		await page.waitForFunction( () => window.wp.data.select( 'core/editor' ).isCurrentPostPublished() );
+		const permalink = await page.evaluate( () => window.wp.data.select( 'core/editor' ).getPermalink() );
+
+		const visitor = await browser.newContext();
+		const anonymous = await visitor.newPage();
+		await anonymous.goto( permalink );
+		await expect( anonymous.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveAttribute( 'data-exclude', 'p-2' );
+
+		const url = publishPost( 'Exclude shortcode E2E', '[profotograaf_gallery id="g-e2e" exclude="p-1, p-3"]' );
+		await anonymous.goto( url );
+		await expect( anonymous.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveAttribute( 'data-exclude', 'p-1,p-3' );
+		await visitor.close();
+	} );
+
 	test( 'a page with two galleries loads the script once', async ( { browser } ) => {
 		const url = publishPost(
 			'Two shortcodes E2E',
@@ -220,6 +263,39 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await anonymous.goto( url );
 		await expect( anonymous.locator( '.profotograaf-gallery-notice' ) ).toHaveCount( 0 );
 		await expect( anonymous.locator( 'div[data-profotograaf-gallery="g-removed"]' ).getByRole( 'link' ) ).toBeVisible();
+		await visitor.close();
+	} );
+
+	test( 'a gallery page announces the platform host early and holds space for the photos', async ( { browser } ) => {
+		const url = publishPost( 'Performance E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9"] [profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext( { javaScriptEnabled: false } );
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		await expect( page.locator( 'link[rel="preconnect"]:not([crossorigin])' ) ).toHaveCount( 1 );
+		await expect( page.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
+		const shaped = page.locator( 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]' );
+		await expect( shaped ).toHaveCSS( 'aspect-ratio', '16 / 9' );
+		const box = await shaped.boundingBox();
+		expect( box.height ).toBeGreaterThan( 100 );
+		await visitor.close();
+	} );
+
+	test( 'the gallery demo page has no axe violations', async ( { browser } ) => {
+		const url = publishPost(
+			'Accessibility E2E',
+			'[profotograaf_gallery id="g-e2e"] [profotograaf_gallery id="g-e2e" layout="masonry" ratio="4-3"] [profotograaf_gallery id="g-e2e" layout="slideshow"]'
+		);
+
+		const visitor = await browser.newContext();
+		const page = await visitor.newPage();
+		await page.goto( url );
+		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveCount( 3 );
+
+		// Scoped to the plugin markup: the active theme is outside this repository.
+		const results = await new AxeBuilder( { page } ).include( '[data-profotograaf-gallery]' ).analyze();
+		expect( results.violations, JSON.stringify( results.violations, null, 2 ) ).toEqual( [] );
 		await visitor.close();
 	} );
 
