@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T12:53:15+00:00\n"
+"POT-Creation-Date: 2026-10-01T13:00:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -42,18 +42,18 @@ msgstr ""
 msgid "https://profotograaf.nl"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:99
-#: includes/admin/class-leads-settings.php:181
+#: includes/admin/class-leads-settings.php:105
+#: includes/admin/class-leads-settings.php:211
 msgid "Profotograaf enquiries"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:100
-#: includes/class-settings-schema.php:51
+#: includes/admin/class-leads-settings.php:106
+#: includes/class-settings-schema.php:53
 msgid "Enquiry forms"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:175
-#: includes/admin/class-leads-settings.php:418
+#: includes/admin/class-leads-settings.php:205
+#: includes/admin/class-leads-settings.php:486
 #: includes/modules/class-admin-notices.php:185
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
@@ -61,110 +61,146 @@ msgstr ""
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:184
+#: includes/admin/class-leads-settings.php:214
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:189
+#: includes/admin/class-leads-settings.php:219
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:190
+#: includes/admin/class-leads-settings.php:220
 msgid "Connect this site"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:196
+#: includes/admin/class-leads-settings.php:225
+msgid "Site defaults"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:226
+msgid "Save defaults"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:228
+msgid "Forms"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:230
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:204
+#: includes/admin/class-leads-settings.php:238
 msgid "Save changes"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:208
+#: includes/admin/class-leads-settings.php:242
 msgid "Delivery"
 msgstr ""
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
-#: includes/admin/class-leads-settings.php:214
+#: includes/admin/class-leads-settings.php:248
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:239
+#: includes/admin/class-leads-settings.php:257
+msgid "Galleries and embed script"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:260
+msgid "Sync galleries now"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:261
+msgid "Clear the gallery index"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:262
+msgid "Re-check the embed version"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:282
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:240
+#: includes/admin/class-leads-settings.php:283
 msgid "Email address"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:241
+#: includes/admin/class-leads-settings.php:284
 msgid "Phone"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:242
+#: includes/admin/class-leads-settings.php:285
 msgid "Event date"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:243
+#: includes/admin/class-leads-settings.php:286
 msgid "Message"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:253
+#: includes/admin/class-leads-settings.php:296
 msgid "Send submissions of this form to Profotograaf"
 msgstr ""
 
+#: includes/admin/class-leads-settings.php:300
+msgid "Source tag"
+msgstr ""
+
+#: includes/admin/class-leads-settings.php:303
+msgid "Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name."
+msgstr ""
+
 #. translators: %s: name of the form field that is picked automatically.
-#: includes/admin/class-leads-settings.php:272
+#: includes/admin/class-leads-settings.php:320
 #, php-format
 msgid "Automatic (%s)"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:273
+#: includes/admin/class-leads-settings.php:321
 msgid "Automatic (no field found)"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:277
+#: includes/admin/class-leads-settings.php:325
 msgid "Do not send"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:286
+#: includes/admin/class-leads-settings.php:334
 msgid "Every other field is sent along as a label and value."
 msgstr ""
 
 #. translators: 1: form name, 2: error message.
-#: includes/admin/class-leads-settings.php:308
+#: includes/admin/class-leads-settings.php:356
 #, php-format
 msgid "%1$s: %2$s"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:317
+#: includes/admin/class-leads-settings.php:365
 msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:320
+#: includes/admin/class-leads-settings.php:368
 #: build/gallery/index.js:3
 msgid "Try again"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:321
+#: includes/admin/class-leads-settings.php:369
 msgid "Download as CSV"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:323
+#: includes/admin/class-leads-settings.php:371
 msgid "Remove exported enquiries"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:377
+#: includes/admin/class-leads-settings.php:421
 msgid "Changes saved."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:379
+#: includes/admin/class-leads-settings.php:423
 msgid "The enquiries are queued again."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:381
+#: includes/admin/class-leads-settings.php:425
 msgid "The exported enquiries were removed."
 msgstr ""
 
@@ -323,110 +359,94 @@ msgstr ""
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr ""
 
-#: includes/class-settings-schema.php:49
+#: includes/class-settings-schema.php:51
 msgid "General"
 msgstr ""
 
-#: includes/class-settings-schema.php:50
+#: includes/class-settings-schema.php:52
 msgid "Galleries"
 msgstr ""
 
-#: includes/class-settings-schema.php:52
+#: includes/class-settings-schema.php:54
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-settings-schema.php:67
+#: includes/class-settings-schema.php:69
 msgid "Gallery link text"
 msgstr ""
 
-#: includes/class-settings-schema.php:68
+#: includes/class-settings-schema.php:70
 msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
 msgstr ""
 
-#: includes/class-settings-schema.php:74
+#: includes/class-settings-schema.php:76
 msgid "Client portal path"
 msgstr ""
 
-#: includes/class-settings-schema.php:75
+#: includes/class-settings-schema.php:77
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr ""
 
-#: includes/class-settings-schema.php:82
+#: includes/class-settings-schema.php:84
 msgid "Default gallery layout"
 msgstr ""
 
-#: includes/class-settings-schema.php:83
-msgid "Used when a gallery block or shortcode does not choose a layout."
-msgstr ""
-
 #: includes/class-settings-schema.php:85
-#: build/gallery/index.js:2
-msgid "Grid"
-msgstr ""
-
-#: includes/class-settings-schema.php:86
-#: build/gallery/index.js:2
-msgid "Masonry"
+msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr ""
 
 #: includes/class-settings-schema.php:87
 #: build/gallery/index.js:2
+msgid "Grid"
+msgstr ""
+
+#: includes/class-settings-schema.php:88
+#: build/gallery/index.js:2
+msgid "Masonry"
+msgstr ""
+
+#: includes/class-settings-schema.php:89
+#: build/gallery/index.js:2
 msgid "Slideshow"
 msgstr ""
 
-#: includes/class-settings-schema.php:94
+#: includes/class-settings-schema.php:96
 msgid "Collect enquiries"
 msgstr ""
 
-#: includes/class-settings-schema.php:95
+#: includes/class-settings-schema.php:97
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:101
+#: includes/class-settings-schema.php:103
 msgid "Failure alerts go to"
 msgstr ""
 
-#: includes/class-settings-schema.php:102
+#: includes/class-settings-schema.php:104
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr ""
 
-#: includes/class-settings-schema.php:109
+#: includes/class-settings-schema.php:111
 msgid "Mail undeliverable enquiries to"
 msgstr ""
 
-#: includes/class-settings-schema.php:110
+#: includes/class-settings-schema.php:112
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr ""
 
-#: includes/class-settings-schema.php:117
-msgid "Keep undeliverable enquiries for"
-msgstr ""
-
-#: includes/class-settings-schema.php:118
-msgid "Enquiries that could not be delivered stay in the database until you export them or this time has passed. You get an email before they are removed."
-msgstr ""
-
-#: includes/class-settings-schema.php:120
-msgid "7 days"
-msgstr ""
-
 #: includes/class-settings-schema.php:121
-msgid "30 days"
+msgid "Keep undeliverable enquiries for (days)"
 msgstr ""
 
 #: includes/class-settings-schema.php:122
-msgid "90 days"
+msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr ""
 
-#: includes/class-settings-schema.php:123
-msgid "1 year"
-msgstr ""
-
-#: includes/class-settings-schema.php:130
+#: includes/class-settings-schema.php:128
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:131
+#: includes/class-settings-schema.php:129
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
@@ -497,6 +517,34 @@ msgstr ""
 
 #: includes/leads/class-lead-alerts.php:193
 msgid "Enquiry that could not be delivered"
+msgstr ""
+
+#. translators: %s: reason the galleries could not be loaded.
+#: includes/leads/class-site-tools.php:62
+#, php-format
+msgid "The galleries could not be synced: %s"
+msgstr ""
+
+#. translators: %s: number of galleries.
+#: includes/leads/class-site-tools.php:72
+#, php-format
+msgid "Synced %s gallery."
+msgid_plural "Synced %s galleries."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/leads/class-site-tools.php:86
+msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
+msgstr ""
+
+#: includes/leads/class-site-tools.php:99
+msgid "The embed script version could not be read. Galleries keep using the address without a version. Try again later."
+msgstr ""
+
+#. translators: %s: version of the embed script, 12 characters.
+#: includes/leads/class-site-tools.php:105
+#, php-format
+msgid "The embed script is at version %s."
 msgstr ""
 
 #: includes/modules/class-admin-notices.php:120
