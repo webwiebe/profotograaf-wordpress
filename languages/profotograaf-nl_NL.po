@@ -19,7 +19,7 @@ msgstr ""
 #: profotograaf.php
 #: includes/modules/class-settings-page.php:72
 #: includes/modules/class-settings-page.php:73
-#: includes/modules/class-settings-page.php:242
+#: includes/modules/class-settings-page.php:239
 msgid "Profotograaf"
 msgstr ""
 
@@ -50,9 +50,9 @@ msgstr "Aanvraagformulieren"
 
 #: includes/admin/class-leads-settings.php:150
 #: includes/admin/class-leads-settings.php:345
-#: includes/modules/class-settings-page.php:207
-#: includes/modules/class-settings-page.php:234
-#: includes/modules/class-settings-page.php:430
+#: includes/modules/class-settings-page.php:204
+#: includes/modules/class-settings-page.php:231
+#: includes/modules/class-settings-page.php:427
 msgid "You do not have permission to do this."
 msgstr "Je hebt hier geen toestemming voor."
 
@@ -207,22 +207,22 @@ msgstr "De verbinding kon niet worden gecontroleerd. Nieuwe poging."
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin opnieuw."
 
-#: includes/modules/class-client-galleries.php:171
+#: includes/modules/class-client-galleries.php:151
 #: build/client-galleries/index.js:1
 msgid "Find your gallery"
 msgstr "Vind je galerij"
 
-#: includes/modules/class-client-galleries.php:172
+#: includes/modules/class-client-galleries.php:152
 #: build/client-galleries/index.js:1
 msgid "Sign in to the client portal to see your photos."
 msgstr "Log in op het klantportaal om je foto's te bekijken."
 
-#: includes/modules/class-client-galleries.php:173
+#: includes/modules/class-client-galleries.php:153
 #: build/client-galleries/index.js:1
 msgid "Open my gallery"
 msgstr "Open mijn galerij"
 
-#: includes/modules/class-client-galleries.php:200
+#: includes/modules/class-client-galleries.php:180
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
@@ -230,78 +230,77 @@ msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft
 msgid "Settings"
 msgstr "Instellingen"
 
-#: includes/modules/class-settings-page.php:126
-#: includes/modules/class-settings-page.php:327
+#: includes/modules/class-settings-page.php:324
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Wachten tot je de verbinding goedkeurt in Profotograaf."
 
-#: includes/modules/class-settings-page.php:127
+#: assets/admin/settings.js:16
 msgid "Could not check the connection. Reload this page to try again."
 msgstr "De verbinding kon niet worden gecontroleerd. Laad deze pagina opnieuw om het nog eens te proberen."
 
-#: includes/modules/class-settings-page.php:148
+#: includes/modules/class-settings-page.php:145
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr "Profotograaf heeft een nieuwe toestemming nodig om galerijen aan te zetten voor insluiten."
 
-#: includes/modules/class-settings-page.php:150
+#: includes/modules/class-settings-page.php:147
 msgid "Connect this site again"
 msgstr "Koppel deze site opnieuw"
 
-#: includes/modules/class-settings-page.php:182
+#: includes/modules/class-settings-page.php:179
 msgid "Disconnected from Profotograaf."
 msgstr "Verbinding met Profotograaf verbroken."
 
-#: includes/modules/class-settings-page.php:186
+#: includes/modules/class-settings-page.php:183
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr "Verbinding verbroken. Deze site heeft geen toegang meer. Om de site ook uit je account te verwijderen, open je Gekoppelde apps in de instellingen van je Profotograaf-account."
 
-#: includes/modules/class-settings-page.php:217
+#: includes/modules/class-settings-page.php:214
 msgid "Connected to Profotograaf."
 msgstr "Verbonden met Profotograaf."
 
-#: includes/modules/class-settings-page.php:220
+#: includes/modules/class-settings-page.php:217
 msgid "The connection was declined in Profotograaf."
 msgstr "De verbinding is geweigerd in Profotograaf."
 
-#: includes/modules/class-settings-page.php:223
+#: includes/modules/class-settings-page.php:220
 msgid "The code expired. Start the connection again."
 msgstr "De code is verlopen. Start de verbinding opnieuw."
 
-#: includes/modules/class-settings-page.php:247
+#: includes/modules/class-settings-page.php:244
 msgid "Connection"
 msgstr "Verbinding"
 
-#: includes/modules/class-settings-page.php:252
+#: includes/modules/class-settings-page.php:249
 msgid "Connected"
 msgstr "Verbonden"
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:256
+#: includes/modules/class-settings-page.php:253
 #, php-format
 msgid "since %s."
 msgstr "sinds %s."
 
-#: includes/modules/class-settings-page.php:262
+#: includes/modules/class-settings-page.php:259
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr "Deze koppeling is gemaakt voordat Profotograaf deze site galerijen kon laten aanzetten voor insluiten. Koppel opnieuw om die toestemming te geven. Je galerijen en instellingen blijven zoals ze zijn."
 
-#: includes/modules/class-settings-page.php:264
+#: includes/modules/class-settings-page.php:261
 msgid "Connect again"
 msgstr "Opnieuw koppelen"
 
-#: includes/modules/class-settings-page.php:266
+#: includes/modules/class-settings-page.php:263
 msgid "Disconnect"
 msgstr "Verbinding verbreken"
 
-#: includes/modules/class-settings-page.php:269
+#: includes/modules/class-settings-page.php:266
 msgid "Not connected"
 msgstr "Niet verbonden"
 
-#: includes/modules/class-settings-page.php:274
+#: includes/modules/class-settings-page.php:271
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr "Verbind deze site met je Profotograaf-account om galerijen te plaatsen en aanvragen te ontvangen. Je keurt de verbinding goed in Profotograaf, dus je wachtwoord komt nooit op deze site."
 
-#: includes/modules/class-settings-page.php:275
+#: includes/modules/class-settings-page.php:272
 msgid "Connect to Profotograaf"
 msgstr "Verbinden met Profotograaf"
 
@@ -328,39 +327,39 @@ msgstr "Metselwerk"
 msgid "Slideshow"
 msgstr "Diavoorstelling"
 
-#: includes/modules/class-settings-page.php:322
+#: includes/modules/class-settings-page.php:319
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bevestig deze code in Profotograaf om het verbinden af te ronden:"
 
-#: includes/modules/class-settings-page.php:325
+#: includes/modules/class-settings-page.php:322
 msgid "Open the approval page"
 msgstr "Open de goedkeuringspagina"
 
-#: includes/modules/class-settings-page.php:328
+#: includes/modules/class-settings-page.php:325
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: includes/modules/class-settings-page.php:339
+#: includes/modules/class-settings-page.php:336
 msgid "Embedding on this site"
 msgstr "Insluiten op deze site"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:344
+#: includes/modules/class-settings-page.php:341
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s mag je Profotograaf-pagina's in een frame tonen."
 
-#: includes/modules/class-settings-page.php:348
+#: includes/modules/class-settings-page.php:345
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf staat insluiten alleen toe op sites die via https worden aangeboden. Bied deze site aan via https om je pagina's in een frame in te sluiten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:353
+#: includes/modules/class-settings-page.php:350
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je %s toe onder \"Sites die mijn pagina's mogen insluiten\" in de instellingen van je Profotograaf-account."
 
-#: includes/modules/class-settings-page.php:361
+#: includes/modules/class-settings-page.php:358
 msgid "Check again"
 msgstr "Opnieuw controleren"
 
@@ -552,7 +551,7 @@ msgstr ""
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:280
+#: includes/modules/class-settings-page.php:277
 msgid "Set up the enquiry forms"
 msgstr ""
 
