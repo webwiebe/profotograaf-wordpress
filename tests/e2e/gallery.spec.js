@@ -276,9 +276,37 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await expect( page.locator( 'link[rel="preconnect"]:not([crossorigin])' ) ).toHaveCount( 1 );
 		await expect( page.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
 		const shaped = page.locator( 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]' );
-		await expect( shaped ).toHaveCSS( 'aspect-ratio', '16 / 9' );
+		await expect( shaped ).toHaveCSS( 'aspect-ratio', 'auto' );
+		await expect( shaped ).not.toHaveCSS( 'min-height', '0px' );
 		const box = await shaped.boundingBox();
 		expect( box.height ).toBeGreaterThan( 100 );
+		await visitor.close();
+	} );
+
+	test( 'the host box is at least as tall as the gallery drawn inside it', async ( { browser } ) => {
+		const url = publishPost( 'Overflow E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9" layout="masonry"]' );
+
+		const visitor = await browser.newContext();
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		// Stand in for embed.js: draw content taller than the reserved space into
+		// a shadow root, then mark the host ready as the script does.
+		const host = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		await host.evaluate( ( el ) => {
+			const root = el.shadowRoot || el.attachShadow( { mode: 'open' } );
+			const tall = document.createElement( 'div' );
+			tall.style.height = '1200px';
+			root.append( tall );
+			el.setAttribute( 'data-pf-ready', '' );
+		} );
+
+		await expect( host ).toHaveCSS( 'min-height', '0px' );
+		const sizes = await host.evaluate( ( el ) => ( {
+			box: el.getBoundingClientRect().height,
+			content: el.shadowRoot.firstElementChild.getBoundingClientRect().height,
+		} ) );
+		expect( sizes.box, 'the host box is shorter than its content' ).toBeGreaterThanOrEqual( sizes.content );
 		await visitor.close();
 	} );
 

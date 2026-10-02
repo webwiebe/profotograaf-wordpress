@@ -16,17 +16,19 @@ final class Reserved_Space {
 
 	/**
 	 * The inline style that holds space for the gallery until embed.js draws
-	 * it. The box gets the ratio of one photo and grows when the gallery is
-	 * taller. An original or unset ratio keeps the fixed minimum.
-	 *
-	 * @param array<string,string> $data Display option data attributes.
+	 * it. Only a minimum height is set, so the box grows with the gallery. An
+	 * aspect ratio would fix the box height and let the gallery overflow it.
+	 * The rule() below clears the minimum once embed.js sets data-pf-ready.
 	 */
-	public static function style( array $data ): string {
-		$style = 'min-height:8em';
-		$ratio = $data['data-ratio'] ?? '';
-		if ( 1 === preg_match( '/^([1-9][0-9]{0,2}):([1-9][0-9]{0,2})$/', $ratio, $parts ) ) {
-			$style .= ';aspect-ratio:' . $parts[1] . ' / ' . $parts[2];
-		}
-		return $style;
+	public static function style(): string {
+		return 'min-height:8em';
+	}
+
+	/**
+	 * The style element that releases the reserved space after embed.js has
+	 * drawn the gallery. It needs !important to win over the inline style.
+	 */
+	public static function rule(): string {
+		return '<style>[data-profotograaf-gallery][data-pf-ready]{min-height:0!important}</style>';
 	}
 }
