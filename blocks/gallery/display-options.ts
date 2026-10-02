@@ -149,7 +149,7 @@ export type SiteDefaults = {
 	ratio: string;
 };
 
-export const NO_SITE_DEFAULTS: SiteDefaults = { columns: '', gap: '', ratio: '' };
+const NO_SITE_DEFAULTS: SiteDefaults = { columns: '', gap: '', ratio: '' };
 
 /** The site defaults the server passed to the editor, or none. */
 export function siteDefaults(): SiteDefaults {
