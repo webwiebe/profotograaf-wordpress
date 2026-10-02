@@ -14,6 +14,7 @@ use Profotograaf\Connection;
 use Profotograaf\Modules\Telemetry_Consent;
 use Profotograaf\Plugin;
 use Profotograaf\Settings;
+use Profotograaf\Telemetry_Delivery;
 use Profotograaf\Telemetry_Payload;
 use Profotograaf\Telemetry_Sender;
 
@@ -37,7 +38,14 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 	 *
 	 * @var mixed
 	 */
-	private $answer = 204;
+	private $answer = 202;
+
+	/**
+	 * Response headers the endpoint answers with.
+	 *
+	 * @var array<string,string>
+	 */
+	private array $headers = array();
 
 	/**
 	 * Scheduled single events.
@@ -67,6 +75,8 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 				return $this->answer;
 			}
 		);
+		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
+		Functions\when( 'wp_remote_retrieve_header' )->alias( fn( $response, $name ) => $this->headers[ $name ] ?? '' );
 		Functions\when( 'wp_remote_retrieve_response_code' )->alias( fn( $response ) => is_int( $response ) ? $response : 0 );
 
 		$this->connection = new Connection();
@@ -150,16 +160,58 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertStringNotContainsString( '@', (string) json_encode( $errors ) );
 	}
 
-	public function test_error_events_ride_in_the_daily_batch_and_need_consent(): void {
+	public function test_each_error_is_one_bugbarn_event_and_needs_consent(): void {
 		$this->assertFalse( $this->sender()->add_error( array( 'error_code' => 'a' ) ) );
 
 		$sender = $this->opt_in();
-		$this->assertTrue( $sender->add_error( array( 'error_code' => 'a_code' ) ) );
-		$sender->run();
+		$this->assertTrue(
+			$sender->add_error(
+				array(
+					'error_code'     => 'a_code',
+					'http_status'    => 500,
+					'error_location' => 'includes/x.php:9',
+					'plugin_version' => '0.1.0',
+					'timestamp'      => '2024-10-01T09:30:00Z',
+				)
+			)
+		);
+		$sender->add_error( array( 'error_code' => 'b_code' ) );
 
-		$body = json_decode( (string) $this->posts[0]['args']['body'], true );
-		$this->assertSame( 'a_code', $body['errors'][0]['error_code'] );
+		$this->assertSame( 3, $sender->run() );
+
+		$this->assertCount( 3, $this->posts );
+		$errors = array_values( array_filter( $this->posts, fn( $post ) => str_starts_with( $post['url'], 'https://bb.profotograaf.nl' ) ) );
+		$this->assertCount( 2, $errors );
+		$this->assertSame( 'https://bb.profotograaf.nl/api/v1/events', $errors[0]['url'] );
+		$headers = $errors[0]['args']['headers'];
+		$this->assertSame( Telemetry_Delivery::BUGBARN_KEY, $headers['X-BugBarn-Api-Key'] );
+		$this->assertSame( 'profotograaf-wordpress', $headers['X-BugBarn-Project'] );
+		$this->assertArrayNotHasKey( 'Authorization', $headers );
+		$this->assertArrayNotHasKey( 'x-api-key', $headers );
+
+		$body = json_decode( (string) $errors[0]['args']['body'], true );
+		$this->assertSame( 'a_code', $body['body'] );
+		$this->assertSame( 'error', $body['severityText'] );
+		$this->assertSame( '2024-10-01T09:30:00Z', $body['timestamp'] );
+		$this->assertSame( 'a_code', $body['exception']['type'] );
+		$this->assertSame(
+			array(
+				array(
+					'function' => 'unknown',
+					'filename' => 'includes/x.php',
+					'lineno'   => 9,
+				),
+			),
+			$body['exception']['stacktrace']
+		);
+		$this->assertSame( '11111111-2222-4333-8444-555555555555', $body['attributes']['install_id'] );
+		$this->assertSame( 500, $body['attributes']['http_status'] );
+		$this->assertSame( '0.1.0', $body['attributes']['plugin_version'] );
+		$second = json_decode( (string) $errors[1]['args']['body'], true );
+		$this->assertSame( array(), $second['exception']['stacktrace'] );
+		$this->assertArrayNotHasKey( 'timestamp', $second );
 		$this->assertSame( array(), $sender->pending_errors() );
+		$this->assertSame( array(), $sender->queue() );
 	}
 
 	public function test_free_text_in_module_and_error_fields_is_stripped(): void {
@@ -223,42 +275,117 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertArrayNotHasKey( Telemetry_Sender::QUEUE_OPTION, $this->options );
 	}
 
-	public function test_the_daily_run_posts_the_payload_to_the_default_endpoint(): void {
+	public function test_the_daily_run_posts_a_funnelbarn_usage_event(): void {
 		$sender = $this->opt_in();
 		$sender->on_lead_delivered();
+		$sender->on_lead_failed( null, new \WP_Error( 'lead_delivery_timeout', 'x' ) );
 
 		$this->assertSame( 1, $sender->run() );
 
 		$this->assertCount( 1, $this->posts );
-		$this->assertSame( 'https://bugbarn.wiebe.xyz/api/v1/ingest', $this->posts[0]['url'] );
-		$this->assertSame( 'application/json', $this->posts[0]['args']['headers']['Content-Type'] );
-		$this->assertArrayNotHasKey( 'Authorization', $this->posts[0]['args']['headers'] );
+		$this->assertSame( 'https://f.profotograaf.nl/api/v1/events', $this->posts[0]['url'] );
+		$headers = $this->posts[0]['args']['headers'];
+		$this->assertSame( 'application/json', $headers['Content-Type'] );
+		$this->assertSame( Telemetry_Delivery::FUNNELBARN_KEY, $headers['X-FunnelBarn-Api-Key'] );
+		$this->assertSame( 'profotograaf-wordpress', $headers['X-FunnelBarn-Project'] );
+		$this->assertArrayNotHasKey( 'Authorization', $headers );
+		$this->assertArrayNotHasKey( 'x-api-key', $headers );
+
 		$body = json_decode( (string) $this->posts[0]['args']['body'], true );
-		$this->assertSame( Telemetry_Payload::FIELDS, array_keys( $body ) );
-		$this->assertSame( 'usage', $body['type'] );
-		$this->assertSame( 1, $body['delivery_success'] );
+		$this->assertSame( 'daily_usage', $body['name'] );
+		$this->assertSame( '11111111-2222-4333-8444-555555555555', $body['session_id'] );
+		$this->assertSame( 'production', $body['environment'] );
+		$this->assertSame( 1, $body['properties']['delivery_success'] );
+		$this->assertSame( 1, $body['properties']['delivery_failed'] );
+		$this->assertSame( 1, $body['properties']['error_code_lead_delivery_timeout'] );
+		$this->assertSame( '6.9', $body['properties']['wordpress_version'] );
+		$this->assertSame( 'nl_NL', $body['properties']['locale'] );
+		$this->assertIsString( $body['properties']['active_modules'] );
+		$this->assertStringContainsString( 'telemetry_consent', $body['properties']['active_modules'] );
+		$this->assertArrayNotHasKey( 'type', $body );
+		$this->assertArrayNotHasKey( 'errors', $body['properties'] );
 		$this->assertSame( array(), $sender->queue() );
 		$this->assertArrayNotHasKey( Telemetry_Sender::COUNTER_OPTION, $this->options );
 	}
 
-	public function test_the_endpoint_and_token_come_from_filters(): void {
-		Filters\expectApplied( 'profotograaf_telemetry_endpoint' )->andReturn( 'https://telemetry.example.org/ingest' );
-		Filters\expectApplied( 'profotograaf_telemetry_token' )->andReturn( 'tok' );
+	public function test_the_endpoints_come_from_filters(): void {
+		Filters\expectApplied( 'profotograaf_telemetry_endpoint' )->andReturn( 'https://errors.example.org/' );
+		Filters\expectApplied( 'profotograaf_telemetry_usage_endpoint' )->andReturn( 'https://usage.example.org' );
 		$sender = $this->opt_in();
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
 
 		$sender->run();
 
-		$this->assertSame( 'https://telemetry.example.org/ingest', $this->posts[0]['url'] );
-		$this->assertSame( 'Bearer tok', $this->posts[0]['args']['headers']['Authorization'] );
+		$this->assertSame(
+			array( 'https://usage.example.org/api/v1/events', 'https://errors.example.org/api/v1/events' ),
+			array_column( $this->posts, 'url' )
+		);
 	}
 
 	public function test_an_empty_or_invalid_endpoint_sends_nothing(): void {
 		Filters\expectApplied( 'profotograaf_telemetry_endpoint' )->andReturn( 'javascript:alert(1)' );
+		Filters\expectApplied( 'profotograaf_telemetry_usage_endpoint' )->andReturn( '' );
 		$sender = $this->opt_in();
 
 		$this->assertSame( '', $sender->endpoint() );
+		$this->assertSame( '', $sender->usage_endpoint() );
 		$this->assertSame( 0, $sender->run() );
 		$this->assertSame( array(), $this->posts );
+	}
+
+	public function test_a_disabled_usage_endpoint_still_sends_errors(): void {
+		Filters\expectApplied( 'profotograaf_telemetry_usage_endpoint' )->andReturn( '' );
+		$sender = $this->opt_in();
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
+
+		$sender->run();
+
+		$this->assertSame( array( 'https://bb.profotograaf.nl/api/v1/events' ), array_column( $this->posts, 'url' ) );
+	}
+
+	public function test_a_429_pauses_sending_until_retry_after_and_keeps_the_queue(): void {
+		$this->answer  = 429;
+		$this->headers = array( 'retry-after' => '120' );
+		$sender        = $this->opt_in();
+		$sender->enqueue( array( 'type' => 'usage' ) );
+
+		$this->assertSame( 0, $sender->send() );
+		$this->assertSame( 0, $sender->send() );
+		$this->assertSame( 0, $sender->send() );
+		$this->assertSame( 0, $sender->send() );
+
+		$this->assertCount( 1, $this->posts );
+		$this->assertCount( 1, $sender->queue() );
+		$this->assertArrayNotHasKey( Telemetry_Sender::ATTEMPT_OPTION, $this->options );
+		$this->assertEqualsWithDelta( 120, $this->options[ Telemetry_Delivery::PAUSE_OPTION ] - time(), 2 );
+		$this->assertEqualsWithDelta( 120, $this->scheduled[0][0] - time(), 2 );
+		$this->assertSame( Telemetry_Sender::RETRY_HOOK, $this->scheduled[0][1] );
+	}
+
+	public function test_a_503_without_retry_after_pauses_for_five_minutes_and_resumes_afterwards(): void {
+		$this->answer = 503;
+		$sender       = $this->opt_in();
+		$sender->enqueue( array( 'type' => 'usage' ) );
+
+		$sender->send();
+		$this->assertEqualsWithDelta( 300, $this->options[ Telemetry_Delivery::PAUSE_OPTION ] - time(), 2 );
+
+		$this->options[ Telemetry_Delivery::PAUSE_OPTION ] = time() - 1;
+		$this->answer                                      = 202;
+		$this->assertSame( 1, $sender->send() );
+		$this->assertCount( 2, $this->posts );
+		$this->assertSame( array(), $sender->queue() );
+	}
+
+	public function test_retry_after_is_capped_at_one_day(): void {
+		$this->answer  = 429;
+		$this->headers = array( 'retry-after' => '9999999' );
+		$sender        = $this->opt_in();
+		$sender->enqueue( array( 'type' => 'usage' ) );
+
+		$sender->send();
+
+		$this->assertEqualsWithDelta( 86400, $this->options[ Telemetry_Delivery::PAUSE_OPTION ] - time(), 2 );
 	}
 
 	public function test_do_not_track_and_global_privacy_control_keep_the_queue_unsent(): void {

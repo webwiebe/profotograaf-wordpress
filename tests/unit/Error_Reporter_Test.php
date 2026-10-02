@@ -162,8 +162,9 @@ class Error_Reporter_Test extends Wp_Test_Case {
 	public function test_the_daily_batch_carries_the_events_and_empties_them(): void {
 		$this->opt_in();
 		Functions\when( 'get_locale' )->justReturn( 'en_US' );
+		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
 		Functions\when( 'wp_remote_post' )->justReturn( array() );
-		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
+		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 202 );
 		$this->reporter->on_lead_failed( array(), $this->error() );
 		$payload = $this->sender->payload();
 
