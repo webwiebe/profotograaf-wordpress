@@ -211,4 +211,80 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( ' data-load-more="on"', $html );
 		$this->assertStringContainsString( ' data-gap="12"', $html );
 	}
+
+	public function test_the_editor_defaults_are_empty_without_site_settings(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		$this->module->register( $this->plugin );
+
+		$this->assertSame(
+			array(
+				'columns' => '',
+				'gap'     => '',
+				'ratio'   => '',
+			),
+			$this->module->editor_defaults()
+		);
+	}
+
+	public function test_the_editor_defaults_follow_the_site_settings(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		$this->module->register( $this->plugin );
+		$this->options['profotograaf_settings'] = array(
+			'gallery_columns' => 4,
+			'gallery_gap'     => 0,
+			'gallery_ratio'   => '1-1',
+		);
+
+		$this->assertSame(
+			array(
+				'columns' => '4',
+				'gap'     => '0',
+				'ratio'   => '1-1',
+			),
+			$this->module->editor_defaults()
+		);
+	}
+
+	public function test_the_editor_script_receives_the_defaults(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		$this->module->register( $this->plugin );
+		$this->options['profotograaf_settings'] = array( 'gallery_columns' => 5 );
+		Functions\when( 'generate_block_asset_handle' )->justReturn( 'profotograaf-gallery-editor-script' );
+		Functions\when( 'wp_script_is' )->justReturn( true );
+		Functions\expect( 'wp_localize_script' )
+			->once()
+			->with(
+				'profotograaf-gallery-editor-script',
+				'profotograafGalleryDefaults',
+				array(
+					'columns' => '5',
+					'gap'     => '',
+					'ratio'   => '',
+				)
+			);
+
+		$this->module->localize_editor_defaults();
+	}
+
+	public function test_nothing_is_localized_while_the_editor_script_is_not_registered(): void {
+		Functions\when( 'generate_block_asset_handle' )->justReturn( 'profotograaf-gallery-editor-script' );
+		Functions\when( 'wp_script_is' )->justReturn( false );
+		Functions\expect( 'wp_localize_script' )->never();
+
+		$this->module->localize_editor_defaults();
+	}
+
+	public function test_it_hooks_the_editor_defaults(): void {
+		$actions = array();
+		Functions\when( 'add_action' )->alias(
+			function ( $hook ) use ( &$actions ) {
+				$actions[] = $hook;
+			}
+		);
+		Functions\when( 'add_shortcode' )->justReturn( true );
+
+		$this->module->register( $this->plugin );
+
+		$this->assertContains( 'enqueue_block_editor_assets', $actions );
+	}
 }
