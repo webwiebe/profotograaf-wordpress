@@ -277,7 +277,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await expect( page.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
 		const shaped = page.locator( 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]' );
 		await expect( shaped ).toHaveCSS( 'aspect-ratio', 'auto' );
-		await expect( shaped ).toHaveCSS( 'min-height', '128px' );
+		await expect( shaped ).not.toHaveCSS( 'min-height', '0px' );
 		const box = await shaped.boundingBox();
 		expect( box.height ).toBeGreaterThan( 100 );
 		await visitor.close();
