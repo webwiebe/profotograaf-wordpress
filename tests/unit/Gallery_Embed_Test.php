@@ -226,6 +226,17 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 	}
 
+	public function test_the_editor_defaults_are_empty_before_the_module_is_registered(): void {
+		$this->assertSame(
+			array(
+				'columns' => '',
+				'gap'     => '',
+				'ratio'   => '',
+			),
+			$this->module->editor_defaults()
+		);
+	}
+
 	public function test_the_editor_defaults_follow_the_site_settings(): void {
 		Functions\when( 'add_shortcode' )->justReturn( true );
 		$this->module->register( $this->plugin );
