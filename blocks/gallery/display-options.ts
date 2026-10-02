@@ -138,6 +138,45 @@ export function cssRatio( ratio: string ): string {
 	return /^\d+-\d+$/.test( ratio ) ? ratio.replace( '-', ' / ' ) : '4 / 3';
 }
 
+/**
+ * The site defaults for the options the preview draws, as the server resolved
+ * them (see Gallery_Embed::editor_defaults). An empty string means the
+ * Profotograaf default.
+ */
+export type SiteDefaults = {
+	columns: string;
+	gap: string;
+	ratio: string;
+};
+
+const NO_SITE_DEFAULTS: SiteDefaults = { columns: '', gap: '', ratio: '' };
+
+/** The site defaults the server passed to the editor, or none. */
+export function siteDefaults(): SiteDefaults {
+	const passed = ( globalThis as { profotograafGalleryDefaults?: Partial< SiteDefaults > } )
+		.profotograafGalleryDefaults;
+	return {
+		columns: String( passed?.columns ?? '' ),
+		gap: String( passed?.gap ?? '' ),
+		ratio: String( passed?.ratio ?? '' ),
+	};
+}
+
+/**
+ * What the preview draws: the block attribute when set, else the site default,
+ * else the Profotograaf default (3 columns, 8 pixels, 4 / 3).
+ */
+export function previewLayout(
+	attributes: Pick< DisplayAttributes, 'columns' | 'gap' | 'ratio' >,
+	defaults: SiteDefaults = NO_SITE_DEFAULTS
+): { columns: number; gap: number; ratio: string } {
+	const pick = ( own: string, site: string ) => ( own !== '' ? own : site );
+	const columns = Number( pick( attributes.columns, defaults.columns ) ) || 3;
+	const gapValue = pick( attributes.gap, defaults.gap );
+	const gap = gapValue === '' || ! Number.isFinite( Number( gapValue ) ) ? 8 : Number( gapValue );
+	return { columns, gap, ratio: cssRatio( pick( attributes.ratio, defaults.ratio ) ) };
+}
+
 /** Short phrases for the options that are set, for the block preview. */
 export function displaySummary( attributes: DisplayAttributes ): string[] {
 	const parts: string[] = [];

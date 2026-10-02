@@ -2,9 +2,11 @@ import { __ } from '@wordpress/i18n';
 import type { CSSProperties } from 'react';
 import type { ImageText } from './types';
 import {
-	cssRatio,
 	displaySummary,
+	previewLayout,
+	siteDefaults,
 	type DisplayAttributes,
+	type SiteDefaults,
 } from './display-options';
 import { excludedCount, excludedLabel, visiblePhotos } from './exclude';
 import type { PhotoRow } from './types';
@@ -40,7 +42,7 @@ function tilesFor(
 
 /**
  * A sketch of the gallery in the editor. It follows columns, gap, shape and
- * captions the way embed.js will draw them. Photos left out do not appear.
+ * captions, with the site defaults behind the block's own values, the way embed.js will draw them. Photos left out do not appear.
  */
 export function PreviewGrid( {
 	attributes,
@@ -48,19 +50,20 @@ export function PreviewGrid( {
 	photos,
 	excluded = [],
 	imageText = [],
+	defaults = siteDefaults(),
 }: {
 	attributes: DisplayAttributes;
 	cover?: string | undefined;
 	photos?: PhotoRow[] | null | undefined;
 	excluded?: string[];
 	imageText?: ImageText[];
+	defaults?: SiteDefaults;
 } ) {
-	const columns = Number( attributes.columns ) || 3;
-	const gap = attributes.gap === '' ? 8 : Number( attributes.gap );
+	const layout = previewLayout( attributes, defaults );
 	const style = {
-		'--profotograaf-columns': columns,
-		'--profotograaf-gap': `${ gap }px`,
-		'--profotograaf-ratio': cssRatio( attributes.ratio ),
+		'--profotograaf-columns': layout.columns,
+		'--profotograaf-gap': `${ layout.gap }px`,
+		'--profotograaf-ratio': layout.ratio,
 	} as CSSProperties;
 	const summary = displaySummary( attributes );
 	const left = photos ? excludedCount( photos, excluded ) : 0;

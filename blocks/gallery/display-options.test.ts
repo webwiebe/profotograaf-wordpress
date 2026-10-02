@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
 	DISPLAY_DEFAULTS,
 	cleanNumber,
 	cssRatio,
 	displayControls,
 	displaySummary,
+	previewLayout,
+	siteDefaults,
 } from './display-options';
 
 describe( 'cleanNumber', () => {
@@ -65,5 +67,44 @@ describe( 'displayControls', () => {
 		expect( displayControls().map( ( c ) => c.attribute ).sort() ).toEqual(
 			Object.keys( DISPLAY_DEFAULTS ).sort()
 		);
+	} );
+} );
+
+describe( 'previewLayout', () => {
+	const site = { columns: '5', gap: '0', ratio: '1-1' };
+
+	it( 'uses the Profotograaf default with no attributes and no site defaults', () => {
+		expect( previewLayout( DISPLAY_DEFAULTS ) ).toEqual( { columns: 3, gap: 8, ratio: '4 / 3' } );
+	} );
+
+	it( 'shows the site defaults when the block sets nothing', () => {
+		expect( previewLayout( DISPLAY_DEFAULTS, site ) ).toEqual( { columns: 5, gap: 0, ratio: '1 / 1' } );
+	} );
+
+	it( 'lets block attributes override the site defaults', () => {
+		const own = { ...DISPLAY_DEFAULTS, columns: '2', gap: '24', ratio: '3-2' };
+		expect( previewLayout( own, site ) ).toEqual( { columns: 2, gap: 24, ratio: '3 / 2' } );
+	} );
+
+	it( 'overrides one value and keeps the site default for the rest', () => {
+		const own = { ...DISPLAY_DEFAULTS, columns: '2' };
+		expect( previewLayout( own, site ) ).toEqual( { columns: 2, gap: 0, ratio: '1 / 1' } );
+	} );
+} );
+
+describe( 'siteDefaults', () => {
+	const target = globalThis as { profotograafGalleryDefaults?: unknown };
+
+	afterEach( () => {
+		delete target.profotograafGalleryDefaults;
+	} );
+
+	it( 'is empty when the server passed nothing', () => {
+		expect( siteDefaults() ).toEqual( { columns: '', gap: '', ratio: '' } );
+	} );
+
+	it( 'reads the values the server passed', () => {
+		target.profotograafGalleryDefaults = { columns: 4, gap: '12', ratio: '16-9' };
+		expect( siteDefaults() ).toEqual( { columns: '4', gap: '12', ratio: '16-9' } );
 	} );
 } );

@@ -162,6 +162,31 @@ describe( 'Edit with a gallery', () => {
 		expect( screen.getByText( '12 photos per page, lightbox on' ) ).toBeTruthy();
 	} );
 
+	it( 'previews the site defaults when the block sets none', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		( globalThis as { profotograafGalleryDefaults?: unknown } ).profotograafGalleryDefaults = {
+			columns: 5,
+			gap: 0,
+			ratio: '1-1',
+		};
+		try {
+			const { container, unmount } = render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+			const grid = container.querySelector< HTMLElement >( '.profotograaf-gallery-grid' );
+			expect( grid?.style.getPropertyValue( '--profotograaf-columns' ) ).toBe( '5' );
+			expect( grid?.style.getPropertyValue( '--profotograaf-gap' ) ).toBe( '0px' );
+			expect( grid?.style.getPropertyValue( '--profotograaf-ratio' ) ).toBe( '1 / 1' );
+			unmount();
+
+			const own = render( <Edit attributes={ { ...chosen, columns: '2', gap: '16' } } setAttributes={ vi.fn() } /> );
+			const overridden = own.container.querySelector< HTMLElement >( '.profotograaf-gallery-grid' );
+			expect( overridden?.style.getPropertyValue( '--profotograaf-columns' ) ).toBe( '2' );
+			expect( overridden?.style.getPropertyValue( '--profotograaf-gap' ) ).toBe( '16px' );
+			expect( overridden?.style.getPropertyValue( '--profotograaf-ratio' ) ).toBe( '1 / 1' );
+		} finally {
+			delete ( globalThis as { profotograafGalleryDefaults?: unknown } ).profotograafGalleryDefaults;
+		}
+	} );
+
 	it( 'shows no captions in the preview when they are hidden', () => {
 		fetchMock.mockReturnValue( new Promise( () => undefined ) );
 		render( <Edit attributes={ { ...chosen, captions: 'off' } } setAttributes={ vi.fn() } /> );

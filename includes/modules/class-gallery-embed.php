@@ -14,6 +14,7 @@ use Profotograaf\Gallery_Rest;
 use Profotograaf\Module;
 use Profotograaf\Oembed;
 use Profotograaf\Plugin;
+use Profotograaf\Settings;
 use Profotograaf\Shortcode;
 
 defined( 'ABSPATH' ) || exit;
@@ -40,6 +41,18 @@ class Gallery_Embed implements Module {
 	private ?Gallery_Renderer $renderer = null;
 
 	/**
+	 * Settings, for the defaults the editor preview shows.
+	 *
+	 * @var Settings|null
+	 */
+	private ?Settings $settings = null;
+
+	/**
+	 * Name of the JavaScript global that carries the site defaults.
+	 */
+	public const EDITOR_GLOBAL = 'profotograafGalleryDefaults';
+
+	/**
 	 * Adds the hooks.
 	 *
 	 * @param Plugin $plugin Service container.
@@ -49,6 +62,7 @@ class Gallery_Embed implements Module {
 		$index          = new Gallery_Index( $plugin->api() );
 		$renderer       = new Gallery_Renderer( $script, $index, $plugin->settings() );
 		$this->renderer = $renderer;
+		$this->settings = $plugin->settings();
 
 		( new Shortcode( $renderer ) )->register();
 		( new Oembed( $script ) )->register();
@@ -59,6 +73,7 @@ class Gallery_Embed implements Module {
 		add_filter( 'script_loader_tag', array( $script, 'add_error_handler' ), 10, 2 );
 		add_filter( 'register_block_type_args', array( $this, 'block_args' ), 10, 2 );
 		add_action( 'init', array( $this, 'load_script_translations' ), 20 );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'localize_editor_defaults' ) );
 	}
 
 	/**
@@ -129,6 +144,40 @@ class Gallery_Embed implements Module {
 		$handle = generate_block_asset_handle( self::BLOCK, 'editorScript' );
 		if ( wp_script_is( $handle, 'registered' ) ) {
 			wp_set_script_translations( $handle, 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		}
+	}
+
+	/**
+	 * The site defaults the editor preview draws, resolved like the front end.
+	 * An empty string means the Profotograaf default.
+	 *
+	 * @return array{columns:string,gap:string,ratio:string}
+	 */
+	public function editor_defaults(): array {
+		if ( null === $this->settings ) {
+			return array(
+				'columns' => '',
+				'gap'     => '',
+				'ratio'   => '',
+			);
+		}
+		return array(
+			'columns' => (string) $this->settings->resolve( 'gallery_columns' ),
+			'gap'     => (string) $this->settings->resolve( 'gallery_gap' ),
+			'ratio'   => (string) $this->settings->resolve( 'gallery_ratio' ),
+		);
+	}
+
+	/**
+	 * Hands the site defaults to the block editor script.
+	 */
+	public function localize_editor_defaults(): void {
+		if ( ! function_exists( 'generate_block_asset_handle' ) ) {
+			return;
+		}
+		$handle = generate_block_asset_handle( self::BLOCK, 'editorScript' );
+		if ( wp_script_is( $handle, 'registered' ) ) {
+			wp_localize_script( $handle, self::EDITOR_GLOBAL, $this->editor_defaults() );
 		}
 	}
 }
