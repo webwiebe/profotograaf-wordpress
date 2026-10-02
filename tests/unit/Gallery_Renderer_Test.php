@@ -56,7 +56,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 		$this->assertStringStartsWith( '<p class="profotograaf-gallery-notice"', $editor );
 		$this->assertStringContainsString( 'may have been deleted', $editor );
-		$this->assertStringStartsWith( '<div class="profotograaf-gallery"', $visitor );
+		$this->assertStringStartsWith( self::RULE . '<div class="profotograaf-gallery"', $visitor );
 		$this->assertStringContainsString( '<a href="https://profotograaf.nl/share/g/gone"', $visitor );
 	}
 
@@ -101,13 +101,20 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( '', $this->renderer->render( array( 'id' => '' ) ) );
 	}
 
-	public function test_the_photo_shape_reserves_space_with_an_aspect_ratio(): void {
+	public function test_the_photo_shape_sets_no_aspect_ratio_on_the_host(): void {
 		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => '4-3' ) );
 
-		$this->assertStringContainsString( 'style="min-height:8em;aspect-ratio:4 / 3"', $html );
+		$this->assertStringContainsString( 'style="min-height:8em"', $html );
+		$this->assertStringNotContainsString( 'aspect-ratio', $html );
 	}
 
-	public function test_the_wrapper_callable_gets_the_aspect_ratio_too(): void {
+	public function test_the_minimum_height_is_cleared_once_the_gallery_is_drawn(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringContainsString( self::RULE, $html );
+	}
+
+	public function test_the_wrapper_callable_gets_the_minimum_height_only(): void {
 		$seen = '';
 		$this->renderer->render(
 			array(
@@ -120,7 +127,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		$this->assertSame( 'min-height:8em;aspect-ratio:16 / 9', $seen );
+		$this->assertSame( 'min-height:8em', $seen );
 	}
 
 	public function test_an_original_ratio_keeps_the_fixed_minimum_only(): void {
@@ -141,7 +148,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			self::HINT . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			self::HINT . self::RULE . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
 			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
 			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
@@ -288,7 +295,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$html = $this->renderer->render( array( 'id' => 'g-2' ) );
 		$this->renderer->render( array( 'id' => 'g-2' ) );
 
-		$this->assertSame( self::HINT . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $html );
+		$this->assertSame( self::HINT . self::RULE . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $html );
 		$this->assertCount( 0, $this->http->requests, 'A render path must not call the platform.' );
 		$this->assertSame( array( Gallery_Index::LOOKUP_HOOK ), $scheduled->getArrayCopy() );
 	}
@@ -320,7 +327,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		( new Gallery_Index( $this->api ) )->lookup();
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
-		$this->assertSame( self::HINT . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $first );
+		$this->assertSame( self::HINT . self::RULE . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $first );
 		$this->assertSame( substr( $first, strlen( self::HINT ) ), $second );
 		$this->assertCount( 1, $scheduled );
 	}
@@ -357,7 +364,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		$this->assertStringStartsWith( self::HINT . '<div class="custom">', $html );
+		$this->assertStringStartsWith( self::HINT . self::RULE . '<div class="custom">', $html );
 		$this->assertSame( 'g-1', $seen['data-profotograaf-gallery'] );
 		$this->assertSame( 'profotograaf-gallery', $seen['class'] );
 	}
@@ -394,7 +401,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( 1, substr_count( $html, '<a ' ) );
 		$this->assertSame( 1, substr_count( $html, '<noscript>' ) );
 		$this->assertSame( 1, substr_count( $html, '<div ' ) );
-		$this->assertStringStartsWith( self::HINT . '<div ', $html );
+		$this->assertStringStartsWith( self::HINT . self::RULE . '<div ', $html );
 		$this->assertStringEndsWith( '</noscript></div>', $html );
 	}
 
