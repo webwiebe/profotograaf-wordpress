@@ -10,8 +10,9 @@ namespace Profotograaf;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Counts outcomes, queues the daily usage batch and sends it to the endpoint
- * (docs/telemetry.md, "Authentication and Batching").
+ * Counts outcomes, queues the daily usage batch and one event per error, and
+ * hands each to Telemetry_Delivery (docs/telemetry.md, "Authentication and
+ * Batching").
  *
  * Every entry point checks consent first, so a site that did not opt in never
  * counts, queues or sends anything, and a revoked site stops at once. A
@@ -20,16 +21,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Telemetry_Sender {
 
-	public const QUEUE_OPTION     = 'profotograaf_telemetry_queued_batches';
-	public const COUNTER_OPTION   = 'profotograaf_telemetry_queued_counters';
-	public const ATTEMPT_OPTION   = 'profotograaf_telemetry_queued_attempts';
-	public const ERRORS_OPTION    = 'profotograaf_telemetry_queued_errors';
-	public const BATCH_HOOK       = 'profotograaf_send_telemetry_batch';
-	public const RETRY_HOOK       = 'profotograaf_retry_telemetry_batch';
-	public const DEFAULT_ENDPOINT = 'https://bugbarn.wiebe.xyz/api/v1/ingest';
-	public const MAX_ATTEMPTS     = 3;
-	public const MAX_QUEUED       = 7;
-	public const BACKOFF          = array( 5, 10, 30 );
+	public const QUEUE_OPTION   = 'profotograaf_telemetry_queued_batches';
+	public const COUNTER_OPTION = 'profotograaf_telemetry_queued_counters';
+	public const ATTEMPT_OPTION = 'profotograaf_telemetry_queued_attempts';
+	public const ERRORS_OPTION  = 'profotograaf_telemetry_queued_errors';
+	public const BATCH_HOOK     = 'profotograaf_send_telemetry_batch';
+	public const RETRY_HOOK     = 'profotograaf_retry_telemetry_batch';
+	public const MAX_ATTEMPTS   = 3;
+	public const MAX_QUEUED     = 100;
+	public const BACKOFF        = array( 5, 10, 30 );
 
 	/**
 	 * Settings.
@@ -122,19 +122,17 @@ class Telemetry_Sender {
 	}
 
 	/**
-	 * The endpoint, or an empty string when telemetry has no destination.
+	 * The base URL for error events, or an empty string when errors have no destination.
 	 */
 	public function endpoint(): string {
-		/**
-		 * Filters the telemetry endpoint. An empty string disables sending.
-		 *
-		 * @param string $url Endpoint URL.
-		 */
-		$url    = apply_filters( 'profotograaf_telemetry_endpoint', self::DEFAULT_ENDPOINT );
-		$url    = trim( (string) $url );
-		$scheme = strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) );
-		$host   = (string) wp_parse_url( $url, PHP_URL_HOST );
-		return '' !== $host && in_array( $scheme, array( 'http', 'https' ), true ) ? $url : '';
+		return Telemetry_Delivery::errors_endpoint();
+	}
+
+	/**
+	 * The base URL for usage events, or an empty string when usage has no destination.
+	 */
+	public function usage_endpoint(): string {
+		return Telemetry_Delivery::usage_endpoint();
 	}
 
 	/**
@@ -169,7 +167,21 @@ class Telemetry_Sender {
 		if ( ! $this->is_enabled() ) {
 			return 0;
 		}
-		$this->enqueue( $this->payload() );
+		$payload = $this->payload();
+		$errors  = $payload['errors'];
+		unset( $payload['errors'] );
+		$this->enqueue( $payload );
+		foreach ( $errors as $error ) {
+			$this->enqueue(
+				array_merge(
+					$error,
+					array(
+						'type'       => 'error',
+						'install_id' => $payload['install_id'],
+					)
+				)
+			);
+		}
 		delete_option( self::COUNTER_OPTION );
 		delete_option( self::ERRORS_OPTION );
 		return $this->send();
@@ -250,6 +262,7 @@ class Telemetry_Sender {
 		delete_option( self::COUNTER_OPTION );
 		delete_option( self::ERRORS_OPTION );
 		delete_option( self::ATTEMPT_OPTION );
+		delete_option( Telemetry_Delivery::PAUSE_OPTION );
 	}
 
 	/**
@@ -269,7 +282,7 @@ class Telemetry_Sender {
 	 *             Do Not Track or Global Privacy Control, or without an endpoint.
 	 */
 	public function send(): int {
-		if ( ! $this->is_enabled() || $this->request_opts_out() || '' === $this->endpoint() ) {
+		if ( ! $this->is_enabled() || $this->request_opts_out() || ( '' === $this->endpoint() && '' === $this->usage_endpoint() ) ) {
 			return 0;
 		}
 		$sent  = 0;
@@ -288,53 +301,25 @@ class Telemetry_Sender {
 	}
 
 	/**
-	 * Delivers one batch.
+	 * Delivers one queued item: a usage batch to FunnelBarn or an error event to BugBarn.
 	 *
-	 * @param array<string,mixed> $batch Batch payload.
-	 * @return bool Whether the endpoint accepted the batch.
+	 * @param array<string,mixed> $batch Queue item.
+	 * @return bool Whether the destination accepted it.
 	 */
 	protected function dispatch( array $batch ): bool {
-		$endpoint = $this->endpoint();
-		if ( '' === $endpoint ) {
-			return false;
-		}
-		$headers = array( 'Content-Type' => 'application/json' );
-		/**
-		 * Filters the bearer token for the telemetry endpoint. Empty sends no
-		 * Authorization header.
-		 *
-		 * @param string $token Token.
-		 */
-		$token = (string) apply_filters( 'profotograaf_telemetry_token', '' );
-		if ( '' !== $token ) {
-			$headers['Authorization'] = 'Bearer ' . $token;
-		}
-
-		$response = wp_remote_post(
-			$endpoint,
-			array(
-				'timeout'     => Config::http_timeout(),
-				'redirection' => 0,
-				'headers'     => $headers,
-				'body'        => (string) wp_json_encode( Telemetry_Payload::build( $batch ) ),
-			)
-		);
-		if ( is_wp_error( $response ) ) {
-			Logger::warning( 'Telemetry could not be sent.', array( 'error' => $response->get_error_code() ) );
-			return false;
-		}
-		$status = (int) wp_remote_retrieve_response_code( $response );
-		if ( $status < 200 || $status >= 300 ) {
-			Logger::warning( 'The telemetry endpoint refused a batch.', array( 'status' => $status ) );
-			return false;
-		}
-		return true;
+		return Telemetry_Delivery::deliver( $batch );
 	}
 
 	/**
-	 * Records a failed attempt and schedules the retry, or gives up.
+	 * Records a failed attempt and schedules the retry, or gives up. A 429 or
+	 * 503 answer pauses sending until its Retry-After time and keeps the queue.
 	 */
 	private function failed(): void {
+		$paused = Telemetry_Delivery::paused_until();
+		if ( $paused > 0 ) {
+			wp_schedule_single_event( $paused, self::RETRY_HOOK );
+			return;
+		}
 		$attempts = (int) get_option( self::ATTEMPT_OPTION, 0 ) + 1;
 		if ( $attempts >= self::MAX_ATTEMPTS ) {
 			delete_option( self::QUEUE_OPTION );

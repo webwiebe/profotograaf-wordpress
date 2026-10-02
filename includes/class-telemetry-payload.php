@@ -19,7 +19,8 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Telemetry_Payload {
 
-	public const TYPE = 'usage';
+	public const TYPE        = 'usage';
+	public const USAGE_EVENT = 'daily_usage';
 
 	public const COUNTERS = array(
 		'refresh_success',
@@ -84,6 +85,86 @@ final class Telemetry_Payload {
 		$payload['errors']      = self::errors( $input['errors'] ?? array() );
 
 		return array_intersect_key( $payload, array_flip( self::FIELDS ) );
+	}
+
+	/**
+	 * The FunnelBarn event for one usage batch: a daily_usage event whose
+	 * session is the install id. Counters stay numbers, lists become strings.
+	 *
+	 * @param array<string,mixed> $batch       Raw usage batch.
+	 * @param string              $environment WordPress environment type.
+	 * @return array<string,mixed>
+	 */
+	public static function funnelbarn_event( array $batch, string $environment ): array {
+		$clean      = self::build( $batch );
+		$properties = array(
+			'plugin_version'    => $clean['plugin_version'],
+			'wordpress_version' => $clean['wordpress_version'],
+			'php_version'       => $clean['php_version'],
+			'locale'            => $clean['locale'],
+			'active_modules'    => implode( ',', $clean['active_modules'] ),
+		);
+		foreach ( self::COUNTERS as $counter ) {
+			$properties[ $counter ] = $clean[ $counter ];
+		}
+		foreach ( $clean['error_codes'] as $code => $count ) {
+			$properties[ 'error_code_' . $code ] = $count;
+		}
+		return array(
+			'name'        => self::USAGE_EVENT,
+			'session_id'  => $clean['install_id'],
+			'environment' => self::token( $environment, 20 ),
+			'properties'  => $properties,
+		);
+	}
+
+	/**
+	 * The BugBarn event for one error. The code is the body, the exception
+	 * type and the message. The stack trace has one frame, the plugin location.
+	 *
+	 * @param array<string,mixed> $item Error event, with the install id.
+	 * @return array<string,mixed>
+	 */
+	public static function bugbarn_event( array $item ): array {
+		$errors = self::errors( array( $item ) );
+		$error  = $errors[0] ?? array(
+			'error_code'        => 'unknown',
+			'http_status'       => 0,
+			'error_location'    => 'unknown',
+			'plugin_version'    => '',
+			'wordpress_version' => '',
+			'php_version'       => '',
+			'timestamp'         => '',
+		);
+		$frames = array();
+		if ( 1 === preg_match( '/^(.+):(\d+)$/', $error['error_location'], $m ) ) {
+			$frames[] = array(
+				'function' => 'unknown',
+				'filename' => $m[1],
+				'lineno'   => (int) $m[2],
+			);
+		}
+		$event = array(
+			'body'         => $error['error_code'],
+			'severityText' => 'error',
+			'exception'    => array(
+				'type'       => $error['error_code'],
+				'message'    => $error['error_code'],
+				'stacktrace' => $frames,
+			),
+			'attributes'   => array(
+				'install_id'        => self::token( $item['install_id'] ?? '', 64 ),
+				'http_status'       => $error['http_status'],
+				'error_location'    => $error['error_location'],
+				'plugin_version'    => $error['plugin_version'],
+				'wordpress_version' => $error['wordpress_version'],
+				'php_version'       => $error['php_version'],
+			),
+		);
+		if ( '' !== $error['timestamp'] ) {
+			$event['timestamp'] = $error['timestamp'];
+		}
+		return $event;
 	}
 
 	/**

@@ -69,15 +69,16 @@ When you switch on a form in the lead settings, every submission of that form is
 
 = Anonymous usage data (only if you opt in) =
 
-Telemetry is off until you switch on "Share anonymous usage data" in the advanced settings or answer the prompt in the admin. Once it is on, the plugin sends one batch every 24 hours with a POST request to `https://bugbarn.wiebe.xyz/api/v1/ingest`, the self-hosted BugBarn error tracker operated by the plugin author. A host can replace the address with the `profotograaf_telemetry_endpoint` filter. Nothing is sent when you have not opted in, when the request carries Do Not Track or Global Privacy Control, or when the endpoint is empty.
+Telemetry is off until you switch on "Share anonymous usage data" in the advanced settings or answer the prompt in the admin. Once it is on, the plugin sends data every 24 hours with POST requests to two services operated by the plugin author: one usage event to FunnelBarn at `https://f.profotograaf.nl/api/v1/events` and one event per error to BugBarn at `https://bb.profotograaf.nl/api/v1/events`. A host can replace the addresses with the `profotograaf_telemetry_usage_endpoint` and `profotograaf_telemetry_endpoint` filters. If a service answers 429 or 503, the plugin waits before it sends again. Nothing is sent when you have not opted in, when the request carries Do Not Track or Global Privacy Control, or when the endpoint is empty.
 
-The batch holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
+The usage event holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
 
-BugBarn: https://github.com/wiebe-xyz/bugbarn
+BugBarn: https://bb.profotograaf.nl
+FunnelBarn: https://f.profotograaf.nl
 
 = Error events =
 
-When you opt in to telemetry, the plugin also records an error event when a token refresh, an enquiry delivery or the connection fails. An event holds the error code, the HTTP status, the plugin file and line, and the plugin, WordPress and PHP versions. Tokens, email addresses, URLs and file paths are removed from it first, and the same error is reported once per day. Events leave your site only with the daily telemetry batch.
+When you opt in to telemetry, the plugin also records an error event when a token refresh, an enquiry delivery or the connection fails. An event holds the error code, the HTTP status, the plugin file and line, and the plugin, WordPress and PHP versions. Tokens, email addresses, URLs and file paths are removed from it first, and the same error is reported once per day. Events leave your site only with the daily telemetry run.
 
 == Help translate Profotograaf ==
 

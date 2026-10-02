@@ -56,78 +56,97 @@ Never collected, even from error events:
 
 ## Destination and Endpoint
 
-Usage telemetry is sent to a HTTP POST endpoint that the plugin owner designates during setup. The default recommendation is to use the existing BugBarn self-hosted error tracker at `https://bugbarn.wiebe.xyz/api/v1/ingest` for both usage and error telemetry.
+Telemetry goes to two services operated by the plugin author, one request per event:
 
-Both batches use the same destination. The owner can configure the endpoint via the `profotograaf_telemetry_endpoint` filter:
+| Data | Service | Base URL | Request |
+|------|---------|----------|---------|
+| Error events | BugBarn | `https://bb.profotograaf.nl` | `POST /api/v1/events` |
+| Daily usage | FunnelBarn | `https://f.profotograaf.nl` | `POST /api/v1/events` |
+
+The plugin appends `/api/v1/events` to the base URL. Each base URL can be replaced with a filter, and an empty string turns that destination off:
 
 ```php
 add_filter( 'profotograaf_telemetry_endpoint', function () {
-    return 'https://telemetry.example.com/ingest';
+    return 'https://errors.example.com';
+} );
+add_filter( 'profotograaf_telemetry_usage_endpoint', function () {
+    return 'https://usage.example.com';
 } );
 ```
 
-If no endpoint is configured, telemetry is not sent even when consent is given.
+`profotograaf_telemetry_endpoint` sets the error destination and `profotograaf_telemetry_usage_endpoint` sets the usage destination.
+
+If an endpoint is empty, nothing is sent to it even when consent is given.
 
 ## Authentication and Batching
 
-### Usage batch
+Both services take an ingest-only collector key. The key can write events and cannot read anything, so it ships in the plugin source. The plugin sends no `Authorization` or `x-api-key` header, both services answer 401 to them.
 
-- **Frequency**: once every 24 hours, via WP-Cron scheduled job `profotograaf_send_telemetry_batch`
-- **Format**: JSON POST, content-type `application/json`
+| Service | Headers |
+|---------|---------|
+| BugBarn | `X-BugBarn-Api-Key`, `X-BugBarn-Project: profotograaf-wordpress` |
+| FunnelBarn | `X-FunnelBarn-Api-Key`, `X-FunnelBarn-Project: profotograaf-wordpress` |
+
+Common rules:
+
+- **Frequency**: once every 24 hours, via WP-Cron scheduled job `profotograaf_send_telemetry_batch`. The job queues one usage event and one event per error, then sends the queue.
+- **Format**: JSON POST, content-type `application/json`. A service answers 202 when it accepts an event.
 - **Timeout**: 10 seconds (respects the `profotograaf_http_timeout` filter)
-- **Retry**: failed batches are retried up to 3 times, with exponential backoff (5 seconds, 10 seconds, 30 seconds)
-- **Authentication**: HTTP Bearer token passed via the `profotograaf_telemetry_token` filter (optional; if not set, no Authorization header is sent)
+- **Retry**: a failed event is retried up to 3 times, with exponential backoff (5 seconds, 10 seconds, 30 seconds), then the queue is dropped
+- **Throttling**: on a 429 or 503 answer the plugin stops sending until the time in the `Retry-After` header (five minutes without one, at most one day) and keeps the queue. These answers do not count towards the 3 attempts.
 
-Example request body:
+### Usage event (FunnelBarn)
+
+One `daily_usage` event per day. The install id is the session id. Counters stay numbers, the module list is one comma-separated string and every error code becomes a `error_code_<code>` count.
 
 ```json
 {
-  "type": "usage",
-  "install_id": "550e8400-e29b-41d4-a716-446655440000",
-  "plugin_version": "0.2.0",
-  "wordpress_version": "6.9",
-  "php_version": "8.3",
-  "locale": "en_US",
-  "active_modules": [
-    "gallery_block",
-    "lead_forms",
-    "client_gallery"
-  ],
-  "refresh_success": 24,
-  "refresh_failed": 0,
-  "refresh_retried": 0,
-  "delivery_success": 15,
-  "delivery_failed": 2,
-  "error_codes": {
-    "lead_delivery_timeout": 1,
-    "api_malformed_response": 1
+  "name": "daily_usage",
+  "session_id": "550e8400-e29b-41d4-a716-446655440000",
+  "environment": "production",
+  "properties": {
+    "plugin_version": "0.2.0",
+    "wordpress_version": "6.9",
+    "php_version": "8.3",
+    "locale": "en_US",
+    "active_modules": "client_gallery,gallery_embed,lead_forms",
+    "refresh_success": 24,
+    "refresh_failed": 0,
+    "refresh_retried": 0,
+    "delivery_success": 15,
+    "delivery_failed": 2,
+    "error_code_lead_delivery_timeout": 1
   }
 }
 ```
 
-### Error events
+### Error events (BugBarn)
 
-- **Timing**: sent within the next usage batch
+- **Timing**: queued with the daily job
 - **Rate limiting**: one per (error_code, error_location, http_status) per 24-hour batch, deduplicated by earliest timestamp
-- **Format**: included in the usage batch as an array under `errors`, at most 50 events per batch (the newest are kept); the plugin stores them in `profotograaf_telemetry_queued_errors` until the daily batch is built
-
-Example errors array:
+- **Format**: one BugBarn event per error, at most 50 per day (the newest are kept). The plugin stores them in `profotograaf_telemetry_queued_errors` until the daily job runs. The error code is the `body`, the exception type and the message. The stack trace has one frame, the plugin file and line.
 
 ```json
-"errors": [
-  {
-    "error_code": "lead_delivery_timeout",
+{
+  "body": "lead_delivery_timeout",
+  "severityText": "error",
+  "timestamp": "2024-10-01T09:30:00Z",
+  "exception": {
+    "type": "lead_delivery_timeout",
+    "message": "lead_delivery_timeout",
+    "stacktrace": [
+      { "function": "unknown", "filename": "includes/leads/class-lead-sender.php", "lineno": 87 }
+    ]
+  },
+  "attributes": {
+    "install_id": "550e8400-e29b-41d4-a716-446655440000",
     "http_status": 0,
     "error_location": "includes/leads/class-lead-sender.php:87",
-    "timestamp": "2024-10-01T09:30:00Z"
-  },
-  {
-    "error_code": "api_malformed_response",
-    "http_status": 200,
-    "error_location": "includes/class-api-client.php:142",
-    "timestamp": "2024-10-01T10:15:00Z"
+    "plugin_version": "0.2.0",
+    "wordpress_version": "6.9",
+    "php_version": "8.3"
   }
-]
+}
 ```
 
 ## Error Collection
@@ -243,13 +262,13 @@ Add the following section to the External services section in `readme.txt`:
 ```
 = Telemetry =
 
-When you opt in to telemetry, Profotograaf sends anonymous usage and error data daily to the endpoint you configure (or the default telemetry service). The data includes plugin, WordPress and PHP versions, locale, active modules, counts of successes and failures, and anonymized error codes. The site URL, user data, and gallery or lead content are never sent. The data is retained for 13 months. You can revoke consent or delete all telemetry by disconnecting from Profotograaf or toggling the telemetry setting off. See the telemetry design document for full details.
+When you opt in to telemetry, Profotograaf sends anonymous usage and error data daily to https://f.profotograaf.nl (usage) and https://bb.profotograaf.nl (errors), or to the endpoints you configure. The data includes plugin, WordPress and PHP versions, locale, active modules, counts of successes and failures, and anonymized error codes. The site URL, user data, and gallery or lead content are never sent. The data is retained for 13 months. You can revoke consent or delete all telemetry by disconnecting from Profotograaf or toggling the telemetry setting off. See the telemetry design document for full details.
 ```
 
 For the default configuration, also add:
 
 ```
-The default telemetry endpoint is https://bugbarn.wiebe.xyz/api/v1/ingest, the self-hosted BugBarn error tracker. It is operated by the plugin author. BugBarn's privacy policy is at https://github.com/wiebe-xyz/bugbarn.
+The default endpoints are https://bb.profotograaf.nl (BugBarn, errors) and https://f.profotograaf.nl (FunnelBarn, usage). Both are operated by the plugin author.
 ```
 
 ## Summary
@@ -259,10 +278,10 @@ The default telemetry endpoint is https://bugbarn.wiebe.xyz/api/v1/ingest, the s
 | **Consent** | Off by default, opt-in required, one-time prompt after connect |
 | **What is sent** | Plugin, WordPress, PHP versions, locale, module list, refresh/delivery counts, error codes |
 | **What is not sent** | Site URL, user data, lead content, gallery content, IP addresses, tokens |
-| **Destination** | Configurable endpoint (default: BugBarn telemetry service) |
+| **Destination** | Errors to BugBarn (`bb.profotograaf.nl`), usage to FunnelBarn (`f.profotograaf.nl`), both filterable |
 | **Frequency** | Daily batch via WP-Cron, 24-hour batching window |
-| **Authentication** | Optional Bearer token via filter |
-| **Retry** | Up to 3 attempts with exponential backoff on failure |
+| **Authentication** | Ingest-only collector keys in the `X-BugBarn-Api-Key` and `X-FunnelBarn-Api-Key` headers |
+| **Retry** | Up to 3 attempts with exponential backoff on failure, a pause on 429 and 503 |
 | **Revoke** | Toggle off in settings, or disconnect (rotates install ID) |
 | **Retention** | 13 months on server, removed when plugin uninstalls locally |
 | **Identifier** | Random install UUID, rotated on disconnect |
