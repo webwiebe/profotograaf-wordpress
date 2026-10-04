@@ -101,6 +101,8 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->assertSame( 12, $rows[0]['photo_count'] );
 		$this->assertSame( 'https://cdn.example/cover.jpg', $rows[0]['cover_url'] );
 		$this->assertSame( 'Spring wedding', $this->options['profotograaf_gallery_index']['g-1']['title'] );
+		$this->assertSame( 12, ( new Gallery_Index( $this->api ) )->count( 'g-1' ) );
+		$this->assertNull( ( new Gallery_Index( $this->api ) )->count( 'g-unknown' ) );
 	}
 
 	public function test_a_disconnected_site_gets_a_409_with_the_api_message(): void {

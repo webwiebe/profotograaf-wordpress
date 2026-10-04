@@ -9,6 +9,7 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Modules\Gallery_Embed;
+use Profotograaf\Reserved_Space;
 
 class Gallery_Embed_Test extends Gallery_Test_Case {
 
@@ -75,7 +76,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			self::HINT . self::RULE . '<div class="profotograaf-gallery wp-block-profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			self::HINT . Reserved_Space::rule() . '<div class="profotograaf-gallery wp-block-profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="--pf-ar:12/9;--pf-ar-t:8/9;--pf-ar-m:4/9">'
 			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
 			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
@@ -102,7 +103,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertStringStartsWith(
-			self::HINT . self::RULE . '<div class="wp-block-profotograaf-gallery has-background profotograaf-gallery" id="spring" data-layout="grid" style="min-height:8em;background-color:#fff">',
+			self::HINT . Reserved_Space::rule() . '<div class="wp-block-profotograaf-gallery has-background profotograaf-gallery" id="spring" data-layout="grid" style="--pf-ar:4/3;--pf-ar-t:3/3;--pf-ar-m:2/3;background-color:#fff">',
 			$html
 		);
 	}
