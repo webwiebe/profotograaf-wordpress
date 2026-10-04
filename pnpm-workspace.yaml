@@ -17,3 +17,12 @@ allowBuilds:
 # copy-webpack-plugin that allows >=7.0.3.
 overrides:
   serialize-javascript: ">=7.0.3"
+
+# GHSA-vfj7-8cjw-p6xm: braces (<=3.0.3) stack exhaustion on deeply nested glob
+# patterns. No patched release exists. It sits under stylelint and micromatch in
+# the @wordpress/scripts and block-editor build tooling, which runs only on
+# developer and CI machines with fixed, repo-controlled glob patterns and never
+# ships in the plugin zip. Remove this entry once braces publishes a fix.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-vfj7-8cjw-p6xm
