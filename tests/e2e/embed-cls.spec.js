@@ -28,12 +28,12 @@ test.describe( 'layout shift with the real script', () => {
 				// Reserved_Space holds a fixed 8em, so the footer below the gallery
 				// jumps when the 16 tiles appear. On a narrow screen that scores
 				// 0.32 to 0.47 with the default block theme. Masonry on a wide screen
-				// scores 0.089 with the WordPress 7.1 theme and 0.131 with the 7.0
-				// one, so the 7.0 job expects it to fail. These cases go red the day
-				// the reservation follows the gallery, which is the cue to remove
-				// this line.
-				const wide70 = layout === 'masonry' && width === 1440 && process.env.WP_VERSION === '7.0';
-				test.fail( width === 390 || wide70, 'Reserved_Space holds 8em only, so the footer shifts when the gallery appears' );
+				// scores 0.089 on a macOS machine and 0.131 on the CI runner (the
+				// fonts change the page height), so CI expects it to fail. These
+				// cases go red the day the reservation follows the gallery, which is
+				// the cue to remove this line.
+				const wide = layout === 'masonry' && width === 1440 && Boolean( process.env.CI );
+				test.fail( width === 390 || wide, 'Reserved_Space holds 8em only, so the footer shifts when the gallery appears' );
 				const { context, page, host } = await openEmbed( browser, urls[ layout ], { width, height: 900 }, ( ctx ) =>
 					ctx.addInitScript( () => {
 						// @ts-ignore Test-only global read back below.
