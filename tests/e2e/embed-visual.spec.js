@@ -33,9 +33,16 @@ test.describe( 'gallery snapshots with the real script', () => {
 			test( `${ layout } at the ${ size } width`, async ( { browser } ) => {
 				const { context, host } = await openEmbed( browser, urls[ layout ], { width, height: 900 } );
 				await expectTiles( host, PER_PAGE );
-				// Every photo decoded, so a late image cannot change the shot.
+				// Every photo loaded and decoded, so a late image cannot change the shot.
+				// Lazy images below the fold never load by themselves, and decode()
+				// would wait for them for ever.
 				await host.evaluate( ( el ) =>
-					Promise.all( [ ...el.shadowRoot.querySelectorAll( 'img' ) ].map( ( img ) => img.decode().catch( () => {} ) ) )
+					Promise.all(
+						[ ...el.shadowRoot.querySelectorAll( 'img' ) ].map( ( img ) => {
+							img.loading = 'eager';
+							return img.decode();
+						} )
+					)
 				);
 				await expect( host ).toHaveScreenshot( `${ layout }-${ size }.png` );
 				await context.close();
