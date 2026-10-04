@@ -102,6 +102,8 @@ describe( 'Edit with a gallery', () => {
 		expect( setAttributes ).toHaveBeenLastCalledWith( { lightbox: 'off' } );
 		fireEvent.change( screen.getByLabelText( 'Link photos to' ), { target: { value: 'file' } } );
 		expect( setAttributes ).toHaveBeenLastCalledWith( { linkTo: 'file' } );
+		fireEvent.change( screen.getByLabelText( 'Open photo links in a new tab' ), { target: { value: 'off' } } );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { linkNewTab: 'off' } );
 	} );
 
 	it( 'adds, edits and removes the text of a single photo', () => {

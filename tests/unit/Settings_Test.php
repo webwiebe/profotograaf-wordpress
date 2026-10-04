@@ -88,6 +88,7 @@ class Settings_Test extends Wp_Test_Case {
 				'gallery_lightbox'       => '',
 				'gallery_duotone'        => '',
 				'gallery_link_to'        => '',
+				'gallery_link_new_tab'   => '',
 			),
 			$clean
 		);
@@ -209,6 +210,7 @@ class Settings_Test extends Wp_Test_Case {
 				'gallery_lightbox'       => '',
 				'gallery_duotone'        => '',
 				'gallery_link_to'        => '',
+				'gallery_link_new_tab'   => '',
 			),
 			$this->options['profotograaf_settings']
 		);

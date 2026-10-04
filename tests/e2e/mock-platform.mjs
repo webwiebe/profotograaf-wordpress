@@ -125,6 +125,7 @@ function publicGallery( origin ) {
 		description: '',
 		layout: 'grid',
 		url: `${ origin }/share/g/spring-wedding`,
+		site_url: `${ origin }/studio-e2e`,
 		photo_count: PUBLIC_PHOTOS.length,
 		badge: { show: false, prominent: false, url: `${ origin }/made-with?ref=embed-badge` },
 		photos: PUBLIC_PHOTOS.map( ( photo, index ) => ( {
@@ -132,6 +133,7 @@ function publicGallery( origin ) {
 			alt: '',
 			title: `Photo ${ index + 1 }`,
 			caption: '',
+			url: `${ origin }/share/g/spring-wedding/photo/${ photo.id }`,
 			images: [ 'thumb', 'web' ].map( ( variant ) => {
 				const [ w, h ] = variantSize( photo, variant );
 				return { variant, url: `${ origin }/img/${ photo.id }/${ variant }.svg`, width: w, height: h };
@@ -236,6 +238,7 @@ const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
 	alt: '',
 	title: [ 'Bride', 'Groom', 'Rings' ][ index ],
 	caption: '',
+	url: `http://localhost:8090/share/g/spring-wedding/photo/${ id }`,
 	images: [
 		{ variant: 'thumb', url: `http://localhost:8090/img/${ id }/thumb.jpg`, width: 400, height: 400 },
 		{ variant: 'web', url: `http://localhost:8090/img/${ id }/web.jpg`, width: 1600, height: 1067 },

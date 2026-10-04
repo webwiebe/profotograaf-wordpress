@@ -590,6 +590,43 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( ' data-link-to="none"', $shortcode );
 	}
 
+	public function test_every_link_target_reaches_embed_js(): void {
+		foreach ( array( 'none', 'page', 'site', 'file' ) as $target ) {
+			$html = $this->renderer->render( array( 'id' => 'g-1' ), array( 'link_to' => $target ) );
+			$this->assertStringContainsString( ' data-link-to="' . $target . '"', $html, $target );
+		}
+	}
+
+	public function test_a_saved_link_target_stays_valid(): void {
+		foreach ( array( 'none', 'page', 'file' ) as $saved ) {
+			$this->options['profotograaf_settings'] = array( 'gallery_link_to' => $saved );
+			$html                                   = $this->renderer->render( array( 'id' => 'g-1' ) );
+			$this->assertStringContainsString( ' data-link-to="' . $saved . '"', $html, $saved );
+		}
+	}
+
+	public function test_link_new_tab_follows_the_block_shortcode_and_site_layers(): void {
+		$this->assertStringNotContainsString( 'data-link-new-tab', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+
+		$this->options['profotograaf_settings'] = array( 'gallery_link_new_tab' => 'off' );
+		$this->assertStringContainsString( ' data-link-new-tab="off"', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+
+		$shortcode = $this->renderer->render( array( 'id' => 'g-1' ), array( 'link_new_tab' => 'on' ) );
+		$this->assertStringContainsString( ' data-link-new-tab="on"', $shortcode );
+
+		$block = $this->renderer->render(
+			array( 'id' => 'g-1' ) + Gallery_Renderer::options_from_block( array( 'linkNewTab' => 'on' ) ),
+			array( 'link_new_tab' => 'off' )
+		);
+		$this->assertStringContainsString( ' data-link-new-tab="on"', $block );
+	}
+
+	public function test_an_invalid_link_new_tab_value_is_dropped(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1' ), array( 'link_new_tab' => 'yes' ) );
+
+		$this->assertStringNotContainsString( 'data-link-new-tab', $html );
+	}
+
 	public function test_an_invalid_duotone_or_link_target_is_dropped(): void {
 		$html = $this->renderer->render(
 			array(

@@ -67,9 +67,20 @@ class Settings_Fields_Test extends Wp_Test_Case {
 		$this->assertMatchesRegularExpression( '/<input type="number"[^>]*id="profotograaf-gallery-columns"[^>]*value="4"[^>]*min="1" max="8"/', $html );
 		$this->assertMatchesRegularExpression( '/<input type="number"[^>]*id="profotograaf-gallery-gap"[^>]*value=""/', $html );
 		$this->assertMatchesRegularExpression( '/value="below" selected/', $html );
-		foreach ( array( 'columns_tablet', 'columns_mobile', 'ratio', 'sort', 'per_page', 'load_more', 'lightbox' ) as $key ) {
+		foreach ( array( 'columns_tablet', 'columns_mobile', 'ratio', 'sort', 'per_page', 'load_more', 'lightbox', 'link_to', 'link_new_tab' ) as $key ) {
 			$this->assertStringContainsString( 'name="profotograaf_settings[gallery_' . $key . ']"', $html, $key );
 		}
+	}
+
+	public function test_the_link_target_offers_the_photographer_site_and_says_the_lightbox_must_be_off(): void {
+		$entry = Settings_Schema::entry( 'gallery_link_to' );
+
+		$this->assertSame( array( '', 'none', 'page', 'site', 'file' ), array_keys( $entry['choices'] ) );
+		$this->assertStringContainsString( 'lightbox is off', $entry['description'] );
+		$this->assertStringContainsString( 'lightbox is off', Settings_Schema::entry( 'gallery_link_new_tab' )['description'] );
+		$this->assertSame( 'site', ( new Settings() )->sanitize( array( 'gallery_link_to' => 'site' ) )['gallery_link_to'] );
+		$this->assertSame( 'off', ( new Settings() )->sanitize( array( 'gallery_link_new_tab' => 'off' ) )['gallery_link_new_tab'] );
+		$this->assertSame( '', ( new Settings() )->sanitize( array( 'gallery_link_new_tab' => 'maybe' ) )['gallery_link_new_tab'] );
 	}
 
 	public function test_saving_the_galleries_tab_with_empty_numbers_keeps_them_empty(): void {

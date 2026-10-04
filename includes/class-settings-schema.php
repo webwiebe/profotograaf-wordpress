@@ -38,7 +38,7 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 4;
+	public const VERSION = 5;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
@@ -292,12 +292,21 @@ final class Settings_Schema {
 				'type'        => 'enum',
 				'default'     => '',
 				'label'       => __( 'Link photos to', 'profotograaf' ),
-				'description' => __( 'What a click on a photo does when the lightbox is off.', 'profotograaf' ) . ' ' . $note,
+				'description' => __( 'What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself.', 'profotograaf' ) . ' ' . $note,
 				'choices'     => $platform + array(
 					'none' => __( 'Nothing', 'profotograaf' ),
-					'file' => __( 'The photo file', 'profotograaf' ),
 					'page' => __( 'The photo page on Profotograaf', 'profotograaf' ),
+					'site' => __( 'Your photographer site', 'profotograaf' ),
+					'file' => __( 'The original photo file', 'profotograaf' ),
 				),
+			),
+			'gallery_link_new_tab'   => array(
+				'tab'         => self::TAB_GALLERIES,
+				'type'        => 'enum',
+				'default'     => '',
+				'label'       => __( 'Open photo links in a new tab', 'profotograaf' ),
+				'description' => __( 'Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere.', 'profotograaf' ) . ' ' . $note,
+				'choices'     => $on_off,
 			),
 		);
 	}

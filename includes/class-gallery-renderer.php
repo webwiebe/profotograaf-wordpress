@@ -102,6 +102,11 @@ class Gallery_Renderer {
 			'attribute' => 'linkTo',
 			'data'      => 'data-link-to',
 		),
+		'link_new_tab'   => array(
+			'setting'   => 'gallery_link_new_tab',
+			'attribute' => 'linkNewTab',
+			'data'      => 'data-link-new-tab',
+		),
 		'image_text'     => array(
 			'setting'   => null,
 			'attribute' => 'imageText',
@@ -109,19 +114,13 @@ class Gallery_Renderer {
 		),
 	);
 
-	/**
-	 * Most photo ids one gallery block can leave out.
-	 */
+	/** Most photo ids one gallery block can leave out. */
 	public const MAX_EXCLUDED = 500;
 
-	/**
-	 * Most per-image entries kept.
-	 */
+	/** Most per-image entries kept. */
 	public const IMAGE_TEXT_LIMIT = 200;
 
-	/**
-	 * Longest caption or alt text kept, in characters.
-	 */
+	/** Longest caption or alt text kept, in characters. */
 	public const IMAGE_TEXT_LENGTH = 500;
 
 	/**
@@ -303,10 +302,10 @@ class Gallery_Renderer {
 	 * Keys of $args: id (required), layout (grid, masonry or slideshow; the
 	 * default layout from the settings when empty or unknown), title and url
 	 * (the fallback link; looked up when both are empty), class (extra CSS
-	 * classes for the div), the display options listed in OPTIONS and wrapper (a callable that takes the div's
-	 * attributes and returns the attribute string; the block passes
-	 * get_block_wrapper_attributes so its color, typography, border, spacing and
-	 * anchor supports reach the div).
+	 * classes for the div), the display options listed in OPTIONS and wrapper
+	 * (a callable that takes the div's attributes and returns the attribute
+	 * string; the block passes get_block_wrapper_attributes so its color,
+	 * typography, border, spacing and anchor supports reach the div).
 	 *
 	 * A display option comes from $args first, from $shortcode second and from
 	 * the site default last. An empty or invalid value falls through to the

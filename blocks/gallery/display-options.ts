@@ -19,6 +19,7 @@ export type DisplayAttributes = {
 	loadMore: string;
 	lightbox: string;
 	linkTo: string;
+	linkNewTab: string;
 };
 
 type DisplayKey = keyof DisplayAttributes;
@@ -35,6 +36,7 @@ export const DISPLAY_DEFAULTS: DisplayAttributes = {
 	loadMore: '',
 	lightbox: '',
 	linkTo: '',
+	linkNewTab: '',
 };
 
 interface ChoiceOption {
@@ -46,6 +48,7 @@ export interface DisplayControl {
 	attribute: DisplayKey;
 	label: string;
 	kind: 'select' | 'number';
+	help?: string;
 	options?: ChoiceOption[];
 	min?: number;
 	max?: number;
@@ -89,8 +92,9 @@ function linkToOptions(): ChoiceOption[] {
 	return [
 		siteDefault(),
 		{ label: __( 'Nothing', 'profotograaf' ), value: 'none' },
-		{ label: __( 'The photo file', 'profotograaf' ), value: 'file' },
 		{ label: __( 'The photo page on Profotograaf', 'profotograaf' ), value: 'page' },
+		{ label: __( 'Your photographer site', 'profotograaf' ), value: 'site' },
+		{ label: __( 'The original photo file', 'profotograaf' ), value: 'file' },
 	];
 }
 
@@ -117,7 +121,20 @@ export function displayControls(): DisplayControl[] {
 		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200 },
 		{ attribute: 'loadMore', label: __( 'Load more button', 'profotograaf' ), kind: 'select', options: onOff() },
 		{ attribute: 'lightbox', label: __( 'Lightbox', 'profotograaf' ), kind: 'select', options: onOff() },
-		{ attribute: 'linkTo', label: __( 'Link photos to', 'profotograaf' ), kind: 'select', options: linkToOptions() },
+		{
+			attribute: 'linkTo',
+			label: __( 'Link photos to', 'profotograaf' ),
+			kind: 'select',
+			options: linkToOptions(),
+			help: __( 'Applies only when the lightbox is off. An open lightbox handles the click itself.', 'profotograaf' ),
+		},
+		{
+			attribute: 'linkNewTab',
+			label: __( 'Open photo links in a new tab', 'profotograaf' ),
+			kind: 'select',
+			options: onOff(),
+			help: __( 'Applies only when the lightbox is off and photos link somewhere.', 'profotograaf' ),
+		},
 	];
 }
 
@@ -177,6 +194,35 @@ export function previewLayout(
 	return { columns, gap, ratio: cssRatio( pick( attributes.ratio, defaults.ratio ) ) };
 }
 
+/**
+ * The link target phrases. embed.js applies the target only while the lightbox
+ * is off, so a block that leaves the lightbox to the site default says so.
+ */
+function linkSummary( attributes: DisplayAttributes ): string[] {
+	const linkLabel = linkToOptions().find( ( o ) => o.value === attributes.linkTo )?.label;
+	if ( ! attributes.linkTo || ! linkLabel ) {
+		return [];
+	}
+	const target = linkLabel.toLowerCase();
+	const parts: string[] = [
+		attributes.lightbox === 'off'
+			? sprintf(
+					/* translators: %s: what a photo links to, such as "the original photo file". */
+					__( 'links to: %s', 'profotograaf' ),
+					target
+			  )
+			: sprintf(
+					/* translators: %s: what a photo links to, such as "the original photo file". */
+					__( 'links to: %s (lightbox off only)', 'profotograaf' ),
+					target
+			  ),
+	];
+	if ( attributes.linkNewTab === 'off' ) {
+		parts.push( __( 'same tab', 'profotograaf' ) );
+	}
+	return parts;
+}
+
 /** Short phrases for the options that are set, for the block preview. */
 export function displaySummary( attributes: DisplayAttributes ): string[] {
 	const parts: string[] = [];
@@ -202,15 +248,8 @@ export function displaySummary( attributes: DisplayAttributes ): string[] {
 	} else if ( attributes.lightbox === 'off' ) {
 		parts.push( __( 'lightbox off', 'profotograaf' ) );
 	}
-	const linkLabel = linkToOptions().find( ( o ) => o.value === attributes.linkTo )?.label;
-	if ( attributes.linkTo && linkLabel ) {
-		parts.push(
-			sprintf(
-				/* translators: %s: what a photo links to, such as "The photo file". */
-				__( 'links to: %s', 'profotograaf' ),
-				linkLabel.toLowerCase()
-			)
-		);
+	if ( attributes.lightbox !== 'on' ) {
+		parts.push( ...linkSummary( attributes ) );
 	}
 	return parts;
 }
