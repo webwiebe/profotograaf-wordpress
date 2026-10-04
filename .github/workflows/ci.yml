@@ -163,10 +163,20 @@ jobs:
         wp: ['7.1', '7.0', '6.9']
     env:
       WP_VERSION: ${{ matrix.wp }}
+      # Firefox, WebKit, the phone profile and the pixel snapshots run on the
+      # current WordPress only, so the matrix does not triple the CI time.
+      E2E_BROWSER_MATRIX: ${{ matrix.wp == '7.1' && '1' || '' }}
+      E2E_VISUAL: ${{ matrix.wp == '7.1' && '1' || '' }}
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm exec playwright install --with-deps chromium
+      - if: matrix.wp == '7.1'
+        run: pnpm exec playwright install --with-deps firefox webkit
       # The E2E site runs the release copy, which holds the built blocks.
       - run: pnpm build
       - run: tests/e2e/up.sh

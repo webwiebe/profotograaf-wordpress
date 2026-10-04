@@ -134,6 +134,28 @@ The E2E tests run the platform's real `embed.js`, so layout bugs between the plu
 
 The WordPress container points the script at `http://mock-platform:8090`. The browser cannot resolve that name, so `tests/e2e/embed-helpers.js` routes those requests to the mock on `MOCK_PORT`. The specs `embed-layout.spec.js` and `embed-options.spec.js` measure boxes with `getBoundingClientRect` and compare them with each other.
 
+#### Browsers
+
+A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, WebKit and a Pixel 7 profile (`mobile-chrome`). Those three projects run only `embed-layout.spec.js` and `embed-options.spec.js`. CI sets the variable in the WordPress 7.1 job, so the 6.9 and 7.0 jobs stay on chromium. Install the extra browsers once with `pnpm exec playwright install --with-deps firefox webkit`. `openEmbed` hands the project's touch and user agent settings to the context it creates, because contexts from the `browser` fixture do not inherit them.
+
+#### Accessibility
+
+`embed-a11y.spec.js` runs axe (`@axe-core/playwright`) with the `wcag2a`, `wcag2aa` and `wcag22aa` tags on the gallery host: masonry and grid, at 390 and 1440 px, before and after Show more, and with the lightbox open. It also tabs to the Show more button and presses Enter. Axe is scoped to the host div because the theme is outside this repository. A violation inside the vendored `embed.js` belongs to the platform. Mark that test `test.fixme` with the rule id and the platform gap, as with any other platform gap.
+
+#### Layout shift
+
+`embed-cls.spec.js` sums `layout-shift` entries without recent input from page load through the render and Show more, and asserts the total stays under 0.1. It runs on chromium only. `Reserved_Space` holds a fixed `8em`, so the narrow cases (390 px) shift about 0.32 when the footer moves below the 16 tiles. They are wrapped in `test.fail`, which turns red once the reservation follows the gallery height. Remove the `test.fail` line then.
+
+#### Pixel snapshots
+
+`embed-visual.spec.js` compares the gallery element, masonry and grid at 390 and 1440 px, with baselines in `tests/e2e/embed-visual.spec.js-snapshots/`. Baselines depend on the operating system's fonts, so only the Linux ones are committed, and the spec runs only when `E2E_VISUAL=1` on Linux (the CI job for WordPress 7.1). To update them after an intended change, add the label `update-e2e-snapshots` to the pull request or start the "Update E2E snapshots" workflow, download the `e2e-snapshots` artifact, copy the PNG files into the snapshot directory and commit them. Never commit baselines made on macOS.
+
+#### Live canary
+
+`.github/workflows/live-embed-canary.yml` runs `embed-layout.spec.js` every day against the `embed.js` that `https://profotograaf.nl/share/embed/embed.js` serves, instead of the pinned fixture. `EMBED_SCRIPT_URL` does this: `openEmbed` fetches the script request from that URL while the API stays the mock. To try it locally, run `EMBED_SCRIPT_URL=https://profotograaf.nl/share/embed/embed.js pnpm exec playwright test tests/e2e/embed-layout.spec.js`. A failure opens the issue "Live embed.js canary failed", or comments on the open one, and the next pass closes it. A red canary with a green fixture run means the platform changed `embed.js`: refresh the fixture and fix the plugin or report the gap.
+
+#### Refreshing the fixture
+
 Refresh the copy after the platform changes `embed.js`:
 
 ```bash
@@ -148,6 +170,8 @@ GitHub Actions on GitHub-hosted runners:
 
 - `ci.yml`: gate script tests first, then oxlint, tsc, knip, file length, workflow rules, vitest and `pnpm audit`; PHPCS, PHPStan and `composer audit`; PHPUnit on PHP 8.1 to 8.4; coverage gates; block build; Plugin Check; and the E2E tests on the current and previous two WordPress versions. It runs on pull requests, pushes to main, and as a reusable workflow.
 - `release.yml`: a `v*` tag runs `ci.yml` first, then builds the zip, attaches it to a GitHub release and deploys to the wordpress.org SVN when the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist.
+- `live-embed-canary.yml`: daily, runs the layout spec against the live `embed.js` and keeps one issue for failures.
+- `update-e2e-snapshots.yml`: manual or by label, regenerates the Linux snapshot baselines and uploads them as an artifact.
 - `wp-tested-up-to.yml`: weekly, installs a newer WordPress release, runs the tests and opens a pull request that raises "Tested up to".
 - `dependabot.yml`: weekly, grouped updates for actions, npm and composer.
 
