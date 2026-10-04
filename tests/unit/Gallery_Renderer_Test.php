@@ -10,6 +10,7 @@ namespace Profotograaf\Tests;
 use Brain\Monkey\Functions;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Gallery_Renderer;
+use Profotograaf\Reserved_Space;
 
 class Gallery_Renderer_Test extends Gallery_Test_Case {
 
@@ -56,7 +57,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 		$this->assertStringStartsWith( '<p class="profotograaf-gallery-notice"', $editor );
 		$this->assertStringContainsString( 'may have been deleted', $editor );
-		$this->assertStringStartsWith( self::RULE . '<div class="profotograaf-gallery"', $visitor );
+		$this->assertStringStartsWith( Reserved_Space::rule() . '<div class="profotograaf-gallery"', $visitor );
 		$this->assertStringContainsString( '<a href="https://profotograaf.nl/share/g/gone"', $visitor );
 	}
 
@@ -77,7 +78,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 	public function test_every_gallery_has_noscript_text_and_reserved_space(): void {
 		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
 
-		$this->assertStringContainsString( 'style="min-height:8em"', $html );
+		$this->assertStringContainsString( 'style="--pf-ar:4/3;', $html );
 		$this->assertStringContainsString( self::NOSCRIPT, $html );
 	}
 
@@ -101,20 +102,20 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( '', $this->renderer->render( array( 'id' => '' ) ) );
 	}
 
-	public function test_the_photo_shape_sets_no_aspect_ratio_on_the_host(): void {
+	public function test_the_photo_shape_sets_the_reserved_ratio_on_the_host(): void {
 		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => '4-3' ) );
 
-		$this->assertStringContainsString( 'style="min-height:8em"', $html );
-		$this->assertStringNotContainsString( 'aspect-ratio', $html );
+		$this->assertStringContainsString( 'style="--pf-ar:16/9;--pf-ar-t:12/9;--pf-ar-m:8/9"', $html );
 	}
 
-	public function test_the_minimum_height_is_cleared_once_the_gallery_is_drawn(): void {
+	public function test_the_reservation_is_released_for_a_gallery_that_does_not_draw(): void {
 		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
 
-		$this->assertStringContainsString( self::RULE, $html );
+		$this->assertStringContainsString( Reserved_Space::rule(), $html );
+		$this->assertStringContainsString( '@keyframes pf-release{to{aspect-ratio:auto}}', $html );
 	}
 
-	public function test_the_wrapper_callable_gets_the_minimum_height_only(): void {
+	public function test_the_wrapper_callable_gets_the_reserved_ratios(): void {
 		$seen = '';
 		$this->renderer->render(
 			array(
@@ -127,14 +128,13 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		$this->assertSame( 'min-height:8em', $seen );
+		$this->assertSame( '--pf-ar:64/27;--pf-ar-t:48/27;--pf-ar-m:32/27', $seen );
 	}
 
-	public function test_an_original_ratio_keeps_the_fixed_minimum_only(): void {
+	public function test_an_original_ratio_reserves_a_three_by_two_tile(): void {
 		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => 'original' ) );
 
-		$this->assertStringContainsString( 'style="min-height:8em"', $html );
-		$this->assertStringNotContainsString( 'aspect-ratio', $html );
+		$this->assertStringContainsString( 'style="--pf-ar:4/3;--pf-ar-t:3/3;--pf-ar-m:2/3"', $html );
 	}
 
 	public function test_it_writes_the_embed_div_with_the_fallback_link(): void {
@@ -148,7 +148,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame(
-			self::HINT . self::RULE . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="min-height:8em">'
+			self::HINT . Reserved_Space::rule() . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="masonry" style="--pf-ar:12/9;--pf-ar-t:8/9;--pf-ar-m:4/9">'
 			. '<a href="https://profotograaf.nl/share/g/spring-wedding" style="display:inline-block;padding:.5em 0">Spring wedding</a>'
 			. '<noscript>This gallery needs JavaScript to be shown here.</noscript></div>',
 			$html
@@ -295,7 +295,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$html = $this->renderer->render( array( 'id' => 'g-2' ) );
 		$this->renderer->render( array( 'id' => 'g-2' ) );
 
-		$this->assertSame( self::HINT . self::RULE . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $html );
+		$this->assertSame( self::HINT . Reserved_Space::rule() . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-2" data-layout="grid" style="--pf-ar:4/3;--pf-ar-t:3/3;--pf-ar-m:2/3">' . self::NOSCRIPT . '</div>', $html );
 		$this->assertCount( 0, $this->http->requests, 'A render path must not call the platform.' );
 		$this->assertSame( array( Gallery_Index::LOOKUP_HOOK ), $scheduled->getArrayCopy() );
 	}
@@ -327,7 +327,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		( new Gallery_Index( $this->api ) )->lookup();
 		$second = $this->renderer->render( array( 'id' => 'g-1' ) );
 
-		$this->assertSame( self::HINT . self::RULE . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="min-height:8em">' . self::NOSCRIPT . '</div>', $first );
+		$this->assertSame( self::HINT . Reserved_Space::rule() . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" style="--pf-ar:4/3;--pf-ar-t:3/3;--pf-ar-m:2/3">' . self::NOSCRIPT . '</div>', $first );
 		$this->assertSame( substr( $first, strlen( self::HINT ) ), $second );
 		$this->assertCount( 1, $scheduled );
 	}
@@ -364,7 +364,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			)
 		);
 
-		$this->assertStringStartsWith( self::HINT . self::RULE . '<div class="custom">', $html );
+		$this->assertStringStartsWith( self::HINT . Reserved_Space::rule() . '<div class="custom">', $html );
 		$this->assertSame( 'g-1', $seen['data-profotograaf-gallery'] );
 		$this->assertSame( 'profotograaf-gallery', $seen['class'] );
 	}
@@ -399,9 +399,9 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		);
 
 		$this->assertSame( 1, substr_count( $html, '<a ' ) );
-		$this->assertSame( 1, substr_count( $html, '<noscript>' ) );
+		$this->assertSame( 1, substr_count( substr( $html, (int) strpos( $html, '<div ' ) ), '<noscript>' ) );
 		$this->assertSame( 1, substr_count( $html, '<div ' ) );
-		$this->assertStringStartsWith( self::HINT . self::RULE . '<div ', $html );
+		$this->assertStringStartsWith( self::HINT . Reserved_Space::rule() . '<div ', $html );
 		$this->assertStringEndsWith( '</noscript></div>', $html );
 	}
 
@@ -422,7 +422,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 		$this->assertStringNotContainsString( 'data-columns', $html );
 		$this->assertStringNotContainsString( 'data-lightbox', $html );
-		$this->assertStringContainsString( 'data-layout="grid" style="min-height:8em"', $html );
+		$this->assertStringContainsString( 'data-layout="grid" style="--pf-ar:4/3;--pf-ar-t:3/3;--pf-ar-m:2/3"', $html );
 	}
 
 	public function test_the_site_default_reaches_embed_js_as_data_attributes(): void {

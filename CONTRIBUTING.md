@@ -144,7 +144,7 @@ A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, Web
 
 #### Layout shift
 
-`embed-cls.spec.js` sums `layout-shift` entries without recent input from page load through the render and Show more, and asserts the total stays under 0.1. It runs on chromium only. `Reserved_Space` holds a fixed `8em`, so the narrow cases (390 px) shift about 0.32 when the footer moves below the 16 tiles. Masonry on a wide screen scores 0.089 on a macOS machine and 0.131 on the CI runner, so CI expects that one to fail. These cases are wrapped in `test.fail`, which turns red once the reservation follows the gallery height. Remove the `test.fail` line then.
+`embed-cls.spec.js` sums `layout-shift` entries without recent input from page load through the render and Show more, and asserts the total stays under 0.1. It runs on chromium only. `Reserved_Space` reserves an aspect ratio from the columns, rows and tile shape (see its class comment), so the cases score under 0.01 when the gallery index knows the photo count and when it does not. A stale count that is lower than the real one raises the score, so keep the mock gallery list and the embed payload at the same photo count.
 
 #### Pixel snapshots
 

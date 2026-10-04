@@ -52,7 +52,7 @@ const GALLERY = {
 	url: 'http://localhost:8090/share/g/spring-wedding',
 	embeddable: true,
 	available: true,
-	photo_count: 3,
+	photo_count: 19,
 	cover_url: 'http://localhost:8090/cover.jpg',
 	updated_at: '2026-09-01T10:00:00Z',
 };

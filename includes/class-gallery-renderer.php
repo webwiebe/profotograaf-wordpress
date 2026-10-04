@@ -407,7 +407,7 @@ class Gallery_Renderer {
 					'class'                     => 'profotograaf-gallery',
 					'data-profotograaf-gallery' => $id,
 					'data-layout'               => $layout,
-				) + $data + array( 'style' => Reserved_Space::style() )
+				) + $data + array( 'style' => Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) )
 			);
 		}
 		$html = sprintf(
@@ -419,7 +419,7 @@ class Gallery_Renderer {
 		foreach ( $data as $name => $value ) {
 			$html .= sprintf( ' %1$s="%2$s"', $name, esc_attr( $value ) );
 		}
-		return $html . sprintf( ' style="%s"', esc_attr( Reserved_Space::style() ) );
+		return $html . sprintf( ' style="%s"', esc_attr( Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) ) );
 	}
 
 	/**
