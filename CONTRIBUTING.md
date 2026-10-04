@@ -128,6 +128,20 @@ Do not run `phpcbf` and commit the result unread. It rewrites string values it c
 
 `WP_VERSION` and `PHP_VERSION` pick the WordPress and PHP image for `make e2e`.
 
+### The embed.js fixture
+
+The E2E tests run the platform's real `embed.js`, so layout bugs between the plugin's host div and the gallery the script draws show up here. `tests/e2e/fixtures/embed.js` is a pinned copy of the platform build. `tests/e2e/fixtures/embed.js.commit` holds the platform commit it came from. The mock platform (`tests/e2e/mock-platform.mjs`) serves it at `/share/embed/embed.js` and at the versioned `embed.<12 hex>.js` name, answers `GET /api/v1/embed/galleries/g-e2e` with 19 photos of mixed ratios drawn as SVG, and accepts `POST /share/embed/view`.
+
+The WordPress container points the script at `http://mock-platform:8090`. The browser cannot resolve that name, so `tests/e2e/embed-helpers.js` routes those requests to the mock on `MOCK_PORT`. The specs `embed-layout.spec.js` and `embed-options.spec.js` measure boxes with `getBoundingClientRect` and compare them with each other.
+
+Refresh the copy after the platform changes `embed.js`:
+
+```bash
+scripts/refresh-embed-fixture.sh /path/to/professionals
+```
+
+The script runs the platform's `pnpm build:public`, copies the bundle and records the commit of that checkout. Commit both files. A test marked `test.fixme` names the platform gap it waits for. After a refresh, remove the `fixme` from every test that now passes.
+
 ## Continuous integration
 
 GitHub Actions on GitHub-hosted runners:
