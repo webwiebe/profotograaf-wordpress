@@ -1,0 +1,224 @@
+// @ts-check
+// Display options through the real embed.js (tests/e2e/fixtures/embed.js): the
+// plugin writes data-* attributes and the script draws the gallery from them.
+// Each test asserts the attribute the plugin emitted and the layout it produced.
+const { test, expect } = require( '@playwright/test' );
+const { publishPost, shortcode, block, openEmbed, expectTiles, measure } = require( './embed-helpers' );
+
+const TOTAL = 19;
+const CLOSE = 1;
+
+/**
+ * Number of distinct tile left offsets, which is the number of columns.
+ *
+ * @param {Awaited<ReturnType<typeof measure>>} box
+ */
+const columnsOf = ( box ) => new Set( box.tiles.map( ( tile ) => Math.round( tile.left ) ) ).size;
+
+/**
+ * @param {string} content
+ * @param {{width:number,height:number}} viewport
+ * @param {import('@playwright/test').Browser} browser
+ */
+async function draw( content, viewport, browser ) {
+	const opened = await openEmbed( browser, publishPost( 'Options', content ), viewport );
+	await expectTiles( opened.host, TOTAL );
+	return opened;
+}
+
+test.describe( 'display options with the real script', () => {
+	for ( const layout of [ 'grid', 'masonry' ] ) {
+		test( `${ layout } columns=4 gives four columns on a wide screen`, async ( { browser } ) => {
+			const { context, host, problems } = await draw( shortcode( { layout, columns: '4' } ), { width: 1440, height: 900 }, browser );
+
+			await expect( host ).toHaveAttribute( 'data-columns', '4' );
+			expect( columnsOf( await measure( host ) ) ).toBe( 4 );
+			expect( problems ).toEqual( [] );
+			await context.close();
+		} );
+
+		test( `${ layout } gap=0 makes the tiles touch`, async ( { browser } ) => {
+			const { context, host } = await draw( shortcode( { layout, columns: '4', gap: '0' } ), { width: 1440, height: 900 }, browser );
+
+			await expect( host ).toHaveAttribute( 'data-gap', '0' );
+			const { tiles } = await measure( host );
+			const byColumn = new Map();
+			for ( const tile of tiles ) {
+				const key = Math.round( tile.left );
+				byColumn.set( key, [ ...( byColumn.get( key ) || [] ), tile ] );
+			}
+			const lefts = [ ...byColumn.keys() ].sort( ( a, b ) => a - b );
+			expect( lefts ).toHaveLength( 4 );
+			for ( const column of byColumn.values() ) {
+				column.sort( ( a, b ) => a.top - b.top );
+				column.slice( 1 ).forEach( ( tile, index ) => {
+					expect( Math.abs( tile.top - ( column[ index ].top + column[ index ].height ) ) ).toBeLessThanOrEqual( CLOSE );
+				} );
+			}
+			const first = byColumn.get( lefts[ 0 ] )[ 0 ];
+			const second = byColumn.get( lefts[ 1 ] )[ 0 ];
+			expect( Math.abs( second.left - ( first.left + first.width ) ) ).toBeLessThanOrEqual( CLOSE );
+			await context.close();
+		} );
+	}
+
+	// Platform gap: embed.js keeps the 4px tile radius at gap 0, so the page
+	// shows through the corners where four tiles meet. Remove the fixme once
+	// the platform squares the corners when the gap is 0 (or honours radius 0 here).
+	test.fixme( 'gap=0 leaves no rounded corner specks between tiles', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { layout: 'grid', columns: '4', gap: '0' } ), { width: 1440, height: 900 }, browser );
+
+		const radius = await host.locator( '.photos .tile' ).first().evaluate( ( tile ) => getComputedStyle( tile ).borderTopLeftRadius );
+		expect( radius ).toBe( '0px' );
+		await context.close();
+	} );
+
+	// Platform gap: embed.js on platform main reads data-columns only. It has
+	// no data-columns-tablet or data-columns-mobile (unmerged in the platform's
+	// feat/embed-honours-data-options), so the count stays at 4.
+	for ( const [ name, width, expected ] of [ [ 'tablet', 820, 3 ], [ 'mobile', 390, 2 ] ] ) {
+		test.fixme( `columns per breakpoint: ${ name } shows ${ expected } columns`, async ( { browser } ) => {
+			const content = shortcode( { layout: 'grid', columns: '4', columns_tablet: '3', columns_mobile: '2' } );
+			const { context, host } = await draw( content, { width: Number( width ), height: 900 }, browser );
+
+			await expect( host ).toHaveAttribute( 'data-columns-tablet', '3' );
+			await expect( host ).toHaveAttribute( 'data-columns-mobile', '2' );
+			expect( columnsOf( await measure( host ) ) ).toBe( expected );
+			await context.close();
+		} );
+	}
+
+	test( 'the plugin sends the per breakpoint column counts as data attributes', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { columns: '4', columns_tablet: '3', columns_mobile: '2' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).toHaveAttribute( 'data-columns-tablet', '3' );
+		await expect( host ).toHaveAttribute( 'data-columns-mobile', '2' );
+		await context.close();
+	} );
+
+	// Platform gap: embed.js on platform main reads data-sort values default,
+	// reverse, title and random. The plugin sends newest, oldest, name and random
+	// (the contract in the platform's unmerged feat/embed-honours-data-options),
+	// so newest is ignored. Remove the fixme once the platform ships those values.
+	test.fixme( 'sort=newest puts the last photo first', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { sort: 'newest' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).toHaveAttribute( 'data-sort', 'newest' );
+		await expect( host.locator( '.photos .tile' ).first() ).toHaveAccessibleName( `Photo ${ TOTAL }` );
+		await context.close();
+	} );
+
+	test( 'ratio 1:1 crops every tile to a square', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { layout: 'masonry', ratio: '1-1' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).toHaveAttribute( 'data-ratio', '1:1' );
+		const { tiles } = await measure( host );
+		for ( const tile of tiles ) {
+			expect( Math.abs( tile.width - tile.height ) ).toBeLessThanOrEqual( CLOSE );
+		}
+		await context.close();
+	} );
+
+	test( 'duotone applies the pf-duo filter to every photo', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { duotone: '#112233,#ffddaa' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).toHaveAttribute( 'data-duotone', '#112233,#ffddaa' );
+		await expect( host.locator( 'svg filter#pf-duo' ) ).toHaveCount( 1 );
+		const filters = await host.locator( '.photos .tile img' ).evaluateAll( ( images ) => images.map( ( img ) => getComputedStyle( img ).filter ) );
+		expect( filters ).toHaveLength( TOTAL );
+		for ( const filter of filters ) {
+			expect( filter ).toContain( '#pf-duo' );
+		}
+		await context.close();
+	} );
+
+	test( 'lightbox on opens a dialog and off leaves the tile inert', async ( { browser } ) => {
+		const on = await draw( shortcode( { lightbox: 'on' } ), { width: 1440, height: 900 }, browser );
+		await on.host.locator( '.photos .tile' ).first().click();
+		await expect( on.host.getByRole( 'dialog' ) ).toBeVisible();
+		await on.context.close();
+
+		const off = await draw( shortcode( { lightbox: 'off' } ), { width: 1440, height: 900 }, browser );
+		await expect( off.host ).toHaveAttribute( 'data-lightbox', 'off' );
+		await expect( off.host.locator( '.photos .tile.static' ) ).toHaveCount( TOTAL );
+		await off.host.locator( '.photos .tile' ).first().click();
+		await expect( off.host.getByRole( 'dialog' ) ).toHaveCount( 0 );
+		await off.context.close();
+	} );
+} );
+
+test.describe( 'link-to with lightbox off', () => {
+	test( 'link_to=none leaves the tiles inert', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { lightbox: 'off', link_to: 'none' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).toHaveAttribute( 'data-link-to', 'none' );
+		const first = host.locator( '.photos .tile' ).first();
+		expect( await first.evaluate( ( tile ) => tile.tagName ) ).not.toBe( 'A' );
+		await first.click();
+		await expect( host.getByRole( 'dialog' ) ).toHaveCount( 0 );
+		await context.close();
+	} );
+
+	// Platform gap: embed.js on platform main has no data-link-to (it is in the
+	// platform's unmerged feat/embed-honours-data-options), so every tile stays a
+	// button. `site` also needs a site_url in the public payload, which the API
+	// does not send yet, and the plugin's link_to choices do not list it. Remove
+	// the fixme once the platform reads data-link-to.
+	for ( const linkTo of [ 'page', 'site', 'file' ] ) {
+		test.fixme( `link_to=${ linkTo } draws an anchor that opens in a new tab`, async ( { browser } ) => {
+			const { context, host } = await draw( shortcode( { lightbox: 'off', link_to: linkTo } ), { width: 1440, height: 900 }, browser );
+
+			await expect( host ).toHaveAttribute( 'data-link-to', linkTo );
+			const first = host.locator( '.photos .tile' ).first();
+			expect( await first.evaluate( ( tile ) => tile.tagName ) ).toBe( 'A' );
+			await expect( first ).toHaveAttribute( 'href', /^https?:\/\// );
+			await expect( first ).toHaveAttribute( 'target', '_blank' );
+			await context.close();
+		} );
+	}
+} );
+
+test.describe( 'block markup and shortcode', () => {
+	test( 'the same options give the same attributes and the same layout', async ( { browser } ) => {
+		const viewport = { width: 1440, height: 900 };
+		const fromShortcode = await openEmbed(
+			browser,
+			publishPost( 'Options shortcode', shortcode( { layout: 'grid', columns: '3', gap: '4', ratio: '4-3', per_page: '10', lightbox: 'off' } ) ),
+			viewport
+		);
+		// Per page is a Show more setting, so only 10 tiles are drawn.
+		const fromBlock = await openEmbed(
+			browser,
+			publishPost(
+				'Options block',
+				block( { layout: 'grid', columns: '3', gap: '4', ratio: '4-3', perPage: '10', lightbox: 'off' } )
+			),
+			viewport
+		);
+		await expectTiles( fromBlock.host, 10 );
+		await expectTiles( fromShortcode.host, 10 );
+
+		const attributes = ( /** @type {import('@playwright/test').Locator} */ host ) =>
+			host.evaluate( ( el ) => Object.fromEntries( el.getAttributeNames().filter( ( name ) => name.startsWith( 'data-' ) && name !== 'data-pf-ready' ).map( ( name ) => [ name, el.getAttribute( name ) ] ) ) );
+		const expected = { 'data-profotograaf-gallery': 'g-e2e', 'data-layout': 'grid', 'data-columns': '3', 'data-gap': '4', 'data-ratio': '4:3', 'data-per-page': '10', 'data-lightbox': 'off' };
+		expect( await attributes( fromShortcode.host ) ).toEqual( expected );
+		expect( await attributes( fromBlock.host ) ).toEqual( expected );
+
+		const a = await measure( fromShortcode.host );
+		const b = await measure( fromBlock.host );
+		expect( columnsOf( a ) ).toBe( 3 );
+		expect( columnsOf( b ) ).toBe( 3 );
+		expect( b.tiles.length ).toBe( a.tiles.length );
+		b.tiles.forEach( ( tile, index ) => {
+			expect( Math.abs( tile.width - a.tiles[ index ].width ) ).toBeLessThanOrEqual( CLOSE );
+			expect( Math.abs( tile.height - a.tiles[ index ].height ) ).toBeLessThanOrEqual( CLOSE );
+			expect( Math.abs( tile.left - a.tiles[ index ].left ) ).toBeLessThanOrEqual( CLOSE );
+		} );
+		await fromShortcode.host.locator( '.photos .tile' ).first().click();
+		await expect( fromShortcode.host.getByRole( 'dialog' ) ).toHaveCount( 0 );
+		expect( fromShortcode.problems ).toEqual( [] );
+		expect( fromBlock.problems ).toEqual( [] );
+		await fromShortcode.context.close();
+		await fromBlock.context.close();
+	} );
+} );

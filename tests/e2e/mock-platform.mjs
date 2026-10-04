@@ -3,7 +3,11 @@
 // It speaks the device pairing endpoints and the two scoped calls the plugin
 // uses, with the shapes documented in the platform repository (docs/features.md
 // and docs/embed-api.md). The test approves a pairing with POST /__approve.
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
 const state = { approved: false, tokens: 0, refreshes: 0, leads: [] };
@@ -70,17 +74,89 @@ function oembed( { req, res, url } ) {
 			origin +
 			'/share/g/spring-wedding">Spring wedding</a></div><script async src="' +
 			origin +
-			'/share/embed/embed.0123456789ab.js"></script>',
+			'/share/embed/embed.' +
+			EMBED_VERSION +
+			'.js"></script>',
 		width: 720,
 		height: 540,
 		cache_age: 300,
 	} );
 }
 
+// The real embed.js, vendored from the platform (see fixtures/README.md). The
+// ETag is the first 12 hex characters of its content hash, the same version the
+// platform puts in the versioned URL.
+const EMBED_JS = readFileSync( join( dirname( fileURLToPath( import.meta.url ) ), 'fixtures', 'embed.js' ) );
+const EMBED_VERSION = createHash( 'sha256' ).update( EMBED_JS ).digest( 'hex' ).slice( 0, 12 );
+
 function embedScript( { req, res } ) {
-	// The current script. The ETag is its content hash, the version in the versioned URL.
-	res.writeHead( 200, { 'content-type': 'text/javascript', etag: '"0123456789ab"' } );
-	return res.end( req.method === 'HEAD' ? undefined : '/* embed */' );
+	res.writeHead( 200, {
+		'content-type': 'text/javascript',
+		'access-control-allow-origin': '*',
+		etag: `"${ EMBED_VERSION }"`,
+	} );
+	return res.end( req.method === 'HEAD' ? undefined : EMBED_JS );
+}
+
+// The public gallery payload (docs/embed-api.md in the platform repository):
+// 19 photos in a fixed mix of portrait and landscape ratios, drawn as SVG by
+// the mock so the images are deterministic and instant.
+const SHAPES = [
+	[ 3000, 2000 ], [ 2000, 3000 ], [ 4000, 3000 ], [ 3000, 4000 ], [ 3200, 1800 ], [ 2000, 2500 ], [ 3000, 2000 ],
+];
+const PUBLIC_PHOTOS = Array.from( { length: 19 }, ( _, index ) => {
+	const [ width, height ] = SHAPES[ index % SHAPES.length ];
+	return { id: `p-${ index + 1 }`, width, height };
+} );
+
+function variantSize( photo, variant ) {
+	if ( variant === 'thumb' ) {
+		return [ 400, 400 ];
+	}
+	const scale = 1600 / Math.max( photo.width, photo.height );
+	return [ Math.round( photo.width * scale ), Math.round( photo.height * scale ) ];
+}
+
+function publicGallery( origin ) {
+	return {
+		id: 'g-e2e',
+		slug: 'spring-wedding',
+		title: 'Spring wedding',
+		description: '',
+		layout: 'grid',
+		url: `${ origin }/share/g/spring-wedding`,
+		photo_count: PUBLIC_PHOTOS.length,
+		badge: { show: false, prominent: false, url: `${ origin }/made-with?ref=embed-badge` },
+		photos: PUBLIC_PHOTOS.map( ( photo, index ) => ( {
+			...photo,
+			alt: '',
+			title: `Photo ${ index + 1 }`,
+			caption: '',
+			images: [ 'thumb', 'web' ].map( ( variant ) => {
+				const [ w, h ] = variantSize( photo, variant );
+				return { variant, url: `${ origin }/img/${ photo.id }/${ variant }.svg`, width: w, height: h };
+			} ),
+		} ) ),
+		version: 'e2e0000000000001',
+	};
+}
+
+const IMAGE = /^\/img\/(p-\d+)\/(thumb|web)\.(?:svg|jpg)$/;
+
+function image( { res, url } ) {
+	const [ , id, variant ] = IMAGE.exec( url.pathname );
+	const photo = PUBLIC_PHOTOS.find( ( candidate ) => candidate.id === id );
+	if ( ! photo ) {
+		return json( res, 404, { error: 'not found' } );
+	}
+	const [ width, height ] = variantSize( photo, variant );
+	const hue = ( Number( id.slice( 2 ) ) * 47 ) % 360;
+	res.writeHead( 200, { 'content-type': 'image/svg+xml', 'cache-control': 'no-store' } );
+	return res.end(
+		`<svg xmlns="http://www.w3.org/2000/svg" width="${ width }" height="${ height }" viewBox="0 0 ${ width } ${ height }">` +
+			`<rect width="100%" height="100%" fill="hsl(${ hue } 45% 60%)"/>` +
+			`<text x="50%" y="50%" font-size="${ Math.round( Math.min( width, height ) / 5 ) }" text-anchor="middle" dominant-baseline="middle" fill="#fff">${ id }</text></svg>`
+	);
 }
 
 function deviceToken( { res, body } ) {
@@ -135,6 +211,12 @@ const routes = {
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY ] ) ),
 	'GET /share/embed/embed.js': embedScript,
 	'HEAD /share/embed/embed.js': embedScript,
+	'GET /api/v1/embed/galleries/g-e2e': ( { req, res } ) =>
+		json( res, 200, publicGallery( `http://${ req.headers.host }` ), { 'access-control-allow-origin': '*' } ),
+	'POST /share/embed/view': ( { res } ) => {
+		res.writeHead( 204, { 'access-control-allow-origin': '*' } );
+		return res.end();
+	},
 	'GET /oembed': oembed,
 	'POST /api/v1/leads': authed( ( { res, body } ) => {
 		state.leads.push( body );
@@ -160,7 +242,15 @@ const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
 	],
 } ) );
 
+const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
+
 function findRoute( method, pathname ) {
+	if ( ( method === 'GET' || method === 'HEAD' ) && EMBED_VERSIONED.test( pathname ) ) {
+		return embedScript;
+	}
+	if ( method === 'GET' && IMAGE.test( pathname ) ) {
+		return image;
+	}
 	if ( method === 'GET' && PHOTOS.test( pathname ) ) {
 		return authed( ( { res } ) => json( res, 200, { photos: PHOTO_LIST } ) );
 	}

@@ -63,6 +63,7 @@ services:
       - "${MOCK_PORT:-8090}:8090"
     volumes:
       - ./mock-platform.mjs:/mock/mock-platform.mjs:ro
+      - ./fixtures:/mock/fixtures:ro
 
 volumes:
   wordpress:
