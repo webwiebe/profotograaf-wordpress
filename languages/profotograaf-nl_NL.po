@@ -445,29 +445,29 @@ msgstr "Er staan nog geen galerijen in je Profotograaf-account."
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord, een vervaldatum, keuzemodus of een instelling alleen voor de klant staat insluiten niet toe."
 
-#: build/gallery/index.js:7
+#: build/gallery/index.js:8
 msgid "Gallery"
 msgstr "Galerij"
 
-#: build/gallery/index.js:7
+#: build/gallery/index.js:8
 msgid "Layout"
 msgstr "Indeling"
 
-#: build/gallery/index.js:7
+#: build/gallery/index.js:8
 msgid "Choose another gallery"
 msgstr "Kies een andere galerij"
 
-#: build/gallery/index.js:6
 #: build/gallery/index.js:7
+#: build/gallery/index.js:8
 msgid "Profotograaf gallery"
 msgstr "Profotograaf-galerij"
 
-#: build/gallery/index.js:7
+#: build/gallery/index.js:8
 msgid "Choose one of your galleries."
 msgstr "Kies een van je galerijen."
 
 #. translators: %s: layout name such as grid.
-#: build/gallery/index.js:7
+#: build/gallery/index.js:8
 #, js-format
 msgid "layout: %s"
 msgstr "indeling: %s"
@@ -789,23 +789,23 @@ msgstr ""
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:324
+#: includes/class-gallery-renderer.php:323
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:335
+#: includes/class-gallery-renderer.php:334
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:344
+#: includes/class-gallery-renderer.php:343
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:483
+#: includes/class-gallery-renderer.php:482
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
-#: build/gallery/index.js:7
+#: build/gallery/index.js:8
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr ""
 
@@ -1442,7 +1442,7 @@ msgid "lightbox off"
 msgstr ""
 
 #: build/gallery/index.js:4
-#: build/gallery/index.js:6
+#: build/gallery/index.js:7
 msgid "Caption"
 msgstr ""
 
@@ -1618,21 +1618,12 @@ msgstr ""
 msgid "Link photos to"
 msgstr ""
 
-#: includes/class-settings-schema.php:295
-msgid "What a click on a photo does when the lightbox is off."
-msgstr ""
-
 #: includes/class-settings-schema.php:297
 #: build/gallery/index.js:3
 msgid "Nothing"
 msgstr ""
 
 #: includes/class-settings-schema.php:298
-#: build/gallery/index.js:3
-msgid "The photo file"
-msgstr ""
-
-#: includes/class-settings-schema.php:299
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
 msgstr ""
@@ -1657,7 +1648,7 @@ msgstr ""
 msgid "Add a photo"
 msgstr ""
 
-#. translators: %s: what a photo links to, such as "The photo file".
+#. translators: %s: what a photo links to, such as "the original photo file".
 #: build/gallery/index.js:6
 #, js-format
 msgid "links to: %s"
@@ -1709,4 +1700,45 @@ msgstr ""
 
 #: includes/admin/class-network-page.php:99
 msgid "Failed enquiries"
+msgstr ""
+
+#: includes/class-settings-schema.php:295
+msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
+msgstr ""
+
+#: includes/class-settings-schema.php:299
+#: build/gallery/index.js:3
+msgid "Your photographer site"
+msgstr ""
+
+#: includes/class-settings-schema.php:300
+#: build/gallery/index.js:3
+msgid "The original photo file"
+msgstr ""
+
+#: includes/class-settings-schema.php:307
+#: build/gallery/index.js:3
+msgid "Open photo links in a new tab"
+msgstr ""
+
+#: includes/class-settings-schema.php:308
+msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Applies only when the lightbox is off. An open lightbox handles the click itself."
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Applies only when the lightbox is off and photos link somewhere."
+msgstr ""
+
+#. translators: %s: what a photo links to, such as "the original photo file".
+#: build/gallery/index.js:7
+#, js-format
+msgid "links to: %s (lightbox off only)"
+msgstr ""
+
+#: build/gallery/index.js:7
+msgid "same tab"
 msgstr ""

@@ -88,6 +88,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"linkNewTab": {
+			"type": "string",
+			"default": ""
+		},
 		"imageText": {
 			"type": "array",
 			"default": [],

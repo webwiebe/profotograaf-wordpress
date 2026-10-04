@@ -55,10 +55,51 @@ describe( 'displaySummary', () => {
 		).toEqual( [ 'Newest first', '1 photo per page', 'load more button', 'lightbox off' ] );
 	} );
 
-	it( 'names what photos link to', () => {
-		expect( displaySummary( { ...DISPLAY_DEFAULTS, linkTo: 'page' } ) ).toEqual( [
+	it( 'names what photos link to when the lightbox is off', () => {
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, lightbox: 'off', linkTo: 'page' } ) ).toEqual( [
+			'lightbox off',
 			'links to: the photo page on profotograaf',
 		] );
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, lightbox: 'off', linkTo: 'site' } ) ).toEqual( [
+			'lightbox off',
+			'links to: your photographer site',
+		] );
+	} );
+
+	it( 'says a link target waits for the lightbox to be off', () => {
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, linkTo: 'file' } ) ).toEqual( [
+			'links to: the original photo file (lightbox off only)',
+		] );
+	} );
+
+	it( 'leaves the link target out while the lightbox is on', () => {
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, lightbox: 'on', linkTo: 'page' } ) ).toEqual( [
+			'lightbox on',
+		] );
+	} );
+
+	it( 'names the new tab choice only next to a link target', () => {
+		expect(
+			displaySummary( { ...DISPLAY_DEFAULTS, lightbox: 'off', linkTo: 'page', linkNewTab: 'off' } )
+		).toEqual( [ 'lightbox off', 'links to: the photo page on profotograaf', 'same tab' ] );
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, linkNewTab: 'off' } ) ).toEqual( [] );
+	} );
+} );
+
+describe( 'link controls', () => {
+	const control = ( attribute: string ) => displayControls().find( ( c ) => c.attribute === attribute );
+
+	it( 'offers every link target and keeps the saved values', () => {
+		expect( control( 'linkTo' )?.options?.map( ( o ) => o.value ) ).toEqual( [ '', 'none', 'page', 'site', 'file' ] );
+	} );
+
+	it( 'offers the new tab choice as on, off or the site default', () => {
+		expect( control( 'linkNewTab' )?.options?.map( ( o ) => o.value ) ).toEqual( [ '', 'on', 'off' ] );
+	} );
+
+	it( 'tells the author the link options apply with the lightbox off', () => {
+		expect( control( 'linkTo' )?.help ).toMatch( /lightbox is off/ );
+		expect( control( 'linkNewTab' )?.help ).toMatch( /lightbox is off/ );
 	} );
 } );
 

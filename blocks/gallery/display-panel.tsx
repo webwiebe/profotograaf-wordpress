@@ -25,6 +25,7 @@ export function DisplayPanel( { attributes, setAttributes }: PanelProps ) {
 						<SelectControl
 							key={ control.attribute }
 							label={ control.label }
+							help={ control.help }
 							value={ attributes[ control.attribute ] }
 							options={ control.options ?? [] }
 							onChange={ ( value ) =>
