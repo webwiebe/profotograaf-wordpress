@@ -99,10 +99,7 @@ test.describe( 'per page and Show more', () => {
 		await context.close();
 	} );
 
-	// Platform gap: embed.js hides the button it was activated from and does not
-	// move focus, so a keyboard user lands on the document body after Show more.
-	// Remove the fixme once the platform focuses the first new tile.
-	test.fixme( 'moves focus to a new tile after Show more', async ( { browser } ) => {
+	test( 'moves focus to a new tile after Show more', async ( { browser } ) => {
 		const url = publishPost( 'Per page focus', shortcode( { per_page: String( PER_PAGE ) } ) );
 		const { context, page, host } = await openEmbed( browser, url, { width: 820, height: 900 } );
 		await expectTiles( host, PER_PAGE );

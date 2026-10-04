@@ -62,10 +62,7 @@ test.describe( 'display options with the real script', () => {
 		} );
 	}
 
-	// Platform gap: embed.js keeps the 4px tile radius at gap 0, so the page
-	// shows through the corners where four tiles meet. Remove the fixme once
-	// the platform squares the corners when the gap is 0 (or honours radius 0 here).
-	test.fixme( 'gap=0 leaves no rounded corner specks between tiles', async ( { browser } ) => {
+	test( 'gap=0 leaves no rounded corner specks between tiles', async ( { browser } ) => {
 		const { context, host } = await draw( shortcode( { layout: 'grid', columns: '4', gap: '0' } ), { width: 1440, height: 900 }, browser );
 
 		const radius = await host.locator( '.photos .tile' ).first().evaluate( ( tile ) => getComputedStyle( tile ).borderTopLeftRadius );
@@ -73,11 +70,8 @@ test.describe( 'display options with the real script', () => {
 		await context.close();
 	} );
 
-	// Platform gap: embed.js on platform main reads data-columns only. It has
-	// no data-columns-tablet or data-columns-mobile (unmerged in the platform's
-	// feat/embed-honours-data-options), so the count stays at 4.
 	for ( const [ name, width, expected ] of [ [ 'tablet', 820, 3 ], [ 'mobile', 390, 2 ] ] ) {
-		test.fixme( `columns per breakpoint: ${ name } shows ${ expected } columns`, async ( { browser } ) => {
+		test( `columns per breakpoint: ${ name } shows ${ expected } columns`, async ( { browser } ) => {
 			const content = shortcode( { layout: 'grid', columns: '4', columns_tablet: '3', columns_mobile: '2' } );
 			const { context, host } = await draw( content, { width: Number( width ), height: 900 }, browser );
 
@@ -96,11 +90,7 @@ test.describe( 'display options with the real script', () => {
 		await context.close();
 	} );
 
-	// Platform gap: embed.js on platform main reads data-sort values default,
-	// reverse, title and random. The plugin sends newest, oldest, name and random
-	// (the contract in the platform's unmerged feat/embed-honours-data-options),
-	// so newest is ignored. Remove the fixme once the platform ships those values.
-	test.fixme( 'sort=newest puts the last photo first', async ( { browser } ) => {
+	test( 'sort=newest puts the last photo first', async ( { browser } ) => {
 		const { context, host } = await draw( shortcode( { sort: 'newest' } ), { width: 1440, height: 900 }, browser );
 
 		await expect( host ).toHaveAttribute( 'data-sort', 'newest' );
@@ -159,23 +149,39 @@ test.describe( 'link-to with lightbox off', () => {
 		await context.close();
 	} );
 
-	// Platform gap: embed.js on platform main has no data-link-to (it is in the
-	// platform's unmerged feat/embed-honours-data-options), so every tile stays a
-	// button. `site` also needs a site_url in the public payload, which the API
-	// does not send yet, and the plugin's link_to choices do not list it. Remove
-	// the fixme once the platform reads data-link-to.
-	for ( const linkTo of [ 'page', 'site', 'file' ] ) {
-		test.fixme( `link_to=${ linkTo } draws an anchor that opens in a new tab`, async ( { browser } ) => {
+	// The mock payload carries site_url and a per-photo url, as the platform's
+	// embed API does. `file` links to the web image.
+	const TARGETS = { page: /\/share\/g\/spring-wedding\/photo\/p-\d+$/, site: /\/studio-e2e$/, file: /\/img\/p-\d+\/web\.svg$/ };
+	for ( const [ linkTo, href ] of Object.entries( TARGETS ) ) {
+		test( `link_to=${ linkTo } draws an anchor that opens in a new tab`, async ( { browser } ) => {
 			const { context, host } = await draw( shortcode( { lightbox: 'off', link_to: linkTo } ), { width: 1440, height: 900 }, browser );
 
 			await expect( host ).toHaveAttribute( 'data-link-to', linkTo );
 			const first = host.locator( '.photos .tile' ).first();
 			expect( await first.evaluate( ( tile ) => tile.tagName ) ).toBe( 'A' );
-			await expect( first ).toHaveAttribute( 'href', /^https?:\/\// );
+			await expect( first ).toHaveAttribute( 'href', href );
 			await expect( first ).toHaveAttribute( 'target', '_blank' );
+			await expect( first ).toHaveAttribute( 'rel', /noopener/ );
 			await context.close();
 		} );
 	}
+
+	test( 'link_new_tab=off opens the link in the same tab', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { lightbox: 'off', link_to: 'page', link_new_tab: 'off' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).toHaveAttribute( 'data-link-new-tab', 'off' );
+		const first = host.locator( '.photos .tile' ).first();
+		expect( await first.evaluate( ( tile ) => tile.tagName ) ).toBe( 'A' );
+		await expect( first ).not.toHaveAttribute( 'target', '_blank' );
+		await context.close();
+	} );
+
+	test( 'link_to is ignored while the lightbox is on', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { lightbox: 'on', link_to: 'page' } ), { width: 1440, height: 900 }, browser );
+
+		expect( await host.locator( '.photos .tile' ).first().evaluate( ( tile ) => tile.tagName ) ).not.toBe( 'A' );
+		await context.close();
+	} );
 } );
 
 test.describe( 'block markup and shortcode', () => {
