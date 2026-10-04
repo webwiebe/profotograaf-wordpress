@@ -30,7 +30,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@types/wordpress__block-editor": "^15.0.6",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.2",
     "@wordpress/api-fetch": "^7.56.0",
     "@wordpress/block-editor": "^18.0.0",
     "@wordpress/blocks": "^16.1.0",
@@ -46,7 +46,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.2",
     "yaml": "^2.9.1"
   },
   "packageManager": "pnpm@12.4.2"
