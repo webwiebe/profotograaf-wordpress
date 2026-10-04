@@ -1,0 +1,69 @@
+name: Live embed.js canary
+
+# Runs the layout spec against the embed.js the platform serves today instead
+# of the pinned copy in tests/e2e/fixtures. The API stays the mock platform. A
+# failure opens one issue, or comments on the one that is already open. A pass
+# closes it.
+
+on:
+  schedule:
+    - cron: '43 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: live-embed-canary
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canary:
+    name: Layout spec with the live embed.js
+    runs-on: ubuntu-latest
+    env:
+      WP_VERSION: '7.1'
+      EMBED_SCRIPT_URL: https://profotograaf.nl/share/embed/embed.js
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_TITLE: Live embed.js canary failed
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - run: tests/e2e/up.sh
+      - name: Layout spec against the live script
+        run: pnpm exec playwright test tests/e2e/embed-layout.spec.js
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: live-embed-canary
+          path: |
+            playwright-report
+            test-results
+      - name: Open or update the issue
+        if: failure()
+        run: |
+          number="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
+          body="The layout spec failed against ${EMBED_SCRIPT_URL}. Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body "$body"
+          else
+            gh issue create --title "$ISSUE_TITLE" --body "$body"
+          fi
+      - name: Close the issue after a pass
+        if: success()
+        run: |
+          number="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
+          if [ -n "$number" ]; then
+            gh issue close "$number" --comment "The layout spec passes against the live script again."
+          fi
+      - if: always()
+        run: docker compose -f tests/e2e/docker-compose.yml down -v

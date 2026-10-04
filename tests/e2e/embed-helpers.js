@@ -2,7 +2,7 @@
 // Shared by the specs that run the real embed.js (tests/e2e/fixtures/embed.js).
 const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
-const { expect } = require( '@playwright/test' );
+const { expect, test } = require( '@playwright/test' );
 const { MOCK } = require( './helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
@@ -10,6 +10,11 @@ const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 // WordPress points the script and the API at this host, which only the
 // containers resolve. The browser reaches the same mock on the published port.
 const PLATFORM_HOST = /^http:\/\/mock-platform:8090(\/.*)$/;
+
+// EMBED_SCRIPT_URL sends the script request to another build of embed.js, for
+// the live canary. The API stays the mock: the script takes its API origin from
+// the src of its own script tag, which is still the mock host.
+const EMBED_SCRIPT = /^\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/;
 
 const HOST = 'div[data-profotograaf-gallery="g-e2e"]';
 const PAGE_URL = 'http://mock-platform:8090/share/g/spring-wedding';
@@ -69,19 +74,32 @@ function block( attributes = {} ) {
  * @param {import('@playwright/test').Browser} browser
  * @param {string} url
  * @param {{width:number,height:number}} viewport
+ * @param {(context: import('@playwright/test').BrowserContext) => Promise<void>} [setup] Runs before the page opens, for init scripts.
  */
-async function openEmbed( browser, url, viewport = { width: 1440, height: 900 } ) {
-	const context = await browser.newContext( { viewport } );
+async function openEmbed( browser, url, viewport = { width: 1440, height: 900 }, setup = async () => {} ) {
+	// Contexts from the browser fixture skip the project's device options, so the
+	// phone profile passes its touch and user agent settings on here.
+	const { isMobile, hasTouch, userAgent, deviceScaleFactor } = test.info().project.use;
+	const device = Object.fromEntries(
+		Object.entries( { isMobile, hasTouch, userAgent, deviceScaleFactor } ).filter( ( [ , value ] ) => value !== undefined )
+	);
+	const context = await browser.newContext( { viewport, ...device } );
 	await context.route( PLATFORM_HOST, async ( route ) => {
-		const target = MOCK + PLATFORM_HOST.exec( route.request().url() )[ 1 ];
+		const [ , path ] = PLATFORM_HOST.exec( route.request().url() );
+		const live = process.env.EMBED_SCRIPT_URL;
+		const target = live && EMBED_SCRIPT.test( path ) ? live : MOCK + path;
 		const response = await route.fetch( { url: target } );
 		await route.fulfill( { response } );
 	} );
+	await setup( context );
 	const page = await context.newPage();
 	/** @type {string[]} */
 	const problems = [];
 	page.on( 'console', ( message ) => {
-		if ( message.type() === 'error' ) {
+		// WebKit logs the plugin's preconnect hint for the container-only host as an
+		// error. The host is mapped to the mock by the route above, which a
+		// preconnect does not go through.
+		if ( message.type() === 'error' && ! message.text().startsWith( 'Failed to preconnect to http://mock-platform' ) ) {
 			problems.push( 'console: ' + message.text() );
 		}
 	} );
