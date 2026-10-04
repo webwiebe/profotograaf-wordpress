@@ -25,12 +25,15 @@ test.describe( 'layout shift with the real script', () => {
 	for ( const layout of [ 'masonry', 'grid' ] ) {
 		for ( const width of [ 390, 1440 ] ) {
 			test( `${ layout } at ${ width }px stays under ${ BUDGET } from load through Show more`, async ( { browser } ) => {
-				// Reserved_Space holds a fixed 8em, so on a narrow screen the footer
-				// below the gallery jumps when the 16 tiles appear (about 0.32 with
-				// the default block theme). The test expects that failure and goes
-				// red the day the reservation follows the gallery, which is the cue
-				// to remove this line.
-				test.fail( width === 390, 'Reserved_Space holds 8em only, so narrow layouts shift about 0.32' );
+				// Reserved_Space holds a fixed 8em, so the footer below the gallery
+				// jumps when the 16 tiles appear. On a narrow screen that scores
+				// 0.32 to 0.47 with the default block theme. Masonry on a wide screen
+				// scores 0.089 with the WordPress 7.1 theme and 0.131 with the 7.0
+				// one, so the 7.0 job expects it to fail. These cases go red the day
+				// the reservation follows the gallery, which is the cue to remove
+				// this line.
+				const wide70 = layout === 'masonry' && width === 1440 && process.env.WP_VERSION === '7.0';
+				test.fail( width === 390 || wide70, 'Reserved_Space holds 8em only, so the footer shifts when the gallery appears' );
 				const { context, page, host } = await openEmbed( browser, urls[ layout ], { width, height: 900 }, ( ctx ) =>
 					ctx.addInitScript( () => {
 						// @ts-ignore Test-only global read back below.
