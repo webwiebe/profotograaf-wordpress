@@ -61,6 +61,9 @@ class Gallery_Index {
 				'title' => (string) ( $row['title'] ?? '' ),
 				'url'   => (string) ( $row['url'] ?? '' ),
 			);
+			if ( isset( $row['photo_count'] ) && (int) $row['photo_count'] > 0 ) {
+				$index[ (string) $row['id'] ]['count'] = (int) $row['photo_count'];
+			}
 		}
 		update_option( self::OPTION, $index, false );
 	}
@@ -79,6 +82,21 @@ class Gallery_Index {
 			$this->schedule_lookup();
 		}
 		return $found;
+	}
+
+	/**
+	 * Photo count of one gallery as last listed, or null when unknown. Reads the
+	 * option only and never schedules a lookup.
+	 *
+	 * @param string $id Gallery id.
+	 */
+	public function count( string $id ): ?int {
+		$index = get_option( self::OPTION, array() );
+		if ( ! is_array( $index ) || ! isset( $index[ $id ] ) || ! is_array( $index[ $id ] ) ) {
+			return null;
+		}
+		$count = (int) ( $index[ $id ]['count'] ?? 0 );
+		return $count > 0 ? $count : null;
 	}
 
 	/**

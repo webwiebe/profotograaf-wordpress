@@ -73,7 +73,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
 		const card = canvas.getByRole( 'button', { name: /Spring wedding/ } );
 		await expect( card ).toBeVisible( { timeout: 20_000 } );
-		await expect( card ).toContainText( '3 photos' );
+		await expect( card ).toContainText( '19 photos' );
 		await card.click();
 		await expect( canvas.getByText( 'Spring wedding' ).first() ).toBeVisible();
 
@@ -268,18 +268,27 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 	test( 'a gallery page announces the platform host early and holds space for the photos', async ( { browser } ) => {
 		const url = publishPost( 'Performance E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9"] [profotograaf_gallery id="g-e2e"]' );
+		const shaped = 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]';
 
+		// A visitor whose script has not drawn the gallery yet: the host holds the
+		// ratio of the gallery. With the script blocked the gallery never draws.
+		const waiting = await browser.newContext();
+		const waitingPage = await waiting.newPage();
+		await waitingPage.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js/, ( route ) => route.abort() );
+		await waitingPage.goto( url );
+		await expect( waitingPage.locator( 'link[rel="preconnect"]:not([crossorigin])' ) ).toHaveCount( 1 );
+		await expect( waitingPage.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
+		const held = waitingPage.locator( shaped );
+		await expect( held ).not.toHaveCSS( 'aspect-ratio', 'auto' );
+		const box = await held.boundingBox();
+		expect( box.height ).toBeGreaterThan( 100 );
+		await waiting.close();
+
+		// Without JavaScript nothing will ever draw, so the space is given back.
 		const visitor = await browser.newContext( { javaScriptEnabled: false } );
 		const page = await visitor.newPage();
 		await page.goto( url );
-
-		await expect( page.locator( 'link[rel="preconnect"]:not([crossorigin])' ) ).toHaveCount( 1 );
-		await expect( page.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
-		const shaped = page.locator( 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]' );
-		await expect( shaped ).toHaveCSS( 'aspect-ratio', 'auto' );
-		await expect( shaped ).not.toHaveCSS( 'min-height', '0px' );
-		const box = await shaped.boundingBox();
-		expect( box.height ).toBeGreaterThan( 100 );
+		await expect( page.locator( shaped ) ).toHaveCSS( 'aspect-ratio', 'auto' );
 		await visitor.close();
 	} );
 
@@ -288,20 +297,20 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const visitor = await browser.newContext();
 		const page = await visitor.newPage();
+		await page.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js/, ( route ) => route.abort() );
 		await page.goto( url );
 
 		// Stand in for embed.js: draw content taller than the reserved space into
-		// a shadow root, then mark the host ready as the script does.
+		// a shadow root. The box keeps its ratio and grows with the content.
 		const host = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await host.evaluate( ( el ) => {
 			const root = el.shadowRoot || el.attachShadow( { mode: 'open' } );
 			const tall = document.createElement( 'div' );
-			tall.style.height = '1200px';
+			tall.style.height = '12000px';
 			root.append( tall );
-			el.setAttribute( 'data-pf-ready', '' );
 		} );
 
-		await expect( host ).toHaveCSS( 'min-height', '0px' );
+		await expect( host ).not.toHaveCSS( 'aspect-ratio', 'auto' );
 		const sizes = await host.evaluate( ( el ) => ( {
 			box: el.getBoundingClientRect().height,
 			content: el.shadowRoot.firstElementChild.getBoundingClientRect().height,

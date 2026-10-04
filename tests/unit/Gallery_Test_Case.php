@@ -44,7 +44,6 @@ abstract class Gallery_Test_Case extends Wp_Test_Case {
 	 */
 	protected const HINT = '<link rel="preconnect" href="https://profotograaf.nl"><link rel="preconnect" href="https://profotograaf.nl" crossorigin>';
 
-	protected const RULE = '<style>[data-profotograaf-gallery][data-pf-ready]{min-height:0!important}</style>';
 
 	protected function setUp(): void {
 		parent::setUp();
