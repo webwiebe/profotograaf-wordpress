@@ -71,7 +71,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$connection = new \Profotograaf\Connection();
 		$this->connect();
 		$plugin = new \Profotograaf\Plugin( $connection, new \Profotograaf\Api_Client( $connection, $http, $this->clock() ), $this->clock() );
-		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( '/api/v1/account/embed-origins' );
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( '/api/v1/embed/origins' );
 		$http->reply( 200, array( 'origins' => array( 'https://other.example.com' ) ) );
 		$http->reply( 200, array( 'origins' => array( 'https://other.example.com', 'https://photos.example.com' ) ) );
 
@@ -87,13 +87,39 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		);
 	}
 
-	public function test_origin_sync_records_a_platform_refusal(): void {
-		$http       = new Fake_Transport();
-		$connection = new \Profotograaf\Connection();
-		$this->connect();
-		$plugin = new \Profotograaf\Plugin( $connection, new \Profotograaf\Api_Client( $connection, $http, $this->clock() ), $this->clock() );
-		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( '/api/v1/account/embed-origins' );
+	public function test_origin_sync_defaults_to_the_device_token_route(): void {
+		$http   = new Fake_Transport();
+		$plugin = $this->plugin_with( $http );
+		$http->reply( 200, array( 'origins' => array( 'https://photos.example.com' ) ) );
+
+		$module = new Origin_Sync();
+		$module->register( $plugin );
+		$module->sync();
+
+		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
+		$this->assertStringEndsWith( '/api/v1/embed/origins', $http->requests[0]['url'] );
+		$this->assertCount( 1, $http->requests );
+	}
+
+	public function test_origin_sync_falls_back_to_verifying_when_the_token_lacks_the_scope(): void {
+		$http   = new Fake_Transport();
+		$plugin = $this->plugin_with( $http );
 		$http->reply( 403, array( 'error' => 'this app is not allowed to use this endpoint' ) );
+		$http->reply( 200, $this->gallery_row() );
+		$http->reply( 200, null, array( 'content-security-policy' => "frame-ancestors 'self' https://photos.example.com" ) );
+
+		$module = new Origin_Sync();
+		$module->register( $plugin );
+		$module->sync();
+
+		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
+		$this->assertSame( 'GET', $http->requests[0]['method'] );
+	}
+
+	public function test_origin_sync_records_a_platform_failure(): void {
+		$http   = new Fake_Transport();
+		$plugin = $this->plugin_with( $http );
+		$http->reply( 500, array( 'error' => 'boom' ) );
 
 		$module = new Origin_Sync();
 		$module->register( $plugin );
@@ -125,6 +151,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 
 	public function test_origin_sync_verifies_the_frame_ancestors_when_there_is_no_write_endpoint(): void {
 		$http = new Fake_Transport();
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( null );
 		$http->reply( 200, $this->gallery_row() );
 		$http->reply( 200, null, array( 'content-security-policy' => "default-src 'self'; frame-ancestors 'self' https://photos.example.com" ) );
 
@@ -138,6 +165,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 	}
 
 	public function test_origin_sync_stays_manual_when_the_origin_is_not_listed(): void {
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( null );
 		$http = new Fake_Transport();
 		$http->reply( 200, $this->gallery_row() );
 		$http->reply( 200, null, array( 'content-security-policy' => "frame-ancestors 'self' https://other.example.com" ) );
@@ -150,6 +178,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 	}
 
 	public function test_origin_sync_stays_manual_when_the_page_cannot_be_checked(): void {
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( null );
 		$http = new Fake_Transport();
 		$http->reply( 200, array() );
 
@@ -173,6 +202,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 	}
 
 	public function test_origin_sync_records_why_the_check_failed(): void {
+		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( null );
 		$http = new Fake_Transport();
 		$http->reply( 500, array( 'error' => 'boom' ) );
 		$module = new Origin_Sync();

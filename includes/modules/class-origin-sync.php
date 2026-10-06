@@ -18,18 +18,22 @@ defined( 'ABSPATH' ) || exit;
  * photographer's account, so the platform's framing policy lets this site
  * frame their pages (docs/oembed-and-framing.md in the platform repository).
  *
- * The platform exposes that list at GET and PUT /api/v1/account/embed-origins,
- * but only for a browser session. The plugin's token (galleries:read and
- * leads:write) is refused there. TODO: once the platform lets the WordPress
- * client write the list, return the path from the
- * `profotograaf_origin_sync_endpoint` filter and this module starts syncing
- * after connect, with no other change. Until then sync() only verifies: it reads
- * the frame-ancestors of a public page and records `synced` once this site is
- * listed, otherwise the settings page tells the photographer which origin to add.
+ * The platform exposes that list to the plugin's token at GET and PUT
+ * /api/v1/embed/origins (scope account:embed-origins), so connect adds this
+ * site's origin by itself. A token paired before that scope existed, or a
+ * platform that predates the route, answers 401, 403 or 404. Then sync() falls
+ * back to verifying: it reads the frame-ancestors of a public page and records
+ * `synced` once this site is listed, otherwise the settings page tells the
+ * photographer which origin to add.
  */
 class Origin_Sync implements Module {
 
 	public const OPTION = 'profotograaf_origin_sync';
+
+	/**
+	 * Device-token route for the allowed embed origins.
+	 */
+	public const ENDPOINT = '/api/v1/embed/origins';
 
 	/**
 	 * Plugin container.
@@ -85,13 +89,16 @@ class Origin_Sync implements Module {
 			/**
 			 * Supplies the platform path that writes the allowed embed origins.
 			 *
-			 * @param string|null $path   Path such as /api/v1/account/embed-origins, null while
-			 *                            the platform offers no write for the plugin's token.
+			 * @param string|null $path   Path of the endpoint that writes the allowed embed origins.
+			 *                            Return null or an empty string to only verify.
 			 * @param string      $origin This site's origin.
 			 */
-			$path = apply_filters( 'profotograaf_origin_sync_endpoint', null, $origin );
+			$path = apply_filters( 'profotograaf_origin_sync_endpoint', self::ENDPOINT, $origin );
 			if ( is_string( $path ) && '' !== $path && null !== $this->plugin ) {
 				$state = $this->write_origin( $path, $origin );
+				if ( null === $state ) {
+					$state = $this->verify_origin( $origin, $this->plugin );
+				}
 			} elseif ( null !== $this->plugin ) {
 				$state = $this->verify_origin( $origin, $this->plugin );
 			}
@@ -154,12 +161,16 @@ class Origin_Sync implements Module {
 	 *
 	 * @param string $path   Endpoint path.
 	 * @param string $origin Origin to add.
-	 * @return array{state:string,origin:string,message:string}
+	 * @return array{state:string,origin:string,message:string}|null Null when the platform
+	 *         refuses this token or has no such route, so the caller verifies instead.
 	 */
-	private function write_origin( string $path, string $origin ): array {
+	private function write_origin( string $path, string $origin ): ?array {
 		$api     = $this->plugin->api();
 		$current = $api->request( 'GET', $path );
 		if ( is_wp_error( $current ) ) {
+			if ( self::is_unsupported( $current ) ) {
+				return null;
+			}
 			return array(
 				'state'   => 'error',
 				'origin'  => $origin,
@@ -172,6 +183,9 @@ class Origin_Sync implements Module {
 			$origins[] = $origin;
 			$result    = $api->request( 'PUT', $path, array( 'origins' => $origins ) );
 			if ( is_wp_error( $result ) ) {
+				if ( self::is_unsupported( $result ) ) {
+					return null;
+				}
 				return array(
 					'state'   => 'error',
 					'origin'  => $origin,
@@ -184,5 +198,15 @@ class Origin_Sync implements Module {
 			'origin'  => $origin,
 			'message' => '',
 		);
+	}
+
+	/**
+	 * Whether an error means the platform refuses this token or has no such route.
+	 *
+	 * @param \WP_Error $error Error from the API client.
+	 */
+	private static function is_unsupported( \WP_Error $error ): bool {
+		$data = $error->get_error_data();
+		return is_array( $data ) && in_array( (int) ( $data['status'] ?? 0 ), array( 401, 403, 404 ), true );
 	}
 }
