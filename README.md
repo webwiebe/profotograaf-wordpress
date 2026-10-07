@@ -17,7 +17,6 @@ Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for
 - Keeps the connection alive in the background. Disconnect revokes the site on the platform and deletes the local tokens.
 - Adds the site's origin to the photographer's allowed embed origins on connect.
 - Provides an authenticated API client that features build on: gallery list, lead posting.
-
 - Has an opt-in `media_source` setting (General tab, off by default). Features that offer Profotograaf photos in the editor check `Settings::media_source_enabled()` first. While it is off the plugin makes no photo list, gallery or image download requests for it. When it is on, the server calls `/api/v1/embed/photos` and `/share/img/` on profotograaf.nl, editors' browsers load thumbnails from profotograaf.nl, and imported photos are stored in the Media Library. See [docs/media-source.md](docs/media-source.md) and the External services section of `readme.txt`.
 
 Blocks, the shortcode, oEmbed and the form bridges are added as modules.
