@@ -145,11 +145,19 @@ function publicGallery( origin ) {
 
 const IMAGE = /^\/img\/(p-\d+)\/(thumb|web)\.(?:svg|jpg)$/;
 
+// A real 48x32 JPEG: the import screen downloads the .jpg variants, and WordPress
+// only accepts a sideload it can read as an image.
+const JPEG = Buffer.from( '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgADADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwC/RRRXecQUUUUAFFFFABRRRQAUUUUAFFFFAH//2Q==', 'base64' );
+
 function image( { res, url } ) {
 	const [ , id, variant ] = IMAGE.exec( url.pathname );
 	const photo = PUBLIC_PHOTOS.find( ( candidate ) => candidate.id === id );
 	if ( ! photo ) {
 		return json( res, 404, { error: 'not found' } );
+	}
+	if ( url.pathname.endsWith( '.jpg' ) ) {
+		res.writeHead( 200, { 'content-type': 'image/jpeg', 'cache-control': 'no-store' } );
+		return res.end( JPEG );
 	}
 	const [ width, height ] = variantSize( photo, variant );
 	const hue = ( Number( id.slice( 2 ) ) * 47 ) % 360;
@@ -221,6 +229,7 @@ const routes = {
 		bearer
 			? json( res, 403, { error: 'this app is not allowed to use this endpoint', code: 'forbidden' } )
 			: json( res, 200, { script_url: `/share/embed/embed.${ EMBED_VERSION }.js`, version: EMBED_VERSION } ),
+	'GET /api/v1/embed/photos': authed( libraryPage ),
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY ] ) ),
 	'GET /share/embed/embed.js': embedScript,
 	'HEAD /share/embed/embed.js': embedScript,
@@ -259,6 +268,42 @@ const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
 		{ variant: 'web', url: `http://localhost:8090/img/${ id }/web.jpg`, width: 1600, height: 1067 },
 	],
 } ) );
+
+// The library-wide list the media source reads (GET /api/v1/embed/photos): the
+// photos of every embeddable and available gallery, in the same photo shape.
+// URLs follow the host of the request, because WordPress reaches the mock under
+// another name than the test browser does and the importer only downloads from
+// the platform's own host.
+const LIBRARY = [
+	[ 'p-1', 'Bride', 'g-e2e', 'Spring wedding' ],
+	[ 'p-2', 'Groom', 'g-e2e', 'Spring wedding' ],
+	[ 'p-3', 'Rings', 'g-e2e', 'Spring wedding' ],
+	[ 'p-4', 'Falling leaves', 'g-e2e-autumn', 'Autumn walk' ],
+];
+
+function libraryPage( { req, res, url } ) {
+	const origin = `http://${ req.headers.host }`;
+	const photos = LIBRARY.map( ( [ id, title, galleryId, galleryTitle ] ) => ( {
+		id,
+		width: 3000,
+		height: 2000,
+		alt: '',
+		title,
+		caption: '',
+		url: `${ origin }/share/g/spring-wedding/photo/${ id }`,
+		gallery_id: galleryId,
+		gallery_title: galleryTitle,
+		thumbnail_url: `${ origin }/img/${ id }/thumb.jpg`,
+		full_url: `${ origin }/img/${ id }/web.jpg`,
+		images: [
+			{ variant: 'thumb', url: `${ origin }/img/${ id }/thumb.jpg`, width: 400, height: 400 },
+			{ variant: 'web', url: `${ origin }/img/${ id }/web.jpg`, width: 1600, height: 1067 },
+		],
+	} ) );
+	const limit = Math.min( Number( url.searchParams.get( 'limit' ) ) || 50, 200 );
+	const offset = Number( url.searchParams.get( 'offset' ) ) || 0;
+	return json( res, 200, { photos: photos.slice( offset, offset + limit ), total: photos.length, limit, offset } );
+}
 
 // One page of the list: limit (default 50, max 200) and offset, the way the
 // platform pages it.

@@ -42,3 +42,4 @@ Makefile
 CONTRIBUTING.md
 README.md
 /vendor
+webpack.config.js
