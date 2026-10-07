@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * (docs/embed-js.md in the platform repository). The unversioned
  * /share/embed/embed.js is served too, with a five minute cache, so it is the
  * URL used until the version is known. The version is learned in the
- * background (a HEAD request answered with the ETag) and from any oEmbed
+ * background (a daily GET on the public /api/v1/embed/script route) and from any oEmbed
  * result the platform returned, and stored. A page view never waits on the
  * network.
  */
@@ -32,6 +32,18 @@ class Embed_Script {
 	private const REFRESH_AFTER = DAY_IN_SECONDS;
 
 	/**
+	 * Public platform route that names the current embed.js version.
+	 */
+	private const VERSION_PATH = '/api/v1/embed/script';
+
+	/**
+	 * HTTP layer for the version lookup.
+	 *
+	 * @var Transport
+	 */
+	private Transport $transport;
+
+	/**
 	 * Whether the tag was printed by hand because the footer already ran.
 	 *
 	 * @var bool
@@ -44,6 +56,15 @@ class Embed_Script {
 	 * @var bool
 	 */
 	private bool $hinted = false;
+
+	/**
+	 * Sets up the script helper.
+	 *
+	 * @param Transport|null $transport HTTP layer for the version lookup; the WordPress HTTP API when null.
+	 */
+	public function __construct( ?Transport $transport = null ) {
+		$this->transport = $transport ?? new Wp_Transport();
+	}
 
 	/**
 	 * URL of the script: versioned when the version is known.
@@ -197,28 +218,52 @@ class Embed_Script {
 	/**
 	 * Reads the current version from the platform. Runs from WP-Cron.
 	 *
-	 * The route answers with the content hash as ETag, the same hash the
-	 * versioned URL carries. Failures leave the stored version alone and try
-	 * again the next day.
+	 * GET /api/v1/embed/script answers with `version` (the content hash the
+	 * versioned URL carries) and `script_url`. The request carries no token:
+	 * the route is public and the platform refuses a scoped token on routes
+	 * without a scope. Failures leave the stored version alone and try again
+	 * the next day.
 	 */
 	public function refresh(): void {
-		$response = wp_remote_head(
-			Config::platform_endpoint( '/share/embed/embed.js' ),
-			array(
-				'timeout'     => Config::http_timeout(),
-				'redirection' => 0,
-			)
-		);
+		try {
+			$response = $this->transport->send(
+				'GET',
+				Config::platform_endpoint( self::VERSION_PATH ),
+				array( 'Accept' => 'application/json' ),
+				null,
+				Config::http_timeout()
+			);
+		} catch ( \Throwable $e ) {
+			Logger::exception( 'The embed.js version lookup threw.', $e, array( 'method' => 'GET' ) );
+			$response = new \WP_Error( 'profotograaf_network' );
+		}
 
 		$version = '';
-		if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
-			$etag = trim( (string) wp_remote_retrieve_header( $response, 'etag' ), " \t\"" );
-			$etag = preg_replace( '#^W/#', '', $etag );
-			if ( is_string( $etag ) && $this->valid_version( $etag ) ) {
-				$version = $etag;
-			}
+		if ( ! is_wp_error( $response ) && 200 === (int) $response['status'] ) {
+			$version = $this->version_from_body( (string) $response['body'] );
 		}
 		$this->store( '' === $version ? $this->stored_version() : $version );
+	}
+
+	/**
+	 * The version in the script route's answer, or an empty string.
+	 *
+	 * @param string $body JSON body.
+	 */
+	private function version_from_body( string $body ): string {
+		$data = json_decode( $body, true );
+		if ( ! is_array( $data ) ) {
+			return '';
+		}
+		$version = is_string( $data['version'] ?? null ) ? $data['version'] : '';
+		if ( $this->valid_version( $version ) ) {
+			return $version;
+		}
+		$url = is_string( $data['script_url'] ?? null ) ? $data['script_url'] : '';
+		if ( 1 === preg_match( '#/share/embed/embed\.([a-f0-9]{12})\.js$#', $url, $found ) ) {
+			return $found[1];
+		}
+		return '';
 	}
 
 	/**

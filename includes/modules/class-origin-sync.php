@@ -18,9 +18,10 @@ defined( 'ABSPATH' ) || exit;
  * photographer's account, so the platform's framing policy lets this site
  * frame their pages (docs/oembed-and-framing.md in the platform repository).
  *
- * The platform exposes that list to the plugin's token at GET and PUT
- * /api/v1/embed/origins (scope account:embed-origins), so connect adds this
- * site's origin by itself. A token paired before that scope existed, or a
+ * The plugin's token may add one origin to that list with POST
+ * /api/v1/embed/origins and the body {"origin": "https://<site>"} (scope
+ * account:embed-origins), so connect and "Check again" add this site's origin
+ * by themselves. A token paired before that scope existed, or a
  * platform that predates the route, answers 401, 403 or 404. Then sync() falls
  * back to verifying: it reads the frame-ancestors of a public page and records
  * `synced` once this site is listed, otherwise the settings page tells the
@@ -157,7 +158,10 @@ class Origin_Sync implements Module {
 	}
 
 	/**
-	 * Reads the list, adds the origin and writes it back.
+	 * Asks the platform to add this site's origin to the list.
+	 *
+	 * The route adds only the origin it is given and answers with the whole
+	 * list, so origins the photographer added by hand stay in place.
 	 *
 	 * @param string $path   Endpoint path.
 	 * @param string $origin Origin to add.
@@ -165,33 +169,16 @@ class Origin_Sync implements Module {
 	 *         refuses this token or has no such route, so the caller verifies instead.
 	 */
 	private function write_origin( string $path, string $origin ): ?array {
-		$api     = $this->plugin->api();
-		$current = $api->request( 'GET', $path );
-		if ( is_wp_error( $current ) ) {
-			if ( self::is_unsupported( $current ) ) {
+		$result = $this->plugin->api()->request( 'POST', $path, array( 'origin' => $origin ) );
+		if ( is_wp_error( $result ) ) {
+			if ( self::is_unsupported( $result ) ) {
 				return null;
 			}
 			return array(
 				'state'   => 'error',
 				'origin'  => $origin,
-				'message' => $current->get_error_message(),
+				'message' => $result->get_error_message(),
 			);
-		}
-
-		$origins = isset( $current['origins'] ) && is_array( $current['origins'] ) ? array_values( array_filter( $current['origins'], 'is_string' ) ) : array();
-		if ( ! in_array( $origin, $origins, true ) ) {
-			$origins[] = $origin;
-			$result    = $api->request( 'PUT', $path, array( 'origins' => $origins ) );
-			if ( is_wp_error( $result ) ) {
-				if ( self::is_unsupported( $result ) ) {
-					return null;
-				}
-				return array(
-					'state'   => 'error',
-					'origin'  => $origin,
-					'message' => $result->get_error_message(),
-				);
-			}
 		}
 		return array(
 			'state'   => 'synced',

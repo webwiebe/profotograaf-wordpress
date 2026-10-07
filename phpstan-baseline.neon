@@ -25,12 +25,6 @@ parameters:
 			path: includes/class-connection.php
 
 		-
-			message: '#^Cannot cast array\|string to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: includes/class-embed-script.php
-
-		-
 			message: '#^Call to function is_array\(\) with array\<string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
