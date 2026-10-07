@@ -230,8 +230,8 @@ const routes = {
 const EMBEDDABLE = /^\/api\/v1\/embed\/galleries\/[^/]+\/embeddable$/;
 const PHOTOS = /^\/api\/v1\/embed\/galleries\/g-e2e\/photos$/;
 
-// The photo shape of the public gallery payload (docs/embed-api.md). The token
-// list route is the one wiebe-xyz/professionals#1868 asks for.
+// The photo shape of the public gallery payload (docs/embed-api.md), as the
+// token list route of wiebe-xyz/professionals#1868 answers it.
 const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
 	id,
 	width: 3000,
@@ -240,11 +240,23 @@ const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
 	title: [ 'Bride', 'Groom', 'Rings' ][ index ],
 	caption: '',
 	url: `http://localhost:8090/share/g/spring-wedding/photo/${ id }`,
+	gallery_id: 'g-e2e',
+	gallery_title: 'Spring wedding',
+	thumbnail_url: `http://localhost:8090/img/${ id }/thumb.jpg`,
+	full_url: `http://localhost:8090/img/${ id }/web.jpg`,
 	images: [
 		{ variant: 'thumb', url: `http://localhost:8090/img/${ id }/thumb.jpg`, width: 400, height: 400 },
 		{ variant: 'web', url: `http://localhost:8090/img/${ id }/web.jpg`, width: 1600, height: 1067 },
 	],
 } ) );
+
+// One page of the list: limit (default 50, max 200) and offset, the way the
+// platform pages it.
+function photoPage( { res, url } ) {
+	const limit = Math.min( Number( url.searchParams.get( 'limit' ) ) || 50, 200 );
+	const offset = Number( url.searchParams.get( 'offset' ) ) || 0;
+	return json( res, 200, { photos: PHOTO_LIST.slice( offset, offset + limit ), total: PHOTO_LIST.length, limit, offset } );
+}
 
 const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
 
@@ -256,7 +268,7 @@ function findRoute( method, pathname ) {
 		return image;
 	}
 	if ( method === 'GET' && PHOTOS.test( pathname ) ) {
-		return authed( ( { res } ) => json( res, 200, { photos: PHOTO_LIST } ) );
+		return authed( photoPage );
 	}
 	if ( method === 'PUT' && EMBEDDABLE.test( pathname ) ) {
 		return authed( ( { res } ) =>

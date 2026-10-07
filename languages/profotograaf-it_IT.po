@@ -219,7 +219,7 @@ msgstr "Le richieste esportate sono state rimosse."
 #: includes/class-api-client.php:146
 #: includes/class-gallery-rest.php:145
 #: includes/class-gallery-rest.php:163
-#: includes/class-photo-list.php:49
+#: includes/class-photo-list.php:56
 msgid "A gallery id is required."
 msgstr "Serve un ID galleria."
 

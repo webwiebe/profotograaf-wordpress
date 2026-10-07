@@ -15,12 +15,19 @@ defined( 'ABSPATH' ) || exit;
  * Reads the photos of one gallery for the editor's exclude grid.
  *
  * Calls `GET /api/v1/embed/galleries/{id}/photos` with the galleries:read
- * scope (wiebe-xyz/professionals#1868). The route is built against the shape
- * of the public gallery payload: photos with `id`, `width`, `height`, `alt`,
- * `title`, `caption` and `images` (variants `thumb` and `web`). The body may
- * be the list itself or an object with a `photos` list.
+ * scope (wiebe-xyz/professionals#1868). The route answers
+ * `{"photos": [...], "total", "limit", "offset"}`, newest first, at most 200
+ * photos per request. Photos carry `id`, `width`, `height`, `alt`, `title`,
+ * `caption`, `images` (variants `thumb` and `web`) and `thumbnail_url`.
+ *
+ * The list follows `offset` until `total` is reached, up to
+ * Gallery_Renderer::MAX_EXCLUDED photos, the most one block can leave out.
+ * A body that is a bare list is read as the whole gallery.
  */
 class Photo_List {
+
+	/** Most photos the platform returns per request. */
+	public const PAGE_SIZE = 200;
 
 	/**
 	 * API client.
@@ -48,47 +55,69 @@ class Photo_List {
 		if ( '' === trim( $gallery_id ) ) {
 			return Api_Errors::make( 'profotograaf_invalid', __( 'A gallery id is required.', 'profotograaf' ), 0, false );
 		}
-		$body = $this->api->request( 'GET', '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/photos' );
-		if ( is_wp_error( $body ) ) {
-			return $body;
-		}
-		$list = is_array( $body ) && isset( $body['photos'] ) ? $body['photos'] : $body;
+		$path = '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/photos';
 		$rows = array();
-		foreach ( is_array( $list ) ? $list : array() as $photo ) {
-			if ( ! is_array( $photo ) || empty( $photo['id'] ) ) {
-				continue;
+		$seen = 0;
+		do {
+			$limit = min( self::PAGE_SIZE, Gallery_Renderer::MAX_EXCLUDED - $seen );
+			$body  = $this->api->request( 'GET', $path . '?limit=' . $limit . '&offset=' . $seen );
+			if ( is_wp_error( $body ) ) {
+				return $body;
 			}
-			$rows[] = array(
-				'id'        => (string) $photo['id'],
-				'title'     => (string) ( $photo['title'] ?? '' ),
-				'alt'       => (string) ( $photo['alt'] ?? '' ),
-				'caption'   => (string) ( $photo['caption'] ?? '' ),
-				'width'     => (int) ( $photo['width'] ?? 0 ),
-				'height'    => (int) ( $photo['height'] ?? 0 ),
-				'thumb_url' => self::variant_url( $photo, 'thumb' ),
-			);
-		}
+			$paged = is_array( $body ) && isset( $body['photos'] );
+			$list  = $paged ? $body['photos'] : $body;
+			$list  = is_array( $list ) ? array_values( $list ) : array();
+			$seen += count( $list );
+			foreach ( $list as $photo ) {
+				$row = self::row( $photo );
+				if ( null !== $row ) {
+					$rows[] = $row;
+				}
+			}
+			$total = $paged && isset( $body['total'] ) ? (int) $body['total'] : 0;
+		} while ( array() !== $list && $seen < $total && $seen < Gallery_Renderer::MAX_EXCLUDED );
 		return $rows;
 	}
 
 	/**
-	 * The URL of one image variant of a photo, or the first image when the
-	 * wanted variant is missing.
+	 * One row of the list, or null for a photo without an id.
 	 *
-	 * @param array<mixed> $photo   Photo.
-	 * @param string       $variant Variant name.
+	 * @param mixed $photo Photo from the platform.
+	 * @return array{id:string,title:string,alt:string,caption:string,width:int,height:int,thumb_url:string}|null
 	 */
-	private static function variant_url( array $photo, string $variant ): string {
+	private static function row( $photo ): ?array {
+		if ( ! is_array( $photo ) || empty( $photo['id'] ) ) {
+			return null;
+		}
+		return array(
+			'id'        => (string) $photo['id'],
+			'title'     => (string) ( $photo['title'] ?? '' ),
+			'alt'       => (string) ( $photo['alt'] ?? '' ),
+			'caption'   => (string) ( $photo['caption'] ?? '' ),
+			'width'     => (int) ( $photo['width'] ?? 0 ),
+			'height'    => (int) ( $photo['height'] ?? 0 ),
+			'thumb_url' => self::thumb_url( $photo ),
+		);
+	}
+
+	/**
+	 * The thumbnail URL of a photo: the `thumb` image, then `thumbnail_url`,
+	 * then the first image.
+	 *
+	 * @param array<mixed> $photo Photo.
+	 */
+	private static function thumb_url( array $photo ): string {
 		$fallback = '';
 		foreach ( is_array( $photo['images'] ?? null ) ? $photo['images'] : array() as $image ) {
 			if ( ! is_array( $image ) || empty( $image['url'] ) ) {
 				continue;
 			}
-			if ( ( $image['variant'] ?? '' ) === $variant ) {
+			if ( ( $image['variant'] ?? '' ) === 'thumb' ) {
 				return (string) $image['url'];
 			}
 			$fallback = '' === $fallback ? (string) $image['url'] : $fallback;
 		}
-		return $fallback;
+		$thumbnail = $photo['thumbnail_url'] ?? '';
+		return is_string( $thumbnail ) && '' !== $thumbnail ? $thumbnail : $fallback;
 	}
 }

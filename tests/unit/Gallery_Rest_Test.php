@@ -230,7 +230,7 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->assertSame( 'p-1', $rows[0]['id'] );
 		$this->assertSame( 'https://profotograaf.nl/share/img/a/thumb-1.jpg', $rows[0]['thumb_url'] );
 		$this->assertSame( 'GET', $this->http->requests[0]['method'] );
-		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries/g-1/photos', $this->http->requests[0]['url'] );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries/g-1/photos?limit=200&offset=0', $this->http->requests[0]['url'] );
 	}
 
 	public function test_a_bad_gallery_id_gives_a_400_for_the_photo_list(): void {
