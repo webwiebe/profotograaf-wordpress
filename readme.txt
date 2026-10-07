@@ -57,6 +57,8 @@ In the block editor and on the settings page, the plugin asks `https://profotogr
 
 When you open the Photos panel of a gallery block to leave photos out, the plugin asks `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for the photos of that gallery (id, size, title, alt text, caption and image links), 200 at a time, up to 500 photos. Only users who can edit posts see this list.
 
+Only if you turn on "Use Profotograaf photos in the editor", the plugin asks `https://profotograaf.nl/api/v1/embed/photos` for the photos of your galleries that allow embedding (id, size, title, alt text, caption, gallery title and image links), 200 at a time, up to 2000 photos. It does this in the background twice a day and when an editor opens the photo library for the first time. The plugin keeps the list in the WordPress options table, so the editor still works when Profotograaf cannot be reached. Nothing is requested while the setting is off, and visitors of your site never trigger the request.
+
 When you pick a gallery in the gallery block that does not allow embedding yet, the plugin sends `PUT https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/embeddable` to switch "Allow embedding on other websites" on for that one gallery. Nothing else about the gallery changes. If your connection was made before this permission existed, Profotograaf refuses the call and the plugin asks you to connect again.
 
 After you connect, and when you click "Check again" on the settings page, the plugin sends `POST https://profotograaf.nl/api/v1/embed/origins` with this site's address (for example `https://www.example.com`) and the access token. Profotograaf adds that one address to "Sites allowed to embed my pages" in your account, so your galleries may be shown on this site. Addresses you added yourself stay in the list. If your connection was made before this permission existed, the plugin only checks whether your public gallery page already allows this site, and the settings page tells you which address to add.
@@ -144,6 +146,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 = 0.1.0 =
 * New: import a Profotograaf photo into the Media Library (web size, once per photo, for users who can upload files, only with "Use Profotograaf photos in the editor" on). Imported photos stay when the plugin is deleted.
+* New: the photo library behind "Use Profotograaf photos in the editor" reads your embeddable photos from Profotograaf into a stored list, refreshed twice a day while the setting is on. The stored list is used when Profotograaf cannot be reached.
 * New: "Use Profotograaf photos in the editor" setting, off by default. Later releases use it to offer your Profotograaf photos in the editor. Nothing is requested while it is off.
 * First version: connect to Profotograaf, settings page and the API client other features build on.
 * New: "Find your gallery" block that links clients to the client portal.
