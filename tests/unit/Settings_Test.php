@@ -40,6 +40,8 @@ class Settings_Test extends Wp_Test_Case {
 		$this->assertSame( '', $this->settings->get( 'fallback_link_label' ) );
 		$this->assertTrue( $this->settings->get( 'leads_enabled' ) );
 		$this->assertFalse( $this->settings->get( 'keep_data_on_uninstall' ) );
+		$this->assertFalse( $this->settings->get( 'media_source' ) );
+		$this->assertFalse( $this->settings->media_source_enabled() );
 		$this->assertNull( $this->settings->get( 'no_such_option' ) );
 	}
 
@@ -69,6 +71,7 @@ class Settings_Test extends Wp_Test_Case {
 			array(
 				'fallback_link_label'    => 'Open the gallery',
 				'client_portal_path'     => '/client',
+				'media_source'           => false,
 				'default_layout'         => 'slideshow',
 				'leads_enabled'          => false,
 				'leads_alert_email'      => '',
@@ -92,6 +95,30 @@ class Settings_Test extends Wp_Test_Case {
 			),
 			$clean
 		);
+	}
+
+	public function test_the_media_source_is_off_by_default_and_saving_it_on_turns_it_on(): void {
+		$this->assertFalse( Settings_Schema::defaults()['media_source'] );
+		$this->assertFalse( $this->settings->sanitize( array() )['media_source'] );
+
+		$clean = $this->settings->sanitize( array( 'media_source' => '1' ) );
+		$this->assertTrue( $clean['media_source'] );
+
+		$this->options['profotograaf_settings'] = $clean;
+		$this->assertTrue( $this->settings->media_source_enabled() );
+
+		$this->options['profotograaf_settings'] = array( 'media_source' => false );
+		$this->options['profotograaf_settings'] = $this->settings->sanitize( array( 'media_source' => 'junk' ) );
+		$this->assertFalse( $this->settings->media_source_enabled(), 'An unusable value keeps the saved off state.' );
+	}
+
+	public function test_the_media_source_checkbox_lives_on_the_general_tab_and_unchecking_turns_it_off(): void {
+		$this->assertArrayHasKey( 'media_source', Settings_Schema::in_tab( Settings_Schema::TAB_GENERAL ) );
+
+		$this->options['profotograaf_settings'] = array( 'media_source' => true );
+		$clean                                  = $this->settings->sanitize( array( '_tab' => 'general' ) );
+
+		$this->assertFalse( $clean['media_source'] );
 	}
 
 	public function test_sanitising_refuses_invalid_values(): void {
@@ -191,6 +218,7 @@ class Settings_Test extends Wp_Test_Case {
 			array(
 				'fallback_link_label'    => '',
 				'client_portal_path'     => '/client',
+				'media_source'           => false,
 				'default_layout'         => 'masonry',
 				'leads_enabled'          => true,
 				'leads_alert_email'      => '',

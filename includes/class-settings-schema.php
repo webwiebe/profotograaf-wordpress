@@ -38,7 +38,7 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 5;
+	public const VERSION = 6;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
@@ -94,6 +94,13 @@ final class Settings_Schema {
 				'label'       => __( 'Client portal path', 'profotograaf' ),
 				'description' => __( 'The path of the client portal on your Profotograaf address, used by the "Find your gallery" block. A block can set its own. The default is /client.', 'profotograaf' ),
 				'sanitize'    => array( Modules\Client_Galleries::class, 'sanitize_path' ),
+			),
+			'media_source'           => array(
+				'tab'         => self::TAB_GENERAL,
+				'type'        => 'bool',
+				'default'     => false,
+				'label'       => __( 'Use Profotograaf photos in the editor', 'profotograaf' ),
+				'description' => __( 'Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors\' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested.', 'profotograaf' ),
 			),
 			'default_layout'         => array(
 				'tab'         => self::TAB_GALLERIES,

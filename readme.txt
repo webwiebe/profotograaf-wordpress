@@ -36,6 +36,8 @@ The plugin sets no cookies and does not track your visitors. See "External servi
 
 **Export and erase.** Tools, Export Personal Data includes the waiting and failed enquiries of an email address, and Tools, Erase Personal Data removes them. The email address is matched without regard to case. Enquiries that were already delivered are held by Profotograaf and covered by its privacy policy.
 
+**Photo library in the editor (only if you turn it on).** The "Use Profotograaf photos in the editor" setting is off by default. When it is on, a photo an editor adds is downloaded and stored in your Media Library like any upload, and stays on your site until you delete it. Deleting the plugin leaves those photos in place.
+
 **Uninstall.** Deleting the plugin removes the stored connection, settings and queued enquiries, unless you chose to keep the data on uninstall in the settings.
 
 == External services ==
@@ -74,6 +76,12 @@ The "Find your gallery" block is a plain link. It sends nothing to Profotograaf 
 = Sending enquiries =
 
 When you switch on a form in the lead settings, every submission of that form is sent to `https://profotograaf.nl/api/v1/leads`: the name, email address, phone, date, message and the other fields of the form, the address of the page it was sent from, and the name of the form. Nothing is sent for forms you have not switched on.
+
+= Photo library in the editor (only if you opt in) =
+
+These calls happen only when you switch on "Use Profotograaf photos in the editor" in the general settings. While it is off, none of them is made.
+
+When an editor with permission to upload files browses or searches the photo library in the block editor, the plugin asks `https://profotograaf.nl/api/v1/embed/photos` and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a page of photos (id, size, title, caption, gallery and links), and `https://profotograaf.nl/api/v1/embed/galleries` for the galleries to choose from. These requests come from your server and carry the access token the plugin stores for your account. When an editor adds a photo, your server downloads the image from `https://profotograaf.nl/share/img/` and stores it in your Media Library. The editor's browser loads the thumbnails of the photos it shows from `https://profotograaf.nl`, so Profotograaf receives that editor's IP address and browser details in the way any web server does. Visitors of your site are not involved.
 
 = Anonymous usage data (only if you opt in) =
 
@@ -135,6 +143,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: "Use Profotograaf photos in the editor" setting, off by default. Later releases use it to offer your Profotograaf photos in the editor. Nothing is requested while it is off.
 * First version: connect to Profotograaf, settings page and the API client other features build on.
 * New: "Find your gallery" block that links clients to the client portal.
 * New: leave photos out of a gallery block (Photos panel) or shortcode (`exclude`). The editor lists up to 500 photos of the gallery, 200 per request.
