@@ -369,9 +369,10 @@ class Leads_Settings_Test extends Leads_Test_Case {
 	public function test_rechecking_the_embed_version_leaves_a_result(): void {
 		$this->allow( true );
 		Functions\when( 'get_current_user_id' )->justReturn( 3 );
-		Functions\when( 'wp_remote_head' )->justReturn( array( 'code' => 200, 'etag' => '"0123456789ab"' ) );
+		Functions\expect( 'wp_remote_request' )->once()->with( 'https://profotograaf.nl/api/v1/embed/script', \Mockery::type( 'array' ) )->andReturn( array( 'code' => 200, 'body' => '{"script_url":"/share/embed/embed.0123456789ab.js","version":"0123456789ab"}' ) );
 		Functions\when( 'wp_remote_retrieve_response_code' )->alias( fn( $response ) => $response['code'] );
-		Functions\when( 'wp_remote_retrieve_header' )->alias( fn( $response, $name ) => $response[ $name ] ?? '' );
+		Functions\when( 'wp_remote_retrieve_header' )->justReturn( '' );
+		Functions\when( 'wp_remote_retrieve_body' )->alias( fn( $response ) => $response['body'] );
 
 		$page = $this->page_with_api( new Fake_Transport() );
 		$page->handle_check_embed_version();

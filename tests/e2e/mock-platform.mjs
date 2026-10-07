@@ -208,9 +208,19 @@ const routes = {
 		state.refreshes += 1;
 		return json( res, 200, { status: 'approved', ...tokenPair() } );
 	},
-	// The real platform refuses the wordpress client here (scope middleware).
-	'POST /api/v1/auth/devices/signout': ( { res } ) =>
-		json( res, 403, { error: 'this app is not allowed to use this endpoint', code: 'forbidden' } ),
+	'POST /api/v1/auth/devices/signout': authed( ( { res } ) => {
+		res.writeHead( 204 );
+		return res.end();
+	} ),
+	// Adds one origin and answers with the whole list.
+	'POST /api/v1/embed/origins': authed( ( { res, body } ) =>
+		json( res, 200, { origins: typeof body.origin === 'string' ? [ body.origin ] : [] } )
+	),
+	// Public: the platform refuses a scoped token here, so a bearer gets 403.
+	'GET /api/v1/embed/script': ( { res, bearer } ) =>
+		bearer
+			? json( res, 403, { error: 'this app is not allowed to use this endpoint', code: 'forbidden' } )
+			: json( res, 200, { script_url: `/share/embed/embed.${ EMBED_VERSION }.js`, version: EMBED_VERSION } ),
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY ] ) ),
 	'GET /share/embed/embed.js': embedScript,
 	'HEAD /share/embed/embed.js': embedScript,

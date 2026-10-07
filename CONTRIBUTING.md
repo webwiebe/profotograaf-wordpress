@@ -69,7 +69,7 @@ Add `blocks/<name>/block.json` with its `index.tsx` (or `index.ts`), `render.php
 | `profotograaf_loaded` | action | All modules registered |
 | `profotograaf_refresh_failed` | action | The background token refresh failed, argument `WP_Error` |
 | `profotograaf_mark_embeddable_request` | filter | Supplies the request that marks a gallery embeddable, once the platform allows it |
-| `profotograaf_origin_sync_endpoint` | filter | Supplies the path that writes the allowed embed origins, once the platform allows it |
+| `profotograaf_origin_sync_endpoint` | filter | Path that adds this site's origin to the allowed embed origins (default `/api/v1/embed/origins`), or null to only verify |
 
 ## Talking to the platform
 
@@ -83,7 +83,7 @@ $body = $plugin->api()->request( 'GET', '/api/v1/some/path' ); // anything else
 
 A `WP_Error` from the client has data `status` (0 when no response came) and `retryable`. A background job retries when `retryable` is true and gives up otherwise. Read `Api_Client`'s class comment for the error codes.
 
-Every endpoint, field and header comes from the platform's documentation and code, not from guesswork. The contracts are `docs/features.md`, `docs/embed-api.md`, `docs/embed-js.md` and `docs/oembed-and-framing.md` in the platform repository. The plugin's token holds the scopes `galleries:read` and `leads:write`. A call outside those scopes is refused with 403, which is why marking a gallery embeddable and syncing embed origins go through filters until the platform offers them to the token.
+Every endpoint, field and header comes from the platform's documentation and code, not from guesswork. The contracts are `docs/features.md`, `docs/embed-api.md`, `docs/embed-js.md` and `docs/oembed-and-framing.md` in the platform repository. A call outside the token's scopes is refused with 403. A token paired before a scope existed gets 403 on that route, so marking a gallery embeddable asks for a new connection and origin sync falls back to reading the frame-ancestors of a public page. Public routes such as `GET /api/v1/embed/script` are called without the bearer, because the platform refuses a scoped token on a route that has no scope.
 
 Front-end requests never wait on the platform. Do slow or fallible work in WP-Cron.
 

@@ -14,7 +14,8 @@ Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for
 
 - Connects a site to a Profotograaf account with the device pairing flow. You approve the connection on profotograaf.nl, so your password never reaches WordPress.
 - When you start a connection, sends the site address, site title, administrator email address and site language (en, nl, de or fr) to Profotograaf, which uses them to prefill the sign-up form if you create an account. The settings page says so next to the Connect button, and `readme.txt` (External services) lists the full request.
-- Keeps the connection alive in the background and disconnects on request.
+- Keeps the connection alive in the background. Disconnect revokes the site on the platform and deletes the local tokens.
+- Adds the site's origin to the photographer's allowed embed origins on connect.
 - Provides an authenticated API client that features build on: gallery list, lead posting.
 
 Blocks, the shortcode, oEmbed and the form bridges are added as modules.

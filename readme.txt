@@ -47,7 +47,7 @@ Privacy policy: https://profotograaf.nl/privacy
 
 = Connecting your site =
 
-When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. The same request sends the site address, the site title, the WordPress administrator email address and the site language (English, Dutch, German or French; other languages are not sent). Profotograaf shows the site title and email address on its connect page and uses them only to prefill the sign-up form if you create a new account there. A value that is not a valid address is left out. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
+When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. The same request sends the site address, the site title, the WordPress administrator email address and the site language (English, Dutch, German or French; other languages are not sent). Profotograaf shows the site title and email address on its connect page and uses them only to prefill the sign-up form if you create a new account there. A value that is not a valid address is left out. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect, which removes this site from the devices connected to your account. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
 
 = Your galleries =
 
@@ -57,9 +57,13 @@ When you open the Photos panel of a gallery block to leave photos out, the plugi
 
 When you pick a gallery in the gallery block that does not allow embedding yet, the plugin sends `PUT https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/embeddable` to switch "Allow embedding on other websites" on for that one gallery. Nothing else about the gallery changes. If your connection was made before this permission existed, Profotograaf refuses the call and the plugin asks you to connect again.
 
+After you connect, and when you click "Check again" on the settings page, the plugin sends `POST https://profotograaf.nl/api/v1/embed/origins` with this site's address (for example `https://www.example.com`) and the access token. Profotograaf adds that one address to "Sites allowed to embed my pages" in your account, so your galleries may be shown on this site. Addresses you added yourself stay in the list. If your connection was made before this permission existed, the plugin only checks whether your public gallery page already allows this site, and the settings page tells you which address to add.
+
 = Showing a gallery on your site =
 
 A page that contains a Profotograaf gallery makes the visitor's browser load the embed script from `https://profotograaf.nl/share/embed/` and the gallery data and photos from `https://profotograaf.nl`. Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the script also reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
+
+Once a day, in the background, the plugin asks `https://profotograaf.nl/api/v1/embed/script` which version of the embed script is current, so pages load the script under its versioned address. The request carries no token and no data about your site or its visitors. When it fails, the plugin keeps the version it knew and tries again the next day.
 
 Pasting a gallery link into the editor makes WordPress ask `https://profotograaf.nl/oembed` for the embed code of that gallery.
 
@@ -115,7 +119,7 @@ No. You approve the connection on profotograaf.nl. The plugin stores an access t
 
 = How do I remove the connection completely? =
 
-Click Disconnect on the settings page. To also remove this site from your account, open Connected apps in your Profotograaf account settings.
+Click Disconnect on the settings page. The plugin asks Profotograaf to end the connection, which removes this site from the devices connected to your account, and deletes its tokens. If Profotograaf cannot be reached, the plugin deletes its tokens anyway; you can then remove the site under Connected apps in your Profotograaf account settings.
 
 = Does it work on a WordPress multisite network? =
 
@@ -136,6 +140,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * New: leave photos out of a gallery block (Photos panel) or shortcode (`exclude`). The editor lists up to 500 photos of the gallery, 200 per request.
 * Dutch (nl_NL) and English.
 * New: starting a connection sends the site address, site title, administrator email address and site language, so Profotograaf can prefill a new account.
+* Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the embed script version is read from a public platform route.
 
 == Upgrade Notice ==
 

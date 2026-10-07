@@ -66,13 +66,12 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$this->assertSame( 'insecure', Origin_Sync::status()['state'] );
 	}
 
-	public function test_origin_sync_adds_the_origin_once_a_write_endpoint_exists(): void {
+	public function test_origin_sync_posts_only_this_origin_to_the_write_endpoint(): void {
 		$http       = new Fake_Transport();
 		$connection = new \Profotograaf\Connection();
 		$this->connect();
 		$plugin = new \Profotograaf\Plugin( $connection, new \Profotograaf\Api_Client( $connection, $http, $this->clock() ), $this->clock() );
 		Filters\expectApplied( 'profotograaf_origin_sync_endpoint' )->andReturn( '/api/v1/embed/origins' );
-		$http->reply( 200, array( 'origins' => array( 'https://other.example.com' ) ) );
 		$http->reply( 200, array( 'origins' => array( 'https://other.example.com', 'https://photos.example.com' ) ) );
 
 		$module = new Origin_Sync();
@@ -80,11 +79,10 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$module->sync();
 
 		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
-		$this->assertSame( 'PUT', $http->requests[1]['method'] );
-		$this->assertSame(
-			array( 'origins' => array( 'https://other.example.com', 'https://photos.example.com' ) ),
-			$http->body( 1 )
-		);
+		$this->assertCount( 1, $http->requests );
+		$this->assertSame( 'POST', $http->requests[0]['method'] );
+		$this->assertSame( array( 'origin' => 'https://photos.example.com' ), $http->body( 0 ) );
+		$this->assertSame( 'Bearer access-1', $http->requests[0]['headers']['Authorization'] ?? '' );
 	}
 
 	public function test_origin_sync_defaults_to_the_device_token_route(): void {
@@ -97,6 +95,7 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$module->sync();
 
 		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
+		$this->assertSame( 'POST', $http->requests[0]['method'] );
 		$this->assertStringEndsWith( '/api/v1/embed/origins', $http->requests[0]['url'] );
 		$this->assertCount( 1, $http->requests );
 	}
@@ -113,7 +112,8 @@ class Config_And_Settings_Test extends Wp_Test_Case {
 		$module->sync();
 
 		$this->assertSame( 'synced', Origin_Sync::status()['state'] );
-		$this->assertSame( 'GET', $http->requests[0]['method'] );
+		$this->assertSame( 'POST', $http->requests[0]['method'] );
+		$this->assertSame( 'GET', $http->requests[1]['method'] );
 	}
 
 	public function test_origin_sync_records_a_platform_failure(): void {

@@ -38,40 +38,78 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		$this->script->enqueue();
 	}
 
-	public function test_refresh_stores_the_etag_as_the_version(): void {
-		Functions\expect( 'wp_remote_head' )->once()->with( 'https://profotograaf.nl/share/embed/embed.js', \Mockery::type( 'array' ) )->andReturn( array( 'etag' => '"0123456789ab"' ) );
-		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
-		Functions\when( 'wp_remote_retrieve_header' )->alias( fn( $response, $name ) => $response[ $name ] ?? '' );
+	public function test_refresh_reads_the_version_from_the_script_route_without_a_token(): void {
+		$this->connect();
+		$http   = new Fake_Transport();
+		$script = new Embed_Script( $http );
+		$http->reply(
+			200,
+			array(
+				'script_url' => '/share/embed/embed.9ea0aff359ae.js',
+				'version'    => '9ea0aff359ae',
+			)
+		);
 
-		$this->script->refresh();
+		$script->refresh();
+
+		$this->assertCount( 1, $http->requests );
+		$this->assertSame( 'GET', $http->requests[0]['method'] );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/script', $http->requests[0]['url'] );
+		$this->assertArrayNotHasKey( 'Authorization', $http->requests[0]['headers'] );
+		$this->assertSame( '9ea0aff359ae', $this->options['profotograaf_embed_version']['version'] );
+		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.9ea0aff359ae.js', $script->url() );
+	}
+
+	public function test_refresh_takes_the_version_from_the_script_url_when_the_field_is_missing(): void {
+		$http   = new Fake_Transport();
+		$script = new Embed_Script( $http );
+		$http->reply( 200, array( 'script_url' => '/share/embed/embed.0123456789ab.js' ) );
+
+		$script->refresh();
 
 		$this->assertSame( '0123456789ab', $this->options['profotograaf_embed_version']['version'] );
-		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.0123456789ab.js', $this->script->url() );
 	}
 
 	public function test_a_failed_refresh_keeps_the_known_version(): void {
-		$this->options['profotograaf_embed_version'] = array(
-			'version'    => '0123456789ab',
-			'checked_at' => 1,
-		);
-		Functions\when( 'wp_remote_head' )->justReturn( new \WP_Error( 'http_request_failed', 'timeout' ) );
-		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 0 );
+		foreach ( array( 'network', 'status', 'body', 'throw' ) as $failure ) {
+			$this->options['profotograaf_embed_version'] = array(
+				'version'    => '0123456789ab',
+				'checked_at' => 1,
+			);
 
-		$this->script->refresh();
+			$http = new Fake_Transport();
+			if ( 'network' === $failure ) {
+				$http->fail( new \WP_Error( 'http_request_failed', 'timeout' ) );
+			} elseif ( 'status' === $failure ) {
+				$http->reply( 503, array( 'error' => 'unavailable' ) );
+			} elseif ( 'body' === $failure ) {
+				$http->reply( 200, array( 'version' => 'not-a-hash' ) );
+			} else {
+				$http->fail( new \RuntimeException( 'boom' ) );
+			}
 
-		$this->assertSame( '0123456789ab', $this->options['profotograaf_embed_version']['version'] );
-		$this->assertGreaterThan( 1, $this->options['profotograaf_embed_version']['checked_at'], 'The attempt is recorded so it is not retried on every page view.' );
+			( new Embed_Script( $http ) )->refresh();
+
+			$this->assertSame( '0123456789ab', $this->options['profotograaf_embed_version']['version'], $failure );
+			$this->assertGreaterThan( 1, $this->options['profotograaf_embed_version']['checked_at'], 'The attempt is recorded so it is not retried on every page view.' );
+		}
 	}
 
-	public function test_an_etag_that_is_not_a_version_is_ignored(): void {
-		Functions\when( 'wp_remote_head' )->justReturn( array( 'etag' => '"not-a-hash"' ) );
-		Functions\when( 'wp_remote_retrieve_response_code' )->justReturn( 200 );
-		Functions\when( 'wp_remote_retrieve_header' )->alias( fn( $response, $name ) => $response[ $name ] ?? '' );
+	public function test_a_value_that_is_not_a_version_is_ignored(): void {
+		$http   = new Fake_Transport();
+		$script = new Embed_Script( $http );
+		$http->reply(
+			200,
+			array(
+				'script_url' => '/share/embed/embed.js',
+				'version'    => 'not-a-hash',
+			)
+		);
 
-		$this->script->refresh();
+		$script->refresh();
 
 		$this->assertSame( '', $this->options['profotograaf_embed_version']['version'] );
-		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.js', $this->script->url() );
+		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.js', $script->url() );
 	}
 
 	public function test_the_footer_that_already_ran_gets_the_tag_once_by_hand(): void {

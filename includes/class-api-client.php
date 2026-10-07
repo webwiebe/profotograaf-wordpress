@@ -391,9 +391,9 @@ class Api_Client {
 	 * Asks the platform to end the connection. The plugin clears its own copy
 	 * whatever this returns.
 	 *
-	 * The WordPress client's token is not allowed on the sign-out route today
-	 * (the platform answers 403), so this is best effort: the photographer can
-	 * always remove the app under "Connected apps" in Profotograaf.
+	 * The platform answers 204 and revokes the device, so it leaves the
+	 * photographer's device list. A token that was already revoked gets 401.
+	 * Disconnect clears the local tokens after any answer, including none.
 	 *
 	 * @return bool True when the platform confirmed the revoke.
 	 */

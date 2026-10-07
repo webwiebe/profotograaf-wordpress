@@ -26,7 +26,7 @@ class Site_Tools_Test extends Wp_Test_Case {
 		parent::setUp();
 		$this->connect( 100000 );
 		$this->http  = new Fake_Transport();
-		$this->tools = new Site_Tools( new Api_Client( new Connection(), $this->http, $this->clock() ), new Embed_Script() );
+		$this->tools = new Site_Tools( new Api_Client( new Connection(), $this->http, $this->clock() ), new Embed_Script( $this->http ) );
 
 		Functions\when( 'number_format_i18n' )->returnArg();
 		Functions\when( 'get_current_user_id' )->justReturn( 7 );
@@ -81,12 +81,7 @@ class Site_Tools_Test extends Wp_Test_Case {
 	}
 
 	public function test_rechecking_reports_the_version_the_platform_serves(): void {
-		Functions\when( 'wp_remote_head' )->justReturn(
-			array(
-				'code' => 200,
-				'etag' => '"0123456789ab"',
-			)
-		);
+		$this->http->reply( 200, array( 'version' => '0123456789ab' ) );
 
 		$result = $this->tools->check_embed_version();
 
@@ -95,7 +90,7 @@ class Site_Tools_Test extends Wp_Test_Case {
 	}
 
 	public function test_rechecking_reports_an_error_when_no_version_is_known(): void {
-		Functions\when( 'wp_remote_head' )->justReturn( new \WP_Error( 'http_request_failed', 'timeout' ) );
+		$this->http->fail( new \WP_Error( 'http_request_failed', 'timeout' ) );
 
 		$result = $this->tools->check_embed_version();
 
