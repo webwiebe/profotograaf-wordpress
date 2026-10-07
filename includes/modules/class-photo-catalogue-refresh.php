@@ -41,7 +41,7 @@ class Photo_Catalogue_Refresh implements Module {
 		add_action( 'init', array( $this, 'sync_schedule' ) );
 		add_action( 'update_option_' . Settings::OPTION, array( $this, 'sync_schedule' ) );
 		add_action( 'profotograaf_connected', array( $this, 'sync_schedule' ) );
-		add_action( 'profotograaf_disconnected', array( $this, 'unschedule' ) );
+		add_action( 'profotograaf_disconnected', array( $this, 'on_disconnected' ) );
 	}
 
 	/**
@@ -66,6 +66,15 @@ class Photo_Catalogue_Refresh implements Module {
 		if ( ! wp_next_scheduled( self::HOOK ) ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'twicedaily', self::HOOK );
 		}
+	}
+
+	/**
+	 * Removes the refresh and the stored catalogue, so a later connection to
+	 * another account never serves this account's photos.
+	 */
+	public function on_disconnected(): void {
+		$this->unschedule();
+		delete_option( Photo_Catalogue::OPTION );
 	}
 
 	/**

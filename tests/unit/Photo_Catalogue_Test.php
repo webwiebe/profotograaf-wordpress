@@ -322,4 +322,24 @@ class Photo_Catalogue_Test extends Gallery_Test_Case {
 		$module->run();
 		$this->assertCount( 1, $this->http->requests );
 	}
+
+	public function test_disconnecting_removes_the_stored_catalogue_and_the_event(): void {
+		$cleared = array();
+		Functions\when( 'wp_clear_scheduled_hook' )->alias(
+			function ( $hook ) use ( &$cleared ) {
+				$cleared[] = $hook;
+				return 1;
+			}
+		);
+		$module = new Photo_Catalogue_Refresh();
+		$module->register( $this->plugin );
+		$this->page_of( 1, 1 );
+		$module->run();
+		$this->assertArrayHasKey( Photo_Catalogue::OPTION, $this->options );
+
+		$module->on_disconnected();
+
+		$this->assertArrayNotHasKey( Photo_Catalogue::OPTION, $this->options );
+		$this->assertSame( array( Photo_Catalogue_Refresh::HOOK ), $cleared );
+	}
 }
