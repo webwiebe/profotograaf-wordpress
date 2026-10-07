@@ -15,8 +15,11 @@ allowBuilds:
 # copy-webpack-plugin (inside @wordpress/scripts) pins serialize-javascript
 # below the fix for a high advisory. Drop this once wp-scripts ships a copy of
 # copy-webpack-plugin that allows >=7.0.3.
+# GHSA-68fv-2mgg-jv7q: css-tree (under csso in the webpack toolchain) pulls
+# source-map-js 1.2.1. Drop this once the toolchain resolves >=1.2.2 itself.
 overrides:
   serialize-javascript: ">=7.0.3"
+  source-map-js: ">=1.2.2"
 
 # GHSA-vfj7-8cjw-p6xm: braces (<=3.0.3) stack exhaustion on deeply nested glob
 # patterns. No patched release exists. It sits under stylelint and micromatch in
