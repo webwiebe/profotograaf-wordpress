@@ -61,9 +61,10 @@ test.describe.serial( 'Lead bridge: Contact Form 7', () => {
 	let fixture;
 
 	test.beforeAll( async () => {
-		// Installing Contact Form 7 downloads it.
+		// Installing Contact Form 7 downloads it. 6.2 requires WordPress 7.1, so the
+		// version is pinned to the last release that installs on 6.9 and 7.0.
 		test.setTimeout( 300_000 );
-		wp( 'plugin', 'install', 'contact-form-7', '--activate' );
+		wp( 'plugin', 'install', 'contact-form-7', '--version=6.1.7', '--activate' );
 		const out = wp( 'eval-file', '/fixtures/cf7-setup.php' );
 		fixture = JSON.parse( out.slice( out.indexOf( '{' ) ) );
 	} );
