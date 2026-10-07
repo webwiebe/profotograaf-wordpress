@@ -65,7 +65,7 @@ msgstr "Anfrageformulare"
 #: includes/modules/class-admin-notices.php:185
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
-#: includes/modules/class-settings-page.php:457
+#: includes/modules/class-settings-page.php:458
 #: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
 msgstr "Du hast keine Berechtigung dafür."
@@ -361,15 +361,15 @@ msgstr "Diese Galerie benötigt JavaScript, um hier angezeigt zu werden."
 msgid "View this gallery on Profotograaf"
 msgstr "Diese Galerie auf Profotograaf ansehen"
 
-#: includes/class-pairing.php:93
+#: includes/class-pairing.php:103
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr "Profotograaf hat die Verbindung nicht gestartet. Versuche es gleich noch einmal."
 
-#: includes/class-pairing.php:185
+#: includes/class-pairing.php:230
 msgid "Could not check the connection. Trying again."
 msgstr "Die Verbindung konnte nicht geprüft werden. Ein neuer Versuch läuft."
 
-#: includes/class-pairing.php:207
+#: includes/class-pairing.php:252
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf hat die Verbindung genehmigt, aber keine Token gesendet. Starte erneut."
 
@@ -835,10 +835,6 @@ msgstr "Wenn ein Kontaktformular für Profotograaf eingeschaltet ist, wird jede 
 msgid "Connection and diagnostics"
 msgstr "Verbindung und Diagnose"
 
-#: includes/modules/class-privacy.php:234
-msgid "When the site owner connects the site, the plugin sends the site title, the host name, the plugin version and a random identifier of this installation to profotograaf.nl. The plugin sends no usage statistics or error reports."
-msgstr "Wenn der Website-Betreiber die Website verbindet, sendet das Plugin den Website-Titel, den Hostnamen, die Plugin-Version und eine zufällige Kennung dieser Installation an profotograaf.nl. Das Plugin sendet keine Nutzungsstatistiken oder Fehlerberichte."
-
 #: includes/modules/class-privacy.php:235
 msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr "Die Datenschutzerklärung von Profotograaf findest du unter https://profotograaf.nl/privacy."
@@ -910,51 +906,51 @@ msgstr "Nicht verbunden"
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr "Verbinde diese Website mit deinem Profotograaf-Konto, um Galerien einzubinden und Anfragen zu empfangen. Du genehmigst die Verbindung in Profotograaf, daher erreicht dein Passwort diese Website nie."
 
-#: includes/modules/class-settings-page.php:302
+#: includes/modules/class-settings-page.php:303
 msgid "Connect to Profotograaf"
 msgstr "Mit Profotograaf verbinden"
 
-#: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:308
 msgid "Set up the enquiry forms"
 msgstr "Die Anfrageformulare einrichten"
 
-#: includes/modules/class-settings-page.php:349
+#: includes/modules/class-settings-page.php:350
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bestätige diesen Code in Profotograaf, um die Verbindung abzuschließen:"
 
-#: includes/modules/class-settings-page.php:352
+#: includes/modules/class-settings-page.php:353
 msgid "Open the approval page"
 msgstr "Genehmigungsseite öffnen"
 
-#: includes/modules/class-settings-page.php:354
+#: includes/modules/class-settings-page.php:355
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Warten darauf, dass du die Verbindung in Profotograaf genehmigst."
 
-#: includes/modules/class-settings-page.php:355
+#: includes/modules/class-settings-page.php:356
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: includes/modules/class-settings-page.php:366
+#: includes/modules/class-settings-page.php:367
 msgid "Embedding on this site"
 msgstr "Einbettung auf dieser Website"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:371
+#: includes/modules/class-settings-page.php:372
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s darf deine Profotograaf-Seiten in einem Frame anzeigen."
 
-#: includes/modules/class-settings-page.php:375
+#: includes/modules/class-settings-page.php:376
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf erlaubt die Einbettung nur auf Websites, die über https ausgeliefert werden. Liefere diese Website über https aus, um deine Seiten in einem Frame einzubetten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:380
+#: includes/modules/class-settings-page.php:381
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Um deine Profotograaf-Seiten in einem Frame auf dieser Website anzuzeigen, füge %s unter \"Websites, die meine Seiten einbetten dürfen\" in den Kontoeinstellungen von Profotograaf hinzu."
 
-#: includes/modules/class-settings-page.php:388
+#: includes/modules/class-settings-page.php:389
 msgid "Check again"
 msgstr "Erneut prüfen"
 
@@ -1741,4 +1737,12 @@ msgstr ""
 
 #: build/gallery/index.js:7
 msgid "same tab"
+msgstr ""
+
+#: includes/modules/class-privacy.php:234
+msgid "When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form. The plugin sends no usage statistics or error reports."
+msgstr ""
+
+#: includes/modules/class-settings-page.php:302
+msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
 msgstr ""

@@ -121,9 +121,18 @@ test.describe( 'Settings > Profotograaf', () => {
 
 	test( 'connect shows the code, approval connects the site and disconnect clears it', async ( { page } ) => {
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
+		await expect( page.getByText( 'Connecting shares this site\'s name and the administrator email address' ) ).toBeVisible();
 		await page.getByRole( 'button', { name: 'Connect to Profotograaf' } ).click();
 
 		await expect( page.locator( '.profotograaf-code' ) ).toHaveText( 'WXYZ-2346' );
+		const { initiate } = await mock( '/__state', 'GET' );
+		expect( initiate ).toMatchObject( {
+			client_id: 'wordpress',
+			site_url: expect.stringMatching( /^https?:\/\// ),
+			site_name: expect.any( String ),
+			email: 'admin@example.com',
+			locale: 'en',
+		} );
 		const approve = page.getByRole( 'link', { name: 'Open the approval page' } );
 		await expect( approve ).toHaveAttribute( 'href', /\/app\/devices\/approve\?code=WXYZ-2346$/ );
 		await expect( page.getByRole( 'status' ) ).toContainText( 'Waiting for you to approve' );

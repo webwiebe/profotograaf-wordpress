@@ -101,6 +101,8 @@ abstract class Wp_Test_Case extends TestCase {
 		Functions\when( 'wp_parse_url' )->alias( fn( $url, $component = -1 ) => parse_url( $url, $component ) );
 		Functions\when( 'home_url' )->justReturn( 'https://photos.example.com' );
 		Functions\when( 'get_bloginfo' )->justReturn( 'Example Photography' );
+		Functions\when( 'get_locale' )->justReturn( 'en_US' );
+		Functions\when( 'is_email' )->alias( fn( $email ) => false !== filter_var( $email, FILTER_VALIDATE_EMAIL ) ? $email : false );
 		Functions\when( 'wp_generate_uuid4' )->justReturn( '11111111-2222-4333-8444-555555555555' );
 		Functions\when( 'sanitize_key' )->alias( fn( $key ) => strtolower( preg_replace( '/[^a-z0-9_\-]/i', '', (string) $key ) ) );
 	}

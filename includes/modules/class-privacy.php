@@ -231,7 +231,7 @@ class Privacy implements Module {
 		$text .= '<h2>' . esc_html__( 'Enquiries', 'profotograaf' ) . '</h2>';
 		$text .= '<p>' . esc_html__( 'When a contact form is switched on for Profotograaf, each submission is stored on this site and then sent to profotograaf.nl: the name, email address, phone number, date, message and other fields of the form, the address of the page and the name of the form. A submission waits in the queue until it is delivered. One that cannot be delivered is kept for a limited time, so the site owner can export or retry it. The personal data tools export and erase these submissions by the email address of the sender.', 'profotograaf' ) . '</p>';
 		$text .= '<h2>' . esc_html__( 'Connection and diagnostics', 'profotograaf' ) . '</h2>';
-		$text .= '<p>' . esc_html__( 'When the site owner connects the site, the plugin sends the site title, the host name, the plugin version and a random identifier of this installation to profotograaf.nl. The plugin sends no usage statistics or error reports.', 'profotograaf' ) . '</p>';
+		$text .= '<p>' . esc_html__( 'When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form. The plugin sends no usage statistics or error reports.', 'profotograaf' ) . '</p>';
 		$text .= '<p>' . esc_html__( 'The Profotograaf privacy policy is at https://profotograaf.nl/privacy.', 'profotograaf' ) . '</p>';
 		return $text;
 	}

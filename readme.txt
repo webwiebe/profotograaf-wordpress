@@ -28,6 +28,8 @@ The block editor scripts are built from the source in the `blocks` folder of the
 
 The plugin sets no cookies and does not track your visitors. See "External services" for exactly what is sent and when.
 
+**What the plugin sends when you connect.** Clicking "Connect to Profotograaf" sends the site address, the site title, the site language and the WordPress administrator email address to Profotograaf, so it can prefill your account if you create one. The settings page says this next to the button. See "External services" for the full request.
+
 **What the plugin stores.** The connection to Profotograaf (tokens and a random identifier of this installation) and your settings are stored in the WordPress options table. When you switch on a form, each submission is stored there as well, with the name, email address, phone, date, message and other fields of the form, until it is delivered to Profotograaf. A submission that cannot be delivered is kept for the retention period in the lead settings (7 days by default), so you can export or retry it.
 
 **Suggested policy text.** The plugin adds text for your privacy policy under Settings, Privacy, Policy Guide. It covers the galleries, enquiries and the connection.
@@ -45,7 +47,7 @@ Privacy policy: https://profotograaf.nl/privacy
 
 = Connecting your site =
 
-When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
+When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. The same request sends the site address, the site title, the WordPress administrator email address and the site language (English, Dutch, German or French; other languages are not sent). Profotograaf shows the site title and email address on its connect page and uses them only to prefill the sign-up form if you create a new account there. A value that is not a valid address is left out. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
 
 = Your galleries =
 
@@ -130,6 +132,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * First version: connect to Profotograaf, settings page and the API client other features build on.
 * New: "Find your gallery" block that links clients to the client portal.
 * Dutch (nl_NL) and English.
+* New: starting a connection sends the site address, site title, administrator email address and site language, so Profotograaf can prefill a new account.
 
 == Upgrade Notice ==
 

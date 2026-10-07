@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [] };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -176,6 +176,7 @@ function deviceInitiate( { res, body } ) {
 	if ( body.client_id !== 'wordpress' ) {
 		return json( res, 400, { error: 'unknown client_id', code: 'device.unknown_client' } );
 	}
+	state.initiate = body;
 	return json( res, 201, {
 		device_code: 'e2e-device-code',
 		user_code: 'WXYZ-2346',
@@ -197,7 +198,7 @@ const routes = {
 		return json( res, 200, { ok: true } );
 	},
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [] } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null } );
 		return json( res, 200, { ok: true } );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
