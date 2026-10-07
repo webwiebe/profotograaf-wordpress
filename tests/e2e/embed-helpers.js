@@ -59,7 +59,7 @@ function shortcode( options = {} ) {
 /**
  * The block markup for the e2e gallery.
  *
- * @param {Record<string,string>} attributes Block attributes.
+ * @param {Record<string,string|string[]>} attributes Block attributes.
  * @return {string}
  */
 function block( attributes = {} ) {

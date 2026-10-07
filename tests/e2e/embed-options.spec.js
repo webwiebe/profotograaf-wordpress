@@ -228,3 +228,36 @@ test.describe( 'block markup and shortcode', () => {
 		await fromBlock.context.close();
 	} );
 } );
+
+test.describe( 'photos left out', () => {
+	// embed.js reads data-exclude (ids split on commas and spaces) and draws the
+	// other photos. Tiles are named after the photo title, Photo 1 to Photo 19.
+	test( 'the block and the shortcode hide the photos they leave out', async ( { browser } ) => {
+		const viewport = { width: 1440, height: 900 };
+		const fromBlock = await openEmbed(
+			browser,
+			publishPost( 'Exclude block', block( { excludedPhotoIds: [ 'p-2', 'p-19' ] } ) ),
+			viewport
+		);
+		const fromShortcode = await openEmbed( browser, publishPost( 'Exclude shortcode', shortcode( { exclude: 'p-1, p-3' } ) ), viewport );
+
+		await expect( fromBlock.host ).toHaveAttribute( 'data-exclude', 'p-2,p-19' );
+		await expect( fromShortcode.host ).toHaveAttribute( 'data-exclude', 'p-1,p-3' );
+		await expectTiles( fromBlock.host, TOTAL - 2 );
+		await expectTiles( fromShortcode.host, TOTAL - 2 );
+		const names = ( /** @type {import('@playwright/test').Locator} */ host ) =>
+			host.locator( '.photos .tile' ).evaluateAll( ( tiles ) => tiles.map( ( tile ) => tile.getAttribute( 'aria-label' ) ) );
+		const blockNames = await names( fromBlock.host );
+		const shortcodeNames = await names( fromShortcode.host );
+		expect( blockNames ).not.toContain( 'Photo 2' );
+		expect( blockNames ).not.toContain( 'Photo 19' );
+		expect( blockNames ).toContain( 'Photo 1' );
+		expect( shortcodeNames ).not.toContain( 'Photo 1' );
+		expect( shortcodeNames ).not.toContain( 'Photo 3' );
+		expect( shortcodeNames ).toContain( 'Photo 2' );
+		expect( fromBlock.problems ).toEqual( [] );
+		expect( fromShortcode.problems ).toEqual( [] );
+		await fromBlock.context.close();
+		await fromShortcode.context.close();
+	} );
+} );

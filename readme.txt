@@ -53,6 +53,8 @@ When you click "Connect to Profotograaf" on the settings page, the plugin sends 
 
 In the block editor and on the settings page, the plugin asks `https://profotograaf.nl/api/v1/embed/galleries` for the list of your galleries (title, link, photo count and a cover picture). Only you, signed in to WordPress with an administrator or editor account, can see this list.
 
+When you open the Photos panel of a gallery block to leave photos out, the plugin asks `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for the photos of that gallery (id, size, title, alt text, caption and image links), 200 at a time, up to 500 photos. Only users who can edit posts see this list.
+
 When you pick a gallery in the gallery block that does not allow embedding yet, the plugin sends `PUT https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/embeddable` to switch "Allow embedding on other websites" on for that one gallery. Nothing else about the gallery changes. If your connection was made before this permission existed, Profotograaf refuses the call and the plugin asks you to connect again.
 
 = Showing a gallery on your site =
@@ -131,6 +133,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 = 0.1.0 =
 * First version: connect to Profotograaf, settings page and the API client other features build on.
 * New: "Find your gallery" block that links clients to the client portal.
+* New: leave photos out of a gallery block (Photos panel) or shortcode (`exclude`). The editor lists up to 500 photos of the gallery, 200 per request.
 * Dutch (nl_NL) and English.
 * New: starting a connection sends the site address, site title, administrator email address and site language, so Profotograaf can prefill a new account.
 
