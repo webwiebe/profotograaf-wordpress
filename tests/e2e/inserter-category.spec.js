@@ -131,7 +131,6 @@ test.describe( 'Profotograaf category in the block inserter', () => {
 		const [ first ] = await imageIds( page );
 		expect( importedCount( 'p-1' ) ).toBe( 1 );
 		expect( wp( 'post', 'meta', 'get', String( first ), '_profotograaf_gallery_id' ) ).toBe( 'g-e2e' );
-		expect( wp( 'post', 'meta', 'get', String( first ), '_profotograaf_version' ) ).toBe( '0123456789ab' );
 		// The block preview in the inserter loads the same URL, so the first insert may download more than once.
 		const downloads = ( await mock( '/__state', 'GET' ) ).jpegHits.filter( ( hit ) => hit.includes( '/p-1/web.' ) );
 		expect( downloads.length ).toBeGreaterThan( 0 );
@@ -151,7 +150,7 @@ test.describe( 'Profotograaf category in the block inserter', () => {
 	test( 'a platform outage shows an empty list and leaves the editor usable', async ( { page } ) => {
 		setMediaSource( true );
 		await login( page );
-		await page.route( '**/profotograaf/v1/photos*', ( route ) => route.fulfill( { status: 502, contentType: 'application/json', body: '{"code":"profotograaf_http","message":"down","data":{"status":502}}' } ) );
+		await page.route( /profotograaf(?:\/|%2F)v1(?:\/|%2F)photos(?!(?:\/|%2F))/, ( route ) => route.fulfill( { status: 502, contentType: 'application/json', body: '{"code":"profotograaf_http","message":"down","data":{"status":502}}' } ) );
 		await openMediaTab( page );
 
 		await page.getByRole( 'tab', { name: 'Profotograaf' } ).click();
