@@ -103,7 +103,7 @@ The platform lists photos per gallery only. The plugin builds a catalogue:
 
 - Source list: embeddable and available galleries from the existing gallery list (#17's `Gallery_Index` already remembers up to 500).
 - Photos: one public `GET /embed/galleries/{id}` per gallery, with `If-None-Match` and the platform's five minute freshness. Stored in a transient keyed by gallery id and `version`, refreshed by a cron job and by the editor on demand. The editor never waits on more than one gallery fetch at a time.
-- A REST route `GET /profotograaf/v1/photos?search=&page=&per_page=` (`edit_posts`, like `/galleries`) searches `title`, `caption` and the gallery title over the catalogue, orders by gallery `updated_at` then position, slices the page and returns `{ items, totalItems, totalPages }` with the item shape above.
+- A REST route `GET /profotograaf/v1/photos?search=&page=&per_page=` (`upload_files`) searches `title`, `caption` and the gallery title over the catalogue, orders by gallery `updated_at` then position, slices the page and returns `{ items, totalItems, totalPages }` with the item shape above.
 - The inserter category's `fetch` calls this route through `apiFetch` and returns the same totals, which gives core's pager.
 
 Typing a gallery name lists that gallery's photos. The inserter offers no filter dropdown, so this is the only gallery filter there. The Import screen can have a real gallery filter.

@@ -217,8 +217,8 @@ msgid "The exported enquiries were removed."
 msgstr "Se eliminaron las consultas exportadas."
 
 #: includes/class-api-client.php:146
-#: includes/class-gallery-rest.php:145
-#: includes/class-gallery-rest.php:163
+#: includes/class-gallery-rest.php:140
+#: includes/class-gallery-rest.php:158
 #: includes/class-photo-list.php:56
 msgid "A gallery id is required."
 msgstr "Se necesita un ID de galería."
@@ -1768,6 +1768,7 @@ msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
 #: includes/class-photo-importer.php:58
+#: includes/class-photo-rest.php:115
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 

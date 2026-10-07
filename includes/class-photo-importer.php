@@ -154,6 +154,46 @@ final class Photo_Importer {
 	}
 
 	/**
+	 * The attachment ids of earlier imports, for several photos at once.
+	 *
+	 * @param array<int,string> $photo_ids Platform photo ids.
+	 * @return array<string,int> Attachment id by photo id, only for imported photos.
+	 */
+	public function find_many( array $photo_ids ): array {
+		$photo_ids = array_values( array_unique( array_filter( $photo_ids, static fn( $id ): bool => '' !== $id ) ) );
+		if ( array() === $photo_ids ) {
+			return array();
+		}
+		$found = get_posts(
+			array(
+				'post_type'              => 'attachment',
+				'post_status'            => 'any',
+				'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one lookup per page of photos.
+					array(
+						'key'     => self::META_PHOTO_ID,
+						'value'   => $photo_ids,
+						'compare' => 'IN',
+					),
+				),
+				'fields'                 => 'ids',
+				'orderby'                => 'ID',
+				'order'                  => 'ASC',
+				'posts_per_page'         => count( $photo_ids ) * 2,
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+			)
+		);
+		$map   = array();
+		foreach ( $found as $attachment_id ) {
+			$photo_id = (string) get_post_meta( (int) $attachment_id, self::META_PHOTO_ID, true );
+			if ( '' !== $photo_id && ! isset( $map[ $photo_id ] ) ) {
+				$map[ $photo_id ] = (int) $attachment_id;
+			}
+		}
+		return $map;
+	}
+
+	/**
 	 * Whether a URL is an http(s) address on the platform's own host.
 	 *
 	 * @param string $url Candidate URL.

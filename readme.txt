@@ -145,6 +145,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: REST route `GET /profotograaf/v1/photos` for editors who can upload files, with search and paging over the photo library. It answers only while "Use Profotograaf photos in the editor" is on, and marks the list as stale when Profotograaf cannot be reached.
 * New: import a Profotograaf photo into the Media Library (web size, once per photo, for users who can upload files, only with "Use Profotograaf photos in the editor" on). Imported photos stay when the plugin is deleted.
 * New: the photo library behind "Use Profotograaf photos in the editor" reads your embeddable photos from Profotograaf into a stored list, refreshed twice a day while the setting is on. The stored list is used when Profotograaf cannot be reached.
 * New: "Use Profotograaf photos in the editor" setting, off by default. Later releases use it to offer your Profotograaf photos in the editor. Nothing is requested while it is off.
