@@ -81,7 +81,7 @@ When you switch on a form in the lead settings, every submission of that form is
 
 These calls happen only when you switch on "Use Profotograaf photos in the editor" in the general settings. While it is off, none of them is made.
 
-When an editor with permission to upload files browses or searches the photo library in the block editor, the plugin asks `https://profotograaf.nl/api/v1/embed/photos` and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a page of photos (id, size, title, caption, gallery and links), and `https://profotograaf.nl/api/v1/embed/galleries` for the galleries to choose from. These requests come from your server and carry the access token the plugin stores for your account. When an editor adds a photo, your server downloads the image from `https://profotograaf.nl/share/img/` and stores it in your Media Library. The editor's browser loads the thumbnails of the photos it shows from `https://profotograaf.nl`, so Profotograaf receives that editor's IP address and browser details in the way any web server does. Visitors of your site are not involved.
+When an editor with permission to upload files browses or searches the photo library in the block editor, the plugin asks `https://profotograaf.nl/api/v1/embed/photos` and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a page of photos (id, size, title, caption, gallery and links), and `https://profotograaf.nl/api/v1/embed/galleries` for the galleries to choose from. These requests come from your server and carry the access token the plugin stores for your account. When an editor adds a photo, your server downloads the image (the web size, at most 1600 px on the long side) from `https://profotograaf.nl/share/img/` and stores it in your Media Library as a normal attachment, once per photo. The attachment keeps the photo and gallery identifiers as hidden fields. Imported photos are your site's content: they stay in the Media Library, with those fields, when you delete the plugin. The editor's browser loads the thumbnails of the photos it shows from `https://profotograaf.nl`, so Profotograaf receives that editor's IP address and browser details in the way any web server does. Visitors of your site are not involved.
 
 = Anonymous usage data (only if you opt in) =
 
@@ -143,6 +143,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: import a Profotograaf photo into the Media Library (web size, once per photo, for users who can upload files, only with "Use Profotograaf photos in the editor" on). Imported photos stay when the plugin is deleted.
 * New: "Use Profotograaf photos in the editor" setting, off by default. Later releases use it to offer your Profotograaf photos in the editor. Nothing is requested while it is off.
 * First version: connect to Profotograaf, settings page and the API client other features build on.
 * New: "Find your gallery" block that links clients to the client portal.
