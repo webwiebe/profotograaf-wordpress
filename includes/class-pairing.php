@@ -28,6 +28,16 @@ class Pairing {
 	private const SLOW_DOWN_STEP = 5;
 
 	/**
+	 * Longest site address the platform accepts for the account prefill.
+	 */
+	private const SITE_URL_MAX_LENGTH = 300;
+
+	/**
+	 * Languages the platform's sign-up form is available in.
+	 */
+	private const PREFILL_LANGUAGES = array( 'en', 'nl', 'de', 'fr' );
+
+	/**
 	 * Stored connection state.
 	 *
 	 * @var Connection
@@ -80,7 +90,7 @@ class Pairing {
 				'app_version' => defined( 'PROFOTOGRAAF_VERSION' ) ? PROFOTOGRAAF_VERSION : '',
 				'hostname'    => $host,
 				'scope'       => implode( ' ', Config::SCOPES ),
-			)
+			) + $this->prefill()
 		);
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -117,6 +127,41 @@ class Pairing {
 			'expires_at'       => $pairing['expires_at'],
 			'interval'         => $pairing['interval'],
 		);
+	}
+
+	/**
+	 * Site details the platform uses to prefill a new account.
+	 *
+	 * The platform drops a field that fails its validation, so a field that
+	 * would fail is left out here.
+	 *
+	 * @return array<string,string>
+	 */
+	private function prefill(): array {
+		$fields = array();
+
+		$site_url = (string) home_url();
+		$scheme   = strtolower( (string) wp_parse_url( $site_url, PHP_URL_SCHEME ) );
+		if ( in_array( $scheme, array( 'http', 'https' ), true ) && '' !== (string) wp_parse_url( $site_url, PHP_URL_HOST ) && strlen( $site_url ) <= self::SITE_URL_MAX_LENGTH ) {
+			$fields['site_url'] = $site_url;
+		}
+
+		$site_name = trim( html_entity_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES, 'UTF-8' ) );
+		if ( '' !== $site_name ) {
+			$fields['site_name'] = $site_name;
+		}
+
+		$email = (string) get_option( 'admin_email', '' );
+		if ( '' !== $email && is_email( $email ) ) {
+			$fields['email'] = $email;
+		}
+
+		$language = strtolower( (string) strtok( (string) get_locale(), '_' ) );
+		if ( in_array( $language, self::PREFILL_LANGUAGES, true ) ) {
+			$fields['locale'] = $language;
+		}
+
+		return $fields;
 	}
 
 	/**

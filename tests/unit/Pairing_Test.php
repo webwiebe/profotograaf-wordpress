@@ -8,6 +8,7 @@
 namespace Profotograaf\Tests;
 
 use Brain\Monkey\Actions;
+use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
 use Profotograaf\Pairing;
@@ -25,6 +26,19 @@ class Pairing_Test extends Wp_Test_Case {
 		$this->http       = new Fake_Transport();
 		$this->connection = new Connection();
 		$this->pairing    = new Pairing( $this->connection, new Api_Client( $this->connection, $this->http, $this->clock() ), $this->clock() );
+
+		$this->options['admin_email'] = 'owner@example.com';
+		Functions\when( 'get_locale' )->justReturn( 'nl_NL' );
+	}
+
+	/**
+	 * Starts a pairing and returns the body sent to the initiate endpoint.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private function initiate_body(): array {
+		$this->start();
+		return $this->http->body( 0 );
 	}
 
 	private function start(): void {
@@ -75,11 +89,100 @@ class Pairing_Test extends Wp_Test_Case {
 				'app_version' => '0.0.0-test',
 				'hostname'    => 'photos.example.com',
 				'scope'       => 'galleries:read leads:write galleries:embed',
+				'site_url'    => 'https://photos.example.com',
+				'site_name'   => 'Example Photography',
+				'email'       => 'owner@example.com',
+				'locale'      => 'nl',
 			),
 			$this->http->body( 0 )
 		);
 		$this->assertSame( 'secret-device-code', $this->connection->pairing()['device_code'] );
 		$this->assertFalse( $this->autoload['profotograaf_pairing'], 'the pairing must not autoload' );
+	}
+
+	/**
+	 * @return array<string,array{0:string,1:?string}>
+	 */
+	public static function locales(): array {
+		return array(
+			'English (US)'  => array( 'en_US', 'en' ),
+			'English (UK)'  => array( 'en_GB', 'en' ),
+			'Dutch'         => array( 'nl_NL', 'nl' ),
+			'Dutch formal'  => array( 'nl_NL_formal', 'nl' ),
+			'Flemish'       => array( 'nl_BE', 'nl' ),
+			'German formal' => array( 'de_DE_formal', 'de' ),
+			'Swiss German'  => array( 'de_CH', 'de' ),
+			'French'        => array( 'fr_FR', 'fr' ),
+			'Canadian'      => array( 'fr_CA', 'fr' ),
+			'Bare English'  => array( 'en', 'en' ),
+			'Spanish'       => array( 'es_ES', null ),
+			'Esperanto'     => array( 'eo', null ),
+			'Low German'    => array( 'nds_DE', null ),
+		);
+	}
+
+	/**
+	 * @dataProvider locales
+	 */
+	public function test_start_maps_the_site_locale_to_a_platform_language( string $wp_locale, ?string $expected ): void {
+		Functions\when( 'get_locale' )->justReturn( $wp_locale );
+
+		$body = $this->initiate_body();
+
+		if ( null === $expected ) {
+			$this->assertArrayNotHasKey( 'locale', $body );
+		} else {
+			$this->assertSame( $expected, $body['locale'] );
+		}
+	}
+
+	public function test_start_leaves_out_an_invalid_admin_email(): void {
+		$this->options['admin_email'] = 'not an address';
+
+		$body = $this->initiate_body();
+
+		$this->assertArrayNotHasKey( 'email', $body );
+		$this->assertSame( 'Example Photography', $body['site_name'] );
+	}
+
+	public function test_start_leaves_out_a_missing_admin_email(): void {
+		unset( $this->options['admin_email'] );
+
+		$this->assertArrayNotHasKey( 'email', $this->initiate_body() );
+	}
+
+	public function test_start_leaves_out_a_site_url_that_is_not_http(): void {
+		Functions\when( 'home_url' )->justReturn( 'ftp://photos.example.com' );
+
+		$body = $this->initiate_body();
+
+		$this->assertArrayNotHasKey( 'site_url', $body );
+		$this->assertSame( 'owner@example.com', $body['email'] );
+	}
+
+	public function test_start_sends_a_plain_http_site_url(): void {
+		Functions\when( 'home_url' )->justReturn( 'http://photos.example.com/blog' );
+
+		$this->assertSame( 'http://photos.example.com/blog', $this->initiate_body()['site_url'] );
+	}
+
+	public function test_start_leaves_out_a_site_url_longer_than_300_characters(): void {
+		$long = 'https://photos.example.com/' . str_repeat( 'a', 300 - 27 );
+		Functions\when( 'home_url' )->justReturn( $long );
+		$this->assertSame( $long, $this->initiate_body()['site_url'], 'exactly 300 characters is allowed' );
+
+		$this->http->requests = array();
+		Functions\when( 'home_url' )->justReturn( $long . 'a' );
+		$this->assertArrayNotHasKey( 'site_url', $this->initiate_body() );
+	}
+
+	public function test_start_decodes_the_site_name_and_leaves_out_an_empty_one(): void {
+		Functions\when( 'get_bloginfo' )->justReturn( 'Smith &amp; Daughters' );
+		$this->assertSame( 'Smith & Daughters', $this->initiate_body()['site_name'] );
+
+		$this->http->requests = array();
+		Functions\when( 'get_bloginfo' )->justReturn( '   ' );
+		$this->assertArrayNotHasKey( 'site_name', $this->initiate_body() );
 	}
 
 	public function test_start_reports_a_platform_failure(): void {

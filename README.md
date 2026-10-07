@@ -13,6 +13,7 @@ Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for
 ## What it does today
 
 - Connects a site to a Profotograaf account with the device pairing flow. You approve the connection on profotograaf.nl, so your password never reaches WordPress.
+- When you start a connection, sends the site address, site title, administrator email address and site language (en, nl, de or fr) to Profotograaf, which uses them to prefill the sign-up form if you create an account. The settings page says so next to the Connect button, and `readme.txt` (External services) lists the full request.
 - Keeps the connection alive in the background and disconnects on request.
 - Provides an authenticated API client that features build on: gallery list, lead posting.
 

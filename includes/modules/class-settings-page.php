@@ -299,6 +299,7 @@ class Settings_Page implements Module {
 					<?php endif; ?>
 				</p>
 				<p><?php esc_html_e( 'Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site.', 'profotograaf' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Connecting shares this site\'s name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account.', 'profotograaf' ); ?></p>
 				<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect to Profotograaf', 'profotograaf' ), 'primary' ); ?>
 			<?php endif; ?>
 			<?php endif; ?>
