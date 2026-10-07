@@ -156,6 +156,8 @@ function image( { res, url } ) {
 		return json( res, 404, { error: 'not found' } );
 	}
 	if ( url.pathname.endsWith( '.jpg' ) ) {
+		// Recorded so a test can count the downloads.
+		state.jpegHits.push( url.pathname );
 		res.writeHead( 200, { 'content-type': 'image/jpeg', 'cache-control': 'no-store' } );
 		return res.end( JPEG );
 	}
@@ -313,52 +315,14 @@ function photoPage( { res, url } ) {
 	return json( res, 200, { photos: PHOTO_LIST.slice( offset, offset + limit ), total: PHOTO_LIST.length, limit, offset } );
 }
 
-// Library-wide photo list (GET /api/v1/embed/photos), the catalogue behind the
-// block inserter. The image links use the host the caller reached the mock by,
-// because the plugin only downloads from its own platform host.
-function libraryPage( { req, res, url } ) {
-	const origin = `http://${ req.headers.host }`;
-	const photos = PHOTO_LIST.map( ( photo ) => ( {
-		...photo,
-		thumbnail_url: `${ origin }/jpeg/${ photo.id }/thumb-0123456789ab.jpg`,
-		full_url: `${ origin }/jpeg/${ photo.id }/web-0123456789ab.jpg`,
-		images: [
-			{ variant: 'thumb', url: `${ origin }/jpeg/${ photo.id }/thumb-0123456789ab.jpg`, width: 400, height: 400 },
-			{ variant: 'web', url: `${ origin }/jpeg/${ photo.id }/web-0123456789ab.jpg`, width: 1600, height: 1067 },
-		],
-	} ) );
-	const limit = Math.min( Number( url.searchParams.get( 'limit' ) ) || 50, 200 );
-	const offset = Number( url.searchParams.get( 'offset' ) ) || 0;
-	return json( res, 200, { photos: photos.slice( offset, offset + limit ), total: photos.length, limit, offset } );
-}
-
-// A real JPEG (120 x 80), because WordPress rejects the SVG the other image
-// route draws. Hits are recorded so a test can count the downloads.
-const JPEG = Buffer.from( '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCABQAHgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwCeiiivPPYCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/9k=', 'base64' );
-const JPEG_IMAGE = /^\/jpeg\/(p-\d+)\/(?:thumb|web)-[a-f0-9]{12}\.jpg$/;
-
-function jpegImage( { res, url } ) {
-	state.jpegHits.push( url.pathname );
-	res.writeHead( 200, { 'content-type': 'image/jpeg', 'content-length': JPEG.length, 'cache-control': 'no-store' } );
-	return res.end( JPEG );
-}
-
 const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
-
-function imageRoute( pathname ) {
-	if ( IMAGE.test( pathname ) ) {
-		return image;
-	}
-	return JPEG_IMAGE.test( pathname ) ? jpegImage : undefined;
-}
 
 function findRoute( method, pathname ) {
 	if ( ( method === 'GET' || method === 'HEAD' ) && EMBED_VERSIONED.test( pathname ) ) {
 		return embedScript;
 	}
-	const picture = method === 'GET' ? imageRoute( pathname ) : undefined;
-	if ( picture ) {
-		return picture;
+	if ( method === 'GET' && IMAGE.test( pathname ) ) {
+		return image;
 	}
 	if ( method === 'GET' && PHOTOS.test( pathname ) ) {
 		return authed( photoPage );

@@ -133,7 +133,7 @@ test.describe( 'Profotograaf category in the block inserter', () => {
 		expect( wp( 'post', 'meta', 'get', String( first ), '_profotograaf_gallery_id' ) ).toBe( 'g-e2e' );
 		expect( wp( 'post', 'meta', 'get', String( first ), '_profotograaf_version' ) ).toBe( '0123456789ab' );
 		// The block preview in the inserter loads the same URL, so the first insert may download more than once.
-		const downloads = ( await mock( '/__state', 'GET' ) ).jpegHits.filter( ( hit ) => hit.includes( '/p-1/web-' ) );
+		const downloads = ( await mock( '/__state', 'GET' ) ).jpegHits.filter( ( hit ) => hit.includes( '/p-1/web.' ) );
 		expect( downloads.length ).toBeGreaterThan( 0 );
 
 		// A fresh editor: the list now carries the attachment id, so core inserts without uploading.
@@ -144,7 +144,7 @@ test.describe( 'Profotograaf category in the block inserter', () => {
 
 		await expect.poll( async () => ( await imageIds( page ) )[ 0 ] ?? 0, { timeout: 30_000 } ).toBe( first );
 		expect( importedCount( 'p-1' ) ).toBe( 1 );
-		const again = ( await mock( '/__state', 'GET' ) ).jpegHits.filter( ( hit ) => hit.includes( '/p-1/web-' ) );
+		const again = ( await mock( '/__state', 'GET' ) ).jpegHits.filter( ( hit ) => hit.includes( '/p-1/web.' ) );
 		expect( again ).toHaveLength( downloads.length );
 	} );
 
