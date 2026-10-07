@@ -44,6 +44,7 @@ function profotograaf_uninstall_site(): void {
 	foreach ( (array) $names as $name ) {
 		delete_option( (string) $name );
 	}
+	// Photo import locks (Photo_Importer::LOCK_PREFIX) left behind by a crashed request are covered by the same prefix.
 	// The log ring buffer (Logger::OPTION) is one of these options. Naming it keeps the removal explicit.
 	delete_option( 'profotograaf_log' );
 

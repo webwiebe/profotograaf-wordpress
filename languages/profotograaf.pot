@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-07T19:32:25+00:00\n"
+"POT-Creation-Date: 2026-10-07T22:29:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -418,28 +418,36 @@ msgstr ""
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr ""
 
-#: includes/class-photo-importer.php:55
+#: includes/class-photo-importer.php:81
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
-#: includes/class-photo-importer.php:58
+#: includes/class-photo-importer.php:84
 #: includes/class-photo-rest.php:115
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
-#: includes/class-photo-importer.php:63
+#: includes/class-photo-importer.php:89
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
-#: includes/class-photo-importer.php:73
+#: includes/class-photo-importer.php:99
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
-#: includes/class-photo-importer.php:87
+#: includes/class-photo-importer.php:106
+msgid "This photo is being imported by another request. Try again in a moment."
+msgstr ""
+
+#: includes/class-photo-importer.php:172
+msgid "Profotograaf redirected the photo download, so it was not imported."
+msgstr ""
+
+#: includes/class-photo-importer.php:181
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
 
-#: includes/class-photo-importer.php:115
+#: includes/class-photo-importer.php:209
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 

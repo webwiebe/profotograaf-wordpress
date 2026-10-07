@@ -29,6 +29,21 @@ final class Photo_Importer {
 	public const META_VERSION    = '_profotograaf_version';
 
 	/**
+	 * Prefix of the per-photo lock options. uninstall.php removes leftovers.
+	 */
+	public const LOCK_PREFIX = 'profotograaf_import_lock_';
+
+	/**
+	 * Seconds after which a lock counts as abandoned (a crashed request).
+	 */
+	public const LOCK_TTL = 60;
+
+	/**
+	 * Times a held lock is waited for, one pause each, before giving up.
+	 */
+	private const LOCK_WAIT_STEPS = 10;
+
+	/**
 	 * Plugin settings.
 	 *
 	 * @var Settings
@@ -36,12 +51,23 @@ final class Photo_Importer {
 	private Settings $settings;
 
 	/**
+	 * Waits one step while another request holds the photo's lock.
+	 *
+	 * @var callable
+	 */
+	private $pause;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Settings $settings Plugin settings.
+	 * @param Settings      $settings Plugin settings.
+	 * @param callable|null $pause    Waits one step for a held lock (default 0.25 s).
 	 */
-	public function __construct( Settings $settings ) {
+	public function __construct( Settings $settings, ?callable $pause = null ) {
 		$this->settings = $settings;
+		$this->pause    = $pause ?? static function (): void {
+			usleep( 250000 );
+		};
 	}
 
 	/**
@@ -73,10 +99,78 @@ final class Photo_Importer {
 			return Api_Errors::make( 'profotograaf_import_host', __( 'The photo is not on the Profotograaf platform, so it was not imported.', 'profotograaf' ), 400, false );
 		}
 
+		$lock = self::LOCK_PREFIX . md5( $photo_id );
+		$step = 0;
+		while ( ! $this->acquire_lock( $lock ) ) {
+			if ( $step++ >= self::LOCK_WAIT_STEPS ) {
+				return Api_Errors::make( 'profotograaf_import_busy', __( 'This photo is being imported by another request. Try again in a moment.', 'profotograaf' ), 409, true );
+			}
+			( $this->pause )();
+			$existing = $this->find( $photo_id );
+			if ( $existing > 0 ) {
+				return $existing;
+			}
+		}
+
+		try {
+			// Another request may have finished between the first lookup and the lock.
+			$existing = $this->find( $photo_id );
+			if ( $existing > 0 ) {
+				return $existing;
+			}
+			return $this->download_and_store( $photo, $photo_id, $url );
+		} finally {
+			delete_option( $lock );
+		}
+	}
+
+	/**
+	 * Takes the per-photo lock, replacing one older than LOCK_TTL.
+	 *
+	 * @param string $lock Lock option name.
+	 */
+	private function acquire_lock( string $lock ): bool {
+		if ( add_option( $lock, time(), '', false ) ) {
+			return true;
+		}
+		$since = get_option( $lock, 0 );
+		if ( is_numeric( $since ) && time() - (int) $since >= self::LOCK_TTL ) {
+			delete_option( $lock );
+			return (bool) add_option( $lock, time(), '', false );
+		}
+		return false;
+	}
+
+	/**
+	 * Downloads the web variant and creates the attachment. Runs under the lock.
+	 *
+	 * @param array<string,mixed> $photo    Catalogue item.
+	 * @param string              $photo_id Platform photo id.
+	 * @param string              $url      Platform URL of the web variant.
+	 * @return int|WP_Error Attachment id.
+	 */
+	private function download_and_store( array $photo, string $photo_id, string $url ) {
 		$this->load_wordpress_files();
 
-		$tmp = download_url( $url, Config::http_timeout() );
+		// The host check covers the first URL only, so redirects stay off.
+		$no_redirects = static function ( $args ) {
+			$args                = is_array( $args ) ? $args : array();
+			$args['redirection'] = 0;
+			return $args;
+		};
+		add_filter( 'http_request_args', $no_redirects, 99 );
+		try {
+			$tmp = download_url( $url, Config::http_timeout() );
+		} finally {
+			remove_filter( 'http_request_args', $no_redirects, 99 );
+		}
 		if ( is_wp_error( $tmp ) ) {
+			$data = $tmp->get_error_data();
+			$code = is_array( $data ) && isset( $data['code'] ) ? (int) $data['code'] : 0;
+			if ( $code >= 300 && $code < 400 ) {
+				Logger::error( 'The photo download was redirected.', array( 'photo' => $photo_id ) );
+				return Api_Errors::make( 'profotograaf_import_redirect', __( 'Profotograaf redirected the photo download, so it was not imported.', 'profotograaf' ), 502, false );
+			}
 			Logger::error(
 				'The photo download failed.',
 				array(

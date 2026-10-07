@@ -1763,27 +1763,35 @@ msgstr ""
 msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. No visitor data is involved."
 msgstr ""
 
-#: includes/class-photo-importer.php:55
+#: includes/class-photo-importer.php:81
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
-#: includes/class-photo-importer.php:58
+#: includes/class-photo-importer.php:84
 #: includes/class-photo-rest.php:115
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
-#: includes/class-photo-importer.php:63
+#: includes/class-photo-importer.php:89
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
-#: includes/class-photo-importer.php:73
+#: includes/class-photo-importer.php:99
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
-#: includes/class-photo-importer.php:87
+#: includes/class-photo-importer.php:181
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
 
-#: includes/class-photo-importer.php:115
+#: includes/class-photo-importer.php:209
 msgid "The photo could not be added to the Media Library."
+msgstr ""
+
+#: includes/class-photo-importer.php:106
+msgid "This photo is being imported by another request. Try again in a moment."
+msgstr ""
+
+#: includes/class-photo-importer.php:172
+msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
