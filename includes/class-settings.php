@@ -104,6 +104,15 @@ final class Settings {
 	}
 
 	/**
+	 * Whether the media source is switched on. Every media source feature
+	 * checks this first, so nothing registers or contacts the platform for
+	 * photos while it is off.
+	 */
+	public function media_source_enabled(): bool {
+		return true === $this->get( 'media_source' );
+	}
+
+	/**
 	 * Sanitize callback for register_setting().
 	 *
 	 * Keys missing from the input keep their saved value, so a REST request

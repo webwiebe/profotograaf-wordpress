@@ -162,5 +162,7 @@ class Privacy_Test extends Leads_Test_Case {
 		$this->assertSame( 'Profotograaf', $captured[0] );
 		$this->assertStringContainsString( 'profotograaf.nl', $captured[1] );
 		$this->assertStringContainsString( 'Enquiries', $captured[1] );
+		$this->assertStringContainsString( 'Photo library in the editor', $captured[1] );
+		$this->assertStringContainsString( 'stored in the Media Library', $captured[1] );
 	}
 }

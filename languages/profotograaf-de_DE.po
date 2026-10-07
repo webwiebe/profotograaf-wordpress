@@ -402,232 +402,232 @@ msgstr "Pfad des Kundenportals"
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr "Der Pfad des Kundenportals unter deiner Profotograaf-Adresse, verwendet vom Block \"Finde deine Galerie\". Ein Block kann einen eigenen festlegen. Standard ist /client."
 
-#: includes/class-settings-schema.php:102
+#: includes/class-settings-schema.php:109
 msgid "Default gallery layout"
 msgstr "Standard-Galerielayout"
 
-#: includes/class-settings-schema.php:103
+#: includes/class-settings-schema.php:110
 msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr "Wird verwendet, wenn ein Galerieblock oder Shortcode kein Layout wählt."
 
-#: includes/class-settings-schema.php:105
+#: includes/class-settings-schema.php:112
 #: build/gallery/index.js:2
 msgid "Grid"
 msgstr "Raster"
 
-#: includes/class-settings-schema.php:106
+#: includes/class-settings-schema.php:113
 #: build/gallery/index.js:2
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/class-settings-schema.php:107
+#: includes/class-settings-schema.php:114
 #: build/gallery/index.js:2
 msgid "Slideshow"
 msgstr "Diashow"
 
-#: includes/class-settings-schema.php:114
+#: includes/class-settings-schema.php:121
 msgid "Collect enquiries"
 msgstr "Anfragen sammeln"
 
-#: includes/class-settings-schema.php:115
+#: includes/class-settings-schema.php:122
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr "Auf Einsendungen unterstützter Formular-Plugins reagieren. Jedes Formular hat weiterhin einen eigenen Schalter auf dem Bildschirm der Anfrageformulare."
 
-#: includes/class-settings-schema.php:121
+#: includes/class-settings-schema.php:128
 msgid "Failure alerts go to"
 msgstr "Fehlerbenachrichtigungen gehen an"
 
-#: includes/class-settings-schema.php:122
+#: includes/class-settings-schema.php:129
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr "Erhält eine E-Mail ohne personenbezogene Daten, wenn eine Anfrage nicht zugestellt werden kann oder verworfen wird. Leer lassen, um die E-Mail-Adresse des Website-Administrators zu verwenden."
 
-#: includes/class-settings-schema.php:129
+#: includes/class-settings-schema.php:136
 msgid "Mail undeliverable enquiries to"
 msgstr "Nicht zustellbare Anfragen per E-Mail senden an"
 
-#: includes/class-settings-schema.php:130
+#: includes/class-settings-schema.php:137
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr "Wenn eine Anfrage nicht an Profotograaf zugestellt werden kann, wird sie stattdessen per E-Mail an diese Adresse gesendet. Die E-Mail enthält die Anfrage. Leer lassen, um dies auszuschalten."
 
-#: includes/class-settings-schema.php:139
+#: includes/class-settings-schema.php:146
 msgid "Keep undeliverable enquiries for (days)"
 msgstr "Nicht zustellbare Anfragen aufbewahren für (Tage)"
 
-#: includes/class-settings-schema.php:140
+#: includes/class-settings-schema.php:147
 msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr "Anfragen, die nicht zugestellt werden konnten, bleiben in der Datenbank, bis du sie exportierst oder diese Anzahl an Tagen von 1 bis 90 vergangen ist. Du erhältst vor dem Entfernen eine E-Mail."
 
-#: includes/class-settings-schema.php:146
+#: includes/class-settings-schema.php:153
 msgid "Share anonymous usage data"
 msgstr "Anonyme Nutzungsdaten teilen"
 
-#: includes/class-settings-schema.php:147
+#: includes/class-settings-schema.php:154
 msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
 msgstr "Hilf mit, Profotograaf zu verbessern, indem du anonyme Nutzungs- und Fehlerdaten teilst. Das ist optional und du kannst es jederzeit ausschalten. Es werden keine personenbezogenen Daten erhoben. Beim Ausschalten wird das Senden sofort gestoppt und Daten, die auf den Versand warten, werden gelöscht."
 
-#: includes/class-settings-schema.php:150
+#: includes/class-settings-schema.php:157
 #: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr "Was geteilt wird"
 
-#: includes/class-settings-schema.php:157
+#: includes/class-settings-schema.php:164
 msgid "Keep my data when the plugin is deleted"
 msgstr "Meine Daten behalten, wenn das Plugin gelöscht wird"
 
-#: includes/class-settings-schema.php:158
+#: includes/class-settings-schema.php:165
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr "Lass die Einstellungen und die Verbindung in der Datenbank, wenn du das Plugin löschst, zum Beispiel um es später neu zu installieren."
 
-#: includes/class-settings-schema.php:172
+#: includes/class-settings-schema.php:179
 msgid "Profotograaf default"
 msgstr "Profotograaf-Standard"
 
-#: includes/class-settings-schema.php:174
+#: includes/class-settings-schema.php:181
 #: build/gallery/index.js:3
 msgid "On"
 msgstr "An"
 
-#: includes/class-settings-schema.php:175
+#: includes/class-settings-schema.php:182
 #: build/gallery/index.js:3
 msgid "Off"
 msgstr "Aus"
 
-#: includes/class-settings-schema.php:177
+#: includes/class-settings-schema.php:184
 msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
 msgstr "Ein Block oder Shortcode kann einen eigenen Wert festlegen. Leer lassen für den Profotograaf-Standard."
 
-#: includes/class-settings-schema.php:186
+#: includes/class-settings-schema.php:193
 #: build/gallery/index.js:3
 msgid "Columns"
 msgstr "Spalten"
 
-#: includes/class-settings-schema.php:187
+#: includes/class-settings-schema.php:194
 msgid "Columns on wide screens, from 1 to 8."
 msgstr "Spalten auf breiten Bildschirmen, von 1 bis 8."
 
-#: includes/class-settings-schema.php:195
+#: includes/class-settings-schema.php:202
 #: build/gallery/index.js:3
 msgid "Columns on tablets"
 msgstr "Spalten auf Tablets"
 
-#: includes/class-settings-schema.php:196
+#: includes/class-settings-schema.php:203
 msgid "Columns on medium screens, from 1 to 8."
 msgstr "Spalten auf mittleren Bildschirmen, von 1 bis 8."
 
-#: includes/class-settings-schema.php:204
+#: includes/class-settings-schema.php:211
 #: build/gallery/index.js:3
 msgid "Columns on phones"
 msgstr "Spalten auf Smartphones"
 
-#: includes/class-settings-schema.php:205
+#: includes/class-settings-schema.php:212
 msgid "Columns on narrow screens, from 1 to 4."
 msgstr "Spalten auf schmalen Bildschirmen, von 1 bis 4."
 
-#: includes/class-settings-schema.php:213
+#: includes/class-settings-schema.php:220
 #: build/gallery/index.js:3
 msgid "Gap between photos (pixels)"
 msgstr "Abstand zwischen Fotos (Pixel)"
 
-#: includes/class-settings-schema.php:214
+#: includes/class-settings-schema.php:221
 msgid "Space between photos, from 0 to 96 pixels."
 msgstr "Abstand zwischen den Fotos, von 0 bis 96 Pixel."
 
-#: includes/class-settings-schema.php:220
+#: includes/class-settings-schema.php:227
 #: build/gallery/index.js:3
 msgid "Photo shape"
 msgstr "Fotoform"
 
-#: includes/class-settings-schema.php:221
+#: includes/class-settings-schema.php:228
 msgid "Crop every photo to one aspect ratio, or keep each photo as shot."
 msgstr "Beschneide jedes Foto auf ein Seitenverhältnis oder behalte jedes Foto, wie es aufgenommen wurde."
 
-#: includes/class-settings-schema.php:223
+#: includes/class-settings-schema.php:230
 #: build/gallery/index.js:3
 msgid "Original"
 msgstr "Original"
 
-#: includes/class-settings-schema.php:224
+#: includes/class-settings-schema.php:231
 #: build/gallery/index.js:3
 msgid "Square (1:1)"
 msgstr "Quadrat (1:1)"
 
-#: includes/class-settings-schema.php:236
+#: includes/class-settings-schema.php:243
 #: build/gallery/index.js:3
 msgid "Captions"
 msgstr "Bildunterschriften"
 
-#: includes/class-settings-schema.php:237
+#: includes/class-settings-schema.php:244
 msgid "Whether photo captions show and where."
 msgstr "Ob und wo Bildunterschriften angezeigt werden."
 
-#: includes/class-settings-schema.php:239
+#: includes/class-settings-schema.php:246
 #: build/gallery/index.js:3
 msgid "Hidden"
 msgstr "Ausgeblendet"
 
-#: includes/class-settings-schema.php:240
+#: includes/class-settings-schema.php:247
 #: build/gallery/index.js:3
 msgid "Below the photo"
 msgstr "Unter dem Foto"
 
-#: includes/class-settings-schema.php:241
+#: includes/class-settings-schema.php:248
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr "Auf dem Foto"
 
-#: includes/class-settings-schema.php:248
+#: includes/class-settings-schema.php:255
 #: build/gallery/index.js:3
 msgid "Sort order"
 msgstr "Sortierung"
 
-#: includes/class-settings-schema.php:249
+#: includes/class-settings-schema.php:256
 msgid "The order of the photos."
 msgstr "Die Reihenfolge der Fotos."
 
-#: includes/class-settings-schema.php:251
+#: includes/class-settings-schema.php:258
 #: build/gallery/index.js:3
 msgid "Newest first"
 msgstr "Neueste zuerst"
 
-#: includes/class-settings-schema.php:252
+#: includes/class-settings-schema.php:259
 #: build/gallery/index.js:3
 msgid "Oldest first"
 msgstr "Älteste zuerst"
 
-#: includes/class-settings-schema.php:253
+#: includes/class-settings-schema.php:260
 #: build/gallery/index.js:3
 msgid "By file name"
 msgstr "Nach Dateiname"
 
-#: includes/class-settings-schema.php:254
+#: includes/class-settings-schema.php:261
 #: build/gallery/index.js:3
 msgid "Random"
 msgstr "Zufällig"
 
-#: includes/class-settings-schema.php:263
+#: includes/class-settings-schema.php:270
 #: build/gallery/index.js:3
 msgid "Photos per page"
 msgstr "Fotos pro Seite"
 
-#: includes/class-settings-schema.php:264
+#: includes/class-settings-schema.php:271
 msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
 msgstr "Zeige zunächst so viele Fotos, von 1 bis 200. Leer lassen, um alle anzuzeigen."
 
-#: includes/class-settings-schema.php:270
+#: includes/class-settings-schema.php:277
 #: build/gallery/index.js:3
 msgid "Load more button"
 msgstr "Schaltfläche „Mehr laden“"
 
-#: includes/class-settings-schema.php:271
+#: includes/class-settings-schema.php:278
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr "Füge eine Schaltfläche hinzu, die die nächsten Fotos anzeigt, wenn \"Fotos pro Seite\" gesetzt ist."
 
-#: includes/class-settings-schema.php:278
+#: includes/class-settings-schema.php:285
 #: build/gallery/index.js:3
 msgid "Lightbox"
 msgstr "Lightbox"
 
-#: includes/class-settings-schema.php:279
+#: includes/class-settings-schema.php:286
 msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr "Öffne ein Foto in einer größeren Ansicht, wenn ein Besucher darauf klickt."
 
@@ -831,11 +831,11 @@ msgstr "Anfragen"
 msgid "When a contact form is switched on for Profotograaf, each submission is stored on this site and then sent to profotograaf.nl: the name, email address, phone number, date, message and other fields of the form, the address of the page and the name of the form. A submission waits in the queue until it is delivered. One that cannot be delivered is kept for a limited time, so the site owner can export or retry it. The personal data tools export and erase these submissions by the email address of the sender."
 msgstr "Wenn ein Kontaktformular für Profotograaf eingeschaltet ist, wird jede Einsendung auf dieser Website gespeichert und dann an profotograaf.nl gesendet: Name, E-Mail-Adresse, Telefonnummer, Datum, Nachricht und weitere Felder des Formulars, die Adresse der Seite und der Name des Formulars. Eine Einsendung wartet in der Warteschlange, bis sie zugestellt ist. Eine nicht zustellbare Einsendung wird für begrenzte Zeit aufbewahrt, damit der Website-Betreiber sie exportieren oder erneut versuchen kann. Die Werkzeuge für personenbezogene Daten exportieren und löschen diese Einsendungen anhand der E-Mail-Adresse des Absenders."
 
-#: includes/modules/class-privacy.php:233
+#: includes/modules/class-privacy.php:235
 msgid "Connection and diagnostics"
 msgstr "Verbindung und Diagnose"
 
-#: includes/modules/class-privacy.php:235
+#: includes/modules/class-privacy.php:237
 msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr "Die Datenschutzerklärung von Profotograaf findest du unter https://profotograaf.nl/privacy."
 
@@ -1466,25 +1466,25 @@ msgstr ""
 msgid "Failed enquiries"
 msgstr ""
 
-#: includes/class-settings-schema.php:286
+#: includes/class-settings-schema.php:293
 msgid "Duotone colours"
 msgstr ""
 
-#: includes/class-settings-schema.php:287
+#: includes/class-settings-schema.php:294
 msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
 msgstr ""
 
-#: includes/class-settings-schema.php:294
+#: includes/class-settings-schema.php:301
 #: build/gallery/index.js:3
 msgid "Link photos to"
 msgstr ""
 
-#: includes/class-settings-schema.php:297
+#: includes/class-settings-schema.php:304
 #: build/gallery/index.js:3
 msgid "Nothing"
 msgstr ""
 
-#: includes/class-settings-schema.php:298
+#: includes/class-settings-schema.php:305
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
 msgstr ""
@@ -1698,26 +1698,26 @@ msgctxt "block variation keyword"
 msgid "slider"
 msgstr ""
 
-#: includes/class-settings-schema.php:295
+#: includes/class-settings-schema.php:302
 msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
 msgstr ""
 
-#: includes/class-settings-schema.php:299
+#: includes/class-settings-schema.php:306
 #: build/gallery/index.js:3
 msgid "Your photographer site"
 msgstr ""
 
-#: includes/class-settings-schema.php:300
+#: includes/class-settings-schema.php:307
 #: build/gallery/index.js:3
 msgid "The original photo file"
 msgstr ""
 
-#: includes/class-settings-schema.php:307
+#: includes/class-settings-schema.php:314
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
 msgstr ""
 
-#: includes/class-settings-schema.php:308
+#: includes/class-settings-schema.php:315
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr ""
 
@@ -1739,10 +1739,26 @@ msgstr ""
 msgid "same tab"
 msgstr ""
 
-#: includes/modules/class-privacy.php:234
+#: includes/modules/class-privacy.php:236
 msgid "When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form. The plugin sends no usage statistics or error reports."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:302
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
+msgstr ""
+
+#: includes/class-settings-schema.php:102
+msgid "Use Profotograaf photos in the editor"
+msgstr ""
+
+#: includes/class-settings-schema.php:103
+msgid "Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested."
+msgstr ""
+
+#: includes/modules/class-privacy.php:233
+msgid "Photo library in the editor"
+msgstr ""
+
+#: includes/modules/class-privacy.php:234
+msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. No visitor data is involved."
 msgstr ""
