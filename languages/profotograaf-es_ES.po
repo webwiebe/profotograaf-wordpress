@@ -22,6 +22,7 @@ msgstr ""
 #: includes/admin/class-network-page.php:92
 #: includes/class-cron-health.php:160
 #: includes/class-cron-health.php:175
+#: includes/modules/class-media-import-screen.php:187
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:74
@@ -29,6 +30,7 @@ msgstr ""
 #: includes/modules/class-settings-page.php:269
 #: includes/modules/class-site-health.php:324
 #: includes/modules/class-site-health.php:394
+#: assets/admin/media-source.js:29
 msgid "Profotograaf"
 msgstr ""
 
@@ -193,6 +195,7 @@ msgstr "Las consultas que no se pudieron enviar se conservan en este sitio hasta
 
 #: includes/admin/class-leads-settings.php:368
 #: build/gallery/index.js:3
+#: build/import-screen/index.js:5
 msgid "Try again"
 msgstr "Reintentar"
 
@@ -1366,6 +1369,7 @@ msgid "layout: %s"
 msgstr "diseño: %s"
 
 #: build/gallery/index.js:8
+#: build/import-screen/index.js:2
 msgid "Gallery"
 msgstr "Galería"
 
@@ -1768,7 +1772,7 @@ msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
 #: includes/class-photo-importer.php:84
-#: includes/class-photo-rest.php:115
+#: includes/class-photo-rest.php:272
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
@@ -1795,3 +1799,123 @@ msgstr ""
 #: includes/class-photo-importer.php:172
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
+
+#: includes/class-photo-rest.php:197
+msgid "Choose at least one photo to import."
+msgstr ""
+
+#. translators: %d: largest number of photos one import takes.
+#: includes/class-photo-rest.php:204
+#, php-format
+msgid "Import at most %d photos at a time."
+msgstr ""
+
+#: includes/class-photo-rest.php:226
+msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
+msgstr ""
+
+#: includes/modules/class-media-import-screen.php:75
+#: includes/modules/class-media-import-screen.php:76
+#: includes/modules/class-media-import-screen.php:90
+msgid "Import from Profotograaf"
+msgstr ""
+
+#: includes/modules/class-media-import-screen.php:179
+msgid "Source"
+msgstr ""
+
+#. translators: %s: gallery title.
+#: includes/modules/class-media-import-screen.php:184
+#, php-format
+msgid "Profotograaf, gallery %s"
+msgstr ""
+
+#: assets/admin/media-source.js:24
+msgid "All sources"
+msgstr ""
+
+#: build/import-screen/index.js:1
+msgid "Something went wrong. Try again."
+msgstr ""
+
+#: build/import-screen/index.js:1
+msgid "All galleries"
+msgstr ""
+
+#. translators: 1: gallery title, 2: number of photos in the gallery.
+#: build/import-screen/index.js:2
+#, js-format
+msgid "%1$s (%2$d)"
+msgstr ""
+
+#: build/import-screen/index.js:2
+msgid "Search photos"
+msgstr ""
+
+#: build/import-screen/index.js:2
+msgid "Search"
+msgstr ""
+
+#: build/import-screen/index.js:2
+msgid "Previous page"
+msgstr ""
+
+#. translators: 1: current page number, 2: number of pages.
+#: build/import-screen/index.js:3
+#, js-format
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+#: build/import-screen/index.js:3
+msgid "Next page"
+msgstr ""
+
+#. translators: %d: number of selected photos.
+#: build/import-screen/index.js:4
+#, js-format
+msgid "Import %d photo"
+msgid_plural "Import %d photos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/import-screen/index.js:4
+msgid "Select all on this page"
+msgstr ""
+
+#: build/import-screen/index.js:4
+msgid "Clear selection"
+msgstr ""
+
+#: build/import-screen/index.js:4
+msgid "Imported"
+msgstr ""
+
+#: build/import-screen/index.js:4
+msgid "Open in Media Library"
+msgstr ""
+
+#: build/import-screen/index.js:4
+msgid "No photos found."
+msgstr ""
+
+#. translators: 1: photos handled so far, 2: photos to import.
+#: build/import-screen/index.js:5
+#, js-format
+msgid "Importing %1$d of %2$d"
+msgstr ""
+
+#: build/import-screen/index.js:5
+msgid "These photos could not be imported:"
+msgstr ""
+
+#: build/import-screen/index.js:5
+msgid "Profotograaf could not be reached, so this list may be out of date."
+msgstr ""
+
+#. translators: %d: number of photos added to the Media Library.
+#: build/import-screen/index.js:6
+#, js-format
+msgid "%d photo imported."
+msgid_plural "%d photos imported."
+msgstr[0] ""
+msgstr[1] ""

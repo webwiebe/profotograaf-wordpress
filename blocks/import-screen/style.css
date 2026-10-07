@@ -1,0 +1,98 @@
+.profotograaf-import {
+	max-inline-size: 1200px;
+}
+
+.profotograaf-import__filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 12px;
+	margin-block: 16px;
+}
+
+.profotograaf-import__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.profotograaf-import__card {
+	margin: 0;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.profotograaf-import__card.is-selected {
+	border-color: #2271b1;
+}
+
+.profotograaf-import__card.is-imported img {
+	opacity: 0.6;
+}
+
+.profotograaf-import__pick {
+	display: block;
+	inline-size: 100%;
+	padding: 0;
+	border: 0;
+	background: none;
+	text-align: start;
+	cursor: pointer;
+}
+
+.profotograaf-import__pick:disabled {
+	cursor: default;
+}
+
+.profotograaf-import__pick img {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
+.profotograaf-import__title,
+.profotograaf-import__badge {
+	display: block;
+	padding-inline: 8px;
+	padding-block: 4px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.profotograaf-import__badge {
+	font-size: 12px;
+}
+
+.profotograaf-import__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-block: 16px;
+}
+
+.profotograaf-import__pages {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-inline-start: auto;
+}
+
+.profotograaf-import__progress {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-block: 8px;
+}
+
+.profotograaf-import__failures {
+	margin: 0;
+	padding-inline-start: 20px;
+	list-style: disc;
+}

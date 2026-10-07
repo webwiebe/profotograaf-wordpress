@@ -52,6 +52,17 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 	 */
 	private string $capability = 'upload_files';
 
+	private string $tmp = '';
+
+	private int $next_id = 900;
+
+	/**
+	 * URLs the importer downloaded.
+	 *
+	 * @var array<int,string>
+	 */
+	private array $downloads = array();
+
 	protected function setUp(): void {
 		parent::setUp();
 		Logger::configure( false );
@@ -63,6 +74,10 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 		Functions\when( 'get_posts' )->alias(
 			function ( $args ) {
 				$this->assertSame( 'attachment', $args['post_type'] );
+				if ( isset( $args['meta_key'] ) ) {
+					$id = $this->imported[ $args['meta_value'] ] ?? null;
+					return null === $id ? array() : array( $id );
+				}
 				$this->assertSame( '_profotograaf_photo_id', $args['meta_query'][0]['key'] );
 				$this->assertSame( 'IN', $args['meta_query'][0]['compare'] );
 				$found = array();
@@ -78,11 +93,26 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 			fn( $id ) => (string) array_search( $id, $this->imported, true )
 		);
 
+		$this->tmp = (string) tempnam( sys_get_temp_dir(), 'pfrest' );
+		$tmp       = $this->tmp;
+		Functions\when( 'download_url' )->alias(
+			function ( $url ) use ( $tmp ) {
+				$this->downloads[] = $url;
+				return false !== strpos( $url, 'broken' ) ? new \WP_Error( 'http_404', 'nope' ) : $tmp;
+			}
+		);
+		Functions\when( 'wp_delete_file' )->justReturn( true );
+		Functions\when( 'update_post_meta' )->justReturn( true );
+		Functions\when( 'media_handle_sideload' )->alias( fn() => $this->next_id++ );
+
 		$settings   = new Settings();
 		$this->rest = new Photo_Rest( new Photo_Catalogue( $this->api, $settings, $this->clock() ), new Photo_Importer( $settings ), $settings );
 	}
 
 	protected function tearDown(): void {
+		if ( is_file( $this->tmp ) ) {
+			unlink( $this->tmp );
+		}
 		Logger::configure( null );
 		parent::tearDown();
 	}
@@ -156,7 +186,11 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 
 		$this->rest->register_routes();
 
-		$this->assertSame( array( '/photos' ), array_keys( $routes ) );
+		$this->assertSame( array( '/photos', '/photos/import' ), array_keys( $routes ) );
+		$this->assertSame( 'POST', $routes['/photos/import']['methods'] );
+		$this->assertSame( array( $this->rest, 'can_upload' ), $routes['/photos/import']['permission_callback'] );
+		$this->assertTrue( $routes['/photos/import']['args']['ids']['required'] );
+		$this->assertArrayHasKey( 'gallery', $routes['/photos']['args'] );
 		$this->assertSame( 'profotograaf/v1', $routes['/photos']['namespace'] );
 		$this->assertSame( 'GET', $routes['/photos']['methods'] );
 		$this->assertSame( array( $this->rest, 'can_upload' ), $routes['/photos']['permission_callback'] );
@@ -304,5 +338,126 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 
 	public function test_find_many_returns_nothing_for_no_ids(): void {
 		$this->assertSame( array(), ( new Photo_Importer( new Settings() ) )->find_many( array() ) );
+	}
+
+	public function test_it_filters_by_gallery_and_lists_the_galleries_with_counts(): void {
+		$this->platform_has(
+			array(
+				$this->photo( 'p-1' ),
+				$this->photo(
+					'p-2',
+					array(
+						'gallery_id'    => 'g-2',
+						'gallery_title' => 'Autumn walk',
+					)
+				),
+				$this->photo( 'p-3' ),
+			)
+		);
+
+		$all = $this->rest->list_photos( new Photo_Rest_Request() );
+		$this->assertSame(
+			array(
+				array(
+					'id'    => 'g-1',
+					'title' => 'Spring wedding',
+					'count' => 2,
+				),
+				array(
+					'id'    => 'g-2',
+					'title' => 'Autumn walk',
+					'count' => 1,
+				),
+			),
+			$all['galleries']
+		);
+
+		$one = $this->rest->list_photos( new Photo_Rest_Request( array( 'gallery' => 'g-2' ) ) );
+		$this->assertSame( array( 'p-2' ), array_column( $one['items'], 'sourceId' ) );
+		$this->assertSame( 1, $one['totalItems'] );
+		$this->assertCount( 2, $one['galleries'] );
+
+		$searched = $this->rest->list_photos( new Photo_Rest_Request( array( 'search' => 'autumn' ) ) );
+		$this->assertSame( array( 'g-2' ), array_column( $searched['galleries'], 'id' ) );
+	}
+
+	public function test_import_refuses_while_the_setting_is_off(): void {
+		$this->options[ Settings::OPTION ] = array( 'media_source' => false );
+
+		$error = $this->rest->import_photos( new Photo_Rest_Request( array( 'ids' => array( 'p-1' ) ) ) );
+
+		$this->assertSame( 'profotograaf_media_source_off', $error->get_error_code() );
+		$this->assertSame( 403, $error->data['status'] );
+		$this->assertSame( array(), $this->http->requests );
+		$this->assertSame( array(), $this->downloads );
+	}
+
+	public function test_import_needs_at_least_one_id(): void {
+		$error = $this->rest->import_photos( new Photo_Rest_Request( array( 'ids' => array( '', ' ' ) ) ) );
+
+		$this->assertSame( 'profotograaf_import_no_ids', $error->get_error_code() );
+		$this->assertSame( 400, $error->data['status'] );
+	}
+
+	public function test_import_takes_at_most_fifty_ids(): void {
+		$ids = array();
+		for ( $i = 1; $i <= 51; $i++ ) {
+			$ids[] = 'p-' . $i;
+		}
+
+		$error = $this->rest->import_photos( new Photo_Rest_Request( array( 'ids' => $ids ) ) );
+
+		$this->assertSame( 'profotograaf_import_too_many', $error->get_error_code() );
+		$this->assertSame( 'Import at most 50 photos at a time.', $error->get_error_message() );
+		$this->assertSame( array(), $this->http->requests );
+		$this->assertSame( array(), $this->downloads );
+
+		$fifty = array_slice( $ids, 0, 50 );
+		$this->platform_has_many();
+		$ok = $this->rest->import_photos( new Photo_Rest_Request( array( 'ids' => $fifty ) ) );
+		$this->assertCount( 45, array_filter( $ok['results'], fn( $r ) => isset( $r['attachment_id'] ) ) );
+		$this->assertCount( 5, array_filter( $ok['results'], fn( $r ) => isset( $r['error'] ) ) );
+	}
+
+	public function test_import_uses_catalogue_data_and_reports_each_photo(): void {
+		$this->platform_has(
+			array(
+				$this->photo( 'p-1' ),
+				$this->photo( 'p-2', array( 'full_url' => 'https://profotograaf.nl/share/img/b/broken-0123456789ab.jpg' ) ),
+				$this->photo( 'p-3' ),
+			)
+		);
+		$this->imported = array( 'p-3' => 73 );
+
+		$result = $this->rest->import_photos(
+			new Photo_Rest_Request(
+				array(
+					'ids' => array( 'p-1', 'p-2', 'p-3', 'p-404', 'p-1', 'p-1' ),
+					'url' => 'https://evil.example/x.jpg',
+				)
+			)
+		)['results'];
+
+		$this->assertSame( array( 'p-1', 'p-2', 'p-3', 'p-404' ), array_column( $result, 'id' ) );
+		$this->assertSame( 900, $result[0]['attachment_id'] );
+		$this->assertSame( 'The photo could not be downloaded from Profotograaf. Try again later.', $result[1]['error'] );
+		$this->assertSame( 73, $result[2]['attachment_id'] );
+		$this->assertStringContainsString( 'not in your Profotograaf library', $result[3]['error'] );
+		$this->assertSame(
+			array(
+				'https://profotograaf.nl/share/img/a/web-0123456789ab.jpg',
+				'https://profotograaf.nl/share/img/b/broken-0123456789ab.jpg',
+			),
+			$this->downloads
+		);
+	}
+
+	public function test_import_passes_a_catalogue_failure_on(): void {
+		$this->http->reply( 500, array( 'error' => 'boom' ) );
+
+		$error = $this->rest->import_photos( new Photo_Rest_Request( array( 'ids' => array( 'p-1' ) ) ) );
+
+		$this->assertInstanceOf( \WP_Error::class, $error );
+		$this->assertSame( 502, $error->data['status'] );
 	}
 }
