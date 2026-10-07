@@ -300,6 +300,12 @@ class Photo_Rest {
 		if ( $attachment_id > 0 ) {
 			$item['id'] = $attachment_id;
 		}
-		return $item;
+		/**
+		 * Filters one item of GET /photos.
+		 *
+		 * @param array<string,mixed> $item  Inserter item.
+		 * @param array<string,mixed> $photo Catalogue row.
+		 */
+		return apply_filters( 'profotograaf_photo_rest_item', $item, $photo );
 	}
 }

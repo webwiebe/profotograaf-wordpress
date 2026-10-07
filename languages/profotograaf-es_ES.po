@@ -31,6 +31,7 @@ msgstr ""
 #: includes/modules/class-site-health.php:324
 #: includes/modules/class-site-health.php:394
 #: assets/admin/media-source.js:29
+#: build/inserter-category/index.js:1
 msgid "Profotograaf"
 msgstr ""
 
@@ -1771,6 +1772,7 @@ msgstr ""
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
+#: includes/class-photo-file-route.php:196
 #: includes/class-photo-importer.php:84
 #: includes/class-photo-rest.php:272
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
@@ -1784,6 +1786,7 @@ msgstr ""
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
+#: includes/class-photo-file-route.php:227
 #: includes/class-photo-importer.php:181
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
@@ -1919,3 +1922,23 @@ msgid "%d photo imported."
 msgid_plural "%d photos imported."
 msgstr[0] ""
 msgstr[1] ""
+
+#: includes/class-photo-file-route.php:202
+msgid "This photo link is not valid or has expired. Reload the photo list and try again."
+msgstr ""
+
+#: includes/class-photo-file-route.php:212
+msgid "The photo is not on the Profotograaf platform, so it was not served."
+msgstr ""
+
+#: includes/class-photo-file-route.php:232
+msgid "Profotograaf sent a file that is not a JPEG image, so it was not used."
+msgstr ""
+
+#: includes/class-photo-file-route.php:353
+msgid "This photo is no longer available from Profotograaf."
+msgstr ""
+
+#: build/inserter-category/index.js:1
+msgid "Search Profotograaf photos"
+msgstr ""
