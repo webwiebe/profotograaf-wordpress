@@ -90,10 +90,11 @@ class Uninstall_Test extends Wp_Test_Case {
 		$this->sites = array();
 		for ( $id = 1; $id <= 150; $id++ ) {
 			$this->sites[ $id ] = array(
-				'profotograaf_settings'     => array( 'media_source' => true ),
-				'profotograaf_connection'   => array( 'access_token' => 'x' ),
-				'profotograaf_lead_job_abc' => '{"status":"queued"}',
-				'blogname'                  => 'Site ' . $id,
+				'profotograaf_settings'         => array( 'media_source' => true ),
+				'profotograaf_connection'       => array( 'access_token' => 'x' ),
+				'profotograaf_lead_job_abc'     => '{"status":"queued"}',
+				'profotograaf_import_lock_0123' => 1000000,
+				'blogname'                      => 'Site ' . $id,
 			);
 		}
 

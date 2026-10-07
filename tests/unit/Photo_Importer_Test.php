@@ -46,6 +46,26 @@ class Photo_Importer_Test extends Wp_Test_Case {
 
 	private int $next_id = 501;
 
+	/**
+	 * Callbacks registered with add_filter, by hook.
+	 *
+	 * @var array<string,callable>
+	 */
+	private array $filters = array();
+
+	private int $pauses = 0;
+
+	/**
+	 * Runs on each wait for a held lock.
+	 *
+	 * @var callable|null
+	 */
+	private $on_pause = null;
+
+	private function lock_name(): string {
+		return 'profotograaf_import_lock_' . md5( 'p-1' );
+	}
+
 	private string $tmp = '';
 
 	protected function setUp(): void {
@@ -96,7 +116,28 @@ class Photo_Importer_Test extends Wp_Test_Case {
 			}
 		);
 
-		$this->importer = new Photo_Importer( new Settings() );
+		Functions\when( 'add_filter' )->alias(
+			function ( $hook, $callback ) {
+				$this->filters[ $hook ] = $callback;
+				return true;
+			}
+		);
+		Functions\when( 'remove_filter' )->alias(
+			function ( $hook ) {
+				unset( $this->filters[ $hook ] );
+				return true;
+			}
+		);
+
+		$this->importer = new Photo_Importer(
+			new Settings(),
+			function (): void {
+				++$this->pauses;
+				if ( null !== $this->on_pause ) {
+					( $this->on_pause )();
+				}
+			}
+		);
 	}
 
 	protected function tearDown(): void {
@@ -251,5 +292,115 @@ class Photo_Importer_Test extends Wp_Test_Case {
 		$this->assertSame( 'profotograaf_import_failed', $result->get_error_code() );
 		$this->assertFileDoesNotExist( $this->tmp );
 		$this->assertSame( array(), $this->meta );
+	}
+
+	public function test_a_held_lock_makes_the_import_return_the_attachment_the_other_request_created(): void {
+		$this->options[ $this->lock_name() ] = time();
+		$this->on_pause                      = function (): void {
+			$this->existing['p-1'] = 777;
+		};
+
+		$result = $this->importer->import( $this->photo() );
+
+		$this->assertSame( 777, $result );
+		$this->assertSame( 1, $this->pauses );
+		$this->assertSame( array(), $this->downloads );
+		$this->assertSame( array(), $this->sideloads );
+		$this->assertArrayHasKey( $this->lock_name(), $this->options, 'the other request still owns the lock' );
+	}
+
+	public function test_a_lock_that_is_released_while_waiting_lets_the_import_continue(): void {
+		$this->options[ $this->lock_name() ] = time();
+		$this->on_pause                      = function (): void {
+			unset( $this->options[ $this->lock_name() ] );
+		};
+
+		$this->assertSame( 501, $this->importer->import( $this->photo() ) );
+		$this->assertSame( 1, $this->pauses );
+	}
+
+	public function test_a_lock_that_stays_held_ends_in_a_retryable_error_and_creates_nothing(): void {
+		$this->options[ $this->lock_name() ] = time();
+
+		$result = $this->importer->import( $this->photo() );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'profotograaf_import_busy', $result->get_error_code() );
+		$this->assertTrue( $result->data['retryable'] );
+		$this->assertSame( array(), $this->downloads );
+	}
+
+	public function test_a_stale_lock_is_replaced(): void {
+		$this->options[ $this->lock_name() ] = time() - Photo_Importer::LOCK_TTL - 1;
+
+		$this->assertSame( 501, $this->importer->import( $this->photo() ) );
+		$this->assertSame( 0, $this->pauses );
+	}
+
+	public function test_the_lock_is_not_autoloaded_and_is_released_after_success(): void {
+		$this->importer->import( $this->photo() );
+
+		$this->assertArrayNotHasKey( $this->lock_name(), $this->options );
+		$this->assertFalse( $this->autoload[ $this->lock_name() ] );
+	}
+
+	public function test_the_lock_is_released_after_a_download_failure(): void {
+		Functions\when( 'download_url' )->justReturn( new \WP_Error( 'http_404', 'Not Found', array( 'code' => 404 ) ) );
+
+		$this->importer->import( $this->photo() );
+
+		$this->assertArrayNotHasKey( $this->lock_name(), $this->options );
+	}
+
+	public function test_the_lock_is_released_after_a_sideload_failure(): void {
+		Functions\when( 'media_handle_sideload' )->justReturn( new \WP_Error( 'upload_error', 'Disk full' ) );
+
+		$this->importer->import( $this->photo() );
+
+		$this->assertArrayNotHasKey( $this->lock_name(), $this->options );
+	}
+
+	public function test_the_lock_is_released_when_the_import_throws(): void {
+		Functions\when( 'media_handle_sideload' )->alias(
+			static function (): void {
+				throw new \RuntimeException( 'boom' );
+			}
+		);
+
+		try {
+			$this->importer->import( $this->photo() );
+			$this->fail( 'The exception should propagate.' );
+		} catch ( \RuntimeException $e ) {
+			$this->assertSame( 'boom', $e->getMessage() );
+		}
+		$this->assertArrayNotHasKey( $this->lock_name(), $this->options );
+	}
+
+	public function test_downloads_run_with_redirects_switched_off_and_the_filter_is_removed_afterwards(): void {
+		$seen = null;
+		Functions\when( 'download_url' )->alias(
+			function () use ( &$seen ) {
+				$seen = isset( $this->filters['http_request_args'] ) ? ( $this->filters['http_request_args'] )( array( 'redirection' => 5 ) ) : null;
+				return $this->tmp;
+			}
+		);
+
+		$this->importer->import( $this->photo() );
+
+		$this->assertSame( array( 'redirection' => 0 ), $seen );
+		$this->assertArrayNotHasKey( 'http_request_args', $this->filters );
+	}
+
+	public function test_a_redirect_is_refused_and_leaves_no_attachment_or_lock(): void {
+		Functions\when( 'download_url' )->justReturn( new \WP_Error( 'http_404', 'Found', array( 'code' => 302 ) ) );
+		Actions\expectDone( 'profotograaf_photo_imported' )->never();
+
+		$result = $this->importer->import( $this->photo() );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'profotograaf_import_redirect', $result->get_error_code() );
+		$this->assertSame( array(), $this->sideloads );
+		$this->assertSame( array(), $this->meta );
+		$this->assertArrayNotHasKey( $this->lock_name(), $this->options );
 	}
 }
