@@ -1,15 +1,22 @@
 /**
  * Webpack config for wp-scripts: the default config (blocks found through their
- * block.json) plus the admin screens that have no block.json.
+ * block.json) plus the scripts that have no block.json.
  *
- * An admin screen is a folder blocks/<name>/ with an index.tsx and no
- * block.json. It builds to build/<name>/index.js.
+ * - An admin screen is a folder blocks/<name>/ with an index.tsx and no
+ *   block.json. It builds to build/<name>/index.js.
+ * - The inserter category is an editor script: blocks/inserter-category/index.ts
+ *   builds to build/inserter-category/index.js with an index.asset.php next to
+ *   it (Media_Source_Inserter loads it).
  */
 const fs = require( 'node:fs' );
 const path = require( 'node:path' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
 const SCREENS = [ 'import-screen' ];
+
+const extraEntries = {
+	'inserter-category/index': path.resolve( __dirname, 'blocks/inserter-category/index.ts' ),
+};
 
 module.exports = {
 	...defaultConfig,
@@ -25,6 +32,6 @@ module.exports = {
 				screens[ `${ name }/index` ] = file;
 			}
 		}
-		return { ...base, ...screens };
+		return { ...base, ...screens, ...extraEntries };
 	},
 };

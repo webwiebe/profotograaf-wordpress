@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [] };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -156,6 +156,8 @@ function image( { res, url } ) {
 		return json( res, 404, { error: 'not found' } );
 	}
 	if ( url.pathname.endsWith( '.jpg' ) ) {
+		// Recorded so a test can count the downloads.
+		state.jpegHits.push( url.pathname );
 		res.writeHead( 200, { 'content-type': 'image/jpeg', 'cache-control': 'no-store' } );
 		return res.end( JPEG );
 	}
@@ -206,7 +208,7 @@ const routes = {
 		return json( res, 200, { ok: true } );
 	},
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [] } );
 		return json( res, 200, { ok: true } );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
