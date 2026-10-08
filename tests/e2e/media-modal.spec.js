@@ -46,7 +46,9 @@ async function openGalleryModal( page ) {
 		const block = window.wp.blocks.createBlock( 'core/gallery' );
 		window.wp.data.dispatch( 'core/block-editor' ).insertBlocks( block );
 	} );
-	await page.getByRole( 'button', { name: 'Media Library' } ).click();
+	// The block editor draws blocks inside the editor canvas iframe.
+	const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
+	await canvas.getByRole( 'button', { name: 'Media Library' } ).click();
 	const modal = page.locator( '.media-modal' );
 	await expect( modal ).toBeVisible();
 	return modal;
