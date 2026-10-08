@@ -154,6 +154,6 @@ test.describe( 'Profotograaf tab in the media modal', () => {
 
 		await expect( modal.getByText( 'Profotograaf is not reachable right now.' ) ).toBeVisible( { timeout: 30_000 } );
 		await modal.getByRole( 'tab', { name: 'Media Library' } ).first().click();
-		await expect( modal.locator( '.attachments' ) ).toBeVisible();
+		await expect( modal.locator( '.attachments:visible' ).first() ).toBeVisible();
 	} );
 } );
