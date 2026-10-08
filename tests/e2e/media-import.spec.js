@@ -143,7 +143,8 @@ test.describe( 'Media > Import from Profotograaf', () => {
 		await expect( page.getByRole( 'link', { name: /Spring wedding|Open on Profotograaf/ } ) ).toBeVisible();
 		await page.getByRole( 'button', { name: 'Re-import' } ).click();
 		await expect( page.locator( '.profotograaf-reimport__status' ) ).toContainText( 'replaced with the current version', { timeout: 60_000 } );
-		expect( wp( 'post', 'meta', 'get', id, '_profotograaf_version' ) ).not.toBe( 'stale-version' );
+		// The mock's image URLs carry no version hash, so the stored version ends up empty. wp post meta get refuses an empty value.
+		expect( wp( 'eval', `echo get_post_meta( ${ id }, '_profotograaf_version', true );` ) ).not.toBe( 'stale-version' );
 		expect( wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--format=count' ) ).toBe( '2' );
 
 		// A photo that left the catalogue keeps its local copy and says so.
