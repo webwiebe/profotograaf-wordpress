@@ -54,6 +54,50 @@ async function openGalleryModal( page ) {
 	return modal;
 }
 
+
+/**
+ * Opens a new post, opens its Featured image panel and the media modal on the Profotograaf tab.
+ *
+ * @param {import('@playwright/test').Page} page
+ */
+async function openFeaturedImageModal( page ) {
+	await page.goto( '/wp-admin/post-new.php' );
+	await page.waitForFunction( () => window.wp && window.wp.data && window.wp.data.select( 'core/editor' ) );
+	await page.evaluate( () => {
+		window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-post', 'welcomeGuide', false );
+		window.wp.data.dispatch( 'core/edit-post' ).openGeneralSidebar( 'edit-post/document' );
+	} );
+	// The panel is open by default, so the button is in the document sidebar.
+	await page.getByRole( 'button', { name: 'Set featured image' } ).click();
+	const modal = page.locator( '.media-modal' );
+	await expect( modal ).toBeVisible();
+	await modal.getByRole( 'tab', { name: 'Profotograaf' } ).click();
+	return modal;
+}
+
+/**
+ * Picks the Bride photo in the modal and confirms, then saves the post.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {import('@playwright/test').Locator} modal
+ * @return {Promise<number>} The post id.
+ */
+async function pickBrideAsFeaturedImage( page, modal ) {
+	const bride = modal.getByRole( 'button', { name: 'Bride' } );
+	await expect( bride ).toBeVisible( { timeout: 30_000 } );
+	await bride.click();
+	await modal.locator( '.media-toolbar-primary .button-primary' ).click();
+	await expect
+		.poll( () => page.evaluate( () => window.wp.data.select( 'core/editor' ).getEditedPostAttribute( 'featured_media' ) ), { timeout: 60_000 } )
+		.toBeGreaterThan( 0 );
+	await page.evaluate( () => window.wp.data.dispatch( 'core/editor' ).editPost( { title: 'Featured image test' } ) );
+	await page.evaluate( () => window.wp.data.dispatch( 'core/editor' ).savePost() );
+	await expect
+		.poll( () => page.evaluate( () => window.wp.data.select( 'core/editor' ).getCurrentPost().featured_media ), { timeout: 30_000 } )
+		.toBeGreaterThan( 0 );
+	return page.evaluate( () => window.wp.data.select( 'core/editor' ).getCurrentPostId() );
+}
+
 test.describe.configure( { mode: 'serial' } );
 
 test.describe( 'Profotograaf tab in the media modal', () => {
@@ -136,6 +180,37 @@ test.describe( 'Profotograaf tab in the media modal', () => {
 			expect( wp( 'post', 'meta', 'get', String( id ), '_profotograaf_gallery_id' ) ).toBe( 'g-e2e' );
 		}
 		expect( wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--format=count' ) ).toBe( '2' );
+	} );
+
+	test( 'sets a Profotograaf photo as the featured image and reuses the attachment', async ( { page } ) => {
+		mediaSource( true );
+		cleanUp();
+		await login( page );
+
+		const first = await pickBrideAsFeaturedImage( page, await openFeaturedImageModal( page ) );
+
+		const thumbnail = wp( 'post', 'meta', 'get', String( first ), '_thumbnail_id' );
+		expect( Number( thumbnail ) ).toBeGreaterThan( 0 );
+		expect( wp( 'post', 'meta', 'get', thumbnail, '_profotograaf_gallery_id' ) ).toBe( 'g-e2e' );
+		expect( wp( 'post', 'meta', 'get', thumbnail, '_profotograaf_photo_id' ) ).not.toBe( '' );
+
+		// Themes and SEO plugins read the thumbnail through core functions and the REST field.
+		const check = wp(
+			'eval',
+			`wp_set_current_user( 1 ); $id = ${ first };$att = (int) get_post_thumbnail_id( $id ); $r = rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/posts/' . $id ) ); echo wp_json_encode( array( 'att' => $att, 'html' => str_contains( (string) wp_get_attachment_image( $att, 'large' ), '<img' ), 'url' => str_contains( (string) get_the_post_thumbnail_url( $id, 'full' ), '/wp-content/uploads/' ), 'rest' => (int) $r->get_data()['featured_media'], 'has' => has_post_thumbnail( $id ) ) );`
+		);
+		const seen = JSON.parse( check );
+		expect( seen.att ).toBe( Number( thumbnail ) );
+		expect( seen.html ).toBe( true );
+		expect( seen.url ).toBe( true );
+		expect( seen.rest ).toBe( Number( thumbnail ) );
+		expect( seen.has ).toBe( true );
+
+		// The same photo on another post reuses the attachment.
+		const second = await pickBrideAsFeaturedImage( page, await openFeaturedImageModal( page ) );
+		expect( second ).not.toBe( first );
+		expect( wp( 'post', 'meta', 'get', String( second ), '_thumbnail_id' ) ).toBe( thumbnail );
+		expect( wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--format=count' ) ).toBe( '1' );
 	} );
 
 	test( 'a platform outage shows a message and leaves the modal usable', async ( { page } ) => {
