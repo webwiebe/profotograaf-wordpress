@@ -181,6 +181,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* Fix: the suggested privacy policy text now says that usage data and error reports are sent when the site owner opts in.
 * New: user documentation for the photo library (README, FAQ, privacy text) and an External services entry that lists the requests it makes.
 * New: choose a Profotograaf photo as the featured image from the Featured image panel. The photo is stored in the Media Library once, the post gets a normal attachment as its featured image, and choosing the same photo on another post reuses that copy.
 * New: the attachment details of a photo imported from Profotograaf link to its gallery on Profotograaf and offer a Re-import button. Re-import replaces the file with the current web size, keeps the Media Library item and its id, rebuilds the image sizes and deletes the old files. When the photo is no longer on Profotograaf you get a notice and the copy stays as it is. Route: `POST /profotograaf/v1/photos/reimport`.

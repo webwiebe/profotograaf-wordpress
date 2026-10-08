@@ -164,5 +164,7 @@ class Privacy_Test extends Leads_Test_Case {
 		$this->assertStringContainsString( 'Enquiries', $captured[1] );
 		$this->assertStringContainsString( 'Photo library in the editor', $captured[1] );
 		$this->assertStringContainsString( 'stored in the Media Library', $captured[1] );
+		$this->assertStringContainsString( 'opts in to anonymous usage data', $captured[1] );
+		$this->assertStringNotContainsString( 'sends no usage statistics or error reports', $captured[1] );
 	}
 }
