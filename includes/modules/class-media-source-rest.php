@@ -27,7 +27,8 @@ class Media_Source_Rest implements Module {
 	 * @param Plugin $plugin Service container.
 	 */
 	public function register( Plugin $plugin ): void {
-		$settings = $plugin->settings();
-		( new Photo_Rest( new Photo_Catalogue( $plugin->api(), $settings ), new Photo_Importer( $settings ), $settings ) )->register();
+		$settings  = $plugin->settings();
+		$catalogue = new Photo_Catalogue( $plugin->api(), $settings );
+		( new Photo_Rest( $catalogue, new Photo_Importer( $settings, null, $catalogue ), $settings ) )->register();
 	}
 }

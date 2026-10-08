@@ -20,6 +20,10 @@ defined( 'ABSPATH' ) || exit;
  * POST /profotograaf/v1/photos/import { ids } imports up to MAX_IMPORT photos
  * from the catalogue into the Media Library. Only ids are read from the
  * request. Titles, URLs and everything else come from the catalogue.
+ *
+ * POST /profotograaf/v1/photos/reimport { attachment_id } replaces the file of
+ * an imported attachment with the photo's current web variant. It needs
+ * edit_post on the attachment and upload_files.
  */
 class Photo_Rest {
 
@@ -122,6 +126,22 @@ class Photo_Rest {
 				),
 			)
 		);
+		register_rest_route(
+			Gallery_Rest::NAMESPACE,
+			'/photos/reimport',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'reimport_photo' ),
+				'permission_callback' => array( $this, 'can_reimport' ),
+				'args'                => array(
+					'attachment_id' => array(
+						'type'     => 'integer',
+						'required' => true,
+						'minimum'  => 1,
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -129,6 +149,33 @@ class Photo_Rest {
 	 */
 	public function can_upload(): bool {
 		return current_user_can( 'upload_files' );
+	}
+
+	/**
+	 * Permission check for re-importing one attachment.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 */
+	public function can_reimport( $request ): bool {
+		$id = (int) $request->get_param( 'attachment_id' );
+		return $id > 0 && current_user_can( 'edit_post', $id ) && current_user_can( 'upload_files' );
+	}
+
+	/**
+	 * POST /photos/reimport.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return array<string,mixed>|\WP_Error|\WP_REST_Response
+	 */
+	public function reimport_photo( $request ) {
+		if ( ! $this->settings->media_source_enabled() ) {
+			return self::source_off();
+		}
+		$result = $this->importer->reimport( (int) $request->get_param( 'attachment_id' ) );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		return array( 'attachment_id' => $result );
 	}
 
 	/**

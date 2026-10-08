@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Config;
 use Profotograaf\Module;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
@@ -132,6 +133,20 @@ class Media_Import_Screen implements Module {
 		}
 		wp_enqueue_script( 'profotograaf-media-source', PROFOTOGRAAF_URL . 'assets/admin/media-source.js', array( 'media-views', 'wp-i18n' ), PROFOTOGRAAF_VERSION, true );
 		wp_set_script_translations( 'profotograaf-media-source', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		$this->enqueue_reimport();
+	}
+
+	/**
+	 * Loads the Re-import button script, in the media modal and on the
+	 * attachment edit screen (wp_enqueue_script after the head still prints
+	 * a footer script).
+	 */
+	public function enqueue_reimport(): void {
+		if ( ! $this->active() ) {
+			return;
+		}
+		wp_enqueue_script( 'profotograaf-reimport', PROFOTOGRAAF_URL . 'assets/admin/reimport.js', array( 'wp-api-fetch', 'wp-i18n' ), PROFOTOGRAAF_VERSION, true );
+		wp_set_script_translations( 'profotograaf-reimport', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
 	}
 
 	/**
@@ -161,7 +176,9 @@ class Media_Import_Screen implements Module {
 	}
 
 	/**
-	 * Adds a read-only Source field to the details of an imported photo.
+	 * Adds the Source field to the details of an imported photo: the gallery
+	 * with a link to it on Profotograaf, and a Re-import button for users who
+	 * may replace the file.
 	 *
 	 * @param mixed    $fields Attachment fields.
 	 * @param \WP_Post $post   Attachment.
@@ -169,41 +186,92 @@ class Media_Import_Screen implements Module {
 	 */
 	public function source_field( $fields, $post ) {
 		$fields   = is_array( $fields ) ? $fields : array();
-		$photo_id = (string) get_post_meta( (int) $post->ID, Photo_Importer::META_PHOTO_ID, true );
+		$id       = (int) $post->ID;
+		$photo_id = (string) get_post_meta( $id, Photo_Importer::META_PHOTO_ID, true );
 		if ( '' === $photo_id ) {
 			return $fields;
 		}
-		$gallery = $this->gallery_title( (string) get_post_meta( (int) $post->ID, Photo_Importer::META_GALLERY_ID, true ) );
+		$gallery_id = (string) get_post_meta( $id, Photo_Importer::META_GALLERY_ID, true );
+		$gallery    = $this->gallery_row( $gallery_id );
+		$title      = (string) ( $gallery['gallery_title'] ?? '' );
+		$url        = $this->gallery_url( $gallery_id, $gallery );
+
+		if ( '' === $url ) {
+			$html = '' !== $title
+				? sprintf(
+					/* translators: %s: gallery title. */
+					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
+					esc_html( $title )
+				)
+				: esc_html__( 'Profotograaf', 'profotograaf' );
+		} else {
+			$link = sprintf(
+				'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+				esc_url( $url ),
+				'' !== $title ? esc_html( $title ) : esc_html__( 'Open on Profotograaf', 'profotograaf' )
+			);
+			$html = '' !== $title
+				? sprintf(
+					/* translators: %s: link to the gallery on Profotograaf, titled with the gallery name. */
+					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
+					$link
+				)
+				: esc_html__( 'Profotograaf', 'profotograaf' ) . ', ' . $link;
+		}//end if
+
+		if ( $this->active() && current_user_can( 'edit_post', $id ) ) {
+			// The attachment edit screen does not load the media views, so the field asks for its own script.
+			$this->enqueue_reimport();
+			$html .= sprintf(
+				'<p class="profotograaf-reimport"><button type="button" class="button profotograaf-reimport__button" data-attachment-id="%1$d">%2$s</button> <span class="profotograaf-reimport__status" role="status" aria-live="polite" data-attachment-id="%1$d"></span></p>',
+				$id,
+				esc_html__( 'Re-import', 'profotograaf' )
+			);
+		}
 
 		$fields['profotograaf_source'] = array(
 			'label' => __( 'Source', 'profotograaf' ),
 			'input' => 'html',
-			'html'  => '' !== $gallery
-				? sprintf(
-					/* translators: %s: gallery title. */
-					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
-					esc_html( $gallery )
-				)
-				: esc_html__( 'Profotograaf', 'profotograaf' ),
+			'html'  => $html,
 		);
 		return $fields;
 	}
 
 	/**
-	 * Title of a gallery from the stored catalogue. Never asks the platform.
+	 * A stored catalogue row of a gallery. Never asks the platform.
 	 *
 	 * @param string $gallery_id Platform gallery id.
+	 * @return array<string,mixed>
 	 */
-	private function gallery_title( string $gallery_id ): string {
+	private function gallery_row( string $gallery_id ): array {
 		if ( '' === $gallery_id ) {
-			return '';
+			return array();
 		}
 		$stored = get_option( Photo_Catalogue::OPTION, array() );
 		foreach ( is_array( $stored ) && isset( $stored['photos'] ) && is_array( $stored['photos'] ) ? $stored['photos'] : array() as $photo ) {
 			if ( is_array( $photo ) && (string) ( $photo['gallery_id'] ?? '' ) === $gallery_id ) {
-				return (string) ( $photo['gallery_title'] ?? '' );
+				return $photo;
 			}
 		}
-		return '';
+		return array();
+	}
+
+	/**
+	 * Address of a gallery on Profotograaf: the catalogue's own gallery URL
+	 * when it has one on the platform host, else the gallery in the platform
+	 * app. Empty without a gallery id.
+	 *
+	 * @param string              $gallery_id Platform gallery id.
+	 * @param array<string,mixed> $row        Stored catalogue row of the gallery.
+	 */
+	private function gallery_url( string $gallery_id, array $row ): string {
+		if ( '' === $gallery_id ) {
+			return '';
+		}
+		$own = isset( $row['gallery_url'] ) && is_string( $row['gallery_url'] ) ? $row['gallery_url'] : '';
+		if ( '' !== $own && strtolower( (string) wp_parse_url( $own, PHP_URL_HOST ) ) === strtolower( (string) wp_parse_url( Config::platform_url(), PHP_URL_HOST ) ) ) {
+			return $own;
+		}
+		return Config::platform_endpoint( '/app/galleries/' . rawurlencode( $gallery_id ) );
 	}
 }

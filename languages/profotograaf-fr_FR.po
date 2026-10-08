@@ -22,7 +22,8 @@ msgstr ""
 #: includes/admin/class-network-page.php:92
 #: includes/class-cron-health.php:160
 #: includes/class-cron-health.php:175
-#: includes/modules/class-media-import-screen.php:187
+#: includes/modules/class-media-import-screen.php:206
+#: includes/modules/class-media-import-screen.php:219
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:74
@@ -1768,67 +1769,74 @@ msgstr ""
 msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. No visitor data is involved."
 msgstr ""
 
-#: includes/class-photo-importer.php:81
+#: includes/class-photo-importer.php:90
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
 #: includes/class-photo-file-route.php:196
-#: includes/class-photo-importer.php:84
-#: includes/class-photo-rest.php:272
+#: includes/class-photo-importer.php:93
+#: includes/class-photo-importer.php:149
+#: includes/class-photo-rest.php:319
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
-#: includes/class-photo-importer.php:89
+#: includes/class-photo-importer.php:98
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
-#: includes/class-photo-importer.php:99
+#: includes/class-photo-importer.php:108
+#: includes/class-photo-importer.php:172
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
 #: includes/class-photo-file-route.php:227
-#: includes/class-photo-importer.php:181
+#: includes/class-photo-importer.php:328
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
 
-#: includes/class-photo-importer.php:209
+#: includes/class-photo-importer.php:227
+#: includes/class-photo-importer.php:235
+#: includes/class-photo-importer.php:367
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 
-#: includes/class-photo-importer.php:106
+#: includes/class-photo-importer.php:115
+#: includes/class-photo-importer.php:177
 msgid "This photo is being imported by another request. Try again in a moment."
 msgstr ""
 
-#: includes/class-photo-importer.php:172
+#: includes/class-photo-importer.php:319
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
 
-#: includes/class-photo-rest.php:197
+#: includes/class-photo-rest.php:244
 msgid "Choose at least one photo to import."
 msgstr ""
 
 #. translators: %d: largest number of photos one import takes.
-#: includes/class-photo-rest.php:204
+#: includes/class-photo-rest.php:251
 #, php-format
 msgid "Import at most %d photos at a time."
 msgstr ""
 
-#: includes/class-photo-rest.php:226
+#: includes/class-photo-rest.php:273
 msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:75
 #: includes/modules/class-media-import-screen.php:76
-#: includes/modules/class-media-import-screen.php:90
+#: includes/modules/class-media-import-screen.php:77
+#: includes/modules/class-media-import-screen.php:91
 msgid "Import from Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:179
+#: includes/modules/class-media-import-screen.php:233
 msgid "Source"
 msgstr ""
 
 #. translators: %s: gallery title.
-#: includes/modules/class-media-import-screen.php:184
+#. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
+#: includes/modules/class-media-import-screen.php:203
+#: includes/modules/class-media-import-screen.php:216
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr ""
@@ -1941,4 +1949,36 @@ msgstr ""
 
 #: build/inserter-category/index.js:1
 msgid "Search Profotograaf photos"
+msgstr ""
+
+#: includes/class-photo-importer.php:146
+msgid "You are not allowed to replace this file."
+msgstr ""
+
+#: includes/class-photo-importer.php:153
+msgid "This file was not imported from Profotograaf."
+msgstr ""
+
+#: includes/class-photo-importer.php:168
+msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
+msgstr ""
+
+#: includes/modules/class-media-import-screen.php:211
+msgid "Open on Profotograaf"
+msgstr ""
+
+#: includes/modules/class-media-import-screen.php:228
+msgid "Re-import"
+msgstr ""
+
+#: assets/admin/reimport.js:43
+msgid "Re-importing…"
+msgstr ""
+
+#: assets/admin/reimport.js:50
+msgid "The photo was replaced with the current version from Profotograaf."
+msgstr ""
+
+#: assets/admin/reimport.js:62
+msgid "The photo could not be re-imported."
 msgstr ""

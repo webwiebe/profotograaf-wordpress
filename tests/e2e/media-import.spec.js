@@ -127,4 +127,32 @@ test.describe( 'Media > Import from Profotograaf', () => {
 		await page.locator( '#profotograaf-source-filter' ).selectOption( 'profotograaf' );
 		await expect( attachments ).toHaveCount( 2 );
 	} );
+	test( 'shows the origin of an imported photo and re-imports it in place', async ( { page } ) => {
+		mediaSource( true );
+		const ids = wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--field=ID' ).split( /\s+/ );
+		const id = ids[ 0 ];
+		const plain = wp( 'post', 'list', '--post_type=attachment', '--title=Plain upload', '--field=ID' );
+		wp( 'post', 'meta', 'update', id, '_profotograaf_version', 'stale-version' );
+		await login( page );
+
+		// A plain upload shows neither the gallery link nor the button.
+		await page.goto( `/wp-admin/post.php?post=${ plain }&action=edit` );
+		await expect( page.locator( '.profotograaf-reimport__button' ) ).toHaveCount( 0 );
+
+		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+		await expect( page.getByRole( 'link', { name: /Spring wedding|Open on Profotograaf/ } ) ).toBeVisible();
+		await page.getByRole( 'button', { name: 'Re-import' } ).click();
+		await expect( page.locator( '.profotograaf-reimport__status' ) ).toContainText( 'replaced with the current version', { timeout: 60_000 } );
+		expect( wp( 'post', 'meta', 'get', id, '_profotograaf_version' ) ).not.toBe( 'stale-version' );
+		expect( wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--format=count' ) ).toBe( '2' );
+
+		// A photo that left the catalogue keeps its local copy and says so.
+		wp(
+			'eval',
+			"$c = get_option( 'profotograaf_photo_catalogue' ); $c['photos'] = array(); update_option( 'profotograaf_photo_catalogue', $c );"
+		);
+		await page.reload();
+		await page.getByRole( 'button', { name: 'Re-import' } ).click();
+		await expect( page.locator( '.profotograaf-reimport__status' ) ).toContainText( 'no longer available on Profotograaf', { timeout: 30_000 } );
+	} );
 } );
