@@ -145,6 +145,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: choose a Profotograaf photo as the featured image from the Featured image panel. The photo is stored in the Media Library once, the post gets a normal attachment as its featured image, and choosing the same photo on another post reuses that copy.
 * New: the attachment details of a photo imported from Profotograaf link to its gallery on Profotograaf and offer a Re-import button. Re-import replaces the file with the current web size, keeps the Media Library item and its id, rebuilds the image sizes and deletes the old files. When the photo is no longer on Profotograaf you get a notice and the copy stays as it is. Route: `POST /profotograaf/v1/photos/reimport`.
 * New: a Profotograaf tab in the media modal, which feeds the Gallery block, the Image block, the classic editor and the featured image box. It shows only with "Use Profotograaf photos in the editor" on and for users who can upload files. Search, filter by gallery, select several photos where the screen allows it, and choose the usual button: the photos are stored in the Media Library once and the screen receives normal attachments. If Profotograaf cannot be reached the tab shows a message and the other tabs keep working.
 * Fix: importing the same Profotograaf photo twice at the same time creates one Media Library item. A photo download that Profotograaf redirects elsewhere is refused.
