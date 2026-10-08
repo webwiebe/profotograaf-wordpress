@@ -51,6 +51,13 @@ final class Photo_Importer {
 	private Settings $settings;
 
 	/**
+	 * Photo catalogue, for re-importing. Without one, re-import is unavailable.
+	 *
+	 * @var Photo_Catalogue|null
+	 */
+	private ?Photo_Catalogue $catalogue;
+
+	/**
 	 * Waits one step while another request holds the photo's lock.
 	 *
 	 * @var callable
@@ -60,12 +67,14 @@ final class Photo_Importer {
 	/**
 	 * Constructor.
 	 *
-	 * @param Settings      $settings Plugin settings.
-	 * @param callable|null $pause    Waits one step for a held lock (default 0.25 s).
+	 * @param Settings             $settings Plugin settings.
+	 * @param callable|null        $pause    Waits one step for a held lock (default 0.25 s).
+	 * @param Photo_Catalogue|null $catalogue Photo catalogue, needed by reimport().
 	 */
-	public function __construct( Settings $settings, ?callable $pause = null ) {
-		$this->settings = $settings;
-		$this->pause    = $pause ?? static function (): void {
+	public function __construct( Settings $settings, ?callable $pause = null, ?Photo_Catalogue $catalogue = null ) {
+		$this->settings  = $settings;
+		$this->catalogue = $catalogue;
+		$this->pause     = $pause ?? static function (): void {
 			usleep( 250000 );
 		};
 	}
@@ -125,6 +134,128 @@ final class Photo_Importer {
 	}
 
 	/**
+	 * Replaces the file of an imported attachment with the photo's current web
+	 * variant. The attachment id, title, caption and alt text stay. Sizes are
+	 * regenerated and the old files are deleted once the new ones exist.
+	 *
+	 * @param int $attachment_id Attachment of an earlier import.
+	 * @return int|WP_Error The attachment id.
+	 */
+	public function reimport( int $attachment_id ) {
+		if ( $attachment_id <= 0 || ! current_user_can( 'edit_post', $attachment_id ) || ! current_user_can( 'upload_files' ) ) {
+			return Api_Errors::make( 'profotograaf_reimport_forbidden', __( 'You are not allowed to replace this file.', 'profotograaf' ), 403, false );
+		}
+		if ( ! $this->settings->media_source_enabled() ) {
+			return Api_Errors::make( 'profotograaf_media_source_off', __( 'Using Profotograaf photos in the editor is switched off in the plugin settings.', 'profotograaf' ), 403, false );
+		}
+		$photo_id = (string) get_post_meta( $attachment_id, self::META_PHOTO_ID, true );
+		if ( '' === $photo_id || null === $this->catalogue ) {
+			return Api_Errors::make( 'profotograaf_reimport_not_imported', __( 'This file was not imported from Profotograaf.', 'profotograaf' ), 400, false );
+		}
+
+		$catalogue = $this->catalogue->get();
+		if ( is_wp_error( $catalogue ) ) {
+			return $catalogue;
+		}
+		$photo = null;
+		foreach ( $catalogue['photos'] as $row ) {
+			if ( (string) $row['id'] === $photo_id ) {
+				$photo = $row;
+				break;
+			}
+		}
+		if ( null === $photo ) {
+			return Api_Errors::make( 'profotograaf_photo_gone', __( 'This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged.', 'profotograaf' ), 404, false );
+		}
+		$url = isset( $photo['web_url'] ) && is_string( $photo['web_url'] ) ? $photo['web_url'] : '';
+		if ( ! $this->is_platform_url( $url ) ) {
+			return Api_Errors::make( 'profotograaf_import_host', __( 'The photo is not on the Profotograaf platform, so it was not imported.', 'profotograaf' ), 400, false );
+		}
+
+		$lock = self::LOCK_PREFIX . md5( $photo_id );
+		if ( ! $this->acquire_lock( $lock ) ) {
+			return Api_Errors::make( 'profotograaf_import_busy', __( 'This photo is being imported by another request. Try again in a moment.', 'profotograaf' ), 409, true );
+		}
+		try {
+			$result = $this->replace_file( $attachment_id, $photo, $photo_id, $url );
+		} finally {
+			delete_option( $lock );
+		}
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		/**
+		 * Fires after the file of an imported attachment was replaced.
+		 *
+		 * @param int                 $attachment_id Attachment id.
+		 * @param array<string,mixed> $photo         Catalogue item the file now matches.
+		 */
+		do_action( 'profotograaf_photo_reimported', $attachment_id, $photo );
+
+		return $attachment_id;
+	}
+
+	/**
+	 * Downloads the current web variant and swaps it into the attachment. Runs
+	 * under the lock. The old files go only after the new ones are in place.
+	 *
+	 * @param int                 $attachment_id Attachment id.
+	 * @param array<string,mixed> $photo         Catalogue item.
+	 * @param string              $photo_id      Platform photo id.
+	 * @param string              $url           Platform URL of the web variant.
+	 * @return true|WP_Error
+	 */
+	private function replace_file( int $attachment_id, array $photo, string $photo_id, string $url ) {
+		$tmp = $this->download( $photo_id, $url );
+		if ( is_wp_error( $tmp ) ) {
+			return $tmp;
+		}
+
+		$old_file    = (string) get_attached_file( $attachment_id );
+		$old_meta    = wp_get_attachment_metadata( $attachment_id );
+		$old_backups = get_post_meta( $attachment_id, '_wp_attachment_backup_sizes', true );
+
+		$upload = array(
+			'name'     => 'profotograaf-' . preg_replace( '/[^A-Za-z0-9_-]/', '-', $photo_id ) . '.jpg',
+			'tmp_name' => $tmp,
+		);
+		$moved  = wp_handle_sideload( $upload, array( 'test_form' => false ) );
+		if ( isset( $moved['error'] ) || empty( $moved['file'] ) ) {
+			wp_delete_file( $tmp );
+			Logger::error( 'The re-imported photo could not be stored.', array( 'photo' => $photo_id ) );
+			return Api_Errors::make( 'profotograaf_import_failed', __( 'The photo could not be added to the Media Library.', 'profotograaf' ), 500, true );
+		}
+		$new_file = (string) $moved['file'];
+
+		$new_meta = wp_generate_attachment_metadata( $attachment_id, $new_file );
+		if ( array() === $new_meta ) {
+			wp_delete_file( $new_file );
+			Logger::error( 'The sizes of the re-imported photo could not be made.', array( 'photo' => $photo_id ) );
+			return Api_Errors::make( 'profotograaf_import_failed', __( 'The photo could not be added to the Media Library.', 'profotograaf' ), 500, true );
+		}
+
+		update_attached_file( $attachment_id, $new_file );
+		if ( ! empty( $moved['type'] ) ) {
+			wp_update_post(
+				array(
+					'ID'             => $attachment_id,
+					'post_mime_type' => (string) $moved['type'],
+				)
+			);
+		}
+		wp_update_attachment_metadata( $attachment_id, $new_meta );
+		delete_post_meta( $attachment_id, '_wp_attachment_backup_sizes' );
+		update_post_meta( $attachment_id, self::META_GALLERY_ID, $this->text( $photo, 'gallery_id' ) );
+		update_post_meta( $attachment_id, self::META_VERSION, $this->text( $photo, 'version' ) );
+
+		if ( '' !== $old_file && $old_file !== $new_file ) {
+			wp_delete_attachment_files( $attachment_id, is_array( $old_meta ) ? $old_meta : array(), is_array( $old_backups ) ? $old_backups : array(), $old_file );
+		}
+		return true;
+	}
+
+	/**
 	 * Takes the per-photo lock, replacing one older than LOCK_TTL.
 	 *
 	 * @param string $lock Lock option name.
@@ -150,6 +281,22 @@ final class Photo_Importer {
 	 * @return int|WP_Error Attachment id.
 	 */
 	private function download_and_store( array $photo, string $photo_id, string $url ) {
+		$tmp = $this->download( $photo_id, $url );
+		if ( is_wp_error( $tmp ) ) {
+			return $tmp;
+		}
+
+		return $this->sideload( $photo, $photo_id, $tmp );
+	}
+
+	/**
+	 * Downloads the web variant to a temp file, never following a redirect.
+	 *
+	 * @param string $photo_id Platform photo id.
+	 * @param string $url      Platform URL of the web variant.
+	 * @return string|WP_Error Temp file path.
+	 */
+	private function download( string $photo_id, string $url ) {
 		$this->load_wordpress_files();
 
 		// The host check covers the first URL only, so redirects stay off.
@@ -180,7 +327,18 @@ final class Photo_Importer {
 			);
 			return Api_Errors::make( 'profotograaf_import_download', __( 'The photo could not be downloaded from Profotograaf. Try again later.', 'profotograaf' ), 0, true );
 		}
+		return $tmp;
+	}
 
+	/**
+	 * Creates the attachment from a downloaded temp file.
+	 *
+	 * @param array<string,mixed> $photo    Catalogue item.
+	 * @param string              $photo_id Platform photo id.
+	 * @param string              $tmp      Temp file.
+	 * @return int|WP_Error Attachment id.
+	 */
+	private function sideload( array $photo, string $photo_id, string $tmp ) {
 		$title   = $this->text( $photo, 'title' );
 		$caption = $this->text( $photo, 'caption' );
 		$alt     = $this->text( $photo, 'alt' );

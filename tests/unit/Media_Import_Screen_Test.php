@@ -36,8 +36,10 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 	protected function setUp(): void {
 		parent::setUp();
 		$this->options[ Settings::OPTION ] = array( 'media_source' => true );
-		Functions\when( 'current_user_can' )->alias( fn( $cap ) => $cap === $this->capability );
+		Functions\when( 'current_user_can' )->alias( fn( $cap ) => $cap === $this->capability || ( 'edit_post' === $cap && 'upload_files' === $this->capability ) );
 		Functions\when( 'wp_unslash' )->returnArg();
+		Functions\when( 'wp_enqueue_script' )->justReturn( true );
+		Functions\when( 'wp_set_script_translations' )->justReturn( true );
 		Functions\when( 'get_post_meta' )->alias( fn( $id, $key ) => $this->meta[ $id ][ $key ] ?? '' );
 		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://photos.example.com/wp-admin/' . $path );
 		$this->screen = new Media_Import_Screen();
@@ -121,7 +123,12 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 				$scripts[] = $args;
 			}
 		);
-		Functions\expect( 'wp_set_script_translations' )->once()->with( 'profotograaf-import-screen', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		$translated = array();
+		Functions\when( 'wp_set_script_translations' )->alias(
+			function ( ...$args ) use ( &$translated ) {
+				$translated[] = $args;
+			}
+		);
 
 		$this->screen->enqueue( 'upload.php' );
 		$this->assertSame( array(), $scripts );
@@ -131,6 +138,7 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		$this->assertSame( 'profotograaf-import-screen', $scripts[0][0] );
 		$this->assertSame( 'https://example.test/wp-content/plugins/profotograaf/build/import-screen/index.js', $scripts[0][1] );
 		$this->assertTrue( $scripts[0][4] );
+		$this->assertSame( array( array( 'profotograaf-import-screen', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ) ), $translated );
 	}
 
 	public function test_the_filter_script_loads_only_while_active(): void {
@@ -143,7 +151,7 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		Functions\when( 'wp_set_script_translations' )->justReturn( true );
 
 		$this->screen->enqueue_filter();
-		$this->assertSame( array( 'profotograaf-media-source' ), $loaded );
+		$this->assertSame( array( 'profotograaf-media-source', 'profotograaf-reimport' ), $loaded );
 
 		$loaded                            = array();
 		$this->options[ Settings::OPTION ] = array( 'media_source' => false );
@@ -214,7 +222,78 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 
 		$this->assertSame( 'html', $fields['profotograaf_source']['input'] );
 		$this->assertSame( 'Source', $fields['profotograaf_source']['label'] );
-		$this->assertSame( 'Profotograaf, gallery Autumn <walk>', html_entity_decode( $fields['profotograaf_source']['html'] ) );
+		$html = $fields['profotograaf_source']['html'];
+		$this->assertStringContainsString( 'Profotograaf, gallery <a href="https://profotograaf.nl/app/galleries/g-2" target="_blank" rel="noopener noreferrer">Autumn &lt;walk&gt;</a>', $html );
+	}
+
+	public function test_the_gallery_link_prefers_the_catalogue_url_on_the_platform_host(): void {
+		$this->meta[12]                           = array(
+			'_profotograaf_photo_id'   => 'p-1',
+			'_profotograaf_gallery_id' => 'g-2',
+		);
+		$this->options[ Photo_Catalogue::OPTION ] = array(
+			'photos' => array(
+				array(
+					'gallery_id'    => 'g-2',
+					'gallery_title' => 'Autumn',
+					'gallery_url'   => 'https://profotograaf.nl/share/g/autumn',
+				),
+			),
+		);
+
+		$html = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+		$this->assertStringContainsString( 'href="https://profotograaf.nl/share/g/autumn"', $html );
+
+		$this->options[ Photo_Catalogue::OPTION ]['photos'][0]['gallery_url'] = 'https://evil.example/g';
+		$html = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+		$this->assertStringContainsString( 'href="https://profotograaf.nl/app/galleries/g-2"', $html );
+		$this->assertStringNotContainsString( 'evil.example', $html );
+	}
+
+	public function test_an_imported_photo_gets_a_reimport_button_for_users_who_may_edit_it(): void {
+		$this->meta[12] = array( '_profotograaf_photo_id' => 'p-1' );
+
+		$html = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+
+		$this->assertStringContainsString( 'class="button profotograaf-reimport__button" data-attachment-id="12">Re-import</button>', $html );
+		$this->assertStringContainsString( 'role="status"', $html );
+	}
+
+	public function test_the_reimport_button_is_left_out_without_permission_or_with_the_setting_off(): void {
+		$this->meta[12] = array( '_profotograaf_photo_id' => 'p-1' );
+
+		$this->capability = 'read';
+		$html             = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+		$this->assertStringNotContainsString( 'profotograaf-reimport', $html );
+
+		$this->capability                  = 'upload_files';
+		$this->options[ Settings::OPTION ] = array( 'media_source' => false );
+		$html                              = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+		$this->assertStringNotContainsString( 'profotograaf-reimport', $html );
+	}
+
+	public function test_the_field_loads_the_reimport_script_for_the_attachment_edit_screen(): void {
+		$loaded = array();
+		Functions\when( 'wp_enqueue_script' )->alias(
+			function ( ...$args ) use ( &$loaded ) {
+				$loaded[] = $args;
+			}
+		);
+		$translated = array();
+		Functions\when( 'wp_set_script_translations' )->alias(
+			function ( ...$args ) use ( &$translated ) {
+				$translated[] = $args;
+			}
+		);
+
+		$this->screen->source_field( array(), (object) array( 'ID' => 13 ) );
+		$this->assertSame( array(), $loaded, 'not an imported photo' );
+
+		$this->meta[12] = array( '_profotograaf_photo_id' => 'p-1' );
+		$this->screen->source_field( array(), (object) array( 'ID' => 12 ) );
+		$this->assertSame( 'profotograaf-reimport', $loaded[0][0] );
+		$this->assertSame( array( 'wp-api-fetch', 'wp-i18n' ), $loaded[0][2] );
+		$this->assertSame( array( array( 'profotograaf-reimport', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ) ), $translated );
 	}
 
 	public function test_without_a_stored_catalogue_the_field_names_the_platform_only(): void {
@@ -225,8 +304,18 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 
 		$fields = $this->screen->source_field( array( 'a' => 1 ), (object) array( 'ID' => 12 ) );
 
-		$this->assertSame( 'Profotograaf', $fields['profotograaf_source']['html'] );
+		$this->assertStringStartsWith( 'Profotograaf, <a href="https://profotograaf.nl/app/galleries/g-9"', $fields['profotograaf_source']['html'] );
+		$this->assertStringContainsString( '>Open on Profotograaf</a>', $fields['profotograaf_source']['html'] );
 		$this->assertSame( 1, $fields['a'] );
+	}
+
+	public function test_a_photo_without_a_gallery_id_has_no_gallery_link(): void {
+		$this->meta[12] = array( '_profotograaf_photo_id' => 'p-1' );
+
+		$html = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+
+		$this->assertStringStartsWith( 'Profotograaf<p', $html );
+		$this->assertStringNotContainsString( '<a ', $html );
 	}
 
 	public function test_other_attachments_get_no_source_field(): void {

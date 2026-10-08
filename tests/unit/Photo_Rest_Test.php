@@ -186,7 +186,7 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 
 		$this->rest->register_routes();
 
-		$this->assertSame( array( '/photos', '/photos/import' ), array_keys( $routes ) );
+		$this->assertSame( array( '/photos', '/photos/import', '/photos/reimport' ), array_keys( $routes ) );
 		$this->assertSame( 'POST', $routes['/photos/import']['methods'] );
 		$this->assertSame( array( $this->rest, 'can_upload' ), $routes['/photos/import']['permission_callback'] );
 		$this->assertTrue( $routes['/photos/import']['args']['ids']['required'] );
