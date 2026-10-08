@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T00:39:58+00:00\n"
+"POT-Creation-Date: 2026-10-08T01:41:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -33,6 +33,7 @@ msgstr ""
 #: includes/modules/class-site-health.php:394
 #: assets/admin/media-source.js:29
 #: build/inserter-category/index.js:1
+#: build/media-modal/index.js:3
 msgid "Profotograaf"
 msgstr ""
 
@@ -1767,6 +1768,7 @@ msgstr ""
 
 #: build/gallery/index.js:8
 #: build/import-screen/index.js:2
+#: build/media-modal/index.js:1
 msgid "Gallery"
 msgstr ""
 
@@ -1787,10 +1789,12 @@ msgid "Choose one of your galleries."
 msgstr ""
 
 #: build/import-screen/index.js:1
+#: build/media-modal/index.js:3
 msgid "Something went wrong. Try again."
 msgstr ""
 
 #: build/import-screen/index.js:1
+#: build/media-modal/index.js:3
 msgid "All galleries"
 msgstr ""
 
@@ -1801,6 +1805,7 @@ msgid "%1$s (%2$d)"
 msgstr ""
 
 #: build/import-screen/index.js:2
+#: build/media-modal/index.js:1
 msgid "Search photos"
 msgstr ""
 
@@ -1847,6 +1852,7 @@ msgid "Open in Media Library"
 msgstr ""
 
 #: build/import-screen/index.js:4
+#: build/media-modal/index.js:3
 msgid "No photos found."
 msgstr ""
 
@@ -1874,6 +1880,32 @@ msgstr[1] ""
 
 #: build/inserter-category/index.js:1
 msgid "Search Profotograaf photos"
+msgstr ""
+
+#: build/media-modal/index.js:1
+msgid "Load more photos"
+msgstr ""
+
+#. translators: 1: photos done, 2: photos in total.
+#: build/media-modal/index.js:2
+#, js-format
+msgid "Importing %1$d of %2$d photos..."
+msgstr ""
+
+#. translators: %d: number of selected photos.
+#: build/media-modal/index.js:3
+#, js-format
+msgid "%d photo selected"
+msgid_plural "%d photos selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/media-modal/index.js:3
+msgid "The platform could not be reached. Showing the last saved list."
+msgstr ""
+
+#: build/media-modal/index.js:3
+msgid "The photo was imported but could not be loaded. Try again."
 msgstr ""
 
 #: blocks/client-galleries/block.json
