@@ -7,6 +7,9 @@
  * - The inserter category is an editor script: blocks/inserter-category/index.ts
  *   builds to build/inserter-category/index.js with an index.asset.php next to
  *   it (Media_Source_Inserter loads it).
+ * - The media modal tab is a script for admin screens that load the media
+ *   views: blocks/media-modal/index.ts builds to build/media-modal/index.js
+ *   with an index.asset.php and style-index.css (Media_Modal_Tab loads them).
  */
 const fs = require( 'node:fs' );
 const path = require( 'node:path' );
@@ -16,6 +19,7 @@ const SCREENS = [ 'import-screen' ];
 
 const extraEntries = {
 	'inserter-category/index': path.resolve( __dirname, 'blocks/inserter-category/index.ts' ),
+	'media-modal/index': path.resolve( __dirname, 'blocks/media-modal/index.ts' ),
 };
 
 module.exports = {

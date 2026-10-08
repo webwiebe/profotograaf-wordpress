@@ -1,0 +1,87 @@
+.profotograaf-modal {
+	padding: 16px;
+	box-sizing: border-box;
+}
+
+.profotograaf-modal__filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 12px;
+	margin-block-end: 12px;
+}
+
+.profotograaf-modal__field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.profotograaf-modal__status,
+.profotograaf-modal__note {
+	margin-block: 8px;
+}
+
+.profotograaf-modal__problems {
+	margin-block: 8px;
+	padding-inline-start: 20px;
+	color: #b32d2e;
+}
+
+.profotograaf-modal__problems:empty {
+	display: none;
+}
+
+.profotograaf-modal__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.profotograaf-modal__card {
+	margin: 0;
+}
+
+.profotograaf-modal__pick {
+	display: block;
+	inline-size: 100%;
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	background: #f0f0f1;
+	cursor: pointer;
+	text-align: start;
+}
+
+.profotograaf-modal__pick[aria-pressed="true"] {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #fff inset;
+}
+
+.profotograaf-modal__pick:disabled {
+	cursor: progress;
+	opacity: 0.7;
+}
+
+.profotograaf-modal__pick img {
+	display: block;
+	inline-size: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
+.profotograaf-modal__title {
+	display: block;
+	padding: 4px 6px;
+	overflow: hidden;
+	font-size: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.profotograaf-modal__more {
+	margin-block-start: 12px;
+}
