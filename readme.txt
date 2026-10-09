@@ -181,6 +181,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* Fix: the "Load more photos" button in the media modal tab shows only when more photos are left.
 * Fix: the suggested privacy policy text now says that usage data and error reports are sent when the site owner opts in.
 * New: user documentation for the photo library (README, FAQ, privacy text) and an External services entry that lists the requests it makes.
 * New: choose a Profotograaf photo as the featured image from the Featured image panel. The photo is stored in the Media Library once, the post gets a normal attachment as its featured image, and choosing the same photo on another post reuses that copy.

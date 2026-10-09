@@ -14,9 +14,15 @@ const matrix = process.env.E2E_BROWSER_MATRIX
 	  ]
 	: [];
 
+// The wordpress.org screenshot capture is no test. `make wporg-screenshots` sets
+// WPORG_SCREENSHOTS and runs only that spec; a plain run skips it.
+const SCREENSHOTS = /wporg-screenshots\.spec\.js$/;
+const capture = Boolean( process.env.WPORG_SCREENSHOTS );
+
 module.exports = defineConfig( {
 	testDir: 'tests/e2e',
-	testMatch: '**/*.spec.js',
+	testMatch: capture ? SCREENSHOTS : '**/*.spec.js',
+	testIgnore: capture ? [] : [ SCREENSHOTS ],
 	fullyParallel: false,
 	workers: 1,
 	retries: process.env.CI ? 1 : 0,

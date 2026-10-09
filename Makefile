@@ -6,7 +6,7 @@ WP_CLI_IMAGE ?= wordpress:cli-php8.3
 PHP_COV_IMAGE ?= profotograaf-php-cov
 PNPM = . scripts/use-pnpm.sh &&
 
-.PHONY: install lint test build e2e e2e-up e2e-down plugin-check pot po mo json i18n i18n-check zip quality quality-js quality-php phpstan coverage-php php-cov-image composer-audit
+.PHONY: install lint test build e2e e2e-up e2e-down wporg-screenshots plugin-check pot po mo json i18n i18n-check zip quality quality-js quality-php phpstan coverage-php php-cov-image composer-audit
 
 install:
 	$(DOCKER_RUN) -e COMPOSER_CACHE_DIR=/tmp/cc composer:2 install --no-interaction --no-progress
@@ -62,6 +62,13 @@ e2e-down:
 
 e2e: e2e-up
 	$(PNPM) pnpm exec playwright test; status=$$?; $(MAKE) e2e-down; exit $$status
+
+# Retakes screenshots 5 to 7 of the wordpress.org plugin page (assets/wporg/):
+# starts the E2E stack, captures them, optimises the PNGs and stops the stack.
+wporg-screenshots: build e2e-up
+	$(PNPM) WPORG_SCREENSHOTS=1 pnpm exec playwright test; status=$$?; \
+		if [ $$status -eq 0 ]; then python3 assets/wporg/optimise.py; status=$$?; fi; \
+		$(MAKE) e2e-down; exit $$status
 
 plugin-check: e2e-up
 	tests/e2e/plugin-check.sh; status=$$?; $(MAKE) e2e-down; exit $$status
