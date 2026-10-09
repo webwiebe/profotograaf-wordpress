@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T03:50:12+00:00\n"
+"POT-Creation-Date: 2026-10-09T08:42:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -428,6 +428,7 @@ msgstr ""
 #: includes/class-photo-importer.php:93
 #: includes/class-photo-importer.php:149
 #: includes/class-photo-rest.php:319
+#: includes/class-virtual-attachments.php:158
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
@@ -453,15 +454,18 @@ msgid "This photo is no longer available from Profotograaf."
 msgstr ""
 
 #: includes/class-photo-importer.php:90
+#: includes/class-virtual-attachments.php:155
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
 #: includes/class-photo-importer.php:98
+#: includes/class-virtual-attachments.php:162
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:172
+#: includes/class-virtual-attachments.php:172
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
@@ -485,6 +489,7 @@ msgstr ""
 #: includes/class-photo-importer.php:227
 #: includes/class-photo-importer.php:235
 #: includes/class-photo-importer.php:367
+#: includes/class-virtual-attachments.php:197
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 
@@ -816,6 +821,14 @@ msgstr ""
 
 #: includes/class-settings-schema.php:315
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
+msgstr ""
+
+#: includes/class-virtual-attachments.php:152
+msgid "Virtual attachments are switched off."
+msgstr ""
+
+#: includes/class-virtual-attachments.php:231
+msgid "This file is not a virtual Profotograaf attachment."
 msgstr ""
 
 #. translators: %d: number of failed leads put back in line.

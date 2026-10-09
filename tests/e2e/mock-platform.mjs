@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [] };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -234,10 +234,16 @@ const routes = {
 		return json( res, 200, { ok: true } );
 	},
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [] } );
 		return json( res, 200, { ok: true } );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
+	// Switches the platform between 'up', 'down' (every call answers 503) and
+	// 'unpublished' (the images answer 404 and the library lists nothing).
+	'POST /__mode': ( { res, url } ) => {
+		state.mode = url.searchParams.get( 'mode' ) || 'up';
+		return json( res, 200, { mode: state.mode } );
+	},
 	'POST /api/v1/auth/devices/initiate': deviceInitiate,
 	'POST /api/v1/auth/devices/token': deviceToken,
 	'POST /api/v1/auth/devices/refresh': ( { res } ) => {
@@ -332,6 +338,9 @@ function libraryPage( { req, res, url } ) {
 	} ) );
 	const limit = Math.min( Number( url.searchParams.get( 'limit' ) ) || 50, 200 );
 	const offset = Number( url.searchParams.get( 'offset' ) ) || 0;
+	if ( state.mode === 'unpublished' ) {
+		return json( res, 200, { photos: [], total: 0, limit, offset } );
+	}
 	return json( res, 200, { photos: photos.slice( offset, offset + limit ), total: photos.length, limit, offset } );
 }
 
@@ -370,6 +379,18 @@ const server = createServer( async ( req, res ) => {
 	const handler = findRoute( req.method, url.pathname );
 	if ( ! handler ) {
 		return json( res, 404, { error: 'not found' } );
+	}
+	if ( url.pathname.startsWith( '/api/' ) ) {
+		// Recorded so a test can prove that a front end request made no call.
+		state.apiHits.push( `${ req.method } ${ url.pathname }` );
+	}
+	if ( ! url.pathname.startsWith( '/__' ) ) {
+		if ( state.mode === 'down' ) {
+			return json( res, 503, { error: 'platform down' } );
+		}
+		if ( state.mode === 'unpublished' && IMAGE.test( url.pathname ) ) {
+			return json( res, 404, { error: 'not found' }, { 'cache-control': 'no-store' } );
+		}
 	}
 	return handler( { req, res, url, body, bearer } );
 } );

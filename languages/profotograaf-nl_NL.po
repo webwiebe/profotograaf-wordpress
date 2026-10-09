@@ -1768,6 +1768,7 @@ msgid "Only when the site owner turns on the media source: editors who can uploa
 msgstr ""
 
 #: includes/class-photo-importer.php:90
+#: includes/class-virtual-attachments.php:155
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
@@ -1775,15 +1776,18 @@ msgstr ""
 #: includes/class-photo-importer.php:93
 #: includes/class-photo-importer.php:149
 #: includes/class-photo-rest.php:319
+#: includes/class-virtual-attachments.php:158
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
 #: includes/class-photo-importer.php:98
+#: includes/class-virtual-attachments.php:162
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:172
+#: includes/class-virtual-attachments.php:172
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
@@ -1795,6 +1799,7 @@ msgstr ""
 #: includes/class-photo-importer.php:227
 #: includes/class-photo-importer.php:235
 #: includes/class-photo-importer.php:367
+#: includes/class-virtual-attachments.php:197
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 
@@ -2017,4 +2022,12 @@ msgstr ""
 
 #: includes/modules/class-privacy.php:237
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
+msgstr ""
+
+#: includes/class-virtual-attachments.php:152
+msgid "Virtual attachments are switched off."
+msgstr ""
+
+#: includes/class-virtual-attachments.php:231
+msgid "This file is not a virtual Profotograaf attachment."
 msgstr ""
