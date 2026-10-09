@@ -15,13 +15,21 @@ type EditProps = {
 	setAttributes: ( next: Partial< ClientGalleriesAttributes > ) => void;
 };
 
-async function registeredEdit() {
-	await import( './index' );
-	const call = vi.mocked( registerBlockType ).mock.calls[ 0 ];
-	if ( ! call ) {
-		throw new Error( 'the block did not register' );
-	}
-	return { name: call[ 0 ], settings: call[ 1 ] as unknown as { edit: ComponentType< EditProps >; save: () => null } };
+// The module registers once, on its first import. Later imports hit the module
+// cache and register nothing, and vitest 5 resets mock call history between
+// tests, so capture the registration call the first time and reuse it.
+let registration: Promise< { name: string; settings: { edit: ComponentType< EditProps >; save: () => null } } > | undefined;
+
+function registeredEdit() {
+	registration ??= ( async () => {
+		await import( './index' );
+		const call = vi.mocked( registerBlockType ).mock.calls[ 0 ];
+		if ( ! call ) {
+			throw new Error( 'the block did not register' );
+		}
+		return { name: call[ 0 ], settings: call[ 1 ] as unknown as { edit: ComponentType< EditProps >; save: () => null } };
+	} )();
+	return registration;
 }
 
 const blank: ClientGalleriesAttributes = {
