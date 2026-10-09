@@ -450,7 +450,7 @@ final class Photo_Importer {
 	 *
 	 * @param string $url Candidate URL.
 	 */
-	private function is_platform_url( string $url ): bool {
+	public function is_platform_url( string $url ): bool {
 		$parts    = wp_parse_url( $url );
 		$platform = wp_parse_url( Config::platform_url() );
 		if ( ! is_array( $parts ) || ! is_array( $platform ) || ! isset( $parts['host'], $platform['host'] ) ) {
