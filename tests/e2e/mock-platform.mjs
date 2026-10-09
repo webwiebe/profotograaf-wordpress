@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [] };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -149,6 +149,28 @@ const IMAGE = /^\/img\/(p-\d+)\/(thumb|web)\.(?:svg|jpg)$/;
 // only accepts a sideload it can read as an image.
 const JPEG = Buffer.from( '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAgADADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwC/RRRXecQUUUUAFFFFABRRRQAUUUUAFFFFAH//2Q==', 'base64' );
 
+// Scenic mode (POST /__scenic, cleared by /__reset): the library lists nine
+// photos and the .jpg variants are real pictures from fixtures/photos, so the
+// wordpress.org screenshots (tests/e2e/wporg-screenshots.spec.js) look like a
+// photographer's library. The default stays the 48x32 JPEG above.
+const SCENIC_LIBRARY = [
+	[ 'p-1', 'Golden hour', 'g-e2e', 'Spring wedding' ],
+	[ 'p-2', 'Misty lake', 'g-e2e', 'Spring wedding' ],
+	[ 'p-3', 'Falling leaves', 'g-e2e-autumn', 'Autumn walk' ],
+	[ 'p-4', 'Blue hour', 'g-e2e', 'Spring wedding' ],
+	[ 'p-5', 'Spring meadow', 'g-e2e', 'Spring wedding' ],
+	[ 'p-6', 'Forest path', 'g-e2e-autumn', 'Autumn walk' ],
+	[ 'p-7', 'Dunes at noon', 'g-e2e', 'Spring wedding' ],
+	[ 'p-8', 'Harbour at dusk', 'g-e2e-autumn', 'Autumn walk' ],
+	[ 'p-9', 'Orchard', 'g-e2e', 'Spring wedding' ],
+];
+const SCENIC_WEB = [ 1280, 853 ];
+
+function scenicJpeg( id, variant ) {
+	const here = dirname( fileURLToPath( import.meta.url ) );
+	return readFileSync( join( here, 'fixtures', 'photos', `${ id }-${ variant }.jpg` ) );
+}
+
 function image( { res, url } ) {
 	const [ , id, variant ] = IMAGE.exec( url.pathname );
 	const photo = PUBLIC_PHOTOS.find( ( candidate ) => candidate.id === id );
@@ -159,7 +181,7 @@ function image( { res, url } ) {
 		// Recorded so a test can count the downloads.
 		state.jpegHits.push( url.pathname );
 		res.writeHead( 200, { 'content-type': 'image/jpeg', 'cache-control': 'no-store' } );
-		return res.end( JPEG );
+		return res.end( state.scenic ? scenicJpeg( id, variant ) : JPEG );
 	}
 	const [ width, height ] = variantSize( photo, variant );
 	const hue = ( Number( id.slice( 2 ) ) * 47 ) % 360;
@@ -207,8 +229,12 @@ const routes = {
 		state.approved = true;
 		return json( res, 200, { ok: true } );
 	},
+	'POST /__scenic': ( { res } ) => {
+		state.scenic = true;
+		return json( res, 200, { ok: true } );
+	},
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [] } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false } );
 		return json( res, 200, { ok: true } );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
@@ -285,7 +311,9 @@ const LIBRARY = [
 
 function libraryPage( { req, res, url } ) {
 	const origin = `http://${ req.headers.host }`;
-	const photos = LIBRARY.map( ( [ id, title, galleryId, galleryTitle ] ) => ( {
+	const entries = state.scenic ? SCENIC_LIBRARY : LIBRARY;
+	const [ webWidth, webHeight ] = state.scenic ? SCENIC_WEB : [ 1600, 1067 ];
+	const photos = entries.map( ( [ id, title, galleryId, galleryTitle ] ) => ( {
 		id,
 		width: 3000,
 		height: 2000,
@@ -299,7 +327,7 @@ function libraryPage( { req, res, url } ) {
 		full_url: `${ origin }/img/${ id }/web.jpg`,
 		images: [
 			{ variant: 'thumb', url: `${ origin }/img/${ id }/thumb.jpg`, width: 400, height: 400 },
-			{ variant: 'web', url: `${ origin }/img/${ id }/web.jpg`, width: 1600, height: 1067 },
+			{ variant: 'web', url: `${ origin }/img/${ id }/web.jpg`, width: webWidth, height: webHeight },
 		],
 	} ) );
 	const limit = Math.min( Number( url.searchParams.get( 'limit' ) ) || 50, 200 );

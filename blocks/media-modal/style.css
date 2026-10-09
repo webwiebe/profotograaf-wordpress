@@ -85,3 +85,8 @@
 .profotograaf-modal__more {
 	margin-block-start: 12px;
 }
+
+/* .button sets display, which would override the hidden attribute. */
+.profotograaf-modal__more[hidden] {
+	display: none;
+}
