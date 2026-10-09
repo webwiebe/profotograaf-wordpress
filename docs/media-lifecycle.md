@@ -6,9 +6,9 @@ It builds on `docs/media-source.md` (#44). The media source it describes is on m
 
 ## Recommendation
 
-1. Flag first, never delete. A change feed poll and a reconcile step mark imported copies with a state (`missing`, `changed`, `conflict`) and nothing else. Every write to an attachment, including removal, is a click by a person with `edit_post` on that attachment.
+1. Flag first, never delete. A change feed poll and a reconcile step mark imported copies with a state (`missing`, `changed`, `conflict`) and nothing else. Every removal, and every write to a copy's file, title, caption or alt text, is a click by a person with `edit_post` on that attachment. The plugin itself writes only its own `_profotograaf_*` bookkeeping meta, and no cron job, REST poll or hook deletes a file.
 2. The platform wins only in what the plugin shows. The plugin never writes remote state into a copy and never writes local state to a platform photo. The one exception is the opt-in upload, which only creates photos.
-3. Poll the change feed (`GET /api/v1/embed/changes`) from WP-Cron once an hour, with a manual "Check now", and show "last checked" so a host without cron is visible instead of silently stale.
+3. Poll the change feed (`GET /api/v1/embed/changes`) from WP-Cron once an hour, with a manual "Check now", and show "last checked" so a host without cron shows up as stale.
 4. Reconcile against the full lists (`GET /api/v1/embed/galleries` and `GET /api/v1/embed/photos`) as well as the feed. The feed reports deletions. It does not report that a gallery stopped serving (embedding switched off, password, expiry), so absence from the lists is the second signal.
 5. Upload from the Media Library is opt-in at three levels: a site setting, a linked gallery, and the files a person sends. It needs `galleries:write`. The plugin stores the granted scope list and asks for a reconnect only on sites that switch upload on, so no existing site sees a new prompt.
 6. Build it in the order of the child issue list at the end. The first four issues give the flagging and the poll. The upload comes after.
@@ -21,7 +21,7 @@ Read from `docs/embed-api.md` and `docs/public-image-urls.md` in `wiebe-xyz/prof
 | --- | --- | --- |
 | Change feed | `GET /api/v1/embed/changes?since=<cursor>&limit=<n>`, scope `galleries:read`, `private, no-store`. Answer `{ cursor, has_more, resync, galleries: { created, updated, deleted }, photos: { created, updated, deleted } }`. Gallery entries are id strings. Photo entries are `{ id, gallery_id }`. `limit` defaults to 500, maximum 1000. | The cursor is opaque. `has_more` means call again at once. At-least-once delivery: an idle cursor trails the present by 5 seconds, so an entry can arrive twice and applying it twice does nothing. When one id arrives as deleted and later as created or updated, the later entry wins. |
 | Resync hint | Same route, `resync: true`, empty lists and a fresh `cursor`. | Sent for a missing `since`, a cursor this feed did not issue, one in the future, or one older than 90 days (`SyncTombstoneRetention`). The client lists everything once and polls from the new cursor. The cursor is taken before the listing, so nothing falls in the gap. |
-| What `photos.deleted` means | Photos deleted from the library (`gallery_id` empty) and photos taken out of a gallery (`gallery_id` is the gallery they left). | A photo moved out of a gallery's folder shows as `updated`, not `deleted`. The store code writes these rows when a photo is detached, replaced by a publish, or deleted. |
+| What `photos.deleted` means | Photos deleted from the library (`gallery_id` empty) and photos taken out of a gallery (`gallery_id` is the gallery they left). | A photo moved out of a gallery's folder shows as `updated`. The store code writes these rows when a photo is detached, replaced by a publish, or deleted. |
 | What `galleries.deleted` means | "Removed from sharing". | In `embed_changes_store.go` the only writer I found is the one that runs when a backing folder is soft-deleted (`embedTombstoneFolderGalleries`). Whether deleting a gallery directly writes a row: not found. |
 | Created and updated | Gallery: `updated_at` moved. Photo: ready photos in a live gallery whose `updated_at` moved. A gallery is `created` when `created_at` is at or after the cursor, else `updated`. | A feed entry carries ids only. It carries no field values, so the plugin reads the new data from the photo list. |
 | Not in the feed | Switching embedding off, adding a password, expiry, proofing mode, client-only. | `docs/embed-api.md` lists these as making a gallery unavailable. The feed has no kind for them. A photo in such a gallery stops being listed by `GET /api/v1/embed/photos`. Whether the gallery's `updated_at` moves when embedding is switched off: not found. |
@@ -113,7 +113,7 @@ A copy that is in use stays in use whatever its state. The front end reads the f
 The importer records a baseline at import and at re-import:
 
 - `_profotograaf_file_hash`: `sha1_file()` of the stored original at the time the plugin wrote it.
-- `_profotograaf_text_hash`: a hash of `title`, `caption` and `alt` as the plugin wrote them.
+- `_profotograaf_text_hash`: a hash of `title`, `caption` and `alt` as the plugin wrote them. The importer stores the title in `_wp_attachment_image_alt` when the platform alt is empty (`Photo_Importer::sideload()`), so the baseline hashes the stored alt and the comparison with the platform text applies the same title fallback.
 
 An attachment is edited locally when the file hash of the current original differs (the Media Library image editor writes a new file and the `_wp_attachment_backup_sizes` meta) or when the text hash of the current title, caption and alt differs. Copies imported before this change have no baseline. For those, the first run records the current values as the baseline and treats the copy as unedited. That can miss an edit made earlier, and the note in the UI for those says "edits made before the update are not detected".
 
@@ -153,7 +153,7 @@ The upload sends a file once and creates a platform photo. After the upload noth
 - The run takes a lock (an option with a TTL, like `Photo_Importer::LOCK_PREFIX`) so two cron requests never overlap.
 - It reads at most 20 feed pages or 20 seconds per run, whichever comes first, following `has_more` with `limit=500`. The cursor option is written after each applied page. At-least-once delivery makes a repeated page harmless. A run that stops on the time budget continues on the next run.
 - Entries are filtered to imported photos before any other work. A site with 40 imported photos and a photographer with 20000 photos reads many feed pages and writes almost nothing.
-- Then the steps from "Detection". The catalogue is refreshed from the same data (`updated_since`) instead of a second full listing, when the feed reported changes for its galleries.
+- Then the steps from "Detection". When the feed reported changes for its galleries, the catalogue is refreshed from the same `updated_since` data and no second full listing runs.
 - A run records `profotograaf_changes_last_ok` (unix time) and the cursor. A failed run records the error and leaves both as they were.
 - After `resync: true`: store the new cursor first, then run `Photo_Catalogue::refresh()`, read the gallery list and reconcile every imported attachment against the complete lists in batches of 50 through single cron events.
 
