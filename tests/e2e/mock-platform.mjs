@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [] };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' } };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -253,8 +253,13 @@ const routes = {
 		return json( res, 200, { ok: true } );
 	},
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [] } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' } } );
 		return json( res, 200, { ok: true } );
+	},
+	// Makes the status call answer that the site may be asked for a review.
+	'POST /__review': ( { res, url } ) => {
+		state.reviewPrompt = { eligible: true, reason: url.searchParams.get( 'reason' ) || 'first_client_download', at: '2026-10-09T10:00:00Z' };
+		return json( res, 200, state.reviewPrompt );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
 	// Switches the platform between 'up', 'down' (every call answers 503) and
@@ -276,7 +281,7 @@ const routes = {
 			device_id: 'e2e-device',
 			client_id: 'wordpress',
 			site_url: typeof body.site_url === 'string' ? body.site_url : '',
-			review_prompt: { eligible: false, reason: '', at: '' },
+			review_prompt: state.reviewPrompt,
 			error_reporting: { endpoint: 'http://localhost:8090', project: 'wordpress-plugin', key: 'e2e-key', environment: 'e2e' },
 		} );
 	} ),

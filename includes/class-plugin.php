@@ -53,6 +53,13 @@ final class Plugin {
 	private ?Platform_Status $platform_status = null;
 
 	/**
+	 * Review request state.
+	 *
+	 * @var Review_Prompt|null
+	 */
+	private ?Review_Prompt $review_prompt = null;
+
+	/**
 	 * Clock override for tests.
 	 *
 	 * @var callable|null
@@ -155,6 +162,16 @@ final class Plugin {
 			$this->platform_status = new Platform_Status( $this->api(), $this->clock );
 		}
 		return $this->platform_status;
+	}
+
+	/**
+	 * What the owner did with the review notice, and the events still to report.
+	 */
+	public function review_prompt(): Review_Prompt {
+		if ( null === $this->review_prompt ) {
+			$this->review_prompt = new Review_Prompt( $this->clock );
+		}
+		return $this->review_prompt;
 	}
 
 	/**

@@ -48,6 +48,7 @@ class Platform_Status_Sync implements Module {
 		add_action( 'init', array( $this, 'ensure_scheduled' ) );
 		add_action( 'profotograaf_connected', array( $this, 'schedule' ) );
 		add_action( 'profotograaf_disconnected', array( $this, 'on_disconnected' ) );
+		add_action( 'profotograaf_review_event_queued', array( $this, 'queue_soon' ) );
 		add_action( 'load-settings_page_' . Settings_Page::SLUG, array( $this, 'on_settings_page' ) );
 	}
 
@@ -58,7 +59,27 @@ class Platform_Status_Sync implements Module {
 		if ( null === $this->plugin || ! $this->plugin->connection()->is_connected() ) {
 			return;
 		}
-		$this->plugin->platform_status()->refresh();
+		$review = $this->plugin->review_prompt();
+		$event  = $review->next_event();
+		if ( true !== $this->plugin->platform_status()->refresh( $event ) ) {
+			return;
+		}
+		if ( null !== $event ) {
+			$review->acknowledge( $event );
+		}
+		// One event goes out per call, in order. Send the rest soon.
+		if ( $review->pending() > 0 ) {
+			$this->queue_soon();
+		}
+	}
+
+	/**
+	 * Queues a one-off call, for a review event that waits for the platform.
+	 */
+	public function queue_soon(): void {
+		if ( ! wp_next_scheduled( self::SOON_HOOK ) ) {
+			wp_schedule_single_event( time(), self::SOON_HOOK );
+		}
 	}
 
 	/**
@@ -71,9 +92,7 @@ class Platform_Status_Sync implements Module {
 		if ( ! $this->plugin->platform_status()->claim( self::PAGE_INTERVAL ) ) {
 			return;
 		}
-		if ( ! wp_next_scheduled( self::SOON_HOOK ) ) {
-			wp_schedule_single_event( time(), self::SOON_HOOK );
-		}
+		$this->queue_soon();
 	}
 
 	/**
