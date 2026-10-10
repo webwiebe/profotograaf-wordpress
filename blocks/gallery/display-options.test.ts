@@ -4,6 +4,7 @@ import {
 	cleanNumber,
 	cssRatio,
 	displayControls,
+	effectiveColumns,
 	displaySummary,
 	previewLayout,
 	siteDefaults,
@@ -112,7 +113,7 @@ describe( 'displayControls', () => {
 } );
 
 describe( 'previewLayout', () => {
-	const site = { columns: '5', gap: '0', ratio: '1-1' };
+	const site = { ...siteDefaults(), columns: '5', gap: '0', ratio: '1-1' };
 
 	it( 'uses the Profotograaf default with no attributes and no site defaults', () => {
 		expect( previewLayout( DISPLAY_DEFAULTS ) ).toEqual( { columns: 3, gap: 8, ratio: '4 / 3' } );
@@ -141,11 +142,105 @@ describe( 'siteDefaults', () => {
 	} );
 
 	it( 'is empty when the server passed nothing', () => {
-		expect( siteDefaults() ).toEqual( { columns: '', gap: '', ratio: '' } );
+		expect( siteDefaults() ).toEqual( {
+			columns: '',
+			columnsTablet: '',
+			columnsMobile: '',
+			gap: '',
+			ratio: '',
+			layout: '',
+		} );
 	} );
 
 	it( 'reads the values the server passed', () => {
 		target.profotograafGalleryDefaults = { columns: 4, gap: '12', ratio: '16-9' };
-		expect( siteDefaults() ).toEqual( { columns: '4', gap: '12', ratio: '16-9' } );
+		expect( siteDefaults() ).toEqual( {
+			columns: '4',
+			columnsTablet: '',
+			columnsMobile: '',
+			gap: '12',
+			ratio: '16-9',
+			layout: '',
+		} );
+	} );
+} );
+
+describe( 'effectiveColumns', () => {
+	const none = { columns: '', columnsTablet: '', columnsMobile: '' };
+	const site = { columns: '', columnsTablet: '', columnsMobile: '', gap: '', ratio: '', layout: '' };
+
+	it( 'steps a grid down to 3 on tablets and 2 on phones', () => {
+		expect( effectiveColumns( { ...none, columns: '5' }, site, 'grid' ) ).toEqual( { tablet: '3', mobile: '2' } );
+	} );
+
+	it( 'steps masonry down to 1 on phones', () => {
+		expect( effectiveColumns( { ...none, columns: '5' }, site, 'masonry' ) ).toEqual( { tablet: '3', mobile: '1' } );
+	} );
+
+	it( 'does not step up', () => {
+		expect( effectiveColumns( { ...none, columns: '1' }, site, 'grid' ) ).toEqual( { tablet: '1', mobile: '1' } );
+		expect( effectiveColumns( { ...none, columns: '2' }, site, 'grid' ) ).toEqual( { tablet: '2', mobile: '2' } );
+	} );
+
+	it( 'treats an empty layout as the site layout, then as a grid', () => {
+		expect( effectiveColumns( { ...none, columns: '5' }, site, '' ).mobile ).toBe( '2' );
+		expect( effectiveColumns( { ...none, columns: '5' }, { ...site, layout: 'masonry' }, '' ).mobile ).toBe( '1' );
+	} );
+
+	it( 'lets explicit block values win and steps the phone down from the tablet', () => {
+		expect( effectiveColumns( { columns: '5', columnsTablet: '5', columnsMobile: '4' }, site, 'grid' ) ).toEqual( {
+			tablet: '5',
+			mobile: '4',
+		} );
+		expect( effectiveColumns( { columns: '5', columnsTablet: '1', columnsMobile: '' }, site, 'grid' ) ).toEqual( {
+			tablet: '1',
+			mobile: '1',
+		} );
+	} );
+
+	it( 'uses the site columns and the site tablet and phone values', () => {
+		expect( effectiveColumns( none, { ...site, columns: '6' }, 'grid' ) ).toEqual( { tablet: '3', mobile: '2' } );
+		expect( effectiveColumns( { ...none, columns: '6' }, { ...site, columnsTablet: '2', columnsMobile: '1' }, 'grid' ) ).toEqual( {
+			tablet: '2',
+			mobile: '1',
+		} );
+	} );
+
+	it( 'shows nothing when no columns are set or for a slideshow', () => {
+		expect( effectiveColumns( none, site, 'grid' ) ).toEqual( { tablet: '', mobile: '' } );
+		expect( effectiveColumns( { ...none, columns: '5' }, site, 'slideshow' ) ).toEqual( { tablet: '', mobile: '' } );
+	} );
+} );
+
+describe( 'displayControls with a block', () => {
+	const find = ( controls: ReturnType< typeof displayControls >, attribute: string ) =>
+		controls.find( ( c ) => c.attribute === attribute );
+	const site = { ...siteDefaults() };
+
+	it( 'shows the effective tablet and phone columns as placeholders', () => {
+		const controls = displayControls( { ...DISPLAY_DEFAULTS, columns: '5', layout: 'grid' }, site );
+		expect( find( controls, 'columnsTablet' )?.placeholder ).toBe( '3' );
+		expect( find( controls, 'columnsMobile' )?.placeholder ).toBe( '2' );
+	} );
+
+	it( 'offers Original except for a grid', () => {
+		const values = ( layout: string, ratio = '' ) =>
+			find( displayControls( { ...DISPLAY_DEFAULTS, ratio, layout }, site ), 'ratio' )?.options?.map( ( o ) => o.value );
+		expect( values( 'masonry' ) ).toContain( 'original' );
+		expect( values( 'slideshow' ) ).toContain( 'original' );
+		expect( values( 'grid' ) ).not.toContain( 'original' );
+		expect( values( '' ) ).not.toContain( 'original' );
+		expect( values( '' ) ).toContain( '1-1' );
+	} );
+
+	it( 'follows the site layout when the block has none', () => {
+		const controls = displayControls( DISPLAY_DEFAULTS, { ...site, layout: 'masonry' } );
+		expect( find( controls, 'ratio' )?.options?.map( ( o ) => o.value ) ).toContain( 'original' );
+	} );
+
+	it( 'keeps a stored Original on a grid, marked as not drawn yet', () => {
+		const option = find( displayControls( { ...DISPLAY_DEFAULTS, ratio: 'original', layout: 'grid' }, site ), 'ratio' )
+			?.options?.find( ( o ) => o.value === 'original' );
+		expect( option?.label ).toMatch( /not drawn in a grid/ );
 	} );
 } );

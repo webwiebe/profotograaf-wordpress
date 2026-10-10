@@ -334,7 +334,7 @@ class Gallery_Renderer {
 			? $this->notice( __( 'This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery.', 'profotograaf' ) )
 			: '';
 
-		$data = $this->data_attributes( $args, $shortcode );
+		$data = $this->data_attributes( $args, $shortcode, $layout );
 
 		if ( $this->index->is_empty( $id ) ) {
 			// The last gallery list counted no photos: no reserved space, no
@@ -361,9 +361,10 @@ class Gallery_Renderer {
 	 *
 	 * @param array<string,mixed> $block     Block layer.
 	 * @param array<string,mixed> $shortcode Shortcode layer.
+	 * @param string              $layout    Resolved layout.
 	 * @return array<string,string> Attribute name => value.
 	 */
-	private function data_attributes( array $block, array $shortcode ): array {
+	private function data_attributes( array $block, array $shortcode, string $layout ): array {
 		$attributes = array();
 		foreach ( self::OPTIONS as $key => $option ) {
 			$ids   = ! empty( $option['list'] ) ? self::clean_ids( $block[ $key ] ?? '' ) : array();
@@ -376,7 +377,7 @@ class Gallery_Renderer {
 			// Ratios are stored as 4-3 (a colon is not allowed in an option key).
 			$attributes[ $option['data'] ] = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
 		}
-		return $attributes;
+		return Reserved_Space::with_step_down( $attributes, $layout );
 	}
 
 	/**

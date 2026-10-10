@@ -151,20 +151,26 @@ class Gallery_Embed implements Module {
 	 * The site defaults the editor preview draws, resolved like the front end.
 	 * An empty string means the Profotograaf default.
 	 *
-	 * @return array{columns:string,gap:string,ratio:string}
+	 * @return array{columns:string,columnsTablet:string,columnsMobile:string,gap:string,ratio:string,layout:string}
 	 */
 	public function editor_defaults(): array {
 		if ( null === $this->settings ) {
 			return array(
-				'columns' => '',
-				'gap'     => '',
-				'ratio'   => '',
+				'columns'       => '',
+				'columnsTablet' => '',
+				'columnsMobile' => '',
+				'gap'           => '',
+				'ratio'         => '',
+				'layout'        => '',
 			);
 		}
 		return array(
-			'columns' => (string) $this->settings->resolve( 'gallery_columns' ),
-			'gap'     => (string) $this->settings->resolve( 'gallery_gap' ),
-			'ratio'   => (string) $this->settings->resolve( 'gallery_ratio' ),
+			'columns'       => (string) $this->settings->resolve( 'gallery_columns' ),
+			'columnsTablet' => (string) $this->settings->resolve( 'gallery_columns_tablet' ),
+			'columnsMobile' => (string) $this->settings->resolve( 'gallery_columns_mobile' ),
+			'gap'           => (string) $this->settings->resolve( 'gallery_gap' ),
+			'ratio'         => (string) $this->settings->resolve( 'gallery_ratio' ),
+			'layout'        => (string) $this->settings->resolve( 'default_layout' ),
 		);
 	}
 

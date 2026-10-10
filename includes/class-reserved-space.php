@@ -20,7 +20,8 @@ defined( 'ABSPATH' ) || exit;
  * The ratio of the host is columns x tile width over rows x tile height:
  *
  * - Columns: data-columns, data-columns-tablet and data-columns-mobile, which
- *   already carry the site defaults. An empty value uses a default close to
+ *   already carry the site defaults and, when only the desktop columns are
+ *   set, the step down of step_down(). An empty value uses a default close to
  *   what embed.js picks for a content column of about 650px: grid 4, 3 and 2,
  *   masonry 3, 2 and 1 (desktop, tablet at 900px and below, phone at 600px
  *   and below). An empty tablet value never exceeds the desktop value and an
@@ -92,6 +93,66 @@ final class Reserved_Space {
 	);
 
 	/**
+	 * Most columns on a tablet when only the desktop columns are set.
+	 */
+	public const TABLET_COLUMNS = 3;
+
+	/**
+	 * Most columns on a phone when only the desktop columns are set: a grid 2,
+	 * masonry 1.
+	 */
+	private const PHONE_COLUMNS = array(
+		'grid'    => 2,
+		'masonry' => 1,
+	);
+
+	/**
+	 * Columns at tablet and phone widths for a gallery that sets only its
+	 * desktop columns: tablet min( columns, 3 ), phone min( tablet, 2 ) for a
+	 * grid and 1 for masonry. A slideshow has no columns, so it gets none.
+	 * Gallery_Renderer sends these as data-columns-tablet and
+	 * data-columns-mobile, and style() estimates with the same numbers, so the
+	 * reserved box matches the drawn gallery.
+	 *
+	 * @param string $layout  Layout.
+	 * @param int    $columns Desktop columns.
+	 * @return array{0:int,1:int}|null Tablet and phone columns, null for a slideshow.
+	 */
+	public static function step_down( string $layout, int $columns ): ?array {
+		if ( 'slideshow' === $layout ) {
+			return null;
+		}
+		$tablet = min( $columns, self::TABLET_COLUMNS );
+		return array( $tablet, min( $tablet, self::PHONE_COLUMNS[ $layout ] ?? self::PHONE_COLUMNS['grid'] ) );
+	}
+
+	/**
+	 * Fills the tablet and phone columns from the desktop columns when only
+	 * those are set, so a 5 column grid does not draw 5 columns of thumbnails
+	 * on a phone. A tablet or phone value from the block, shortcode or site
+	 * settings is kept. Gallery_Renderer calls it on the data attributes.
+	 *
+	 * @param array<string,string> $data   Display option data attributes.
+	 * @param string               $layout Layout.
+	 * @return array<string,string>
+	 */
+	public static function with_step_down( array $data, string $layout ): array {
+		$columns = self::whole( $data['data-columns'] ?? '', 12 );
+		$stepped = null === $columns ? null : self::step_down( $layout, $columns );
+		if ( null === $stepped ) {
+			return $data;
+		}
+		$tablet = (int) ( $data['data-columns-tablet'] ?? $stepped[0] );
+		if ( ! isset( $data['data-columns-tablet'] ) ) {
+			$data['data-columns-tablet'] = (string) $stepped[0];
+		}
+		if ( ! isset( $data['data-columns-mobile'] ) ) {
+			$data['data-columns-mobile'] = (string) min( $tablet, $stepped[1] );
+		}
+		return $data;
+	}
+
+	/**
 	 * The inline style that holds space for the gallery until it is drawn: the
 	 * three ratios that rule() applies.
 	 *
@@ -158,9 +219,12 @@ final class Reserved_Space {
 	 */
 	private static function columns( string $layout, array $data ): array {
 		$defaults = self::COLUMNS[ $layout ] ?? self::COLUMNS['grid'];
-		$desktop  = self::whole( $data['data-columns'] ?? '', 12 ) ?? $defaults[0];
-		$tablet   = self::whole( $data['data-columns-tablet'] ?? '', 12 ) ?? min( $desktop, $defaults[1] );
-		$phone    = self::whole( $data['data-columns-mobile'] ?? '', 12 ) ?? min( $tablet, $defaults[2] );
+		// Columns set without a tablet or phone value step down like the markup.
+		$set     = self::whole( $data['data-columns'] ?? '', 12 );
+		$desktop = $set ?? $defaults[0];
+		$stepped = null === $set ? null : self::step_down( $layout, $set );
+		$tablet  = self::whole( $data['data-columns-tablet'] ?? '', 12 ) ?? $stepped[0] ?? min( $desktop, $defaults[1] );
+		$phone   = self::whole( $data['data-columns-mobile'] ?? '', 12 ) ?? ( null === $stepped ? min( $tablet, $defaults[2] ) : min( $tablet, $stepped[1] ) );
 		return array( $desktop, $tablet, $phone );
 	}
 

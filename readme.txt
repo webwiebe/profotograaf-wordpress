@@ -185,6 +185,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: the Gallery block is wide by default, so a new gallery uses more of the screen on themes that support wide blocks.
+* New: when you set only Columns, tablets show at most 3 columns, and phones at most 2 columns in a grid or 1 in masonry. A tablet or phone value you set still wins, and the editor shows the values that apply.
+* Fix: the Photo shape control no longer offers Original for the grid layout, because the grid draws square photos. A grid block that already uses Original keeps working.
 * New: a gallery without photos that can be shown has an empty state. In the editor the block shows "This gallery has no photos that can be shown on your site." with a hint (photos still processing, videos, or file types the site embed cannot show yet), based on the real photo count of the public embed payload (`GET /profotograaf/v1/galleries/{id}/showable`), and the picker reads "0 visible" for a gallery listed without photos. On the site the block holds no reserved space and shows no failed message, also when embed.js draws zero photos. People who can edit the post see a short hint there. The fallback link of a failed gallery stays visible inside the block.
 * New: the plugin tells Profotograaf its version, the WordPress version and the PHP version when you connect, and once a day while connected. Profotograaf answers with the review prompt and error reporting settings, which the plugin stores. A failed call keeps the last answer.
 * Internal: the connection keeps the list of scopes the platform granted. A site paired earlier fills it with one background token refresh, without a prompt.

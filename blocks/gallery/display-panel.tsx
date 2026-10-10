@@ -4,11 +4,12 @@ import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import {
 	cleanNumber,
 	displayControls,
+	siteDefaults,
 	type DisplayAttributes,
 } from './display-options';
 
 interface PanelProps {
-	attributes: DisplayAttributes;
+	attributes: DisplayAttributes & { layout?: string };
 	setAttributes: ( next: Partial< DisplayAttributes > ) => void;
 }
 
@@ -20,7 +21,7 @@ export function DisplayPanel( { attributes, setAttributes }: PanelProps ) {
 				title={ __( 'Display', 'profotograaf' ) }
 				initialOpen={ false }
 			>
-				{ displayControls().map( ( control ) =>
+				{ displayControls( attributes, siteDefaults() ).map( ( control ) =>
 					control.kind === 'select' ? (
 						<SelectControl
 							key={ control.attribute }
@@ -39,6 +40,7 @@ export function DisplayPanel( { attributes, setAttributes }: PanelProps ) {
 							type="number"
 							label={ control.label }
 							help={ __( 'Leave empty for the site default.', 'profotograaf' ) }
+							placeholder={ control.placeholder }
 							min={ control.min }
 							max={ control.max }
 							value={ attributes[ control.attribute ] }

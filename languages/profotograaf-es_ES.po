@@ -2049,3 +2049,7 @@ msgstr ""
 #: build/gallery/index.js:8
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
 msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Original (not drawn in a grid yet)"
+msgstr ""

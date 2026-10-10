@@ -213,15 +213,35 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( ' data-gap="12"', $html );
 	}
 
+	public function test_an_explicit_tablet_value_wins_over_the_step_down(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		$this->module->register( $this->plugin );
+
+		$html = $this->module->render_block(
+			array(
+				'galleryId'     => 'g-1',
+				'layout'        => 'grid',
+				'columns'       => '5',
+				'columnsTablet' => '4',
+			)
+		);
+
+		$this->assertStringContainsString( ' data-columns-tablet="4"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="2"', $html );
+	}
+
 	public function test_the_editor_defaults_are_empty_without_site_settings(): void {
 		Functions\when( 'add_shortcode' )->justReturn( true );
 		$this->module->register( $this->plugin );
 
 		$this->assertSame(
 			array(
-				'columns' => '',
-				'gap'     => '',
-				'ratio'   => '',
+				'columns'       => '',
+				'columnsTablet' => '',
+				'columnsMobile' => '',
+				'gap'           => '',
+				'ratio'         => '',
+				'layout'        => 'grid',
 			),
 			$this->module->editor_defaults()
 		);
@@ -230,9 +250,12 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 	public function test_the_editor_defaults_are_empty_before_the_module_is_registered(): void {
 		$this->assertSame(
 			array(
-				'columns' => '',
-				'gap'     => '',
-				'ratio'   => '',
+				'columns'       => '',
+				'columnsTablet' => '',
+				'columnsMobile' => '',
+				'gap'           => '',
+				'ratio'         => '',
+				'layout'        => '',
 			),
 			$this->module->editor_defaults()
 		);
@@ -249,9 +272,12 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 
 		$this->assertSame(
 			array(
-				'columns' => '4',
-				'gap'     => '0',
-				'ratio'   => '1-1',
+				'columns'       => '4',
+				'columnsTablet' => '',
+				'columnsMobile' => '',
+				'gap'           => '0',
+				'ratio'         => '1-1',
+				'layout'        => 'grid',
 			),
 			$this->module->editor_defaults()
 		);
@@ -269,9 +295,12 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 				'profotograaf-gallery-editor-script',
 				'profotograafGalleryDefaults',
 				array(
-					'columns' => '5',
-					'gap'     => '',
-					'ratio'   => '',
+					'columns'       => '5',
+					'columnsTablet' => '',
+					'columnsMobile' => '',
+					'gap'           => '',
+					'ratio'         => '',
+					'layout'        => 'grid',
 				)
 			);
 

@@ -482,6 +482,68 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( ' data-sort="random"', $html );
 	}
 
+	public function test_columns_alone_step_down_for_a_grid(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'columns' => '5' ) );
+
+		$this->assertStringContainsString( ' data-columns="5"', $html );
+		$this->assertStringContainsString( ' data-columns-tablet="3"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="2"', $html );
+		$this->assertStringContainsString( '--pf-ar:5/3;--pf-ar-t:3/3;--pf-ar-m:2/3', $html );
+	}
+
+	public function test_columns_alone_step_down_to_one_on_a_phone_for_masonry(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'layout' => 'masonry', 'columns' => '4' ) );
+
+		$this->assertStringContainsString( ' data-columns-tablet="3"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="1"', $html );
+	}
+
+	public function test_small_column_counts_do_not_step_up(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'columns' => '1' ) );
+
+		$this->assertStringContainsString( ' data-columns-tablet="1"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="1"', $html );
+	}
+
+	public function test_explicit_tablet_and_phone_values_win_over_the_step_down(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'columns' => '5', 'columns_tablet' => '5', 'columns_mobile' => '4' ) );
+
+		$this->assertStringContainsString( ' data-columns-tablet="5"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="4"', $html );
+	}
+
+	public function test_a_site_tablet_value_wins_and_the_phone_steps_down_from_it(): void {
+		$this->options['profotograaf_settings'] = array( 'gallery_columns_tablet' => 1 );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'columns' => '5' ) );
+
+		$this->assertStringContainsString( ' data-columns-tablet="1"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="1"', $html );
+	}
+
+	public function test_site_default_columns_step_down_too(): void {
+		$this->options['profotograaf_settings'] = array( 'gallery_columns' => 6 );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringContainsString( ' data-columns-tablet="3"', $html );
+		$this->assertStringContainsString( ' data-columns-mobile="2"', $html );
+	}
+
+	public function test_a_slideshow_gets_no_step_down(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'layout' => 'slideshow', 'columns' => '5' ) );
+
+		$this->assertStringNotContainsString( 'data-columns-tablet', $html );
+		$this->assertStringNotContainsString( 'data-columns-mobile', $html );
+	}
+
+	public function test_grid_with_original_ratio_still_renders(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'layout' => 'grid', 'ratio' => 'original' ) );
+
+		$this->assertStringContainsString( ' data-ratio="original"', $html );
+		$this->assertStringContainsString( '--pf-ar:4/3;--pf-ar-t:3/3;--pf-ar-m:2/3', $html );
+	}
+
 	public function test_a_block_can_turn_off_what_the_site_default_turns_on(): void {
 		$this->options['profotograaf_settings'] = array( 'gallery_lightbox' => 'on' );
 
