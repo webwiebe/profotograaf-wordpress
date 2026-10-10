@@ -352,15 +352,15 @@ msgstr[1] "%d Leads warten auf Zustellung."
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Diese Galerie konnte nicht geladen werden. Bitte versuche es später erneut."
 
-#: includes/class-gallery-renderer.php:323
+#: includes/class-gallery-renderer.php:319
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr "Die Profotograaf-Galerie kann nicht angezeigt werden, weil ihre Galerie-ID fehlt oder ungültig ist. Wähle die Galerie erneut aus."
 
-#: includes/class-gallery-renderer.php:334
+#: includes/class-gallery-renderer.php:330
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Diese Profotograaf-Galerie wurde in deinem Konto nicht gefunden. Sie wurde möglicherweise gelöscht. Wähle eine andere Galerie."
 
-#: includes/class-gallery-renderer.php:355
+#: includes/class-gallery-renderer.php:351
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Diese Galerie benötigt JavaScript, um hier angezeigt zu werden."
 

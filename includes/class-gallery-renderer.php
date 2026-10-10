@@ -204,9 +204,12 @@ class Gallery_Renderer {
 	/**
 	 * Render arguments for the display options of a block.
 	 *
-	 * A duotone chosen with the block's own color support is drawn by WordPress
-	 * as a filter on the photos, so it switches the site-wide duotone off for
-	 * that block (value `none`) to avoid applying two filters.
+	 * A duotone chosen with the block's own color support (a preset slug or two
+	 * colours) becomes the `duotone` argument as two hex colours, so embed.js
+	 * draws it inside the shadow root, where the filter rule WordPress writes for
+	 * the block cannot reach. A block that turns duotone off (`unset`) gets the
+	 * value `none`, which also switches the site-wide duotone off. A value that
+	 * cannot be resolved to two hex colours leaves the site-wide duotone in place.
 	 *
 	 * @param array<string,mixed> $attributes Block attributes.
 	 * @return array<string,mixed>
@@ -216,8 +219,9 @@ class Gallery_Renderer {
 		foreach ( self::OPTIONS as $key => $option ) {
 			$args[ $key ] = null === $option['attribute'] ? '' : ( $attributes[ $option['attribute'] ] ?? '' );
 		}
-		if ( ! empty( $attributes['style']['color']['duotone'] ) ) {
-			$args['duotone'] = 'none';
+		$block_duotone = Block_Duotone::resolve( $attributes['style']['color']['duotone'] ?? null );
+		if ( '' !== $block_duotone ) {
+			$args['duotone'] = $block_duotone;
 		}
 		if ( is_array( $args['image_text'] ) ) {
 			$args['image_text'] = self::clean_image_text( $args['image_text'] );
@@ -234,15 +238,7 @@ class Gallery_Renderer {
 	 *                     value, or null when the value is not two hex colours.
 	 */
 	public static function clean_duotone( $value ): ?string {
-		if ( ! is_scalar( $value ) ) {
-			return null;
-		}
-		$value = strtolower( trim( (string) $value ) );
-		if ( '' === $value ) {
-			return '';
-		}
-		$hex = '#[0-9a-f]{6}|#[0-9a-f]{3}';
-		return 1 === preg_match( '/^(?:' . $hex . '),(?:' . $hex . ')$/', $value ) ? $value : null;
+		return Block_Duotone::clean( $value );
 	}
 
 	/**

@@ -702,17 +702,6 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringNotContainsString( 'data-link-to', $html );
 	}
 
-	public function test_a_block_duotone_from_core_replaces_the_site_duotone(): void {
-		$this->options['profotograaf_settings'] = array( 'gallery_duotone' => '#111111,#eeeeee' );
-
-		$args = Gallery_Renderer::options_from_block( array( 'style' => array( 'color' => array( 'duotone' => 'var:preset|duotone|midnight' ) ) ) );
-		$html = $this->renderer->render( array( 'id' => 'g-1' ) + $args );
-
-		$this->assertSame( 'none', $args['duotone'] );
-		$this->assertStringNotContainsString( 'data-duotone', $html );
-		$this->assertSame( '', Gallery_Renderer::options_from_block( array() )['duotone'] );
-	}
-
 	public function test_per_image_text_reaches_embed_js_as_clean_json(): void {
 		$items = array(
 			array(

@@ -38,6 +38,8 @@ test.beforeAll( () => {
 	urls.fiveColumns = publishPost( 'Display five columns', block( { layout: 'grid', columns: '5', perPage: '10' } ) );
 	urls.masonryFour = publishPost( 'Display masonry four columns', block( { layout: 'masonry', columns: '4', perPage: '10' } ) );
 	urls.phoneThree = publishPost( 'Display phone three', block( { layout: 'grid', columns: '5', columnsMobile: '3', perPage: '10' } ) );
+	urls.duotone = publishPost( 'Display duotone', block( { layout: 'grid', style: { color: { duotone: [ '#1a1a2e', '#f5c542' ] } } } ) );
+	urls.duotonePreset = publishPost( 'Display duotone preset', block( { layout: 'grid', style: { color: { duotone: 'var:preset|duotone|dark-grayscale' } } } ) );
 } );
 
 test.describe( 'gallery display with the mock platform', () => {
@@ -120,4 +122,22 @@ test.describe( 'gallery display with the mock platform', () => {
 		await expectFallback( hostOf( page, 'g-e2e' ) );
 		await context.close();
 	} );
+
+	for ( const [ name, colours ] of [ [ 'duotone', '#1a1a2e,#f5c542' ], [ 'duotonePreset', '#000000,#7f7f7f' ] ] ) {
+		test( `a block duotone (${ name }) puts the pf-duo filter on every tile image`, async ( { browser } ) => {
+			const { context, host, problems } = await openEmbed( browser, urls[ name ] );
+			await expectPhotos( host, TOTAL );
+			await expect( host ).toHaveAttribute( 'data-duotone', colours );
+			await expect( host.locator( 'svg filter#pf-duo' ) ).toHaveCount( 1 );
+			const filters = await host.locator( '.photos .tile img' ).evaluateAll( ( images ) => images.map( ( img ) => getComputedStyle( img ).filter ) );
+			expect( filters ).toHaveLength( TOTAL );
+			for ( const filter of filters ) {
+				expect( filter ).toContain( '#pf-duo' );
+			}
+			expect( await host.evaluate( ( el ) => el.querySelectorAll( 'img' ).length ), 'no photo in the light DOM for the WordPress filter to hit' ).toBe( 0 );
+			expect( problems ).toEqual( [] );
+			await context.close();
+		} );
+	}
+
 } );

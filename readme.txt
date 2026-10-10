@@ -185,6 +185,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* Fix: the duotone filter of the Gallery block (Styles) now tints the photos. The plugin passes the block's duotone, a preset or two colours, to the site embed, and a block without a duotone keeps the site-wide one.
 * New: the Gallery block is wide by default, so a new gallery uses more of the screen on themes that support wide blocks.
 * New: when you set only Columns, tablets show at most 3 columns, and phones at most 2 columns in a grid or 1 in masonry. A tablet or phone value you set still wins, and the editor shows the values that apply.
 * Fix: the Photo shape control no longer offers Original for the grid layout, because the grid draws square photos. A grid block that already uses Original keeps working.
