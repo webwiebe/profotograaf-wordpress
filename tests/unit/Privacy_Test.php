@@ -167,4 +167,25 @@ class Privacy_Test extends Leads_Test_Case {
 		$this->assertStringContainsString( 'opts in to anonymous usage data', $captured[1] );
 		$this->assertStringNotContainsString( 'sends no usage statistics or error reports', $captured[1] );
 	}
+
+	public function test_policy_content_covers_sending_media_library_files(): void {
+		$captured = '';
+		Functions\when( 'wp_add_privacy_policy_content' )->alias(
+			function ( $name, $content ) use ( &$captured ) {
+				$captured = $content;
+			}
+		);
+		Functions\when( 'wp_kses_post' )->returnArg();
+		Functions\when( 'wpautop' )->returnArg();
+
+		$this->module()->add_policy_content();
+
+		$this->assertStringContainsString( 'Sending Media Library files', $captured );
+		$this->assertStringContainsString( 'GPS position', $captured );
+		$this->assertStringContainsString( 'client gallery', $captured );
+		$this->assertStringContainsString( 'personal data', $captured );
+		// Whether the platform strips other metadata is unknown, so the text must not promise it.
+		$this->assertStringNotContainsString( 'removes all metadata', $captured );
+		$this->assertStringNotContainsString( 'strips all', $captured );
+	}
 }

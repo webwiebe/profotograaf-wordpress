@@ -44,6 +44,23 @@ What to know:
 - Deleting the plugin removes the list and the setting and leaves the imported photos.
 - Browsing reads the stored list. The server calls `/api/v1/embed/photos` to build it, and downloads from `/share/img/` when a photo is imported. See the External services section of `readme.txt` for every request.
 
+## Sending Media Library files to Profotograaf
+
+Optional. Settings > Profotograaf > General > "Send Media Library files to Profotograaf" is off by default (setting `media_upload`). While it is off the plugin shows no upload controls and sends nothing. It needs a connected site with the `galleries:write` permission. A site connected before that permission existed is asked to connect again once.
+
+- Link a gallery in the settings: create one, or choose an existing one. A file can go to any of your galleries, including a client gallery.
+- Choose the gallery on a file in the attachment details, with the bulk action in the Media Library list, or switch on automatic sending for one linked gallery. A file is never sent without one of these choices.
+- Files are sent one at a time in the background (WP-Cron) with retries. A full storage on Profotograaf shows a notice. Failed files show in Site Health.
+- After a file is sent, later changes to its title, caption and alt text are sent too.
+- Only JPEG, PNG, WebP and GIF files are sent. HEIC, video and RAW files are not.
+
+Privacy:
+
+- Before upload the plugin removes the GPS position: the Exif GPS block, XMP GPS properties, and in PNG files the text chunks that hold Exif, IPTC or XMP as a raw profile. The rest of the metadata (camera, lens, date, orientation) stays in the file. Whether Profotograaf strips more after receiving the file is not documented, so do not rely on it.
+- Photos of people are personal data. You decide which files to send and need the right to send them.
+- Per file the plugin keeps hidden fields: `_profotograaf_photo_id`, `_profotograaf_gallery_id`, `_profotograaf_origin` and the `_profotograaf_upload_*` fields. Deleting the plugin removes the settings, the linked galleries and the scheduled events and leaves these fields. See [docs/media-lifecycle.md](docs/media-lifecycle.md).
+- Deleting a file in WordPress deletes nothing on Profotograaf. See the External services section of `readme.txt` for every request.
+
 ## License
 
 GPL-2.0-or-later. See [LICENSE](LICENSE).

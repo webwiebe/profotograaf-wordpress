@@ -94,6 +94,8 @@ class Uninstall_Test extends Wp_Test_Case {
 				'profotograaf_connection'       => array( 'access_token' => 'x' ),
 				'profotograaf_lead_job_abc'     => '{"status":"queued"}',
 				'profotograaf_import_lock_0123' => 1000000,
+				'profotograaf_upload_links'     => array( array( 'gallery_id' => 'g1' ) ),
+				'profotograaf_upload_lock'      => 1000000,
 				'blogname'                      => 'Site ' . $id,
 			);
 		}
@@ -121,7 +123,7 @@ class Uninstall_Test extends Wp_Test_Case {
 			}
 		);
 		Functions\when( 'delete_transient' )->justReturn( true );
-		Functions\when( '_get_cron_array' )->justReturn( array( 1 => array( 'profotograaf_refresh_tokens' => array() ) ) );
+		Functions\when( '_get_cron_array' )->justReturn( array( 1 => array( 'profotograaf_refresh_tokens' => array(), 'profotograaf_upload_queue' => array() ) ) );
 		Functions\when( 'wp_clear_scheduled_hook' )->alias(
 			function ( $hook ) {
 				$this->cleared[] = $this->current . ':' . $hook;
@@ -136,5 +138,6 @@ class Uninstall_Test extends Wp_Test_Case {
 			$this->assertSame( array( 'blogname' ), array_keys( $options ), "site $id keeps only WordPress options" );
 		}
 		$this->assertContains( '150:profotograaf_refresh_tokens', $this->cleared );
+		$this->assertContains( '150:profotograaf_upload_queue', $this->cleared );
 	}
 }
