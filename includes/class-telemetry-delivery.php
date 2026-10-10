@@ -98,8 +98,10 @@ final class Telemetry_Delivery {
 
 		$event = $is_error ? Telemetry_Payload::bugbarn_event( $item ) : Telemetry_Payload::funnelbarn_event( $item, self::environment() );
 		if ( null !== $destination && '' !== $destination['environment'] ) {
-			// The BugBarn SDKs send the environment as an event attribute.
-			$event['attributes']['environment'] = $destination['environment'];
+			// BugBarn groups issues by `environment` and fills its environment
+			// facet from `deployment.environment`, so the event carries both.
+			$event['attributes']['environment']            = $destination['environment'];
+			$event['attributes']['deployment.environment'] = $destination['environment'];
 		}
 		$response = wp_remote_post(
 			$base . self::EVENTS_PATH,

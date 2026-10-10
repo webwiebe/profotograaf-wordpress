@@ -365,7 +365,9 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( 'https://errors.example.org/api/v1/events', $errors[0]['url'] );
 		$this->assertSame( 'ingest-key', $errors[0]['args']['headers']['X-BugBarn-Api-Key'] );
 		$this->assertSame( 'wordpress-plugin', $errors[0]['args']['headers']['X-BugBarn-Project'] );
-		$this->assertSame( 'production', json_decode( (string) $errors[0]['args']['body'], true )['attributes']['environment'] );
+		$attributes = json_decode( (string) $errors[0]['args']['body'], true )['attributes'];
+		$this->assertSame( 'production', $attributes['environment'] );
+		$this->assertSame( 'production', $attributes['deployment.environment'] );
 	}
 
 	public function test_opt_in_off_sends_no_error_even_with_a_block(): void {
