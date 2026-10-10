@@ -185,13 +185,10 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
-<<<<<<< HEAD
 * Fix: a fixed photo shape no longer turns masonry into a square grid. Masonry keeps each photo's own shape and ignores the Photo shape of the block, the shortcode and the site-wide setting; the plugin sends no ratio for it. In the block editor the Photo shape control gives way to the hint "Masonry keeps each photo's own shape." when the layout is masonry, also when the site default layout is masonry. The Photo shape setting on the Galleries tab says it applies to grid and slideshow.
-=======
 * Fix: a gallery whose layout on Profotograaf is not grid, masonry or slideshow (parallax, filmstrip, justified and others) was drawn as a square grid. A block left on the site default now shows it in the closest layout the site can draw: masonry for justified, mosaic and light table, slideshow for parallax, direct, cinema, filmstrip and slideout, grid for the rest. The plugin reads the layout from its stored gallery list, so a page view makes no extra request.
-* New: under the Layout control the editor says what the site default means for the gallery, for example "Parallax on Profotograaf, shown as Slideshow on your site". A layout the plugin does not know is shown as a grid, and the hint says so.
+* New: under the Layout control the editor says what the site default means for the gallery, for example "Parallax on Profotograaf, shown as Slideshow on your site". A layout the plugin does not know is shown as a grid, and the hint says so. A gallery drawn as masonry also hides the Photo shape control.
 * New: the Default gallery layout setting has a Profotograaf default choice, which is now the default.
->>>>>>> 95a5d02 (Gallery: draw platform layouts as the nearest layout the embed knows (#180))
 * Fix: the duotone filter of the Gallery block (Styles) now tints the photos. The plugin passes the block's duotone, a preset or two colours, to the site embed, and a block without a duotone keeps the site-wide one.
 * Fix: a gallery that draws nothing no longer leaves a blank box for 8 seconds before the page jumps. When embed.js reports that the gallery is empty or failed (`data-pf-state` and the `profotograaf:state` event), the reserved space is released at once and a failed gallery shows its fallback link right away. An older embed.js keeps the 8 second release.
 * New: the Gallery block is wide by default, so a new gallery uses more of the screen on themes that support wide blocks.

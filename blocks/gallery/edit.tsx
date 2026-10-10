@@ -26,7 +26,7 @@ import { ImageTextPanel } from './image-text-panel';
 import { PreviewGrid } from './preview-grid';
 import { usePhotos, type PhotosState } from './use-photos';
 import { useShowable } from './use-showable';
-import { layoutHint } from './layout-map';
+import { layoutHint, platformDefaults } from './layout-map';
 import { siteDefaults } from './display-options';
 import type { GalleryAttributes, GalleryRow } from './types';
 
@@ -172,7 +172,7 @@ function InspectorPanels( {
 	return (
 		<>
 			<InspectorPanel attributes={ attributes } setAttributes={ setAttributes } listed={ listed } />
-			<DisplayPanel attributes={ attributes } setAttributes={ setAttributes } />
+			<DisplayPanel attributes={ attributes } setAttributes={ setAttributes } row={ listed } />
 			<ImageTextPanel
 				items={ attributes.imageText }
 				setItems={ ( imageText ) => setAttributes( { imageText } ) }
@@ -195,11 +195,13 @@ function BelowPreview( {
 	attributes,
 	empty,
 	cover,
+	row,
 	photos,
 }: {
 	attributes: GalleryAttributes;
 	empty: EmptyNotice;
 	cover: string | undefined;
+	row: GalleryRow | null;
 	photos: PhotosState[ 'photos' ];
 } ) {
 	if ( empty ) {
@@ -217,6 +219,7 @@ function BelowPreview( {
 		<PreviewGrid
 			attributes={ attributes }
 			cover={ cover }
+			defaults={ platformDefaults( siteDefaults(), row ) }
 			photos={ photos }
 			excluded={ attributes.excludedPhotoIds }
 			imageText={ attributes.imageText }
@@ -274,7 +277,7 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 					<BelowPreview
 						attributes={ attributes }
 						empty={ empty }
-						cover={ shown?.cover_url }
+						cover={ shown?.cover_url } row={ shown ?? listed }
 						photos={ photos.photos }
 					/>
 				) }

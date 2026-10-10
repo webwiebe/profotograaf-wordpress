@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import layoutMap from '../../includes/layout-map.json';
-import { drawnLayout, layoutHint, layoutName } from './layout-map';
+import { displayControls, DISPLAY_DEFAULTS, previewLayout } from './display-options';
+import { drawnLayout, layoutHint, layoutName, platformDefaults } from './layout-map';
 
 const PLATFORM_LAYOUTS = [
 	'grid',
@@ -101,5 +102,30 @@ describe( 'layoutHint', () => {
 		expect( layoutHint( undefined ) ).toBe( '' );
 		expect( layoutHint( {} ) ).toBe( '' );
 		expect( layoutHint( { layout: '' } ) ).toBe( '' );
+	} );
+} );
+
+describe( 'platformDefaults', () => {
+	const site = { columns: '', columnsTablet: '', columnsMobile: '', gap: '', ratio: '1-1', layout: '' };
+	const shape = ( layout: string ) =>
+		displayControls( DISPLAY_DEFAULTS, platformDefaults( site, { layout } ) ).find( ( c ) => c.attribute === 'ratio' );
+
+	it.each( [ 'masonry', 'justified', 'mosaic', 'lighttable' ] )( 'hides the shape control for %s', ( layout ) => {
+		expect( shape( layout )?.kind ).toBe( 'note' );
+		expect( previewLayout( DISPLAY_DEFAULTS, platformDefaults( site, { layout } ) ).ratio ).toBe( '4 / 3' );
+	} );
+
+	it.each( [ 'parallax', 'instagram', 'carousel' ] )( 'keeps the shape control for %s', ( layout ) => {
+		expect( shape( layout )?.kind ).toBe( 'select' );
+	} );
+
+	it( 'leaves the defaults alone when the site or the gallery has no layout to give', () => {
+		expect( platformDefaults( { ...site, layout: 'grid' }, { layout: 'justified' } ).layout ).toBe( 'grid' );
+		expect( platformDefaults( site, null ) ).toBe( site );
+		expect( platformDefaults( site, { layout: '' } ) ).toBe( site );
+	} );
+
+	it( 'uses the layout the platform reports as drawn', () => {
+		expect( platformDefaults( site, { layout: 'parallax', embed_layout: 'masonry' } ).layout ).toBe( 'masonry' );
 	} );
 } );

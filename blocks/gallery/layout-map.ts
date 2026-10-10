@@ -1,5 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 import layoutMap from '../../includes/layout-map.json';
+import type { SiteDefaults } from './display-options';
 import type { GalleryRow } from './types';
 
 /**
@@ -101,4 +102,23 @@ export function layoutHint(
 		layoutName( platform ),
 		shown
 	);
+}
+
+/**
+ * The site defaults with the layout filled in for a gallery on the platform
+ * default: the layout the site draws for it. Controls and the preview use it
+ * so a parallax gallery (drawn as a slideshow) or a justified one (masonry)
+ * behaves like the layout it is drawn as. Nothing changes when the site picks a
+ * layout or the gallery's layout is not known.
+ */
+export function platformDefaults(
+	defaults: SiteDefaults,
+	row: Pick< GalleryRow, 'layout' | 'embed_layout' > | null | undefined
+): SiteDefaults {
+	const platform = row?.layout ?? '';
+	const reported = row?.embed_layout ?? '';
+	if ( defaults.layout !== '' || ( ! platform && ! DRAWN.includes( reported.trim().toLowerCase() ) ) ) {
+		return defaults;
+	}
+	return { ...defaults, layout: drawnLayout( platform, reported ).layout };
 }

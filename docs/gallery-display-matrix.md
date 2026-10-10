@@ -52,6 +52,8 @@ call. A gallery that is not in the index yet, or was stored before layouts were
 kept, renders as a grid and schedules one lookup. A layout set in the block or
 in the Galleries settings tab always wins.
 
+A gallery that maps to masonry (masonry, justified, mosaic, lighttable) behaves as masonry everywhere else too: the render sends no `data-ratio` and the editor hides the Photo shape control and draws the default shape in its sketch (`platformDefaults()` fills the resolved layout for the controls and the preview).
+
 The Layout control shows the same mapping as a hint while it is on the site
 default: "Parallax on Profotograaf, shown as Slideshow on your site". An
 unknown layout says the plugin does not know it and that it is shown as a grid.

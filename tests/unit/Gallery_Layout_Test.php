@@ -121,6 +121,25 @@ class Gallery_Layout_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( 'data-layout="grid"', $this->renderer->render( array( 'id' => 'g-1' ) ) );
 	}
 
+	public function test_a_gallery_drawn_as_masonry_sends_no_ratio(): void {
+		$this->remember( 'g-1', 'justified' );
+		$this->options['profotograaf_settings'] = array( 'gallery_ratio' => '1-1' );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => '3-2' ) );
+
+		$this->assertStringContainsString( 'data-layout="masonry"', $html );
+		$this->assertStringNotContainsString( 'data-ratio', $html );
+	}
+
+	public function test_a_gallery_drawn_as_a_slideshow_still_sends_the_ratio(): void {
+		$this->remember( 'g-1', 'parallax' );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => '3-2' ) );
+
+		$this->assertStringContainsString( 'data-layout="slideshow"', $html );
+		$this->assertStringContainsString( 'data-ratio="3:2"', $html );
+	}
+
 	public function test_a_gallery_missing_from_the_index_is_a_grid_and_asks_for_a_lookup(): void {
 		$scheduled = $this->scheduled();
 

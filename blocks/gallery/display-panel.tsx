@@ -7,21 +7,25 @@ import {
 	siteDefaults,
 	type DisplayAttributes,
 } from './display-options';
+import { platformDefaults } from './layout-map';
+import type { GalleryRow } from './types';
 
 interface PanelProps {
 	attributes: DisplayAttributes & { layout?: string };
 	setAttributes: ( next: Partial< DisplayAttributes > ) => void;
+	/** The chosen gallery's list row, for the layout the platform default draws. */
+	row?: GalleryRow | null;
 }
 
 /** Inspector panel with one control per display option. */
-export function DisplayPanel( { attributes, setAttributes }: PanelProps ) {
+export function DisplayPanel( { attributes, setAttributes, row = null }: PanelProps ) {
 	return (
 		<InspectorControls>
 			<PanelBody
 				title={ __( 'Display', 'profotograaf' ) }
 				initialOpen={ false }
 			>
-				{ displayControls( attributes, siteDefaults() ).map( ( control ) =>
+				{ displayControls( attributes, platformDefaults( siteDefaults(), row ) ).map( ( control ) =>
 					control.kind === 'note' ? (
 						<p key={ control.attribute } className="profotograaf-photo-grid__help">
 							{ control.help }
