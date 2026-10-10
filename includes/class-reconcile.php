@@ -189,8 +189,14 @@ final class Reconcile {
 		$counts = self::counts();
 		foreach ( $changes as $attachment_id => $change ) {
 			$attachment_id = (int) $attachment_id;
-			$from          = (string) $change['from'];
-			$to            = (string) $change['state'];
+			// The stored state is the truth, not the state the plan saw. Applying a plan twice then leaves the counts as they are,
+			// and a "Keep" click made while the run was busy is not overwritten.
+			$from = self::stored_state( $attachment_id );
+			$to   = (string) $change['state'];
+			if ( self::STATE_KEPT === $from || ( $from === $to && self::same_stored( $attachment_id, $change ) ) ) {
+				continue;
+			}
+			$from = '' === $from ? self::STATE_SYNCED : $from;
 			if ( isset( $counts[ $from ] ) ) {
 				$counts[ $from ] = max( 0, $counts[ $from ] - 1 );
 			}
@@ -216,6 +222,17 @@ final class Reconcile {
 			update_option( self::COUNTS_OPTION, $counts, false );
 		}
 		return $counts;
+	}
+
+	/**
+	 * Whether the attachment already holds the reason and remote version of a change.
+	 *
+	 * @param int                 $attachment_id Attachment id.
+	 * @param array<string,mixed> $change        Change from plan().
+	 */
+	private static function same_stored( int $attachment_id, array $change ): bool {
+		return (string) get_post_meta( $attachment_id, self::META_REASON, true ) === (string) $change['reason']
+			&& (string) get_post_meta( $attachment_id, self::META_REMOTE_VERSION, true ) === (string) $change['remote_version'];
 	}
 
 	/**

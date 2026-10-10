@@ -607,6 +607,44 @@ class Reconcile_Test extends Wp_Test_Case {
 		$this->assertSame( 'g2', $this->meta[12]['_profotograaf_gallery_id'] );
 	}
 
+	public function test_applying_the_same_plan_twice_counts_once(): void {
+		$changes = array(
+			11 => array(
+				'from'           => 'synced',
+				'state'          => 'missing',
+				'reason'         => 'deleted',
+				'since'          => 5000,
+				'remote_version' => '',
+				'gallery_id'     => '',
+			),
+		);
+
+		Reconcile::apply( $changes );
+		$counts = Reconcile::apply( $changes );
+
+		$this->assertSame( 1, $counts['missing'] );
+	}
+
+	public function test_apply_does_not_overwrite_a_copy_the_author_kept_meanwhile(): void {
+		$this->meta[11] = array( '_profotograaf_sync_state' => 'kept' );
+
+		Reconcile::apply(
+			array(
+				11 => array(
+					'from'           => 'synced',
+					'state'          => 'missing',
+					'reason'         => 'deleted',
+					'since'          => 5000,
+					'remote_version' => '',
+					'gallery_id'     => '',
+				),
+			)
+		);
+
+		$this->assertSame( 'kept', $this->meta[11]['_profotograaf_sync_state'] );
+		$this->assertSame( 0, Reconcile::counts()['missing'] );
+	}
+
 	public function test_apply_without_changes_leaves_the_counts_alone(): void {
 		Reconcile::apply( array() );
 
