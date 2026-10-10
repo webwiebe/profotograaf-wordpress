@@ -62,6 +62,8 @@ abstract class Gallery_Test_Case extends Wp_Test_Case {
 			}
 		);
 
+		Functions\when( 'get_the_ID' )->justReturn( 0 );
+
 		$this->http     = new Fake_Transport();
 		$connection     = new Connection();
 		$this->api      = new Api_Client( $connection, $this->http, $this->clock() );

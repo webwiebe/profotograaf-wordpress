@@ -2,6 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 import {
 	clearedAttributes,
 	countLabel,
+	emptyGalleryNotice,
+	showablePath,
+	visibleCountLabel,
 	eligibility,
 	embeddablePath,
 	canRetry,
@@ -181,5 +184,39 @@ describe( 'errorKind and canRetry', () => {
 		expect( canRetry( { data: { status: 429 } } ) ).toBe( true );
 		expect( canRetry( { code: 'fetch_error' } ) ).toBe( true );
 		expect( canRetry( { data: { status: 502 } } ) ).toBe( true );
+	} );
+} );
+
+describe( 'showablePath', () => {
+	it( 'points at the showable route of the gallery', () => {
+		expect( showablePath( 'g-1' ) ).toBe( '/profotograaf/v1/galleries/g-1/showable' );
+	} );
+} );
+
+describe( 'visibleCountLabel', () => {
+	it( 'counts the listed photos', () => {
+		expect( visibleCountLabel( 12 ) ).toBe( '12 photos' );
+		expect( visibleCountLabel( 12, 9 ) ).toBe( '12 photos' );
+	} );
+
+	it( 'says 0 visible for a listed count of zero', () => {
+		expect( visibleCountLabel( 0 ) ).toBe( '0 visible' );
+	} );
+
+	it( 'says 0 visible when the embed shows none of the listed photos', () => {
+		expect( visibleCountLabel( 1, 0 ) ).toBe( '0 visible' );
+	} );
+} );
+
+describe( 'emptyGalleryNotice', () => {
+	it( 'names the problem and the likely causes when nothing can be shown', () => {
+		const notice = emptyGalleryNotice( 0 );
+		expect( notice?.message ).toBe( 'This gallery has no photos that can be shown on your site.' );
+		expect( notice?.hint ).toMatch( /still be processing.*videos or file types/ );
+	} );
+
+	it( 'stays quiet while the count is unknown or above zero', () => {
+		expect( emptyGalleryNotice( null ) ).toBeNull();
+		expect( emptyGalleryNotice( 3 ) ).toBeNull();
 	} );
 } );

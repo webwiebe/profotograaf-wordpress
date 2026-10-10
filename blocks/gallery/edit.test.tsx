@@ -201,7 +201,7 @@ describe( 'Edit with a gallery', () => {
 		expect( screen.getByText( 'Spring wedding' ) ).toBeTruthy();
 		expect( screen.getByText( 'layout: Slideshow' ) ).toBeTruthy();
 		// The gallery list and the photo list.
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 2 ) );
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 3 ) );
 		expect( screen.queryByText( /may have been deleted/ ) ).toBeNull();
 	} );
 
@@ -214,7 +214,7 @@ describe( 'Edit with a gallery', () => {
 	it( 'shows no warning when the list cannot be loaded', async () => {
 		fetchMock.mockRejectedValue( { code: 'profotograaf_not_connected' } );
 		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
-		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 2 ) );
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledTimes( 3 ) );
 		expect( screen.queryByText( /may have been deleted/ ) ).toBeNull();
 	} );
 
@@ -373,5 +373,43 @@ describe( 'Edit leaving photos out', () => {
 		fetchMock.mockReturnValue( new Promise( () => undefined ) );
 		render( <Edit attributes={ empty } setAttributes={ vi.fn() } /> );
 		expect( screen.queryByLabelText( 'Photos' ) ).toBeNull();
+	} );
+} );
+
+describe( 'Edit with a gallery the embed cannot show', () => {
+	const chosen: GalleryAttributes = { ...empty, galleryId: 'g-1', galleryTitle: 'Spring wedding' };
+
+	function serve( showable: number | undefined ) {
+		fetchMock.mockImplementation( ( options ) => {
+			const path = ( options as { path: string } ).path;
+			if ( path.endsWith( '/showable' ) ) {
+				return showable === undefined ? Promise.reject( { code: 'profotograaf_http' } ) : Promise.resolve( { showable } );
+			}
+			return Promise.resolve( path.endsWith( '/photos' ) ? [ photoRow() ] : [ galleryRow() ] );
+		} );
+	}
+
+	it( 'shows the notice with the hint when the embed shows no photos', async () => {
+		serve( 0 );
+		const { container } = render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await screen.findByText( 'This gallery has no photos that can be shown on your site.' );
+		expect( container.textContent ).toContain( 'videos or file types the site embed cannot show yet' );
+		expect( fetchMock ).toHaveBeenCalledWith( { path: '/profotograaf/v1/galleries/g-1/showable' } );
+		expect( container.querySelector( '.profotograaf-gallery-grid' ) ).toBeNull();
+	} );
+
+	it( 'shows no notice when the embed shows photos', async () => {
+		serve( 4 );
+		const { container } = render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalledWith( { path: '/profotograaf/v1/galleries/g-1/showable' } ) );
+		await screen.findByLabelText( photoRow().title );
+		expect( container.querySelector( '.profotograaf-gallery-empty-notice' ) ).toBeNull();
+	} );
+
+	it( 'shows no notice when the count cannot be read', async () => {
+		serve( undefined );
+		const { container } = render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		await screen.findByLabelText( photoRow().title );
+		expect( container.querySelector( '.profotograaf-gallery-empty-notice' ) ).toBeNull();
 	} );
 } );

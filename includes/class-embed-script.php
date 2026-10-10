@@ -58,6 +58,13 @@ class Embed_Script {
 	private bool $hinted = false;
 
 	/**
+	 * Whether the watcher script is queued for the footer.
+	 *
+	 * @var bool
+	 */
+	private bool $watching = false;
+
+	/**
 	 * Sets up the script helper.
 	 *
 	 * @param Transport|null $transport HTTP layer for the version lookup; the WordPress HTTP API when null.
@@ -141,6 +148,7 @@ class Embed_Script {
 			if ( ! $this->printed ) {
 				$this->printed = true;
 				printf( '<script async src="%1$s" onerror="%2$s"></script>', esc_url( $this->url() ), esc_attr( $this->error_handler() ) ); // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- the footer already ran, so the queue can no longer print it.
+				$this->print_watcher();
 			}
 			return;
 		}
@@ -156,6 +164,20 @@ class Embed_Script {
 				'strategy'  => 'async',
 			)
 		);
+		// Not wp_add_inline_script(): an inline script attached to the handle makes
+		// WordPress drop the async strategy.
+		if ( ! $this->watching ) {
+			$this->watching = true;
+			add_action( 'wp_footer', array( $this, 'print_watcher' ), 100 );
+		}
+	}
+
+	/**
+	 * Prints the script that marks galleries embed.js left empty (see
+	 * Empty_Gallery). Hooked to wp_footer after the queued scripts.
+	 */
+	public function print_watcher(): void {
+		echo '<script>' . Empty_Gallery::script() . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.EnqueuedResources.NonEnqueuedScript -- fixed script, no user input.
 	}
 
 	/**

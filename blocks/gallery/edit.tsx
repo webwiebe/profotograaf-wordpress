@@ -13,7 +13,8 @@ import { Picker } from './picker';
 import {
 	LIST_PATH,
 	clearedAttributes,
-	countLabel,
+	emptyGalleryNotice,
+	visibleCountLabel,
 	layoutLabel,
 	layoutOptions,
 	pickedAttributes,
@@ -24,6 +25,7 @@ import { ExcludePanel } from './exclude-panel';
 import { ImageTextPanel } from './image-text-panel';
 import { PreviewGrid } from './preview-grid';
 import { usePhotos, type PhotosState } from './use-photos';
+import { useShowable } from './use-showable';
 import type { GalleryAttributes, GalleryRow } from './types';
 
 interface EditProps {
@@ -35,10 +37,12 @@ function Preview( {
 	attributes,
 	shown,
 	notice,
+	showable,
 }: {
 	attributes: GalleryAttributes;
 	shown: GalleryRow | null;
 	notice: string;
+	showable: number | null;
 } ) {
 	const { galleryTitle, layout } = attributes;
 	return (
@@ -56,7 +60,9 @@ function Preview( {
 						__( 'Profotograaf gallery', 'profotograaf' ) }
 				</p>
 				<p className="profotograaf-gallery-preview__line">
-					{ shown ? countLabel( shown.photo_count ) + ', ' : '' }
+					{ shown
+						? visibleCountLabel( shown.photo_count, showable ) + ', '
+						: '' }
 					{ sprintf(
 						/* translators: %s: layout name such as grid. */
 						__( 'layout: %s', 'profotograaf' ),
@@ -158,12 +164,49 @@ function InspectorPanels( {
 	);
 }
 
+type EmptyNotice = ReturnType< typeof emptyGalleryNotice >;
+
+/** Under the preview card: the empty notice, or a sketch of the gallery. */
+function BelowPreview( {
+	attributes,
+	empty,
+	cover,
+	photos,
+}: {
+	attributes: GalleryAttributes;
+	empty: EmptyNotice;
+	cover: string | undefined;
+	photos: PhotosState[ 'photos' ];
+} ) {
+	if ( empty ) {
+		return (
+			<Notice
+				status="warning"
+				isDismissible={ false }
+				className="profotograaf-gallery-empty-notice"
+			>
+				<strong>{ empty.message }</strong> { empty.hint }
+			</Notice>
+		);
+	}
+	return (
+		<PreviewGrid
+			attributes={ attributes }
+			cover={ cover }
+			photos={ photos }
+			excluded={ attributes.excludedPhotoIds }
+			imageText={ attributes.imageText }
+		/>
+	);
+}
+
 export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const { galleryId } = attributes;
 	const [ notice, setNotice ] = useState( '' );
 	const [ preview, setPreview ] = useState< GalleryRow | null >( null );
 	const missing = useMissingGallery( galleryId );
 	const photos = usePhotos( galleryId );
+	const empty = emptyGalleryNotice( useShowable( galleryId ) );
 	const blockProps = useBlockProps();
 
 	const pick = ( gallery: GalleryRow ) => {
@@ -208,15 +251,15 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 						attributes={ attributes }
 						shown={ shown }
 						notice={ notice || missingNotice( missing ) }
+						showable={ empty ? 0 : null }
 					/>
 				) }
 				{ galleryId && (
-					<PreviewGrid
+					<BelowPreview
 						attributes={ attributes }
+						empty={ empty }
 						cover={ shown?.cover_url }
 						photos={ photos.photos }
-						excluded={ attributes.excludedPhotoIds }
-						imageText={ attributes.imageText }
 					/>
 				) }
 			</div>

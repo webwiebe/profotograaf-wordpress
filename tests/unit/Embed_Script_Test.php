@@ -9,8 +9,10 @@ namespace Profotograaf\Tests;
 
 // phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript -- the tests assert on script markup.
 
+use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use Profotograaf\Embed_Script;
+use Profotograaf\Empty_Gallery;
 
 class Embed_Script_Test extends Gallery_Test_Case {
 
@@ -160,5 +162,36 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		$html = (string) ob_get_clean();
 
 		$this->assertStringContainsString( '<script async src="https://profotograaf.nl/share/embed/embed.js" onerror="console.error(', $html );
+	}
+
+	public function test_the_queued_script_keeps_async_and_the_watcher_goes_to_the_footer_once(): void {
+		Actions\expectAdded( 'wp_footer' )->once()->with( array( $this->script, 'print_watcher' ), 100 );
+
+		$this->script->enqueue();
+		$this->script->enqueue();
+
+		ob_start();
+		$this->script->print_watcher();
+		$this->assertSame( '<script>' . Empty_Gallery::script() . '</script>', ob_get_clean() );
+	}
+
+	public function test_a_hand_printed_tag_is_followed_by_the_empty_gallery_watcher(): void {
+		Functions\when( 'did_action' )->justReturn( 1 );
+
+		ob_start();
+		$this->script->enqueue();
+		$output = (string) ob_get_clean();
+
+		$this->assertStringContainsString( '</script><script>(function(){var S="[data-profotograaf-gallery]"', $output );
+	}
+
+	public function test_the_watcher_marks_a_host_that_embed_js_left_without_photos(): void {
+		$js = Empty_Gallery::script();
+
+		$this->assertStringContainsString( 'data-pf-ready', $js );
+		$this->assertStringContainsString( 'shadowRoot', $js );
+		$this->assertStringContainsString( '/api/v1/embed/galleries/', $js );
+		$this->assertStringContainsString( 'setAttribute("data-pf-empty","")', $js );
+		$this->assertStringContainsString( 'removeAttribute("data-profotograaf-failed")', $js );
 	}
 }
