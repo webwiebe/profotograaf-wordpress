@@ -27,6 +27,10 @@ export interface GalleryRow {
 	cover_url?: string;
 	/** Alt text of the cover photo, when the platform sends one. */
 	cover_alt?: string;
+	/** Layout of the gallery on Profotograaf, such as parallax. Empty when the platform sends none. */
+	layout?: string;
+	/** The layout the platform says the embed draws, once it reports one. */
+	embed_layout?: string;
 	photo_count: number;
 	embeddable: boolean;
 	available: boolean;

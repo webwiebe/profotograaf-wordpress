@@ -83,23 +83,28 @@ export const SelectControl = ( {
 	value,
 	options,
 	onChange,
+	help,
 }: {
 	label: string;
 	value: string;
 	options: { label: string; value: string }[];
 	onChange: ( value: string ) => void;
+	help?: string;
 } ) => (
-	<select
-		aria-label={ label }
-		value={ value }
-		onChange={ ( e: ChangeEvent< HTMLSelectElement > ) => onChange( e.target.value ) }
-	>
-		{ options.map( ( option ) => (
-			<option key={ option.value } value={ option.value }>
-				{ option.label }
-			</option>
-		) ) }
-	</select>
+	<>
+		<select
+			aria-label={ label }
+			value={ value }
+			onChange={ ( e: ChangeEvent< HTMLSelectElement > ) => onChange( e.target.value ) }
+		>
+			{ options.map( ( option ) => (
+				<option key={ option.value } value={ option.value }>
+					{ option.label }
+				</option>
+			) ) }
+		</select>
+		{ help ? <p data-testid={ `help-${ label }` }>{ help }</p> : null }
+	</>
 );
 
 export const InspectorControls = ( { children }: WithChildren ) => (

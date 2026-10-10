@@ -110,16 +110,18 @@ class Api_Client {
 				continue;
 			}
 			$rows[] = array(
-				'id'          => (string) $row['id'],
-				'slug'        => (string) ( $row['slug'] ?? '' ),
-				'title'       => (string) ( $row['title'] ?? '' ),
-				'url'         => (string) ( $row['url'] ?? '' ),
-				'embeddable'  => ! empty( $row['embeddable'] ),
-				'available'   => ! empty( $row['available'] ),
-				'photo_count' => (int) ( $row['photo_count'] ?? 0 ),
-				'cover_url'   => (string) ( $row['cover_url'] ?? '' ),
-				'cover_alt'   => (string) ( $row['cover_alt'] ?? '' ),
-				'updated_at'  => (string) ( $row['updated_at'] ?? '' ),
+				'id'           => (string) $row['id'],
+				'slug'         => (string) ( $row['slug'] ?? '' ),
+				'title'        => (string) ( $row['title'] ?? '' ),
+				'url'          => (string) ( $row['url'] ?? '' ),
+				'embeddable'   => ! empty( $row['embeddable'] ),
+				'available'    => ! empty( $row['available'] ),
+				'photo_count'  => (int) ( $row['photo_count'] ?? 0 ),
+				'cover_url'    => (string) ( $row['cover_url'] ?? '' ),
+				'cover_alt'    => (string) ( $row['cover_alt'] ?? '' ),
+				'layout'       => Layout_Map::clean( $row['layout'] ?? '' ),
+				'embed_layout' => Layout_Map::clean( $row['embed_layout'] ?? '' ),
+				'updated_at'   => (string) ( $row['updated_at'] ?? '' ),
 			);
 		}
 		return $rows;

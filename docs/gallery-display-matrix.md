@@ -30,11 +30,42 @@ site default on the Galleries settings tab. An empty value means "not set
 here" and falls through. When nothing sets it, no `data-*` attribute is written
 and embed.js uses its own default.
 
+## Platform layouts
+
+A gallery on Profotograaf can use any of 13 layouts, and embed.js draws three.
+The table below (`includes/layout-map.json`, read by `Layout_Map` in PHP and
+imported by the block editor from `blocks/gallery/layout-map.ts`) says which
+one the site draws. It follows wiebe-xyz/professionals#2359.
+
+| Platform layout | Drawn as |
+|---|---|
+| masonry, justified, mosaic, lighttable | masonry |
+| parallax, direct, cinema, filmstrip, slideout | slideshow |
+| flickr, instagram, duo, grid | grid |
+| anything else (a layout added later) | grid |
+
+When the block and the site setting leave the layout empty, the render writes
+the drawn layout in `data-layout`. It reads the platform layout from the cached
+gallery index (`Gallery_Index::drawn_layout()`), which the picker and the
+background lookup fill from the gallery list, so a page view makes no platform
+call. A gallery that is not in the index yet, or was stored before layouts were
+kept, renders as a grid and schedules one lookup. A layout set in the block or
+in the Galleries settings tab always wins.
+
+The Layout control shows the same mapping as a hint while it is on the site
+default: "Parallax on Profotograaf, shown as Slideshow on your site". An
+unknown layout says the plugin does not know it and that it is shown as a grid.
+
+When the platform reports the layout it draws (`embed_layout` on the gallery
+list rows, wiebe-xyz/professionals#2359), the index stores it and it wins over
+the table, in the render and in the hint. Nothing breaks while the platform
+does not send it.
+
 ## Options
 
 | Option (block / shortcode) | Values | Default when unset | Plugin markup | CSS var (Reserved_Space) | embed.js |
 |---|---|---|---|---|---|
-| `layout` / `layout` | `grid`, `masonry`, `slideshow`; empty | site setting `default_layout` (`grid`) | `data-layout` always written | picks the column defaults and tile shape | `pickLayout()`: attribute, else the gallery's platform layout, else `grid`. Platform layouts such as `parallax` or `instagram` fall back to `grid` |
+| `layout` / `layout` | `grid`, `masonry`, `slideshow`; empty | site setting `default_layout`, itself empty by default (Profotograaf default): the gallery's platform layout mapped by `Layout_Map`, see "Platform layouts" | `data-layout` always written | picks the column defaults and tile shape | `pickLayout()`: attribute, else the gallery's platform layout, else `grid`. Platform layouts such as `parallax` or `instagram` fall back to `grid`, which is why the plugin sends the mapped layout |
 | `columns` / `columns` | 1 to 8 (embed accepts 1 to 12) | grid: `auto-fill` of 140px minimum tiles; masonry: 220px wide columns | `data-columns` | `--pf-ar` (columns x rows) | `--cols`; `grid-template-columns` or `column-count` |
 | `columnsTablet` / `columns_tablet` | 1 to 8 | with columns set (block, shortcode or site): min(columns, 3), sent as `data-columns-tablet`. Without columns: embed.js default | `data-columns-tablet` | `--pf-ar-t`, the value sent | `--cols-tablet` at 900px and below |
 | `columnsMobile` / `columns_mobile` | 1 to 4 | with columns set: min(tablet, 2) for a grid, 1 for masonry, sent as `data-columns-mobile`. Without columns: embed.js default | `data-columns-mobile` | `--pf-ar-m`, the value sent | `--cols-mobile` at 600px and below |
@@ -101,6 +132,7 @@ are the pairs and triples where one option changes what another does.
 |---|---|---|
 | layout x lightbox | grid and masonry tiles open the lightbox; the slideshow stage opens it too; with the lightbox off the slideshow tile is inert | `gallery-display.spec.js` (grid, slideshow), `sample-pages.spec.js` |
 | lightbox x linkTo x linkNewTab | `linkTo` only applies with the lightbox off | `sample-pages.spec.js` (`combo-link-page`), `embed-options.spec.js` |
+| layout x platform layout | a block on the platform default draws a parallax gallery as a slideshow; a block that picks the grid keeps the grid | `gallery-display.spec.js` (mock gallery `g-e2e-parallax`), `Gallery_Layout_Test.php`, `layout-map.test.ts` |
 | layout x perPage x loadMore | slideshow ignores both; grid and masonry show one page with or without the button | `gallery-display.spec.js`, `embed-layout.spec.js`, `sample-pages.spec.js` (`combo-load-more`, `combo-first-page`) |
 | loadMore x Reserved_Space | the box must grow with Show more and never clip | `embed-layout.spec.js`, `embed-cls.spec.js` |
 | layout x ratio | grid crops to the ratio (square without one), masonry ignores the ratio and keeps each photo's shape (the plugin sends none; the editor hides the control and says so), slideshow letterboxes inside 3:2 | `embed-options.spec.js` (masonry with a block ratio and with a site-wide 1:1), `sample-pages.spec.js` (`grid-landscape`, `grid-portrait`, `slideshow-portrait`) |

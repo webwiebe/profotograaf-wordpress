@@ -61,6 +61,11 @@ class Gallery_Index {
 				'title' => (string) ( $row['title'] ?? '' ),
 				'url'   => (string) ( $row['url'] ?? '' ),
 			);
+			// The platform layout and, when the platform reports it, the layout the
+			// embed draws. Always stored, so an entry without the key is one from
+			// before the layout was kept and asks for a fresh list.
+			$index[ (string) $row['id'] ]['layout']       = Layout_Map::clean( $row['layout'] ?? '' );
+			$index[ (string) $row['id'] ]['embed_layout'] = Layout_Map::clean( $row['embed_layout'] ?? '' );
 			if ( isset( $row['photo_count'] ) ) {
 				$index[ (string) $row['id'] ]['count'] = max( 0, (int) $row['photo_count'] );
 			}
@@ -97,6 +102,24 @@ class Gallery_Index {
 		}
 		$count = (int) ( $index[ $id ]['count'] ?? 0 );
 		return $count > 0 ? $count : null;
+	}
+
+	/**
+	 * The layout embed.js draws for a gallery on the platform default: the layout
+	 * the platform reports, else the table in Layout_Map, else the grid. Reads the
+	 * option only. A gallery that is not in the list yet, or was stored before the
+	 * layout was kept, schedules the background lookup and gets the grid for now.
+	 *
+	 * @param string $id Gallery id.
+	 */
+	public function drawn_layout( string $id ): string {
+		$index = get_option( self::OPTION, array() );
+		$entry = is_array( $index ) && isset( $index[ $id ] ) && is_array( $index[ $id ] ) ? $index[ $id ] : null;
+		if ( null === $entry || ! array_key_exists( 'layout', $entry ) ) {
+			$this->schedule_lookup();
+			return Layout_Map::fallback();
+		}
+		return Layout_Map::drawn( (string) $entry['layout'], (string) ( $entry['embed_layout'] ?? '' ) );
 	}
 
 	/**

@@ -26,6 +26,8 @@ import { ImageTextPanel } from './image-text-panel';
 import { PreviewGrid } from './preview-grid';
 import { usePhotos, type PhotosState } from './use-photos';
 import { useShowable } from './use-showable';
+import { layoutHint } from './layout-map';
+import { siteDefaults } from './display-options';
 import type { GalleryAttributes, GalleryRow } from './types';
 
 interface EditProps {
@@ -79,7 +81,20 @@ function Preview( {
 	);
 }
 
-function InspectorPanel( { attributes, setAttributes }: EditProps ) {
+/**
+ * What the Layout control chooses when it is left on the site default: the
+ * layout of the gallery on Profotograaf and what the site draws for it. Empty
+ * when the block or the site settings pick a layout themselves.
+ */
+function platformHint( layout: string, row: GalleryRow | null ): string {
+	return layout === '' && siteDefaults().layout === '' ? layoutHint( row ) : '';
+}
+
+function InspectorPanel( {
+	attributes,
+	setAttributes,
+	listed,
+}: EditProps & { listed: GalleryRow | null } ) {
 	const { galleryId, layout } = attributes;
 	return (
 		<InspectorControls>
@@ -88,6 +103,7 @@ function InspectorPanel( { attributes, setAttributes }: EditProps ) {
 					label={ __( 'Layout', 'profotograaf' ) }
 					value={ layout }
 					options={ layoutOptions() }
+					help={ platformHint( layout, listed ) }
 					onChange={ ( value ) => setAttributes( { layout: value } ) }
 					__nextHasNoMarginBottom
 				/>
@@ -104,11 +120,17 @@ function InspectorPanel( { attributes, setAttributes }: EditProps ) {
 	);
 }
 
-/** Whether the account's gallery list leaves this gallery out (deleted or unknown). */
-function useMissingGallery( galleryId: string ): boolean {
-	const [ missing, setMissing ] = useState( false );
+/**
+ * The account's gallery list as it concerns this gallery: its row, and whether
+ * the list leaves it out (deleted or unknown).
+ */
+function useListedGallery( galleryId: string ): { missing: boolean; row: GalleryRow | null } {
+	const [ listed, setListed ] = useState< { missing: boolean; row: GalleryRow | null } >( {
+		missing: false,
+		row: null,
+	} );
 	useEffect( () => {
-		setMissing( false );
+		setListed( { missing: false, row: null } );
 		if ( ! galleryId ) {
 			return undefined;
 		}
@@ -117,7 +139,8 @@ function useMissingGallery( galleryId: string ): boolean {
 			try {
 				const rows = await apiFetch< GalleryRow[] >( { path: LIST_PATH } );
 				if ( state.active ) {
-					setMissing( ! rows.some( ( row ) => row.id === galleryId ) );
+					const row = rows.find( ( candidate ) => candidate.id === galleryId ) ?? null;
+					setListed( { missing: row === null, row } );
 				}
 			} catch {
 				// The picker reports list errors. The notice only needs a clear answer.
@@ -127,7 +150,7 @@ function useMissingGallery( galleryId: string ): boolean {
 			state.active = false;
 		};
 	}, [ galleryId ] );
-	return missing;
+	return listed;
 }
 
 function missingNotice( missing: boolean ): string {
@@ -144,10 +167,11 @@ function InspectorPanels( {
 	attributes,
 	setAttributes,
 	photos,
-}: EditProps & { photos: PhotosState } ) {
+	listed,
+}: EditProps & { photos: PhotosState; listed: GalleryRow | null } ) {
 	return (
 		<>
-			<InspectorPanel attributes={ attributes } setAttributes={ setAttributes } />
+			<InspectorPanel attributes={ attributes } setAttributes={ setAttributes } listed={ listed } />
 			<DisplayPanel attributes={ attributes } setAttributes={ setAttributes } />
 			<ImageTextPanel
 				items={ attributes.imageText }
@@ -204,16 +228,14 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 	const { galleryId } = attributes;
 	const [ notice, setNotice ] = useState( '' );
 	const [ preview, setPreview ] = useState< GalleryRow | null >( null );
-	const missing = useMissingGallery( galleryId );
+	const { missing, row: listed } = useListedGallery( galleryId );
 	const photos = usePhotos( galleryId );
 	const empty = emptyGalleryNotice( useShowable( galleryId ) );
 	const blockProps = useBlockProps();
-
 	const pick = ( gallery: GalleryRow ) => {
 		setNotice( '' );
 		setPreview( gallery );
 		setAttributes( pickedAttributes( gallery ) );
-
 		void pickNotice( gallery, ( path ) =>
 			apiFetch< { available?: boolean } >( { path, method: 'POST' } )
 		).then( ( message ) => {
@@ -222,18 +244,12 @@ export default function Edit( { attributes, setAttributes }: EditProps ) {
 			}
 		} );
 	};
-
 	// The preview card uses the cover thumbnail from the picker. It is only known
 	// in this editing session, so a reloaded block shows the title alone.
 	const shown = preview && preview.id === galleryId ? preview : null;
-
 	return (
 		<>
-			<InspectorPanels
-				attributes={ attributes }
-				setAttributes={ setAttributes }
-				photos={ photos }
-			/>
+			<InspectorPanels attributes={ attributes } setAttributes={ setAttributes } photos={ photos } listed={ shown ?? listed } />
 			<div { ...blockProps }>
 				{ ! galleryId ? (
 					<Placeholder

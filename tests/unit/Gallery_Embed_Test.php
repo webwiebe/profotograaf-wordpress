@@ -220,7 +220,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$html = $this->module->render_block(
 			array(
 				'galleryId'     => 'g-1',
-				'layout'        => 'grid',
+				'layout'        => '',
 				'columns'       => '5',
 				'columnsTablet' => '4',
 			)
@@ -241,7 +241,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 				'columnsMobile' => '',
 				'gap'           => '',
 				'ratio'         => '',
-				'layout'        => 'grid',
+				'layout'        => '',
 			),
 			$this->module->editor_defaults()
 		);
@@ -277,7 +277,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 				'columnsMobile' => '',
 				'gap'           => '0',
 				'ratio'         => '1-1',
-				'layout'        => 'grid',
+				'layout'        => '',
 			),
 			$this->module->editor_defaults()
 		);
@@ -300,7 +300,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 					'columnsMobile' => '',
 					'gap'           => '',
 					'ratio'         => '',
-					'layout'        => 'grid',
+					'layout'        => '',
 				)
 			);
 
