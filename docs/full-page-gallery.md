@@ -44,10 +44,27 @@ migration.
 2. A picked photo leaves the flow before the sections are filled, so it shows
    once. An unpicked slot takes the next photo in flow order.
 3. When fewer photos are left than the next section takes, the remainder
-   becomes a grid with `columns = min(remaining, columns)`. One leftover photo
-   becomes a hero.
+   becomes a grid with `columns = min(remaining, columns)` (the columns of the
+   section it replaces, or 3) and as many full rows as fit, then one shorter
+   row of the photos left, so no row has an empty cell. One leftover photo
+   becomes a hero. The rest keeps the gap, ratio and captions of the section
+   it replaces.
 4. A `text` section takes no photos and never ends the gallery.
 5. No photos: the fallback link, as in the gallery block.
+
+A pick the gallery never reaches (its slot is in a later cycle than the
+photos fill) still shows: it joins the rest in gallery order. A pick of an
+excluded photo, of a photo picked for an earlier slot, or for a slot outside
+the pattern is ignored. A custom list without any photo section uses the
+default preset. With mirror on, every second `pair` in the sequence flips its
+side.
+
+The sequencer is `Section_Sequencer` (PHP). The editor previews it through
+`GET /wp-json/profotograaf/v1/galleries/{id}/sections` (`Sections_Rest`),
+which takes `preset`, `sections` and `picks` (JSON lists) and `exclude`
+(comma separated) and answers `{ preset, sections }`, every section with its
+fields, `slots` and `photos` (`id`, `thumb`, `width`, `height`, `alt`). A
+photo of the tail has the slot `''`.
 
 Picks in a preset are keyed by slot, `<cycle>.<section index>.<position>`
 (`0.0.0` is the first photo of the first section of the first cycle). In
