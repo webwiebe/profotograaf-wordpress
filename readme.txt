@@ -78,7 +78,7 @@ What is sent, and when. In the background (WP-Cron, never while an admin page lo
 
 Photos of people are personal data. You decide which files to send, and you are responsible for having the right to send them. A file can go to any of your galleries, including a client gallery.
 
-What stays on your site: the file in the Media Library and a few hidden fields on it (`_profotograaf_photo_id`, `_profotograaf_gallery_id`, `_profotograaf_origin`, `_profotograaf_upload_gallery`, `_profotograaf_upload_state`, `_profotograaf_upload_error`, `_profotograaf_upload_attempts`, `_profotograaf_uploaded_at`, and hashes the plugin uses to see later edits). Deleting the plugin removes its settings, linked galleries and scheduled events and leaves these fields, as it leaves imported photos. Deleting a file in WordPress deletes nothing on Profotograaf.
+What stays on your site: the file in the Media Library and a few hidden fields on it (`_profotograaf_photo_id`, `_profotograaf_gallery_id`, `_profotograaf_origin`, `_profotograaf_upload_gallery`, `_profotograaf_upload_state`, `_profotograaf_upload_error`, `_profotograaf_upload_attempts`, `_profotograaf_uploaded_at`, `_profotograaf_upload_next_at`, `_profotograaf_upload_started_at`, `_profotograaf_upload_check`, and hashes the plugin uses to see later edits). Deleting the plugin removes its settings, linked galleries and scheduled events and leaves these fields, as it leaves imported photos. Deleting a file in WordPress deletes nothing on Profotograaf.
 
 = Showing a gallery on your site =
 
