@@ -144,7 +144,23 @@ function publicGallery( origin ) {
 	};
 }
 
-const IMAGE = /^\/img\/(p-\d+)\/(thumb|web)\.(?:svg|jpg)$/;
+const IMAGE = /^\/img\/(p-\d+)\/(thumb|web)\.(?:svg|jpg|png)$/;
+
+// Two more public galleries for tests/e2e/gallery-display.spec.js: one without
+// photos, and one whose variants are PNG files (the case of
+// wiebe-xyz/professionals#2330, which the real platform drops).
+const PNG = readFileSync( join( dirname( fileURLToPath( import.meta.url ) ), 'fixtures', 'photo.png' ) );
+
+function emptyGallery( origin ) {
+	return { ...publicGallery( origin ), id: 'g-e2e-empty', slug: 'empty', title: 'Empty gallery', url: `${ origin }/share/g/empty`, photo_count: 0, photos: [] };
+}
+
+function pngGallery( origin ) {
+	const photos = publicGallery( origin )
+		.photos.slice( 0, 3 )
+		.map( ( photo ) => ( { ...photo, images: photo.images.map( ( image ) => ( { ...image, url: image.url.replace( /\.svg$/, '.png' ) } ) ) } ) );
+	return { ...publicGallery( origin ), id: 'g-e2e-png', slug: 'png', title: 'PNG gallery', url: `${ origin }/share/g/png`, photo_count: photos.length, photos };
+}
 
 // A real 48x32 JPEG: the import screen downloads the .jpg variants, and WordPress
 // only accepts a sideload it can read as an image.
@@ -177,6 +193,10 @@ function image( { res, url } ) {
 	const photo = PUBLIC_PHOTOS.find( ( candidate ) => candidate.id === id );
 	if ( ! photo ) {
 		return json( res, 404, { error: 'not found' } );
+	}
+	if ( url.pathname.endsWith( '.png' ) ) {
+		res.writeHead( 200, { 'content-type': 'image/png', 'cache-control': 'no-store' } );
+		return res.end( PNG );
 	}
 	if ( url.pathname.endsWith( '.jpg' ) ) {
 		// Recorded so a test can count the downloads.
@@ -281,6 +301,10 @@ const routes = {
 	'HEAD /share/embed/embed.js': embedScript,
 	'GET /api/v1/embed/galleries/g-e2e': ( { req, res } ) =>
 		json( res, 200, publicGallery( `http://${ req.headers.host }` ), { 'access-control-allow-origin': '*' } ),
+	'GET /api/v1/embed/galleries/g-e2e-empty': ( { req, res } ) =>
+		json( res, 200, emptyGallery( `http://${ req.headers.host }` ), { 'access-control-allow-origin': '*' } ),
+	'GET /api/v1/embed/galleries/g-e2e-png': ( { req, res } ) =>
+		json( res, 200, pngGallery( `http://${ req.headers.host }` ), { 'access-control-allow-origin': '*' } ),
 	'POST /share/embed/view': ( { res } ) => {
 		res.writeHead( 204, { 'access-control-allow-origin': '*' } );
 		return res.end();

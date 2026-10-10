@@ -19,6 +19,11 @@ const matrix = process.env.E2E_BROWSER_MATRIX
 const SCREENSHOTS = /wporg-screenshots\.spec\.js$/;
 const capture = Boolean( process.env.WPORG_SCREENSHOTS );
 
+// E2E_BASE_URL points the run at another WordPress, such as the local dev site
+// on https://localhost:8443 with its self-signed certificate. The default is
+// the docker WordPress that tests/e2e/up.sh starts, which CI uses.
+const baseURL = process.env.E2E_BASE_URL || `http://localhost:${ process.env.WP_PORT || 8080 }`;
+
 module.exports = defineConfig( {
 	testDir: 'tests/e2e',
 	testMatch: capture ? SCREENSHOTS : '**/*.spec.js',
@@ -31,7 +36,8 @@ module.exports = defineConfig( {
 		toHaveScreenshot: { animations: 'disabled', caret: 'hide', maxDiffPixelRatio: 0.02 },
 	},
 	use: {
-		baseURL: `http://localhost:${ process.env.WP_PORT || 8080 }`,
+		baseURL,
+		ignoreHTTPSErrors: baseURL.startsWith( 'https:' ),
 		trace: 'retain-on-failure',
 	},
 	projects: [ { name: 'chromium', use: { ...devices[ 'Desktop Chrome' ] } }, ...matrix ],
