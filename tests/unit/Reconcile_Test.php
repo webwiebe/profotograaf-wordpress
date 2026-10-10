@@ -784,7 +784,7 @@ class Reconcile_Test extends Wp_Test_Case {
 			'_profotograaf_text_hash'  => self::base_hash(),
 			'_wp_attachment_image_alt' => 'A',
 		);
-		$same = array(
+		$same           = array(
 			'id'      => 'p1',
 			'version' => 'aaaaaaaaaaaa',
 			'title'   => 'T',

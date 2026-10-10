@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: [], changeCalls: [] };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: /** @type {Record<string, unknown>[]} */ ( [] ), changeCalls: /** @type {Record<string, unknown>[]} */ ( [] ) };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );

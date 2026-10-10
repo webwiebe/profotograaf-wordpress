@@ -55,7 +55,6 @@ final class Reconcile {
 	 * The file hash is the expensive part (sha1 of every original). With `$listed`, the
 	 * hash is computed only for copies the platform lists with another file version or other
 	 * text than the stored baseline, because plan() reads `file_edited` for no other copy.
-	 * Without `$listed`, every copy with a baseline is hashed.
 	 *
 	 * @param array<int,int>                         $attachment_ids Attachment ids.
 	 * @param array<string,array<string,mixed>>|null $listed         Catalogue rows by photo id, or null to hash every copy.
@@ -75,14 +74,12 @@ final class Reconcile {
 			$version   = (string) get_post_meta( $attachment_id, Photo_Importer::META_VERSION, true );
 			$hash_file = '' !== $file_base;
 			if ( $hash_file && null !== $listed ) {
-				$hash_file = isset( $listed[ $photo_id ] ) && self::differs(
-					array(
-						'version'   => $version,
-						'text_base' => $text_base,
-						'text_now'  => $text_now,
-					),
-					$listed[ $photo_id ]
+				$probe     = array(
+					'version'   => $version,
+					'text_base' => $text_base,
+					'text_now'  => $text_now,
 				);
+				$hash_file = isset( $listed[ $photo_id ] ) && ( self::file_changed( $probe, $listed[ $photo_id ] ) || self::text_changed( $probe, $listed[ $photo_id ] ) );
 			}
 			$file_now = $hash_file ? Media_Baseline::file_hash( $attachment_id ) : '';
 			$rows[]   = array(
@@ -398,16 +395,6 @@ final class Reconcile {
 	private static function file_changed( array $row, array $photo ): bool {
 		$remote = (string) ( $photo['version'] ?? '' );
 		return '' !== $remote && '' !== (string) $row['version'] && $remote !== (string) $row['version'];
-	}
-
-	/**
-	 * Whether the platform file version or text differs from the copy.
-	 *
-	 * @param array<string,mixed> $row   Imported copy (`version`, `text_base`, `text_now`).
-	 * @param array<string,mixed> $photo Catalogue row.
-	 */
-	private static function differs( array $row, array $photo ): bool {
-		return self::file_changed( $row, $photo ) || self::text_changed( $row, $photo );
 	}
 
 	/**

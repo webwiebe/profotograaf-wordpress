@@ -62,7 +62,7 @@ class Change_Poll implements Module {
 		if ( ! $this->active() ) {
 			return;
 		}
-		$this->poller()->run();
+		$this->poller( $this->plugin )->run();
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Change_Poll implements Module {
 		if ( ! $this->active() ) {
 			return;
 		}
-		$this->poller()->run_batch();
+		$this->poller( $this->plugin )->run_batch();
 	}
 
 	/**
@@ -89,8 +89,8 @@ class Change_Poll implements Module {
 			 *
 			 * @param string $interval A registered cron schedule, `hourly` by default.
 			 */
-			$interval = apply_filters( 'profotograaf_poll_interval', self::INTERVAL );
-			wp_schedule_event( time() + HOUR_IN_SECONDS, is_string( $interval ) && '' !== $interval ? $interval : self::INTERVAL, self::HOOK );
+			$interval = (string) apply_filters( 'profotograaf_poll_interval', self::INTERVAL );
+			wp_schedule_event( time() + HOUR_IN_SECONDS, '' !== $interval ? $interval : self::INTERVAL, self::HOOK );
 		}
 	}
 
@@ -114,10 +114,10 @@ class Change_Poll implements Module {
 	/**
 	 * The poller over the plugin's API client.
 	 *
-	 * @phpstan-assert Plugin $this->plugin
+	 * @param Plugin $plugin Service container.
 	 */
-	private function poller(): Change_Poller {
-		return new Change_Poller( $this->plugin->api(), new Photo_Catalogue( $this->plugin->api(), $this->plugin->settings() ) );
+	private function poller( Plugin $plugin ): Change_Poller {
+		return new Change_Poller( $plugin->api(), new Photo_Catalogue( $plugin->api(), $plugin->settings() ) );
 	}
 
 	/**

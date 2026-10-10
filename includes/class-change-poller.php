@@ -79,7 +79,7 @@ final class Change_Poller {
 	/**
 	 * Catalogue of the current run.
 	 *
-	 * @var array<string,mixed>|WP_Error|null
+	 * @var array{photos:array<int,array<string,mixed>>,stale:bool,fetched_at:int,dropped:int}|WP_Error|null
 	 */
 	private $run_catalogue = null;
 
@@ -100,9 +100,9 @@ final class Change_Poller {
 	/**
 	 * Constructor.
 	 *
-	 * @param Api_Client         $api       API client.
-	 * @param Photo_Catalogue    $catalogue Photo catalogue.
-	 * @param callable|null      $clock     Returns the current unix time.
+	 * @param Api_Client      $api       API client.
+	 * @param Photo_Catalogue $catalogue Photo catalogue.
+	 * @param callable|null   $clock     Returns the current unix time.
 	 */
 	public function __construct( Api_Client $api, Photo_Catalogue $catalogue, ?callable $clock = null ) {
 		$this->api       = $api;
@@ -211,7 +211,7 @@ final class Change_Poller {
 	/**
 	 * Reads the feed pages of one run.
 	 *
-	 * @param array<string,mixed> $result Result skeleton.
+	 * @param array{ok:bool,pages:int,applied:int,error:string,paused:bool,resync:bool,busy:bool} $result Result skeleton.
 	 * @return array{ok:bool,pages:int,applied:int,error:string,paused:bool,resync:bool,busy:bool}
 	 */
 	private function poll( array $result ): array {
@@ -223,7 +223,7 @@ final class Change_Poller {
 
 		$started  = $this->now();
 		$cursor   = (string) get_option( self::OPTION_CURSOR, '' );
-		$imported = $this->imported();
+		$imported = Imported_Copies::all();
 		$done     = false;
 		$resynced = false;
 
@@ -244,7 +244,7 @@ final class Change_Poller {
 				break;
 			}
 
-			$feed = self::filter( $page, $imported );
+			$feed = Imported_Copies::filter_feed( $page, $imported );
 			if ( $feed['relevant'] ) {
 				$applied = $this->reconcile( array_column( $imported, 'id' ), $feed );
 				if ( is_wp_error( $applied ) ) {
@@ -260,7 +260,7 @@ final class Change_Poller {
 			}
 		}//end while
 
-		if ( ! $done && ! $resynced && array() !== $imported && $this->serving_changed( $imported ) ) {
+		if ( ! $done && ! $resynced && array() !== $imported && Imported_Copies::serving_changed( $imported, $this->galleries() ) ) {
 			$applied = $this->reconcile( array_column( $imported, 'id' ), null );
 			if ( is_wp_error( $applied ) ) {
 				return $this->fail( $result, $applied );
@@ -292,13 +292,13 @@ final class Change_Poller {
 	 * @param int $offset First imported copy of the batch.
 	 */
 	private function batch( int $offset ): void {
-		$imported = $this->imported();
+		$imported = Imported_Copies::all();
 		$slice    = array_slice( $imported, $offset, self::BATCH_SIZE );
 		$status   = $this->status();
 
 		if ( 0 === $offset && ! $status['verified'] && array() !== $imported ) {
 			$catalogue = $this->catalogue();
-			if ( ! is_wp_error( $catalogue ) && self::account_mismatch( $catalogue, $imported ) ) {
+			if ( ! is_wp_error( $catalogue ) && Imported_Copies::account_mismatch( $catalogue, $imported ) ) {
 				// A different account lists none of the copies. Flag nothing and wait for the owner.
 				$status['paused'] = true;
 				update_option( self::OPTION_STATUS, $status, false );
@@ -349,7 +349,7 @@ final class Change_Poller {
 
 		$listed = array();
 		foreach ( $catalogue['photos'] as $photo ) {
-			if ( is_array( $photo ) && isset( $photo['id'] ) ) {
+			if ( isset( $photo['id'] ) ) {
 				$listed[ (string) $photo['id'] ] = $photo;
 			}
 		}
@@ -412,166 +412,9 @@ final class Change_Poller {
 	}
 
 	/**
-	 * Whether a gallery of an imported copy serves something else than the
-	 * copy's state says: not serving while the copy is not flagged, or serving
-	 * again while the copy is flagged `unavailable`.
-	 *
-	 * @param array<int,array{id:int,photo_id:string,gallery_id:string}> $imported Imported copies.
-	 */
-	private function serving_changed( array $imported ): bool {
-		$galleries = $this->galleries();
-		if ( null === $galleries ) {
-			return false;
-		}
-		$serving = array();
-		foreach ( $galleries as $gallery ) {
-			$serving[ (string) $gallery['id'] ] = ! empty( $gallery['embeddable'] ) && ! empty( $gallery['available'] );
-		}
-		$complete = count( $galleries ) < Reconcile::GALLERY_LIST_CAP;
-		foreach ( $imported as $copy ) {
-			$gallery = $copy['gallery_id'];
-			$state   = (string) get_post_meta( $copy['id'], Reconcile::META_STATE, true );
-			if ( '' === $gallery || Reconcile::STATE_KEPT === $state ) {
-				continue;
-			}
-			$missing = Reconcile::STATE_MISSING === $state;
-			if ( ! isset( $serving[ $gallery ] ) ) {
-				if ( $complete && ! $missing ) {
-					return true;
-				}
-				continue;
-			}
-			if ( ! $serving[ $gallery ] && ! $missing ) {
-				return true;
-			}
-			if ( $serving[ $gallery ] && $missing && Reconcile::REASON_UNAVAILABLE === (string) get_post_meta( $copy['id'], Reconcile::META_REASON, true ) ) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Whether a complete catalogue lists none of the imported copies.
-	 *
-	 * @param array<string,mixed>                                        $catalogue Catalogue.
-	 * @param array<int,array{id:int,photo_id:string,gallery_id:string}> $imported  Imported copies.
-	 */
-	private static function account_mismatch( array $catalogue, array $imported ): bool {
-		if ( (int) ( $catalogue['dropped'] ?? 0 ) > 0 ) {
-			return false;
-		}
-		$listed = array();
-		foreach ( (array) $catalogue['photos'] as $photo ) {
-			if ( is_array( $photo ) && isset( $photo['id'] ) ) {
-				$listed[ (string) $photo['id'] ] = true;
-			}
-		}
-		foreach ( $imported as $copy ) {
-			if ( isset( $listed[ $copy['photo_id'] ] ) ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Keeps the feed entries that name an imported photo or a gallery of one.
-	 *
-	 * @param array<string,mixed>                                        $page     Feed page from Api_Client::changes().
-	 * @param array<int,array{id:int,photo_id:string,gallery_id:string}> $imported Imported copies.
-	 * @return array{photos_deleted:array<int,array{id:string,gallery_id:string}>,photos_changed:array<int,string>,galleries_deleted:array<int,string>,relevant:bool}
-	 */
-	private static function filter( array $page, array $imported ): array {
-		$photos    = array();
-		$galleries = array();
-		foreach ( $imported as $copy ) {
-			$photos[ $copy['photo_id'] ] = true;
-			if ( '' !== $copy['gallery_id'] ) {
-				$galleries[ $copy['gallery_id'] ] = true;
-			}
-		}
-		$deleted = array();
-		foreach ( $page['photos']['deleted'] as $entry ) {
-			if ( isset( $photos[ $entry['id'] ] ) ) {
-				$deleted[] = $entry;
-			}
-		}
-		$changed = array();
-		foreach ( array_merge( $page['photos']['created'], $page['photos']['updated'] ) as $entry ) {
-			if ( isset( $photos[ $entry['id'] ] ) ) {
-				$changed[] = $entry['id'];
-			}
-		}
-		$gone = array_values( array_filter( $page['galleries']['deleted'], static fn( string $id ): bool => isset( $galleries[ $id ] ) ) );
-		$live = array_filter( array_merge( $page['galleries']['created'], $page['galleries']['updated'] ), static fn( string $id ): bool => isset( $galleries[ $id ] ) );
-
-		return array(
-			'photos_deleted'    => $deleted,
-			'photos_changed'    => array_values( array_unique( $changed ) ),
-			'galleries_deleted' => $gone,
-			'relevant'          => array() !== $deleted || array() !== $changed || array() !== $gone || array() !== $live,
-		);
-	}
-
-	/**
-	 * The copies the sync watches: attachments linked to a platform photo that
-	 * the site did not upload itself. An uploaded file diverges from the
-	 * platform copy by design (docs/media-lifecycle.md, rule 2).
-	 *
-	 * @return array<int,array{id:int,photo_id:string,gallery_id:string}>
-	 */
-	private function imported(): array {
-		$ids = get_posts(
-			array(
-				'post_type'              => 'attachment',
-				'post_status'            => 'any',
-				'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- finds the imported copies once per run.
-					'relation' => 'AND',
-					array(
-						'key'     => Photo_Importer::META_PHOTO_ID,
-						'compare' => 'EXISTS',
-					),
-					array(
-						'relation' => 'OR',
-						array(
-							'key'     => Media_Baseline::META_ORIGIN,
-							'compare' => 'NOT EXISTS',
-						),
-						array(
-							'key'     => Media_Baseline::META_ORIGIN,
-							'value'   => Media_Baseline::ORIGIN_UPLOAD,
-							'compare' => '!=',
-						),
-					),
-				),
-				'fields'                 => 'ids',
-				'orderby'                => 'ID',
-				'order'                  => 'ASC',
-				'posts_per_page'         => -1,
-				'no_found_rows'          => true,
-				'update_post_term_cache' => false,
-			)
-		);
-		$copies = array();
-		foreach ( $ids as $attachment_id ) {
-			$photo_id = (string) get_post_meta( (int) $attachment_id, Photo_Importer::META_PHOTO_ID, true );
-			if ( '' === $photo_id ) {
-				continue;
-			}
-			$copies[] = array(
-				'id'         => (int) $attachment_id,
-				'photo_id'   => $photo_id,
-				'gallery_id' => (string) get_post_meta( (int) $attachment_id, Photo_Importer::META_GALLERY_ID, true ),
-			);
-		}
-		return $copies;
-	}
-
-	/**
 	 * Records a failed run. The cursor and the last-success time stay.
 	 *
-	 * @param array<string,mixed> $result Result so far.
+	 * @param array<string,mixed> $result Result so far, empty when none.
 	 * @param WP_Error            $error  Error.
 	 * @return array{ok:bool,pages:int,applied:int,error:string,paused:bool,resync:bool,busy:bool}
 	 */

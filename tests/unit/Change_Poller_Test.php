@@ -383,7 +383,7 @@ class Change_Poller_Test extends Gallery_Test_Case {
 		}
 		$this->copy( 11, 'gone' );
 		$this->options[ Change_Poller::OPTION_RESYNC ] = 0;
-		$photos = array();
+		$photos                                        = array();
 		for ( $i = 1; $i <= 60; $i++ ) {
 			$photos[] = $this->photo( 'p' . $i );
 		}
@@ -418,8 +418,8 @@ class Change_Poller_Test extends Gallery_Test_Case {
 		$this->assertArrayNotHasKey( Reconcile::META_STATE, $this->meta[11] );
 
 		$this->tick += 3600;
-		$count = count( $this->http->requests );
-		$result = $this->poller->run();
+		$count       = count( $this->http->requests );
+		$result      = $this->poller->run();
 		$this->assertTrue( $result['paused'] );
 		$this->assertCount( $count, $this->http->requests, 'A paused poll makes no request.' );
 	}
