@@ -84,6 +84,8 @@ What stays on your site: the file in the Media Library and a few hidden fields o
 
 While your site is connected, the plugin asks `https://profotograaf.nl/api/v1/embed/changes` once an hour in the background (WP-Cron, never while a page loads for a visitor) which photos and galleries changed on Profotograaf. The answer lists ids only. When a change names a photo you imported, or a gallery such a photo came from, the plugin also reads `https://profotograaf.nl/api/v1/embed/galleries` and `https://profotograaf.nl/api/v1/embed/photos`, and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a gallery whose photos it cannot account for, to see whether the photo is still listed. Nothing is sent from your site except the access token and the position in the change list. The plugin only records a state on the Media Library item. It never changes or deletes a file or a Media Library item by itself.
 
+"Check now" under Settings, Profotograaf and on the Import screen runs the same check at once, and both screens show when photo changes were last checked. When the last check is more than six hours old, opening the Media Library, the Import screen or the settings page starts one check in the background, at most once every 15 minutes. These checks use the same request as the hourly one and run only for people who can upload files, never while a page loads for a visitor.
+
 = Showing a gallery on your site =
 
 A page that contains a Profotograaf gallery makes the visitor's browser load the embed script from `https://profotograaf.nl/share/embed/` and the gallery data and photos from `https://profotograaf.nl`. Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the script also reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
@@ -184,6 +186,12 @@ No. The plugin never deletes or changes anything on Profotograaf. Deleting an im
 
 The library shows the last saved list with a notice, or an empty list with a message. Photos you already imported keep working and the editor keeps working.
 
+= Photo changes are not checked on my host. What do I do? =
+
+The hourly check runs from WP-Cron. Some hosts switch WP-Cron off (`DISABLE_WP_CRON`) and do not run it from the server. Site Health (Tools, Site Health) and the settings page then say that photo changes have not been checked for more than three hours. Use "Check now", or ask the host to run WordPress cron by adding this line to the crontab of the site, with your own address in place of the example:
+
+`*/5 * * * * curl -fsS "https://example.com/wp-cron.php?doing_wp_cron" > /dev/null 2>&1`
+
 = Does it work on a WordPress multisite network? =
 
 Yes. Every site in the network connects to Profotograaf on its own, because each site pairs with its own account and keeps its own settings. Network activation leaves each site disconnected. Network Admin, Settings, Profotograaf lists every site with its connection state and its failed enquiries, and links to each site's settings page.
@@ -201,6 +209,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: "Check now" for photo changes on the settings page and the Import screen, a "last checked" line, and one background check from the Media Library, the Import screen and the settings page when the last check is more than six hours old. Site Health and the settings page notice name a photo change check that has not run for three hours and show the crontab line, for hosts without WP-Cron.
 * New: the plugin checks Profotograaf for changes to imported photos once an hour in the background, with the cursor stored on your site, and hands them to the reconcile step. When the change list asks for a full check, copies are reconciled 50 at a time. The check follows the connection, so it keeps running when "Use Profotograaf photos in the editor" is off. It only records states and never deletes anything.
 * Fix: the reconcile step no longer reads every imported original on each run. A file is hashed only when Profotograaf lists another version or other text than the copy holds.
 * New: documentation for sending Media Library files: the External services entry names every request, the Privacy section and the suggested policy text say what location data is removed (and that other metadata is sent), which files are not sent and what stays after uninstall, and the README has a section for it.

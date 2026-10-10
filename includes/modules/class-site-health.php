@@ -351,6 +351,7 @@ class Site_Health implements Module {
 			}
 		}
 		$never = __( 'never', 'profotograaf' );
+		$poll  = $cron->poll_status()['last_ok'];
 
 		$info['profotograaf'] = array(
 			'label'  => __( 'Profotograaf', 'profotograaf' ),
@@ -369,6 +370,7 @@ class Site_Health implements Module {
 					( $cron->is_disabled() ? __( 'disabled', 'profotograaf' ) : __( 'enabled', 'profotograaf' ) )
 						. ', ' . __( 'last delivery run', 'profotograaf' ) . ': ' . ( null === $last ? $never : gmdate( 'Y-m-d H:i', $last ) . ' UTC' )
 				),
+				'photo_changes'  => $this->field( __( 'Photo changes last checked', 'profotograaf' ), null === $poll ? $never : gmdate( 'Y-m-d H:i', $poll ) . ' UTC' ),
 				'recent_errors'  => $this->field( __( 'Recent errors', 'profotograaf' ), array() === $errors ? __( 'none', 'profotograaf' ) : implode( "\n", $errors ) ),
 			),
 		);
