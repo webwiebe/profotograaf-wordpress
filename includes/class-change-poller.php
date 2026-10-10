@@ -164,7 +164,7 @@ final class Change_Poller {
 	/**
 	 * Unix time of the last run that finished without error, null for never.
 	 */
-	public function last_ok(): ?int {
+	public static function last_ok(): ?int {
 		$value = get_option( self::OPTION_LAST_OK, 0 );
 		return is_numeric( $value ) && (int) $value > 0 ? (int) $value : null;
 	}
