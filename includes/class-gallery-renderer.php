@@ -336,10 +336,22 @@ class Gallery_Renderer {
 
 		$data = $this->data_attributes( $args, $shortcode );
 
+		if ( $this->index->is_empty( $id ) ) {
+			// The last gallery list counted no photos: no reserved space, no
+			// fallback link (it would lead to an empty page) and no failed look.
+			$data['data-pf-empty'] = '';
+			return $notice . $this->script->preconnect() . Reserved_Space::rule() . sprintf(
+				'<div %1$s>%2$s</div>',
+				$this->wrapper_attributes( $args, $classes, $id, $layout, $data ),
+				Empty_Gallery::hint( true )
+			);
+		}
+
 		return $notice . $this->script->preconnect() . Reserved_Space::rule() . sprintf(
-			'<div %1$s>%2$s<noscript>%3$s</noscript></div>',
+			'<div %1$s>%2$s%3$s<noscript>%4$s</noscript></div>',
 			$this->wrapper_attributes( $args, $classes, $id, $layout, $data ),
 			$this->fallback_link( $id, $args ),
+			Empty_Gallery::hint( false ),
 			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
 		);
 	}
@@ -407,7 +419,7 @@ class Gallery_Renderer {
 					'class'                     => 'profotograaf-gallery',
 					'data-profotograaf-gallery' => $id,
 					'data-layout'               => $layout,
-				) + $data + array( 'style' => Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) )
+				) + $data + ( isset( $data['data-pf-empty'] ) ? array() : array( 'style' => Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) ) )
 			);
 		}
 		$html = sprintf(
@@ -418,6 +430,9 @@ class Gallery_Renderer {
 		);
 		foreach ( $data as $name => $value ) {
 			$html .= sprintf( ' %1$s="%2$s"', $name, esc_attr( $value ) );
+		}
+		if ( isset( $data['data-pf-empty'] ) ) {
+			return $html;
 		}
 		return $html . sprintf( ' style="%s"', esc_attr( Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) ) );
 	}
@@ -464,36 +479,6 @@ class Gallery_Renderer {
 	 * @param array<string,mixed> $args Render arguments.
 	 */
 	private function fallback_link( string $id, array $args ): string {
-		$title = isset( $args['title'] ) ? trim( wp_strip_all_tags( (string) $args['title'] ) ) : '';
-		$url   = isset( $args['url'] ) ? $this->clean_url( (string) $args['url'] ) : '';
-
-		if ( '' === $url ) {
-			$known = $this->index->find( $id );
-			if ( null !== $known ) {
-				$url   = $this->clean_url( $known['url'] );
-				$title = '' !== $title ? $title : trim( wp_strip_all_tags( $known['title'] ) );
-			}
-		}
-		if ( '' === $url ) {
-			return '';
-		}
-
-		$site_label = (string) $this->settings->resolve( 'fallback_link_label' );
-		$label      = '' !== $title ? $title : ( '' !== $site_label ? $site_label : __( 'View this gallery on Profotograaf', 'profotograaf' ) );
-		return sprintf( '<a href="%1$s" style="display:inline-block;padding:.5em 0">%2$s</a>', esc_url( $url ), esc_html( $label ) );
-	}
-
-	/**
-	 * An http(s) URL, or an empty string.
-	 *
-	 * @param string $url Candidate.
-	 */
-	private function clean_url( string $url ): string {
-		$url = trim( $url );
-		if ( '' === $url ) {
-			return '';
-		}
-		$scheme = strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) );
-		return in_array( $scheme, array( 'http', 'https' ), true ) ? $url : '';
+		return ( new Fallback_Link( $this->index, $this->settings ) )->render( $id, $args );
 	}
 }

@@ -80,7 +80,7 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 
 		$this->rest->register_routes();
 
-		$this->assertCount( 3, $routes );
+		$this->assertCount( 4, $routes );
 		foreach ( $routes as $route ) {
 			$this->assertSame( 'profotograaf/v1', $route['namespace'] );
 			$this->assertSame( array( $this->rest, 'can_edit' ), $route['permission_callback'] );
@@ -231,6 +231,34 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->assertSame( 'https://profotograaf.nl/share/img/a/thumb-1.jpg', $rows[0]['thumb_url'] );
 		$this->assertSame( 'GET', $this->http->requests[0]['method'] );
 		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries/g-1/photos?limit=200&offset=0', $this->http->requests[0]['url'] );
+	}
+
+	public function test_showable_counts_the_photos_of_the_public_embed_payload_without_a_token(): void {
+		$this->http->reply( 200, array( 'photos' => array( $this->photo( 'p-1' ), $this->photo( 'p-2' ) ) ) );
+
+		$result = $this->rest->showable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
+
+		$this->assertSame( array( 'showable' => 2 ), $result );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/galleries/g-1', $this->http->requests[0]['url'] );
+		$this->assertArrayNotHasKey( 'Authorization', $this->http->requests[0]['headers'] );
+	}
+
+	public function test_showable_is_zero_for_a_payload_without_photos(): void {
+		$this->http->reply( 200, array( 'id' => 'g-1' ) );
+		$this->assertSame( array( 'showable' => 0 ), $this->rest->showable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) ) );
+
+		$this->http->reply( 200, array( 'photos' => array() ) );
+		$this->assertSame( array( 'showable' => 0 ), $this->rest->showable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) ) );
+	}
+
+	public function test_showable_passes_a_platform_error_on_and_refuses_a_bad_id(): void {
+		$this->http->reply( 404, array( 'error' => 'not found' ) );
+		$error = $this->rest->showable( new Rest_Request_Stub( array( 'id' => 'g-1' ) ) );
+		$this->assertInstanceOf( \WP_Error::class, $error );
+
+		$bad = $this->rest->showable( new Rest_Request_Stub( array( 'id' => '../x' ) ) );
+		$this->assertSame( 400, $bad->data['status'] );
+		$this->assertCount( 1, $this->http->requests );
 	}
 
 	public function test_a_bad_gallery_id_gives_a_400_for_the_photo_list(): void {

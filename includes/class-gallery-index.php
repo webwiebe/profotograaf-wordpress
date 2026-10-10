@@ -61,8 +61,8 @@ class Gallery_Index {
 				'title' => (string) ( $row['title'] ?? '' ),
 				'url'   => (string) ( $row['url'] ?? '' ),
 			);
-			if ( isset( $row['photo_count'] ) && (int) $row['photo_count'] > 0 ) {
-				$index[ (string) $row['id'] ]['count'] = (int) $row['photo_count'];
+			if ( isset( $row['photo_count'] ) ) {
+				$index[ (string) $row['id'] ]['count'] = max( 0, (int) $row['photo_count'] );
 			}
 		}
 		update_option( self::OPTION, $index, false );
@@ -97,6 +97,23 @@ class Gallery_Index {
 		}
 		$count = (int) ( $index[ $id ]['count'] ?? 0 );
 		return $count > 0 ? $count : null;
+	}
+
+	/**
+	 * Whether the last gallery list said this gallery has no photos. False when
+	 * the count is unknown or above zero. Reads the option only. A gallery with
+	 * photos the embed cannot show still counts them, so this misses that case;
+	 * the front end script catches it once embed.js has answered.
+	 *
+	 * @param string $id Gallery id.
+	 */
+	public function is_empty( string $id ): bool {
+		$index = get_option( self::OPTION, array() );
+		return is_array( $index )
+			&& isset( $index[ $id ] )
+			&& is_array( $index[ $id ] )
+			&& isset( $index[ $id ]['count'] )
+			&& 0 === (int) $index[ $id ]['count'];
 	}
 
 	/**

@@ -141,6 +141,7 @@ class Embed_Script {
 			if ( ! $this->printed ) {
 				$this->printed = true;
 				printf( '<script async src="%1$s" onerror="%2$s"></script>', esc_url( $this->url() ), esc_attr( $this->error_handler() ) ); // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript -- the footer already ran, so the queue can no longer print it.
+				echo '<script>' . Empty_Gallery::script() . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.EnqueuedResources.NonEnqueuedScript -- fixed script, printed by hand for the same reason.
 			}
 			return;
 		}
@@ -156,6 +157,8 @@ class Embed_Script {
 				'strategy'  => 'async',
 			)
 		);
+		// Marks galleries embed.js left empty (see Empty_Gallery).
+		wp_add_inline_script( self::HANDLE, Empty_Gallery::script() );
 	}
 
 	/**

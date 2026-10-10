@@ -198,3 +198,42 @@ export async function pickNotice(
 		return errorMessage( e as RestError );
 	}
 }
+
+/** REST path of the count of photos the site embed shows for one gallery. */
+export function showablePath( galleryId: string ): string {
+	return `${ LIST_PATH }/${ encodeURIComponent( galleryId ) }/showable`;
+}
+
+/**
+ * The photo count line. The picker's photo_count can include photos the embed
+ * drops (PNG web variants, videos), so a known showable count of zero, or a
+ * listed count of zero, reads "0 visible".
+ */
+export function visibleCountLabel(
+	photoCount: number,
+	showable: number | null = null
+): string {
+	if ( showable === 0 || photoCount === 0 ) {
+		return __( '0 visible', 'profotograaf' );
+	}
+	return countLabel( photoCount );
+}
+
+/** The editor notice for a gallery with nothing the embed can show, or null. */
+export function emptyGalleryNotice(
+	showable: number | null
+): { message: string; hint: string } | null {
+	if ( showable !== 0 ) {
+		return null;
+	}
+	return {
+		message: __(
+			'This gallery has no photos that can be shown on your site.',
+			'profotograaf'
+		),
+		hint: __(
+			'Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet.',
+			'profotograaf'
+		),
+	};
+}

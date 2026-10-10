@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Button, Notice, Spinner } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { LIST_PATH, canRetry, countLabel, errorMessage } from './helpers';
+import { LIST_PATH, canRetry, errorMessage, visibleCountLabel } from './helpers';
 import type { GalleryRow, RestError } from './types';
 
 function PickerRow( {
@@ -32,7 +32,7 @@ function PickerRow( {
 						{ gallery.title }
 					</span>
 					<span className="profotograaf-gallery-picker__count">
-						{ countLabel( gallery.photo_count ) }
+						{ visibleCountLabel( gallery.photo_count ) }
 					</span>
 				</span>
 			</Button>

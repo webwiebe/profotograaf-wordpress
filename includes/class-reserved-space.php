@@ -53,6 +53,11 @@ defined( 'ABSPATH' ) || exit;
  * tall and a gallery that never draws (platform down, no photos). A release
  * animation switches the ratio to auto after RELEASE_AFTER seconds for those,
  * and the noscript rule releases it at once without JavaScript.
+ *
+ * A gallery without photos the embed can show carries `data-pf-empty`
+ * (Empty_Gallery). It holds no space, hides the fallback link and keeps the
+ * editor hint. A failed gallery (`data-profotograaf-failed`) holds no space
+ * either, and its fallback link stays inside the block at the start edge.
  */
 final class Reserved_Space {
 
@@ -118,6 +123,9 @@ final class Reserved_Space {
 			. '@media(max-width:900px){' . $host . '{aspect-ratio:var(--pf-ar-t)}}'
 			. '@media(max-width:600px){' . $host . '{aspect-ratio:var(--pf-ar-m)}}'
 			. '@keyframes pf-release{to{aspect-ratio:auto}}'
+			. '[data-pf-empty],[data-profotograaf-failed]{display:block;aspect-ratio:auto!important;animation:none;overflow:visible;text-indent:0;text-align:start}'
+			. '[data-pf-empty]>a,[data-pf-empty]>noscript{display:none!important}'
+			. $host . '>a{max-width:100%;overflow-wrap:anywhere;text-indent:0}'
 			. '</style>'
 			. '<noscript><style>' . $host . '{aspect-ratio:auto!important}</style></noscript>';
 	}

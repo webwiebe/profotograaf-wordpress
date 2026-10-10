@@ -292,6 +292,34 @@ const routes = {
 	} ),
 };
 
+// Galleries the embed has nothing to show for. g-e2e-empty has no photos at
+// all. g-e2e-png holds one PNG photo: the gallery list would count it, and the
+// public payload leaves it out (wiebe-xyz/professionals#2330).
+const NOTHING_TO_SHOW = /^\/api\/v1\/embed\/galleries\/(g-e2e-empty|g-e2e-png)$/;
+
+function emptyGallery( { req, res, url } ) {
+	const id = url.pathname.split( '/' ).pop();
+	const origin = `http://${ req.headers.host }`;
+	return json(
+		res,
+		200,
+		{
+			id,
+			slug: id,
+			title: id === 'g-e2e-png' ? 'PNG only' : 'Empty',
+			description: '',
+			layout: 'grid',
+			url: `${ origin }/share/g/${ id }`,
+			site_url: `${ origin }/studio-e2e`,
+			photo_count: id === 'g-e2e-png' ? 1 : 0,
+			badge: { show: false, prominent: false, url: `${ origin }/made-with?ref=embed-badge` },
+			photos: [],
+			version: 'e2e0000000000002',
+		},
+		{ 'access-control-allow-origin': '*' }
+	);
+}
+
 const EMBEDDABLE = /^\/api\/v1\/embed\/galleries\/[^/]+\/embeddable$/;
 const PHOTOS = /^\/api\/v1\/embed\/galleries\/g-e2e\/photos$/;
 
@@ -369,6 +397,9 @@ const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
 function findRoute( method, pathname ) {
 	if ( ( method === 'GET' || method === 'HEAD' ) && EMBED_VERSIONED.test( pathname ) ) {
 		return embedScript;
+	}
+	if ( method === 'GET' && NOTHING_TO_SHOW.test( pathname ) ) {
+		return emptyGallery;
 	}
 	if ( method === 'GET' && IMAGE.test( pathname ) ) {
 		return image;

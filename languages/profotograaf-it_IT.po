@@ -223,8 +223,9 @@ msgid "The exported enquiries were removed."
 msgstr "Le richieste esportate sono state rimosse."
 
 #: includes/class-api-client.php:146
-#: includes/class-gallery-rest.php:140
-#: includes/class-gallery-rest.php:158
+#: includes/class-gallery-rest.php:166
+#: includes/class-gallery-rest.php:184
+#: includes/class-gallery-rest.php:211
 #: includes/class-photo-list.php:56
 msgid "A gallery id is required."
 msgstr "Serve un ID galleria."
@@ -347,7 +348,7 @@ msgid_plural "%d leads are waiting for delivery."
 msgstr[0] "%d contatto è in attesa di consegna."
 msgstr[1] "%d contatti sono in attesa di consegna."
 
-#: includes/class-embed-script.php:184
+#: includes/class-embed-script.php:187
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Non è stato possibile caricare questa galleria. Riprova più tardi."
 
@@ -359,11 +360,11 @@ msgstr "La galleria Profotograaf non può essere mostrata perché il suo ID manc
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Questa galleria Profotograaf non è stata trovata nel tuo account. Potrebbe essere stata eliminata. Scegli un'altra galleria."
 
-#: includes/class-gallery-renderer.php:343
+#: includes/class-gallery-renderer.php:355
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Questa galleria richiede JavaScript per essere mostrata qui."
 
-#: includes/class-gallery-renderer.php:482
+#: includes/class-fallback-link.php:68
 msgid "View this gallery on Profotograaf"
 msgstr "Guarda questa galleria su Profotograaf"
 
@@ -417,17 +418,17 @@ msgid "Used when a gallery block or shortcode does not choose a layout."
 msgstr "Usato quando un blocco galleria o uno shortcode non sceglie un layout."
 
 #: includes/class-settings-schema.php:112
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 msgid "Grid"
 msgstr "Griglia"
 
 #: includes/class-settings-schema.php:113
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 msgid "Masonry"
 msgstr "Masonry"
 
 #: includes/class-settings-schema.php:114
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 msgid "Slideshow"
 msgstr "Presentazione"
 
@@ -1279,47 +1280,47 @@ msgid "Only editors see this note. Enter your Profotograaf address in the block 
 msgstr "Solo gli editor vedono questa nota. Inserisci il tuo indirizzo Profotograaf nelle impostazioni del blocco. Fino ad allora i visitatori non vedono questo blocco."
 
 #. translators: %d: number of photos in a gallery.
-#: build/gallery/index.js:2
+#: build/gallery/index.js:3
 #, js-format
 msgid "%d photo"
 msgid_plural "%d photos"
 msgstr[0] "%d foto"
 msgstr[1] "%d foto"
 
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Site default"
 msgstr "Predefinito del sito"
 
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr "Collega questo sito a Profotograaf in Impostazioni > Profotograaf per scegliere una galleria."
 
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
 msgstr "Ricollega questo sito a Profotograaf in Impostazioni > Profotograaf. La connessione richiede un nuovo permesso."
 
-#: build/gallery/index.js:2
+#: build/gallery/index.js:1
 msgid "Profotograaf is receiving too many requests. Try again in a moment."
 msgstr "Profotograaf sta ricevendo troppe richieste. Riprova tra un momento."
 
 #. translators: %d: number of seconds to wait.
-#: build/gallery/index.js:3
+#: build/gallery/index.js:2
 #, js-format
 msgid "Profotograaf is receiving too many requests. Try again in %d second."
 msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
 msgstr[0] "Profotograaf sta ricevendo troppe richieste. Riprova tra %d secondo."
 msgstr[1] "Profotograaf sta ricevendo troppe richieste. Riprova tra %d secondi."
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:2
 msgid "Profotograaf could not be reached. Check your connection and try again."
 msgstr "Non è stato possibile raggiungere Profotograaf. Controlla la connessione e riprova."
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:2
 msgid "Profotograaf reported a problem. Try again later."
 msgstr "Profotograaf ha segnalato un problema. Riprova più tardi."
 
-#: build/gallery/index.js:3
+#: build/gallery/index.js:2
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Questa galleria non può essere mostrata su altri siti al momento. Una password, una data di scadenza, la modalità di revisione o un'impostazione riservata ai clienti impedisce l'incorporamento."
 
@@ -2030,4 +2031,21 @@ msgstr ""
 
 #: includes/class-virtual-attachments.php:231
 msgid "This file is not a virtual Profotograaf attachment."
+msgstr ""
+
+#: includes/class-empty-gallery.php:70
+#: build/gallery/index.js:8
+msgid "This gallery has no photos that can be shown on your site."
+msgstr ""
+
+#: includes/class-empty-gallery.php:77
+msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet. Visitors do not see this note."
+msgstr ""
+
+#: build/gallery/index.js:2
+msgid "0 visible"
+msgstr ""
+
+#: build/gallery/index.js:8
+msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
 msgstr ""

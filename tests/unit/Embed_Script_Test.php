@@ -11,6 +11,7 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Embed_Script;
+use Profotograaf\Empty_Gallery;
 
 class Embed_Script_Test extends Gallery_Test_Case {
 
@@ -160,5 +161,31 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		$html = (string) ob_get_clean();
 
 		$this->assertStringContainsString( '<script async src="https://profotograaf.nl/share/embed/embed.js" onerror="console.error(', $html );
+	}
+
+	public function test_the_queued_script_gets_the_empty_gallery_watcher_after_it(): void {
+		$this->script->enqueue();
+
+		$this->assertSame( array( Empty_Gallery::script() ), $this->inline_scripts[ Embed_Script::HANDLE ] );
+	}
+
+	public function test_a_hand_printed_tag_is_followed_by_the_empty_gallery_watcher(): void {
+		Functions\when( 'did_action' )->justReturn( 1 );
+
+		ob_start();
+		$this->script->enqueue();
+		$output = (string) ob_get_clean();
+
+		$this->assertStringContainsString( '</script><script>(function(){var S="[data-profotograaf-gallery]"', $output );
+	}
+
+	public function test_the_watcher_marks_a_host_that_embed_js_left_without_photos(): void {
+		$js = Empty_Gallery::script();
+
+		$this->assertStringContainsString( 'data-pf-ready', $js );
+		$this->assertStringContainsString( 'shadowRoot', $js );
+		$this->assertStringContainsString( '/api/v1/embed/galleries/', $js );
+		$this->assertStringContainsString( 'setAttribute("data-pf-empty","")', $js );
+		$this->assertStringContainsString( 'removeAttribute("data-profotograaf-failed")', $js );
 	}
 }

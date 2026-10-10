@@ -706,4 +706,112 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertArrayNotHasKey( 'crop', Gallery_Renderer::OPTIONS );
 		$this->assertArrayNotHasKey( 'radius', Gallery_Renderer::OPTIONS );
 	}
+
+	/**
+	 * Index entry for one gallery.
+	 *
+	 * @param int $count Photo count.
+	 * @return array<string,array<string,mixed>>
+	 */
+	private function indexed( int $count ): array {
+		return array(
+			'g-1' => array(
+				'title' => 'A',
+				'url'   => 'https://profotograaf.nl/share/g/a',
+				'count' => $count,
+			),
+		);
+	}
+
+	public function test_a_gallery_listed_with_no_photos_gets_the_empty_state_without_space_or_link(): void {
+		$this->as_editor( false );
+		( new Gallery_Index( $this->api ) )->remember( array( array_merge( $this->row( 'g-1' ), array( 'photo_count' => 0 ) ) ) );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertSame( self::HINT . Reserved_Space::rule() . '<div class="profotograaf-gallery" data-profotograaf-gallery="g-1" data-layout="grid" data-pf-empty=""></div>', $html );
+	}
+
+	public function test_the_empty_state_keeps_the_hint_for_editors_only(): void {
+		$this->options['profotograaf_gallery_index'] = $this->indexed( 0 );
+
+		$this->as_editor( true );
+		$editor = $this->renderer->render( array( 'id' => 'g-1' ) );
+		$this->as_editor( false );
+		$visitor = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringContainsString( 'This gallery has no photos that can be shown on your site.', $editor );
+		$this->assertStringContainsString( 'data-pf-hint style=', $editor );
+		$this->assertStringNotContainsString( ' hidden', $editor );
+		$this->assertStringNotContainsString( '<a ', $editor );
+		$this->assertStringNotContainsString( 'has no photos', $visitor );
+	}
+
+	public function test_the_hint_follows_the_right_to_edit_the_current_post(): void {
+		$this->options['profotograaf_gallery_index'] = $this->indexed( 0 );
+		Functions\when( 'get_the_ID' )->justReturn( 42 );
+		Functions\when( 'current_user_can' )->alias( fn( $cap, $id = 0 ) => 'edit_post' === $cap && 42 === $id );
+
+		$this->assertStringContainsString( 'has no photos', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+
+		Functions\when( 'current_user_can' )->justReturn( false );
+		$this->assertStringNotContainsString( 'has no photos', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+	}
+
+	public function test_a_gallery_with_photos_keeps_its_space_and_link_and_a_hidden_hint_for_editors(): void {
+		$this->options['profotograaf_gallery_index'] = $this->indexed( 5 );
+
+		$this->as_editor( true );
+		$editor = $this->renderer->render( array( 'id' => 'g-1' ) );
+		$this->as_editor( false );
+		$visitor = $this->renderer->render( array( 'id' => 'g-1' ) );
+
+		$this->assertStringNotContainsString( 'data-pf-empty=', $editor );
+		$this->assertStringContainsString( ' style="--pf-ar:', $editor );
+		$this->assertStringContainsString( '<a href="https://profotograaf.nl/share/g/a"', $editor );
+		$this->assertStringContainsString( '<p class="profotograaf-gallery-empty-hint" data-pf-hint hidden', $editor );
+		$this->assertStringNotContainsString( 'data-pf-hint', $visitor );
+	}
+
+	public function test_a_gallery_with_an_unknown_count_is_not_called_empty(): void {
+		$this->options['profotograaf_gallery_index'] = array(
+			'g-1' => array(
+				'title' => 'A',
+				'url'   => 'https://profotograaf.nl/share/g/a',
+			),
+		);
+		$this->as_editor( false );
+
+		$this->assertStringNotContainsString( 'data-pf-empty=', $this->renderer->render( array( 'id' => 'g-1' ) ) );
+	}
+
+	public function test_the_empty_state_works_with_the_block_wrapper(): void {
+		$this->as_editor( false );
+		$this->options['profotograaf_gallery_index'] = $this->indexed( 0 );
+		$wrapper                                     = static function ( array $attributes ): string {
+			$html = '';
+			foreach ( $attributes as $name => $value ) {
+				$html .= $name . '="' . $value . '" ';
+			}
+			return trim( $html );
+		};
+
+		$html = $this->renderer->render(
+			array(
+				'id'      => 'g-1',
+				'wrapper' => $wrapper,
+			)
+		);
+
+		$this->assertStringContainsString( 'data-pf-empty=""', $html );
+		$this->assertStringNotContainsString( 'style=', substr( $html, (int) strpos( $html, '<div ' ) ) );
+	}
+
+	public function test_the_stylesheet_collapses_empty_and_failed_galleries(): void {
+		$rule = Reserved_Space::rule();
+
+		$this->assertStringContainsString( '[data-pf-empty],[data-profotograaf-failed]{display:block;aspect-ratio:auto!important', $rule );
+		$this->assertStringContainsString( '[data-pf-empty]>a,[data-pf-empty]>noscript{display:none!important}', $rule );
+		$this->assertStringContainsString( '[data-profotograaf-gallery]>a{max-width:100%', $rule );
+	}
 }

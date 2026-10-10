@@ -185,6 +185,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: a gallery without photos that can be shown has an empty state. In the editor the block shows "This gallery has no photos that can be shown on your site." with a hint (photos still processing, videos, or file types the site embed cannot show yet), based on the real photo count of the public embed payload (`GET /profotograaf/v1/galleries/{id}/showable`), and the picker reads "0 visible" for a gallery listed without photos. On the site the block holds no reserved space and shows no failed message, also when embed.js draws zero photos. People who can edit the post see a short hint there. The fallback link of a failed gallery stays visible inside the block.
 * New: the plugin tells Profotograaf its version, the WordPress version and the PHP version when you connect, and once a day while connected. Profotograaf answers with the review prompt and error reporting settings, which the plugin stores. A failed call keeps the last answer.
 * Internal: the connection keeps the list of scopes the platform granted. A site paired earlier fills it with one background token refresh, without a prompt.
 * Fix: the "Load more photos" button in the media modal tab shows only when more photos are left.

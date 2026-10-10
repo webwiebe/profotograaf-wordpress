@@ -40,6 +40,13 @@ describe( 'Picker', () => {
 		);
 	} );
 
+	it( 'says 0 visible for a gallery listed with no photos', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow( { photo_count: 0 } ) ] );
+		render( <Picker onPick={ vi.fn() } /> );
+		await screen.findByText( 'Spring wedding' );
+		expect( screen.getByText( '0 visible' ) ).toBeTruthy();
+	} );
+
 	it( 'uses the alt text the platform sends for the cover and keeps it empty otherwise', async () => {
 		fetchMock.mockResolvedValue( [
 			galleryRow( { cover_alt: 'The couple at the altar' } ),

@@ -40,6 +40,13 @@ abstract class Gallery_Test_Case extends Wp_Test_Case {
 	protected array $enqueued = array();
 
 	/**
+	 * Inline scripts added through wp_add_inline_script, by handle.
+	 *
+	 * @var array<string,string[]>
+	 */
+	protected array $inline_scripts = array();
+
+	/**
 	 * The connection hint the first gallery on a page carries.
 	 */
 	protected const HINT = '<link rel="preconnect" href="https://profotograaf.nl"><link rel="preconnect" href="https://profotograaf.nl" crossorigin>';
@@ -59,6 +66,14 @@ abstract class Gallery_Test_Case extends Wp_Test_Case {
 		Functions\when( 'wp_enqueue_script' )->alias(
 			function ( $handle, $src = '', $deps = array(), $ver = false, $args = array() ) {
 				$this->enqueued[ $handle ] = compact( 'src', 'deps', 'ver', 'args' );
+			}
+		);
+
+		Functions\when( 'get_the_ID' )->justReturn( 0 );
+		Functions\when( 'wp_add_inline_script' )->alias(
+			function ( $handle, $code ) {
+				$this->inline_scripts[ $handle ][] = $code;
+				return true;
 			}
 		);
 
