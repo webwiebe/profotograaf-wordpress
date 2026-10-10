@@ -129,7 +129,9 @@ test.describe( 'display options with the real script', () => {
 	} );
 
 	test( 'masonry ignores the site-wide 1:1 photo shape and draws tiles of different heights', async ( { browser } ) => {
-		const current = wp( 'eval', "$o = get_option( 'profotograaf_settings', array() ); echo $o['gallery_ratio'] ?? '';" );
+		// PHP notices can share the output, so the value sits between markers.
+		const stored = wp( 'eval', "$o = get_option( 'profotograaf_settings', array() ); echo '[' . ( $o['gallery_ratio'] ?? '' ) . ']';" );
+		const current = /\[([a-z0-9-]*)\]/.exec( stored )?.[ 1 ] ?? '';
 		const setRatio = ( value ) => wp( 'eval', `$o = get_option( 'profotograaf_settings', array() ); $o['gallery_ratio'] = '${ value }'; update_option( 'profotograaf_settings', $o );` );
 		setRatio( '1-1' );
 		try {
