@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T21:29:43+00:00\n"
+"POT-Creation-Date: 2026-10-10T21:42:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -521,124 +521,124 @@ msgstr ""
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
-#: includes/class-gallery-look.php:148
+#: includes/class-gallery-look.php:150
 #: includes/class-settings-schema.php:123
 #: includes/class-settings-schema.php:191
 msgid "Profotograaf default"
 msgstr ""
 
-#: includes/class-gallery-look.php:159
+#: includes/class-gallery-look.php:161
 #: build/gallery/index.js:4
 msgid "Space between rows (pixels)"
 msgstr ""
 
-#: includes/class-gallery-look.php:159
-#: includes/class-gallery-look.php:160
+#: includes/class-gallery-look.php:161
+#: includes/class-gallery-look.php:162
 msgid "From 0 to 96 pixels. Empty uses the gap between photos."
 msgstr ""
 
-#: includes/class-gallery-look.php:160
+#: includes/class-gallery-look.php:162
 #: build/gallery/index.js:4
 msgid "Space between columns (pixels)"
 msgstr ""
 
-#: includes/class-gallery-look.php:165
+#: includes/class-gallery-look.php:167
 #: build/gallery/index.js:4
 msgid "Corners"
 msgstr ""
 
-#: includes/class-gallery-look.php:166
+#: includes/class-gallery-look.php:168
 msgid "Rounded corners on every photo. Circle applies to square photos only; other shapes keep the default corners."
 msgstr ""
 
-#: includes/class-gallery-look.php:173
+#: includes/class-gallery-look.php:175
 #: build/gallery/index.js:4
 msgid "Hover effect"
 msgstr ""
 
-#: includes/class-gallery-look.php:174
+#: includes/class-gallery-look.php:176
 msgid "What a photo does under the mouse or keyboard focus. Grow lifts the whole photo above its neighbours; the slideshow does not grow. Visitors who ask for less motion see no effect."
 msgstr ""
 
-#: includes/class-gallery-look.php:181
+#: includes/class-gallery-look.php:183
 #: build/gallery/index.js:4
 msgid "Hover strength"
 msgstr ""
 
-#: includes/class-gallery-look.php:184
+#: includes/class-gallery-look.php:186
 #: build/gallery/index.js:4
 msgid "Subtle"
 msgstr ""
 
-#: includes/class-gallery-look.php:185
-#: includes/class-gallery-look.php:214
+#: includes/class-gallery-look.php:187
+#: includes/class-gallery-look.php:216
 #: build/gallery/index.js:4
 msgid "Strong"
 msgstr ""
 
-#: includes/class-gallery-look.php:192
+#: includes/class-gallery-look.php:194
 #: build/gallery/index.js:4
 msgid "Frame colour"
 msgstr ""
 
-#: includes/class-gallery-look.php:193
+#: includes/class-gallery-look.php:195
 msgid "The colour of the frame around each photo, as a hex code such as #ffffff. White when only a width is set."
 msgstr ""
 
-#: includes/class-gallery-look.php:202
+#: includes/class-gallery-look.php:204
 #: build/gallery/index.js:4
 msgid "Frame width (pixels)"
 msgstr ""
 
-#: includes/class-gallery-look.php:203
+#: includes/class-gallery-look.php:205
 msgid "A frame around each photo, from 1 to 24 pixels. 0 means no frame. Not drawn in a slideshow."
 msgstr ""
 
-#: includes/class-gallery-look.php:209
+#: includes/class-gallery-look.php:211
 #: build/gallery/index.js:4
 msgid "Shadow"
 msgstr ""
 
-#: includes/class-gallery-look.php:210
+#: includes/class-gallery-look.php:212
 msgid "A shadow under each photo. Not drawn in a slideshow."
 msgstr ""
 
-#: includes/class-gallery-look.php:212
-#: includes/class-gallery-look.php:243
+#: includes/class-gallery-look.php:214
+#: includes/class-gallery-look.php:245
 #: build/gallery/index.js:4
 msgid "None"
 msgstr ""
 
-#: includes/class-gallery-look.php:213
+#: includes/class-gallery-look.php:215
 #: build/gallery/index.js:4
 msgid "Soft"
 msgstr ""
 
-#: includes/class-gallery-look.php:227
+#: includes/class-gallery-look.php:229
 #: build/gallery/index.js:4
 msgid "Square corners"
 msgstr ""
 
-#: includes/class-gallery-look.php:228
+#: includes/class-gallery-look.php:230
 #: build/gallery/index.js:4
 msgid "Subtle (4 pixels)"
 msgstr ""
 
-#: includes/class-gallery-look.php:229
+#: includes/class-gallery-look.php:231
 #: build/gallery/index.js:4
 msgid "Rounded (12 pixels)"
 msgstr ""
 
-#: includes/class-gallery-look.php:230
+#: includes/class-gallery-look.php:232
 msgid "Circle (square photos only)"
 msgstr ""
 
-#: includes/class-gallery-look.php:241
+#: includes/class-gallery-look.php:243
 #: build/gallery/index.js:4
 msgid "Zoom inside the frame"
 msgstr ""
 
-#: includes/class-gallery-look.php:242
+#: includes/class-gallery-look.php:244
 #: build/gallery/index.js:4
 msgid "Grow above the neighbours"
 msgstr ""
