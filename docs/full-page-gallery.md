@@ -1,0 +1,118 @@
+# Full-page gallery
+
+The full-page gallery block (`profotograaf/full-page-gallery`, #194) shows one
+Profotograaf gallery as a sequence of sections with different shapes. The
+plugin renders it on the server from the public embed payload, so all sections
+share one lightbox, the photos are in the HTML with their size, and the page
+shows them without JavaScript.
+
+## Shared vocabulary
+
+`includes/sections.json` holds the section types, the default and the range of
+every field, the phone values and the presets. PHP reads it through
+`Sections_Schema`, and the editor imports it through
+`blocks/full-page-gallery/sections.ts`. The platform share page implements the
+same table (wiebe-xyz/professionals#2385).
+
+| Type | Photos | Fields (default) |
+|---|---|---|
+| `grid` | columns × rows | columns 3, rows 2, ratio `3-2`, gap 8, captions `off` |
+| `masonry` | count | columns 3, count 9, gap 8, captions `off` |
+| `feature` | count (2 or 3) | count 2, gap 8, captions `off` |
+| `hero` | 1 | height 85 (vh), captions `off`, title empty |
+| `pair` | 3 | side `left`, mirror on, gap 8, captions `off` |
+| `filmstrip` | count | count 8, rowHeight 360 (px), gap 8, captions `off` |
+| `text` | 0 | heading, text, align `center` |
+
+Presets repeat their pattern until the photos run out:
+
+| Preset | Pattern | Photos per cycle |
+|---|---|---|
+| `calm` | grid 3×2, feature 2 | 8 |
+| `editorial` (default) | hero, grid 3×2, pair, grid 3×2, feature 3 | 19 |
+| `playful` | grid 4×2, pair, filmstrip 8, pair, hero, masonry 3 columns 9 | 32 |
+| `custom` | the photographer's own list | any |
+
+A block stores an empty value for a field the photographer left alone, and
+`Sections_Schema::normalise()` fills it from the table. A site-wide setting
+can later sit between the two (keys `sections_<type>_<field>`) without a
+migration.
+
+## Sequencer rules
+
+1. Gallery order, with excluded photos removed first.
+2. A picked photo leaves the flow before the sections are filled, so it shows
+   once. An unpicked slot takes the next photo in flow order.
+3. When fewer photos are left than the next section takes, the remainder
+   becomes a grid with `columns = min(remaining, columns)`. One leftover photo
+   becomes a hero.
+4. A `text` section takes no photos and never ends the gallery.
+5. No photos: the fallback link, as in the gallery block.
+
+Picks in a preset are keyed by slot, `<cycle>.<section index>.<position>`
+(`0.0.0` is the first photo of the first section of the first cycle). In
+`custom`, each section keeps its own `photoIds`.
+
+## Markup contract
+
+The renderer writes this markup and the front-end script
+(`blocks/full-page-gallery/view.ts`) reads it. Both build against this section.
+
+```html
+<div class="pf-fp alignfull" data-pf-full-page="{gallery id}" data-preset="editorial">
+  <section class="pf-fp-s pf-fp-grid" data-type="grid"
+           style="--pf-cols:3;--pf-cols-phone:2;--pf-ratio:3/2;--pf-gap:8px">
+    <figure class="pf-fp-photo">
+      <a class="pf-fp-open" href="{photo page on Profotograaf}" data-pf-index="0">
+        <img src="{web}" srcset="{web} 1600w, {large} 2560w" sizes="…"
+             width="{w}" height="{h}" alt="{alt}" loading="lazy" decoding="async">
+      </a>
+      <figcaption>{caption}</figcaption>
+    </figure>
+    …
+  </section>
+  <section class="pf-fp-s pf-fp-text" data-type="text" style="--pf-align:center">
+    <h2>{heading}</h2>
+    <p>{text}</p>
+  </section>
+  <a class="pf-fp-badge" href="{badge.url}">…</a>
+  <script type="application/json" class="pf-fp-data">{…}</script>
+</div>
+```
+
+- Every section is a `section.pf-fp-s.pf-fp-{type}` with `data-type`. Layout
+  values travel as CSS custom properties: `--pf-cols`, `--pf-cols-phone`,
+  `--pf-ratio` (`auto` for `original`), `--pf-gap`, `--pf-height` (hero, in
+  vh), `--pf-height-phone`, `--pf-row` and `--pf-row-phone` (filmstrip, in px),
+  and `--pf-align` (text).
+- `pair` sets `data-side="left|right"`. The renderer resolves the mirroring,
+  so the script and the CSS read the side as written.
+- `filmstrip` sets `tabindex="0"`, `role="region"` and an `aria-label`, and
+  wraps its figures in `.pf-fp-track`, the element that scrolls.
+- `hero` with a title sets `data-title` and renders the title in
+  `.pf-fp-title` over the photo.
+- Captions: `data-captions="below|overlay"` on the section when they are on.
+- `data-pf-index` is the photo's position in one flat list across all
+  sections, in render order. The lightbox steps through that list.
+- With the lightbox off, `.pf-fp-open` is a plain link to the photo page (or
+  to nothing, following the block's link setting) and has no `data-pf-index`.
+- The first section's images load eagerly. A hero in the first section gets
+  `fetchpriority="high"`. Every later image has `loading="lazy"`.
+- `.pf-fp-badge` is present only when the payload's `badge.show` is set, and
+  has the class `prominent` when `badge.prominent` is set.
+- `script.pf-fp-data` holds JSON:
+  `{ "lightbox": bool, "photos": [ { "src", "srcset", "w", "h", "alt", "caption" } ], "beacon": { "url", "gallery" } }`.
+  `photos` is the flat list behind `data-pf-index`.
+
+## Platform
+
+- The renderer reads `GET /api/v1/embed/galleries/{id}` and caches it in a
+  transient for 5 minutes, keyed by the gallery id and the payload `version`.
+- A watermarked gallery lists only `web`, so the renderer uses only `web`.
+- A larger variant for hero and feature photos is
+  wiebe-xyz/professionals#2393. The renderer adds it to `srcset` when the
+  payload lists it.
+- The view beacon is `POST {platform}/share/embed/view`, form-encoded
+  `gallery`, `source=embed` and `origin`, sent once when the gallery is
+  visible and never under Do Not Track or Global Privacy Control. It becomes a
+  documented contract in wiebe-xyz/professionals#2394.

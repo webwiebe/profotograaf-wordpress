@@ -1,0 +1,80 @@
+{
+	"version": 1,
+	"defaultPreset": "editorial",
+	"phoneBreakpoint": 600,
+	"fields": {
+		"columns": { "default": 3, "min": 1, "max": 6 },
+		"rows": { "default": 2, "min": 1, "max": 6 },
+		"count": { "default": 2, "min": 1, "max": 24 },
+		"ratio": { "default": "3-2", "enum": [ "original", "1-1", "4-3", "3-2", "16-9", "2-3", "3-4" ] },
+		"gap": { "default": 8, "min": 0, "max": 64 },
+		"captions": { "default": "off", "enum": [ "off", "below", "overlay" ] },
+		"height": { "default": 85, "min": 30, "max": 100 },
+		"rowHeight": { "default": 360, "min": 120, "max": 800 },
+		"side": { "default": "left", "enum": [ "left", "right" ] },
+		"mirror": { "default": true },
+		"title": { "default": "" },
+		"heading": { "default": "" },
+		"text": { "default": "" },
+		"align": { "default": "center", "enum": [ "left", "center", "right" ] }
+	},
+	"types": {
+		"grid": {
+			"take": "columns*rows",
+			"fields": { "columns": 3, "rows": 2, "ratio": "3-2", "gap": 8, "captions": "off" },
+			"phone": { "columns": 2 }
+		},
+		"masonry": {
+			"take": "count",
+			"fields": { "columns": 3, "count": 9, "gap": 8, "captions": "off" },
+			"phone": { "columns": 2 }
+		},
+		"feature": {
+			"take": "count",
+			"fields": { "count": 2, "gap": 8, "captions": "off" },
+			"limits": { "count": { "min": 2, "max": 3 } },
+			"phone": { "columns": 1 }
+		},
+		"hero": {
+			"take": 1,
+			"fields": { "height": 85, "captions": "off", "title": "" },
+			"phone": { "height": 70 }
+		},
+		"pair": {
+			"take": 3,
+			"fields": { "side": "left", "mirror": true, "gap": 8, "captions": "off" },
+			"phone": { "columns": 2 }
+		},
+		"filmstrip": {
+			"take": "count",
+			"fields": { "count": 8, "rowHeight": 360, "gap": 8, "captions": "off" },
+			"phone": { "rowHeight": 240 }
+		},
+		"text": {
+			"take": 0,
+			"fields": { "heading": "", "text": "", "align": "center" },
+			"phone": {}
+		}
+	},
+	"presets": {
+		"calm": [
+			{ "type": "grid", "columns": 3, "rows": 2 },
+			{ "type": "feature", "count": 2 }
+		],
+		"editorial": [
+			{ "type": "hero" },
+			{ "type": "grid", "columns": 3, "rows": 2 },
+			{ "type": "pair" },
+			{ "type": "grid", "columns": 3, "rows": 2 },
+			{ "type": "feature", "count": 3 }
+		],
+		"playful": [
+			{ "type": "grid", "columns": 4, "rows": 2 },
+			{ "type": "pair" },
+			{ "type": "filmstrip", "count": 8 },
+			{ "type": "pair" },
+			{ "type": "hero" },
+			{ "type": "masonry", "columns": 3, "count": 9 }
+		]
+	}
+}
