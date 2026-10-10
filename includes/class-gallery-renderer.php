@@ -145,6 +145,13 @@ class Gallery_Renderer {
 	private Settings $settings;
 
 	/**
+	 * Option precedence.
+	 *
+	 * @var Option_Resolver
+	 */
+	private Option_Resolver $options;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Embed_Script  $script   Script handling.
@@ -155,6 +162,7 @@ class Gallery_Renderer {
 		$this->script   = $script;
 		$this->index    = $index;
 		$this->settings = $settings;
+		$this->options  = new Option_Resolver( $settings );
 	}
 
 	/**
@@ -208,8 +216,9 @@ class Gallery_Renderer {
 	 * colours) becomes the `duotone` argument as two hex colours, so embed.js
 	 * draws it inside the shadow root, where the filter rule WordPress writes for
 	 * the block cannot reach. A block that turns duotone off (`unset`) gets the
-	 * value `none`, which also switches the site-wide duotone off. A value that
-	 * cannot be resolved to two hex colours leaves the site-wide duotone in place.
+	 * value `none`, which also switches the site-wide duotone off. So does a
+	 * duotone that cannot be resolved to two colours: a block that sets a
+	 * duotone never shows the site-wide one.
 	 *
 	 * @param array<string,mixed> $attributes Block attributes.
 	 * @return array<string,mixed>
@@ -296,8 +305,9 @@ class Gallery_Renderer {
 	 * Renders a gallery.
 	 *
 	 * Keys of $args: id (required), layout (grid, masonry or slideshow; the
-	 * default layout from the settings when empty or unknown; when that is the
-	 * platform default, the drawn layout of the gallery from the index), title and url
+	 * default layout from the settings when empty or unknown; `auto`, or a
+	 * setting on the platform default, is the drawn layout of the gallery from
+	 * the index), title and url
 	 * (the fallback link; looked up when both are empty), class (extra CSS
 	 * classes for the div), the display options listed in OPTIONS and wrapper
 	 * (a callable that takes the div's attributes and returns the attribute
@@ -305,8 +315,8 @@ class Gallery_Renderer {
 	 * typography, border, spacing and anchor supports reach the div).
 	 *
 	 * A display option comes from $args first, from $shortcode second and from
-	 * the site default last. An empty or invalid value falls through to the
-	 * next layer.
+	 * the site default last (Option_Resolver). An empty or invalid value falls
+	 * through to the next layer; `auto` stops at the built-in behaviour.
 	 *
 	 * @param array<string,mixed> $args      Arguments, from the block.
 	 * @param array<string,mixed> $shortcode Display options from shortcode attributes.
@@ -321,7 +331,7 @@ class Gallery_Renderer {
 			);
 		}
 
-		$layout = (string) $this->settings->resolve( 'default_layout', array( 'default_layout' => $args['layout'] ?? '' ) );
+		$layout = (string) $this->options->resolve( 'default_layout', array( $args['layout'] ?? '' ) );
 		if ( '' === $layout ) {
 			// Platform default: the layout of the gallery on Profotograaf, as embed.js draws it.
 			$layout = $this->index->drawn_layout( $id );
@@ -387,7 +397,8 @@ class Gallery_Renderer {
 	}
 
 	/**
-	 * One option resolved: block, then shortcode, then the site default.
+	 * One option resolved: block, then shortcode, then the site default, then
+	 * nothing (embed.js's own behaviour).
 	 *
 	 * @param string              $key       Render argument.
 	 * @param string|null         $setting   Schema key of the site default, if any.
@@ -399,14 +410,7 @@ class Gallery_Renderer {
 			$text = self::clean_image_text( $block[ $key ] ?? '' );
 			return '' !== $text ? $text : self::clean_image_text( $shortcode[ $key ] ?? '' );
 		}
-		if ( 'duotone' === $key && 'none' === ( $block[ $key ] ?? '' ) ) {
-			return '';
-		}
-		$layers = array();
-		foreach ( array( $block, $shortcode ) as $layer ) {
-			$layers[] = array( $setting => $layer[ $key ] ?? '' );
-		}
-		return (string) $this->settings->resolve( $setting, ...$layers );
+		return (string) $this->options->resolve( $setting, array( $block[ $key ] ?? '', $shortcode[ $key ] ?? '' ) );
 	}
 
 	/**

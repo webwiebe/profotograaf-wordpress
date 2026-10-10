@@ -19,6 +19,7 @@ export interface LayoutOption {
 export function layoutOptions(): LayoutOption[] {
 	return [
 		{ label: __( 'Site default', 'profotograaf' ), value: '' },
+		{ label: __( "Profotograaf default (the gallery's own layout)", 'profotograaf' ), value: 'auto' },
 		{ label: __( 'Grid', 'profotograaf' ), value: 'grid' },
 		{ label: __( 'Masonry', 'profotograaf' ), value: 'masonry' },
 		{ label: __( 'Slideshow', 'profotograaf' ), value: 'slideshow' },

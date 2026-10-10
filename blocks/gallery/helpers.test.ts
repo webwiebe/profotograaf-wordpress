@@ -31,9 +31,10 @@ describe( 'countLabel', () => {
 } );
 
 describe( 'layouts', () => {
-	it( 'lists the site default first, then the three layouts', () => {
+	it( 'lists the site default first, then the own layout of the gallery, then the three layouts', () => {
 		expect( layoutOptions().map( ( o ) => o.value ) ).toEqual( [
 			'',
+			'auto',
 			'grid',
 			'masonry',
 			'slideshow',

@@ -131,6 +131,12 @@ test.describe( 'interaction on the real platform', () => {
 		await expectFallback( gallery( page, 'grid-few' ) );
 	} );
 
+	test( 'a block duotone wins over the site duotone, and off means off (#197)', async ( { page } ) => {
+		await openSample( page, 'sample-combinations' );
+		await expect( gallery( page, 'combo-duotone' ) ).toHaveAttribute( 'data-duotone', '#204a87,#ffd6e0' );
+		await expect( gallery( page, 'combo-duotone-off' ) ).not.toHaveAttribute( 'data-duotone' );
+	} );
+
 	test( 'a gallery of PNG photos draws them (professionals#2330)', async ( { page } ) => {
 		await openSample( page, 'sample-combinations' );
 		await expectPhotos( gallery( page, 'combo-png' ) );

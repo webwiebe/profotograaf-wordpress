@@ -31,7 +31,12 @@ const ROLE_TITLES = {
 /** Roles that fall back to another role when the platform has no gallery for them. */
 const ROLE_FALLBACK = { landscape: 'large', portrait: 'large', mixed: 'large' };
 
-const DUOTONE = [ '#1a1a2e', '#f5c542' ];
+/**
+ * The block duotone of the sample. It differs from the duotone the dev site
+ * sets in the plugin settings (#1a1a2e,#f5c542), so the sample shows that the
+ * block wins, and one colour is rgb() to show that format is read (#197).
+ */
+const DUOTONE = [ 'rgb(32, 74, 135)', '#ffd6e0' ];
 
 /**
  * @typedef {{anchor:string, role:keyof typeof ROLE_TITLES, attrs?:Record<string,unknown>, expect?:'photos'|'empty'|'png', heading:string}} SampleBlock
@@ -83,6 +88,7 @@ const PAGES = [
 			{ anchor: 'combo-wide', role: 'large', heading: 'Grid, wide alignment, 5 columns', attrs: { layout: 'grid', align: 'wide', columns: '5', perPage: '10', loadMore: 'on' } },
 			{ anchor: 'combo-full', role: 'mixed', heading: 'Masonry, full width', attrs: { layout: 'masonry', align: 'full' } },
 			{ anchor: 'combo-duotone', role: 'mixed', heading: 'Grid with the block duotone filter', attrs: { layout: 'grid', style: { color: { duotone: DUOTONE } } } },
+			{ anchor: 'combo-duotone-off', role: 'mixed', heading: 'Grid with duotone turned off on the block', attrs: { layout: 'grid', style: { color: { duotone: 'unset' } } } },
 			{ anchor: 'combo-png', role: 'png', expect: 'png', heading: 'Grid of PNG photos (professionals#2330)', attrs: { layout: 'grid' } },
 			{ anchor: 'combo-empty', role: 'empty', expect: 'empty', heading: 'Grid of an empty gallery', attrs: { layout: 'grid' } },
 		],
