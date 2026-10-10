@@ -440,6 +440,157 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertFalse( $this->options['profotograaf_connection']['write_denied'] );
 	}
 
+	private function write_connect(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
+		$this->options['profotograaf_connection']['scope_revision'] = \Profotograaf\Config::SCOPE_REVISION;
+	}
+
+	private function temp_file( string $contents, string $name = 'IMG_1.jpg' ): string {
+		$dir = sys_get_temp_dir() . '/profotograaf-test-' . bin2hex( random_bytes( 4 ) );
+		mkdir( $dir );
+		$path = $dir . '/' . $name;
+		file_put_contents( $path, $contents );
+		return $path;
+	}
+
+	public function test_create_gallery_posts_the_title(): void {
+		$this->write_connect();
+		$this->http->reply( 201, array( 'id' => 'g9', 'slug' => 'copy-2026-10', 'title' => 'Copy 2026-10', 'url' => 'https://f.profotograaf.nl/g/copy' ) );
+
+		$result = $this->api->create_gallery( '  Copy 2026-10 ' );
+
+		$this->assertSame( 'g9', $result['id'] );
+		$this->assertSame( 'POST', $this->http->requests[0]['method'] );
+		$this->assertStringEndsWith( '/api/v1/embed/galleries', $this->http->requests[0]['url'] );
+		$this->assertSame( array( 'title' => 'Copy 2026-10' ), $this->http->body( 0 ) );
+	}
+
+	public function test_create_gallery_refuses_an_empty_title_without_a_request(): void {
+		$this->write_connect();
+
+		$this->assertWPError( $this->api->create_gallery( '  ' ), 'profotograaf_invalid' );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
+	public function test_create_gallery_403_asks_to_reconnect(): void {
+		$this->write_connect();
+		$this->http->reply( 403, array( 'error' => 'forbidden' ) );
+
+		$this->assertWPError( $this->api->create_gallery( 'X' ), 'profotograaf_reconnect' );
+		$this->assertTrue( ( new Connection() )->needs_write_reconnect( true ) );
+	}
+
+	public function test_create_gallery_without_an_id_in_the_answer_is_an_error(): void {
+		$this->write_connect();
+		$this->http->reply( 201, array() );
+
+		$this->assertWPError( $this->api->create_gallery( 'X' ), 'profotograaf_http' );
+	}
+
+	public function test_upload_photo_sends_a_multipart_file_part(): void {
+		$this->write_connect();
+		$path = $this->temp_file( 'JPEGBYTES' );
+		$this->http->reply( 202, array( 'id' => 'p7', 'gallery_id' => 'g1', 'filename' => 'IMG_1.jpg' ) );
+
+		$result = $this->api->upload_photo( 'g1', $path, '', 'image/jpeg' );
+
+		$this->assertSame( 'p7', $result['id'] );
+		$request = $this->http->requests[0];
+		$this->assertSame( 'POST', $request['method'] );
+		$this->assertStringEndsWith( '/api/v1/embed/galleries/g1/photos', $request['url'] );
+		$this->assertSame( 'Bearer access-1', $request['headers']['Authorization'] );
+		$this->assertMatchesRegularExpression( '#^multipart/form-data; boundary=(\w+)$#', $request['headers']['Content-Type'] );
+		$this->assertStringContainsString( 'name="file"; filename="IMG_1.jpg"', $request['body'] );
+		$this->assertStringContainsString( "Content-Type: image/jpeg\r\n\r\nJPEGBYTES\r\n", $request['body'] );
+		$this->assertGreaterThan( 30, $request['timeout'] );
+	}
+
+	public function test_upload_photo_cleans_the_file_name(): void {
+		$this->write_connect();
+		$path = $this->temp_file( 'x' );
+		$this->http->reply( 201, array( 'id' => 'p1' ) );
+
+		$this->api->upload_photo( 'g1', $path, "a\"b\r\nc.jpg" );
+
+		$this->assertStringContainsString( 'filename="a_b__c.jpg"', $this->http->requests[0]['body'] );
+	}
+
+	public function test_upload_photo_refuses_a_missing_file_without_a_request(): void {
+		$this->write_connect();
+
+		$this->assertWPError( $this->api->upload_photo( 'g1', '/nonexistent/file.jpg' ), 'profotograaf_invalid' );
+		$this->assertWPError( $this->api->upload_photo( '', '/nonexistent/file.jpg' ), 'profotograaf_invalid' );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
+	public function test_upload_photo_413_is_a_final_storage_full_error(): void {
+		$this->write_connect();
+		$this->http->reply( 413, array( 'error' => 'storage limit reached' ) );
+
+		$result = $this->api->upload_photo( 'g1', $this->temp_file( 'x' ) );
+
+		$this->assertWPError( $result, 'profotograaf_storage_full' );
+		$this->assertFalse( $result->get_error_data()['retryable'] );
+		$this->assertSame( 413, $result->get_error_data()['status'] );
+	}
+
+	public function test_upload_photo_403_asks_to_reconnect(): void {
+		$this->write_connect();
+		$this->http->reply( 403, array( 'error' => 'forbidden' ) );
+
+		$this->assertWPError( $this->api->upload_photo( 'g1', $this->temp_file( 'x' ) ), 'profotograaf_reconnect' );
+	}
+
+	public function test_upload_photo_5xx_is_retryable(): void {
+		$this->write_connect();
+		$this->http->reply( 503, array( 'error' => 'down' ) );
+
+		$result = $this->api->upload_photo( 'g1', $this->temp_file( 'x' ) );
+
+		$this->assertWPError( $result, 'profotograaf_http' );
+		$this->assertTrue( $result->get_error_data()['retryable'] );
+	}
+
+	public function test_a_401_on_upload_resends_the_same_body_after_a_refresh(): void {
+		$this->write_connect();
+		$this->http->reply( 401, array( 'error' => 'expired' ) );
+		$this->refresh_reply();
+		$this->http->reply( 201, array( 'id' => 'p2' ) );
+
+		$result = $this->api->upload_photo( 'g1', $this->temp_file( 'BYTES' ) );
+
+		$this->assertSame( 'p2', $result['id'] );
+		$this->assertSame( 'Bearer access-2', $this->http->requests[2]['headers']['Authorization'] );
+		$this->assertStringContainsString( 'BYTES', $this->http->requests[2]['body'] );
+	}
+
+	public function test_update_photo_patches_only_the_given_fields(): void {
+		$this->write_connect();
+		$this->http->reply( 200, array( 'id' => 'p1', 'title' => 'T' ) );
+
+		$result = $this->api->update_photo( 'p1', array( 'title' => 'T', 'alt' => '', 'other' => 'dropped' ) );
+
+		$this->assertSame( 'p1', $result['id'] );
+		$this->assertSame( 'PATCH', $this->http->requests[0]['method'] );
+		$this->assertStringEndsWith( '/api/v1/embed/photos/p1', $this->http->requests[0]['url'] );
+		$this->assertSame( array( 'title' => 'T', 'alt' => '' ), $this->http->body( 0 ) );
+	}
+
+	public function test_update_photo_without_a_field_makes_no_request(): void {
+		$this->write_connect();
+
+		$this->assertWPError( $this->api->update_photo( 'p1', array( 'other' => 'x' ) ), 'profotograaf_invalid' );
+		$this->assertWPError( $this->api->update_photo( '', array( 'title' => 'x' ) ), 'profotograaf_invalid' );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
+	public function test_update_photo_403_asks_to_reconnect(): void {
+		$this->write_connect();
+		$this->http->reply( 403, array( 'error' => 'forbidden' ) );
+
+		$this->assertWPError( $this->api->update_photo( 'p1', array( 'title' => 'x' ) ), 'profotograaf_reconnect' );
+	}
+
 	public function test_mark_embeddable_other_failures_stay_http_errors(): void {
 		$this->connect();
 		$this->http->reply( 404, array( 'error' => 'gallery not found' ) );

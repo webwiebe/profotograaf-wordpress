@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *  - profotograaf_invalid: the payload was rejected before sending.
  *  - profotograaf_reconnect: the platform refused a call because the token lacks a
  *    permission the plugin now asks for; connecting again grants it.
+ *  - profotograaf_storage_full: an upload got 413, the account is at its storage cap.
  *  - profotograaf_refresh_busy: another request is refreshing the token.
  *
  * The error data is always an array with `status` (HTTP status, 0 when no
@@ -37,10 +38,17 @@ defined( 'ABSPATH' ) || exit;
  */
 class Api_Client {
 
+	use Api_Client_Writes;
+
 	/**
 	 * Seconds before expiry at which a token counts as expired.
 	 */
 	private const SKEW = 30;
+
+	/**
+	 * Seconds an upload may take.
+	 */
+	private const UPLOAD_TIMEOUT = 120;
 
 	private const LEAD_FIELDS = array(
 		'name',
@@ -128,66 +136,6 @@ class Api_Client {
 	}
 
 	/**
-	 * Marks a gallery as embeddable on other sites.
-	 *
-	 * Calls `PUT /api/v1/embed/galleries/{id}/embeddable`, which needs the
-	 * galleries:embed scope. The answer is `id`, `embeddable` and `available`.
-	 * `available` is false when a password, an expiry date, proofing mode or a
-	 * client-only setting keeps the gallery off other sites even though the
-	 * setting is on; callers tell the photographer.
-	 *
-	 * A 403 means the token was paired before the scope existed. The result is
-	 * then a profotograaf_reconnect error and the connection remembers it, so
-	 * the settings page asks the photographer to connect again.
-	 *
-	 * @param string $gallery_id Gallery id.
-	 * @return array{id:string,embeddable:bool,available:bool}|WP_Error
-	 */
-	public function mark_embeddable( string $gallery_id ) {
-		if ( '' === trim( $gallery_id ) ) {
-			return Api_Errors::make( 'profotograaf_invalid', __( 'A gallery id is required.', 'profotograaf' ), 0, false );
-		}
-
-		$request = array(
-			'method' => 'PUT',
-			'path'   => '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/embeddable',
-			'body'   => array( 'embeddable' => true ),
-		);
-
-		/**
-		 * Overrides the request that marks a gallery embeddable.
-		 *
-		 * @param array{method:string,path:string,body:array<string,mixed>} $request    The default request.
-		 * @param string                                                    $gallery_id Gallery id.
-		 */
-		$request = apply_filters( 'profotograaf_mark_embeddable_request', $request, $gallery_id );
-		if ( ! is_array( $request ) || empty( $request['method'] ) || empty( $request['path'] ) ) {
-			return Api_Errors::make( 'profotograaf_invalid', __( 'The request to switch embedding on is not valid.', 'profotograaf' ), 0, false );
-		}
-
-		$result = $this->request( (string) $request['method'], (string) $request['path'], isset( $request['body'] ) && is_array( $request['body'] ) ? $request['body'] : null );
-		if ( is_wp_error( $result ) ) {
-			$data = $result->get_error_data();
-			if ( 'profotograaf_http' === $result->get_error_code() && is_array( $data ) && 403 === ( $data['status'] ?? 0 ) ) {
-				$this->connection->flag_embed_denied();
-				return Api_Errors::make(
-					'profotograaf_reconnect',
-					__( 'This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission.', 'profotograaf' ),
-					403,
-					false
-				);
-			}
-			return $result;
-		}
-		$result = is_array( $result ) ? $result : array();
-		return array(
-			'id'         => (string) ( $result['id'] ?? $gallery_id ),
-			'embeddable' => ! empty( $result['embeddable'] ),
-			'available'  => ! empty( $result['available'] ),
-		);
-	}
-
-	/**
 	 * Sends a lead to the photographer's inbox.
 	 *
 	 * Needs the leads:write scope. `name` and `email` are required, the rest is
@@ -237,6 +185,19 @@ class Api_Client {
 	 * @return mixed Decoded JSON body (null for an empty one), or WP_Error.
 	 */
 	public function request( string $method, string $path, ?array $body = null ) {
+		return $this->perform( $method, $path, $body, null );
+	}
+
+	/**
+	 * Runs an authenticated request with a JSON body or a raw one.
+	 *
+	 * @param string                                                  $method HTTP method.
+	 * @param string                                                  $path   Path starting with a slash.
+	 * @param array<string,mixed>|null                                $body   JSON body.
+	 * @param array{body:string,content_type:string,timeout:int}|null $raw    Raw body, which replaces the JSON body.
+	 * @return mixed Decoded JSON body (null for an empty one), or WP_Error.
+	 */
+	private function perform( string $method, string $path, ?array $body, ?array $raw ) {
 		if ( ! $this->connection->is_connected() ) {
 			return Api_Errors::not_connected();
 		}
@@ -255,13 +216,13 @@ class Api_Client {
 		}
 
 		$token    = $this->connection->access_token();
-		$response = $this->send( $method, $path, $body, $token );
+		$response = $this->send( $method, $path, $body, $token, $raw );
 		if ( ! is_wp_error( $response ) && 401 === $response['status'] ) {
 			$refreshed = $this->refresh_tokens( $token );
 			if ( is_wp_error( $refreshed ) ) {
 				return $refreshed;
 			}
-			$response = $this->send( $method, $path, $body, $this->connection->access_token() );
+			$response = $this->send( $method, $path, $body, $this->connection->access_token(), $raw );
 		}
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -432,19 +393,25 @@ class Api_Client {
 	/**
 	 * Performs one request. Never throws.
 	 *
-	 * @param string                   $method HTTP method.
-	 * @param string                   $path   Path starting with a slash.
-	 * @param array<string,mixed>|null $body   JSON body.
-	 * @param string                   $bearer Access token, empty for none.
+	 * @param string                                                  $method HTTP method.
+	 * @param string                                                  $path   Path starting with a slash.
+	 * @param array<string,mixed>|null                                $body   JSON body.
+	 * @param string                                                  $bearer Access token, empty for none.
+	 * @param array{body:string,content_type:string,timeout:int}|null $raw    Raw body, which replaces the JSON body.
 	 * @return array{status:int,retry_after:int,body:mixed}|WP_Error
 	 */
-	private function send( string $method, string $path, ?array $body, string $bearer ) {
+	private function send( string $method, string $path, ?array $body, string $bearer, ?array $raw = null ) {
 		$headers = array( 'Accept' => 'application/json' );
 		if ( '' !== $bearer ) {
 			$headers['Authorization'] = 'Bearer ' . $bearer;
 		}
 		$encoded = null;
-		if ( null !== $body ) {
+		$timeout = Config::http_timeout();
+		if ( null !== $raw ) {
+			$headers['Content-Type'] = $raw['content_type'];
+			$encoded                 = $raw['body'];
+			$timeout                 = $raw['timeout'];
+		} elseif ( null !== $body ) {
 			$headers['Content-Type'] = 'application/json';
 			$encoded                 = wp_json_encode( $body );
 			if ( false === $encoded ) {
@@ -453,7 +420,7 @@ class Api_Client {
 		}
 
 		try {
-			$result = $this->transport->send( $method, Config::platform_endpoint( $path ), $headers, $encoded, Config::http_timeout() );
+			$result = $this->transport->send( $method, Config::platform_endpoint( $path ), $headers, $encoded, $timeout );
 		} catch ( \Throwable $e ) {
 			Logger::exception(
 				'The transport threw.',

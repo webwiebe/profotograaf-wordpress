@@ -223,49 +223,50 @@ msgstr "Les demandes sont de nouveau mises en file d'attente."
 msgid "The exported enquiries were removed."
 msgstr "Les demandes exportées ont été supprimées."
 
-#: includes/class-api-client.php:148
 #: includes/class-gallery-rest.php:166
 #: includes/class-gallery-rest.php:184
 #: includes/class-gallery-rest.php:211
 #: includes/class-photo-list.php:56
+#: includes/trait-api-client-writes.php:72
+#: includes/trait-api-client-writes.php:174
 msgid "A gallery id is required."
 msgstr "Un identifiant de galerie est requis."
 
-#: includes/class-api-client.php:165
+#: includes/trait-api-client-writes.php:191
 msgid "The request to switch embedding on is not valid."
 msgstr "La demande d'activation de l'intégration n'est pas valide."
 
-#: includes/class-api-client.php:175
+#: includes/trait-api-client-writes.php:201
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Cette connexion n'est pas encore autorisée à activer des galeries. Reconnectez ce site sous Réglages > Profotograaf pour accorder la nouvelle autorisation."
 
-#: includes/class-api-client.php:214
+#: includes/class-api-client.php:162
 msgid "A lead needs a name and an email address."
 msgstr "Un contact doit avoir un nom et une adresse e-mail."
 
-#: includes/class-api-client.php:316
+#: includes/class-api-client.php:277
 msgid "That page is not on the Profotograaf platform."
 msgstr "Cette page n'appartient pas à la plateforme Profotograaf."
 
-#: includes/class-api-client.php:326
-#: includes/class-api-client.php:466
-#: includes/class-api-client.php:471
+#: includes/class-api-client.php:287
+#: includes/class-api-client.php:433
+#: includes/class-api-client.php:438
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf n'a pas pu être joint."
 
-#: includes/class-api-client.php:333
+#: includes/class-api-client.php:294
 msgid "The public page could not be loaded."
 msgstr "La page publique n'a pas pu être chargée."
 
-#: includes/class-api-client.php:358
+#: includes/class-api-client.php:319
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "La connexion est en cours de renouvellement. Réessayez dans un instant."
 
-#: includes/class-api-client.php:382
+#: includes/class-api-client.php:343
 msgid "The connection was ended in your Profotograaf account."
 msgstr "La connexion a été interrompue dans votre compte Profotograaf."
 
-#: includes/class-api-client.php:451
+#: includes/class-api-client.php:418
 msgid "The request could not be encoded."
 msgstr "La requête n'a pas pu être encodée."
 
@@ -2160,4 +2161,33 @@ msgstr ""
 
 #: includes/modules/class-settings-page.php:300
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:35
+msgid "A gallery needs a title."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:43
+msgid "Profotograaf did not return the new gallery."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:75
+#: includes/trait-api-client-writes.php:79
+msgid "The file could not be read."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:106
+msgid "Your Profotograaf storage is full. Free up space or upgrade your plan to send more files."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:115
+msgid "Profotograaf did not return the new photo."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:138
+msgid "A photo id is required."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:147
+msgid "Nothing to update: give a title, caption or alt text."
 msgstr ""
