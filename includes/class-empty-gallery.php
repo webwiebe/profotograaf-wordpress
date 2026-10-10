@@ -89,18 +89,23 @@ final class Empty_Gallery {
 	 * host is drawn or marked, or TICKS looks passed.
 	 */
 	public static function script(): string {
-		return '(function(){var S="[data-profotograaf-gallery]",n=0;'
-			. 'function done(h){var p="/api/v1/embed/galleries/"+encodeURIComponent(h.getAttribute("data-profotograaf-gallery")),r=performance.getEntriesByType("resource"),i,e;'
-			. 'for(i=0;i<r.length;i++){e=r[i];if(e.responseEnd>0&&!(e.responseStatus>=400)&&e.name.split("?")[0].slice(-p.length)===p)return true}return false}'
-			. 'function mark(h){h.setAttribute("data-pf-empty","");h.removeAttribute("data-profotograaf-failed");var t=h.querySelector("[data-pf-hint]");if(t)t.hidden=false}'
-			. 'function fail(h){if(!h.hasAttribute("data-pf-empty"))h.setAttribute("data-profotograaf-failed","")}'
-			. 'function apply(h,s){if(s==="empty")mark(h);else if(s==="error")fail(h)}'
-			. 'document.addEventListener("profotograaf:state",function(v){var h=v.target;if(h&&h.matches&&h.matches(S)&&v.detail)apply(h,v.detail.state)});'
-			. 'function look(){var l=document.querySelectorAll(S),o=0,i,h,s;n++;'
-			. 'for(i=0;i<l.length;i++){h=l[i];s=h.getAttribute("data-pf-state");if(s){apply(h,s);continue}'
-			. 'if(h.shadowRoot||h.hasAttribute("data-pf-empty"))continue;o++;'
-			. 'if(!h.hasAttribute("data-pf-ready")||!done(h))continue;if(h._pf)mark(h);else h._pf=1}'
-			. 'if(o&&n<' . self::TICKS . ')setTimeout(look,' . self::TICK . ')}'
-			. 'if(window.performance&&performance.getEntriesByType)look()})()';
+		return implode(
+			'',
+			array(
+				'(function(){var S="[data-profotograaf-gallery]",n=0;',
+				'function done(h){var p="/api/v1/embed/galleries/"+encodeURIComponent(h.getAttribute("data-profotograaf-gallery")),r=performance.getEntriesByType("resource"),i,e;',
+				'for(i=0;i<r.length;i++){e=r[i];if(e.responseEnd>0&&!(e.responseStatus>=400)&&e.name.split("?")[0].slice(-p.length)===p)return true}return false}',
+				'function mark(h){h.setAttribute("data-pf-empty","");h.removeAttribute("data-profotograaf-failed");var t=h.querySelector("[data-pf-hint]");if(t)t.hidden=false}',
+				'function fail(h){if(!h.hasAttribute("data-pf-empty"))h.setAttribute("data-profotograaf-failed","")}',
+				'function apply(h,s){if(s==="empty")mark(h);else if(s==="error")fail(h)}',
+				'document.addEventListener("profotograaf:state",function(v){var h=v.target;if(h&&h.matches&&h.matches(S)&&v.detail)apply(h,v.detail.state)});',
+				'function look(){var l=document.querySelectorAll(S),o=0,i,h,s;n++;',
+				'for(i=0;i<l.length;i++){h=l[i];s=h.getAttribute("data-pf-state");if(s){apply(h,s);continue}',
+				'if(h.shadowRoot||h.hasAttribute("data-pf-empty"))continue;o++;',
+				'if(!h.hasAttribute("data-pf-ready")||!done(h))continue;if(h._pf)mark(h);else h._pf=1}',
+				'if(o&&n<' . self::TICKS . ')setTimeout(look,' . self::TICK . ')}',
+				'if(window.performance&&performance.getEntriesByType)look()})()',
+			)
+		);
 	}
 }

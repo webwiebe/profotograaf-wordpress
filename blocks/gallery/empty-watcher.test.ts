@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 function watcherSource(): string {
 	const php = readFileSync( resolve( process.cwd(), 'includes/class-empty-gallery.php' ), 'utf8' );
 	const constant = ( name: string ) => Number( new RegExp( `const ${ name } = (\\d+);` ).exec( php )?.[ 1 ] );
-	const body = /public static function script\(\): string \{\s*return ([\s\S]*?);\s*\}\s*\}\s*$/.exec( php )?.[ 1 ];
+	const body = /return implode\(\s*'',\s*array\(([\s\S]*?)\)\s*\);/.exec( php )?.[ 1 ];
 	if ( ! body ) {
 		throw new Error( 'Empty_Gallery::script() was not found' );
 	}
@@ -17,7 +17,7 @@ function watcherSource(): string {
 		.replace( /self::TICK/g, String( constant( 'TICK' ) ) )
 		.replace( /\s+\.\s+/g, ' + ' );
 	// oxlint-disable-next-line typescript/no-implied-eval -- evaluates the string literals of the PHP source into the watcher string
-	return new Function( `return ${ js };` )() as string;
+	return new Function( `return [ ${ js } ].join( "" );` )() as string;
 }
 
 const TICK = 250;
