@@ -149,6 +149,24 @@ describe( 'Edit with a gallery', () => {
 		expect( setAttributes ).toHaveBeenLastCalledWith( { linkNewTab: 'off' } );
 	} );
 
+	it( 'stores auto from the Automatic boxes and clears it again (#197)', () => {
+		fetchMock.mockReturnValue( new Promise( () => undefined ) );
+		const setAttributes = vi.fn();
+		const { rerender } = render( <Edit attributes={ chosen } setAttributes={ setAttributes } /> );
+		fireEvent.click( screen.getByLabelText( 'All photos' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { perPage: 'auto' } );
+		const [ automaticColumns ] = screen.getAllByLabelText( 'Automatic columns' );
+		if ( automaticColumns ) {
+			fireEvent.click( automaticColumns );
+		}
+		expect( setAttributes ).toHaveBeenLastCalledWith( { columns: 'auto' } );
+
+		rerender( <Edit attributes={ { ...chosen, perPage: 'auto' } } setAttributes={ setAttributes } /> );
+		expect( screen.getByLabelText( 'Photos per page' ) ).toHaveProperty( 'value', '' );
+		fireEvent.click( screen.getByLabelText( 'All photos' ) );
+		expect( setAttributes ).toHaveBeenLastCalledWith( { perPage: '' } );
+	} );
+
 	it( 'adds, edits and removes the text of a single photo', () => {
 		fetchMock.mockReturnValue( new Promise( () => undefined ) );
 		const setAttributes = vi.fn();

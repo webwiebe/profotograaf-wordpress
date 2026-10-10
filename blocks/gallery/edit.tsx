@@ -27,7 +27,7 @@ import { PreviewGrid } from './preview-grid';
 import { usePhotos, type PhotosState } from './use-photos';
 import { useShowable } from './use-showable';
 import { layoutHint, platformDefaults } from './layout-map';
-import { siteDefaults } from './display-options';
+import { blockDefaults, siteDefaults } from './display-options';
 import type { GalleryAttributes, GalleryRow } from './types';
 
 interface EditProps {
@@ -83,11 +83,12 @@ function Preview( {
 
 /**
  * What the Layout control chooses when it is left on the site default: the
- * layout of the gallery on Profotograaf and what the site draws for it. Empty
- * when the block or the site settings pick a layout themselves.
+ * layout of the gallery on Profotograaf and what the site draws for it, also
+ * when the block asks for it with `auto`. Empty when the block or the site
+ * settings pick a layout themselves.
  */
 function platformHint( layout: string, row: GalleryRow | null ): string {
-	return layout === '' && siteDefaults().layout === '' ? layoutHint( row ) : '';
+	return layout === 'auto' || ( layout === '' && siteDefaults().layout === '' ) ? layoutHint( row ) : '';
 }
 
 function InspectorPanel( {
@@ -219,7 +220,7 @@ function BelowPreview( {
 		<PreviewGrid
 			attributes={ attributes }
 			cover={ cover }
-			defaults={ platformDefaults( siteDefaults(), row ) }
+			defaults={ platformDefaults( blockDefaults( attributes, siteDefaults() ), row ) }
 			photos={ photos }
 			excluded={ attributes.excludedPhotoIds }
 			imageText={ attributes.imageText }

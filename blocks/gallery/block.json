@@ -35,6 +35,7 @@
 			"type": "string",
 			"enum": [
 				"",
+				"auto",
 				"grid",
 				"masonry",
 				"slideshow"

@@ -60,7 +60,7 @@ describe( 'gallery variations', () => {
 		const json = load( 'gallery' ) as BlockJson & {
 			variations: { name: string; title: string; attributes: Record< string, string > }[];
 		};
-		const layouts = layoutOptions().map( ( o ) => o.value ).filter( ( v ) => v !== '' );
+		const layouts = layoutOptions().map( ( o ) => o.value ).filter( ( v ) => v !== '' && v !== 'auto' );
 		expect( json.variations.map( ( v ) => v.attributes.layout ) ).toEqual( layouts );
 		for ( const variation of json.variations ) {
 			expect( Object.keys( variation.attributes ) ).toEqual( [ 'layout' ] );

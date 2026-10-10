@@ -42,7 +42,7 @@ export type GalleryAttributes = {
 	galleryId: string;
 	galleryTitle: string;
 	galleryUrl: string;
-	layout: '' | 'grid' | 'masonry' | 'slideshow';
+	layout: '' | 'auto' | 'grid' | 'masonry' | 'slideshow';
 	imageText: ImageText[];
 } & DisplayAttributes &
 	ExcludeAttributes;

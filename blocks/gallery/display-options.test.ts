@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+	AUTO,
 	DISPLAY_DEFAULTS,
+	blockDefaults,
 	cleanNumber,
 	cssRatio,
 	displayControls,
@@ -261,5 +263,39 @@ describe( 'displayControls with a block', () => {
 		const option = find( displayControls( { ...DISPLAY_DEFAULTS, ratio: 'original', layout: 'grid' }, site ), 'ratio' )
 			?.options?.find( ( o ) => o.value === 'original' );
 		expect( option?.label ).toMatch( /not drawn in a grid/ );
+	} );
+} );
+
+describe( 'auto (#197)', () => {
+	const site = { columns: '5', columnsTablet: '4', columnsMobile: '3', gap: '0', ratio: '1-1', layout: 'masonry' };
+
+	it( 'drops the site default of every option the block sets to auto', () => {
+		expect( blockDefaults( { columns: AUTO, layout: AUTO, gap: '4' }, site ) ).toEqual( {
+			...site,
+			columns: '',
+			layout: '',
+		} );
+		expect( blockDefaults( {}, site ) ).toEqual( site );
+	} );
+
+	it( 'previews automatic columns and the own layout without the site values', () => {
+		const own = { ...DISPLAY_DEFAULTS, columns: AUTO, layout: AUTO };
+		expect( previewLayout( own, blockDefaults( own, site ) ) ).toEqual( { columns: 3, gap: 0, ratio: '1 / 1' } );
+	} );
+
+	it( 'steps nothing down from automatic columns', () => {
+		const own = { columns: AUTO, columnsTablet: AUTO, columnsMobile: AUTO };
+		expect( effectiveColumns( own, blockDefaults( own, site ), AUTO ) ).toEqual( { tablet: '', mobile: '' } );
+	} );
+
+	it( 'offers auto for columns, photos per page and sort', () => {
+		const controls = displayControls();
+		const automatic = controls.filter( ( c ) => c.automatic ).map( ( c ) => c.attribute );
+		expect( automatic ).toEqual( [ 'columns', 'columnsTablet', 'columnsMobile', 'perPage' ] );
+		expect( controls.find( ( c ) => c.attribute === 'sort' )?.options?.map( ( o ) => o.value ) ).toContain( AUTO );
+	} );
+
+	it( 'summarises all photos and the gallery order', () => {
+		expect( displaySummary( { ...DISPLAY_DEFAULTS, perPage: AUTO, sort: AUTO } ) ).toEqual( [ 'Gallery order', 'all photos' ] );
 	} );
 } );

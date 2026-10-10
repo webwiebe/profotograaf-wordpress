@@ -142,7 +142,7 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		$this->assertSame( 'profotograaf/gallery', $json['name'] );
 		$this->assertSame( Gallery_Embed::BLOCK, $json['name'] );
 		$this->assertSame( 'profotograaf', $json['textdomain'] );
-		$this->assertSame( array( '', 'grid', 'masonry', 'slideshow' ), $json['attributes']['layout']['enum'] );
+		$this->assertSame( array( '', \Profotograaf\Option_Resolver::AUTO, 'grid', 'masonry', 'slideshow' ), $json['attributes']['layout']['enum'] );
 		$this->assertSame( array( 'grid', 'masonry', 'slideshow' ), \Profotograaf\Settings::LAYOUTS );
 	}
 

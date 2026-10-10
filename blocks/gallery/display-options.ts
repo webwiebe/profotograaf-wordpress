@@ -3,7 +3,9 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 /**
  * The display options of the block. Every value is a string. An empty string
  * means "use the site default", which the server resolves (see
- * Gallery_Renderer::OPTIONS). To add an option, add it here, to block.json
+ * Gallery_Renderer::OPTIONS and Option_Resolver). `auto` asks for the built-in
+ * behaviour whatever the site default says: the gallery's own order, all
+ * photos, automatic columns. To add an option, add it here, to block.json
  * and to Gallery_Renderer::OPTIONS. `excludedPhotoIds` is a list of photo ids
  * and lives in exclude.ts.
  */
@@ -39,6 +41,32 @@ export const DISPLAY_DEFAULTS: DisplayAttributes = {
 	linkNewTab: '',
 };
 
+/** The stored value that asks for the built-in behaviour over the site default. */
+export const AUTO = 'auto';
+
+/** A stored value with `auto` read as "not set here". */
+function ownValue( value: string | undefined ): string {
+	return value === AUTO ? '' : value ?? '';
+}
+
+/**
+ * The site defaults as they apply to one block: the options the block sets to
+ * `auto` drop their site default, so the preview and the controls show the
+ * built-in behaviour the server will render.
+ */
+export function blockDefaults(
+	attributes: Partial< DisplayAttributes > & { layout?: string },
+	defaults: SiteDefaults
+): SiteDefaults {
+	const result = { ...defaults };
+	for ( const key of Object.keys( result ) as Array< keyof SiteDefaults > ) {
+		if ( attributes[ key ] === AUTO ) {
+			result[ key ] = '';
+		}
+	}
+	return result;
+}
+
 interface ChoiceOption {
 	label: string;
 	value: string;
@@ -51,6 +79,8 @@ export interface DisplayControl {
 	help?: string;
 	/** Shown in an empty number control: the value that applies. */
 	placeholder?: string;
+	/** The label of the checkbox that stores `auto` in a number control. */
+	automatic?: string;
 	options?: ChoiceOption[];
 	min?: number;
 	max?: number;
@@ -118,6 +148,7 @@ function linkToOptions(): ChoiceOption[] {
 function sortOptions(): ChoiceOption[] {
 	return [
 		siteDefault(),
+		{ label: __( 'Gallery order', 'profotograaf' ), value: AUTO },
 		{ label: __( 'Newest first', 'profotograaf' ), value: 'newest' },
 		{ label: __( 'Oldest first', 'profotograaf' ), value: 'oldest' },
 		{ label: __( 'By file name', 'profotograaf' ), value: 'name' },
@@ -145,7 +176,7 @@ export function effectiveColumns(
 	defaults: SiteDefaults,
 	layout: string
 ): { tablet: string; mobile: string } {
-	const resolved = layout || defaults.layout || 'grid';
+	const resolved = ownValue( layout ) || defaults.layout || 'grid';
 	const desktop = firstSet( attributes.columns, defaults.columns );
 	const canStep = desktop > 0 && resolved !== 'slideshow';
 	const tablet = firstSet( attributes.columnsTablet, defaults.columnsTablet ) || ( canStep ? Math.min( desktop, TABLET_COLUMNS ) : 0 );
@@ -164,6 +195,10 @@ function wholeColumns( value: string ): number {
 	return /^\d+$/.test( value ) ? Number( value ) : 0;
 }
 
+function automaticColumns(): string {
+	return __( 'Automatic columns', 'profotograaf' );
+}
+
 /** The inspector controls, in display order. */
 export function displayControls(
 	attributes: Partial< DisplayAttributes > & { layout?: string } = {},
@@ -178,7 +213,7 @@ export function displayControls(
 		defaults,
 		attributes.layout ?? ''
 	);
-	const layout = attributes.layout || defaults.layout || 'grid';
+	const layout = ownValue( attributes.layout ) || defaults.layout || 'grid';
 	// A fixed shape contradicts masonry: the control gives way to a hint.
 	const shape: DisplayControl =
 		layout === 'masonry'
@@ -190,14 +225,14 @@ export function displayControls(
 			  }
 			: { attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions( layout, attributes.ratio ?? '' ) };
 	return [
-		{ attribute: 'columns', label: __( 'Columns', 'profotograaf' ), kind: 'number', min: 1, max: 8 },
-		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8, placeholder: shown.tablet },
-		{ attribute: 'columnsMobile', label: __( 'Columns on phones', 'profotograaf' ), kind: 'number', min: 1, max: 4, placeholder: shown.mobile },
+		{ attribute: 'columns', label: __( 'Columns', 'profotograaf' ), kind: 'number', min: 1, max: 8, automatic: automaticColumns() },
+		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8, placeholder: shown.tablet, automatic: automaticColumns() },
+		{ attribute: 'columnsMobile', label: __( 'Columns on phones', 'profotograaf' ), kind: 'number', min: 1, max: 4, placeholder: shown.mobile, automatic: automaticColumns() },
 		{ attribute: 'gap', label: __( 'Gap between photos (pixels)', 'profotograaf' ), kind: 'number', min: 0, max: 96 },
 		shape,
 		{ attribute: 'captions', label: __( 'Captions', 'profotograaf' ), kind: 'select', options: captionOptions() },
 		{ attribute: 'sort', label: __( 'Sort order', 'profotograaf' ), kind: 'select', options: sortOptions() },
-		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200 },
+		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200, automatic: __( 'All photos', 'profotograaf' ) },
 		{ attribute: 'loadMore', label: __( 'Load more button', 'profotograaf' ), kind: 'select', options: onOff() },
 		{ attribute: 'lightbox', label: __( 'Lightbox', 'profotograaf' ), kind: 'select', options: onOff() },
 		{
@@ -276,12 +311,12 @@ export function previewLayout(
 	attributes: Pick< DisplayAttributes, 'columns' | 'gap' | 'ratio' > & { layout?: string },
 	defaults: SiteDefaults = NO_SITE_DEFAULTS
 ): { columns: number; gap: number; ratio: string } {
-	const pick = ( own: string, site: string ) => ( own !== '' ? own : site );
+	const pick = ( own: string, site: string ) => ( ownValue( own ) !== '' ? own : site );
 	const columns = Number( pick( attributes.columns, defaults.columns ) ) || 3;
 	const gapValue = pick( attributes.gap, defaults.gap );
 	const gap = gapValue === '' || ! Number.isFinite( Number( gapValue ) ) ? 8 : Number( gapValue );
 	// Masonry ignores the photo shape, so the sketch draws the default shape.
-	const masonry = ( attributes.layout || defaults.layout ) === 'masonry';
+	const masonry = ( ownValue( attributes.layout ) || defaults.layout ) === 'masonry';
 	return { columns, gap, ratio: cssRatio( masonry ? '' : pick( attributes.ratio, defaults.ratio ) ) };
 }
 
@@ -322,7 +357,9 @@ export function displaySummary( attributes: DisplayAttributes ): string[] {
 		parts.push( sortLabel );
 	}
 	const perPage = Number( attributes.perPage );
-	if ( perPage > 0 ) {
+	if ( attributes.perPage === AUTO ) {
+		parts.push( __( 'all photos', 'profotograaf' ) );
+	} else if ( perPage > 0 ) {
 		parts.push(
 			sprintf(
 				/* translators: %d: number of photos shown at first. */

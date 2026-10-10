@@ -78,6 +78,10 @@ export const ToggleControl = ( {
 	/>
 );
 
+export const CheckboxControl = ( props: { label: string; checked: boolean; onChange: ( value: boolean ) => void } ) => (
+	<ToggleControl { ...props } />
+);
+
 export const SelectControl = ( {
 	label,
 	value,
