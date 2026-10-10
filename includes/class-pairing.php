@@ -88,6 +88,8 @@ class Pairing {
 				'name'        => (string) get_bloginfo( 'name' ),
 				'platform'    => Config::CLIENT_ID,
 				'app_version' => defined( 'PROFOTOGRAAF_VERSION' ) ? PROFOTOGRAAF_VERSION : '',
+				'wp_version'  => (string) get_bloginfo( 'version' ),
+				'php_version' => PHP_VERSION,
 				'hostname'    => $host,
 				'scope'       => implode( ' ', Config::SCOPES ),
 			) + $this->prefill()

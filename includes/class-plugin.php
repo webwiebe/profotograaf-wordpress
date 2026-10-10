@@ -46,6 +46,13 @@ final class Plugin {
 	private ?Pairing $pairing = null;
 
 	/**
+	 * Platform status call.
+	 *
+	 * @var Platform_Status|null
+	 */
+	private ?Platform_Status $platform_status = null;
+
+	/**
 	 * Clock override for tests.
 	 *
 	 * @var callable|null
@@ -138,6 +145,16 @@ final class Plugin {
 			$this->pairing = new Pairing( $this->connection(), $this->api(), $this->clock );
 		}
 		return $this->pairing;
+	}
+
+	/**
+	 * Platform status call and its stored answer.
+	 */
+	public function platform_status(): Platform_Status {
+		if ( null === $this->platform_status ) {
+			$this->platform_status = new Platform_Status( $this->api(), $this->clock );
+		}
+		return $this->platform_status;
 	}
 
 	/**

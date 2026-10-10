@@ -29,6 +29,7 @@ class Pairing_Test extends Wp_Test_Case {
 
 		$this->options['admin_email'] = 'owner@example.com';
 		Functions\when( 'get_locale' )->justReturn( 'nl_NL' );
+		Functions\when( 'get_bloginfo' )->alias( fn( ...$args ) => array( 'version' ) === $args ? '6.8.1' : 'Example Photography' );
 	}
 
 	/**
@@ -87,6 +88,8 @@ class Pairing_Test extends Wp_Test_Case {
 				'name'        => 'Example Photography',
 				'platform'    => 'wordpress',
 				'app_version' => '0.0.0-test',
+				'wp_version'  => '6.8.1',
+				'php_version' => PHP_VERSION,
 				'hostname'    => 'photos.example.com',
 				'scope'       => 'galleries:read leads:write galleries:embed',
 				'site_url'    => 'https://photos.example.com',

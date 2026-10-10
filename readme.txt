@@ -50,7 +50,11 @@ Privacy policy: https://profotograaf.nl/privacy
 
 = Connecting your site =
 
-When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version and a random identifier of this installation. The same request sends the site address, the site title, the WordPress administrator email address and the site language (English, Dutch, German or French; other languages are not sent). Profotograaf shows the site title and email address on its connect page and uses them only to prefill the sign-up form if you create a new account there. A value that is not a valid address is left out. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect, which removes this site from the devices connected to your account. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
+When you click "Connect to Profotograaf" on the settings page, the plugin sends a request to `https://profotograaf.nl/api/v1/auth/devices/initiate` with the site title, the site's host name, the plugin version, the WordPress and PHP versions and a random identifier of this installation. The same request sends the site address, the site title, the WordPress administrator email address and the site language (English, Dutch, German or French; other languages are not sent). Profotograaf shows the site title and email address on its connect page and uses them only to prefill the sign-up form if you create a new account there. A value that is not a valid address is left out. You confirm the connection on profotograaf.nl. While you wait, the plugin checks `https://profotograaf.nl/api/v1/auth/devices/token` every few seconds. Afterwards it calls `https://profotograaf.nl/api/v1/auth/devices/refresh` in the background to keep the connection alive, and `https://profotograaf.nl/api/v1/auth/devices/signout` when you disconnect, which removes this site from the devices connected to your account. The connection request names the permissions the plugin asks for: reading your galleries, sending enquiries and switching embedding on for a gallery. These calls carry the access token the plugin stores for your account.
+
+= Plugin status =
+
+While your site is connected, the plugin sends `POST https://profotograaf.nl/api/v1/auth/devices/status` once a day in the background, and shortly after you open the settings page (at most once an hour). The request carries the access token, the plugin version, the WordPress version, the PHP version and the site address. Profotograaf answers with whether it may ask you for a review and with the settings for sending error reports. The plugin keeps the answer in the WordPress options table. When the request fails, the plugin keeps the last answer and tries again later. Opening the settings page never waits for this request.
 
 = Your galleries =
 
@@ -181,6 +185,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: the plugin tells Profotograaf its version, the WordPress version and the PHP version when you connect, and once a day while connected. Profotograaf answers with the review prompt and error reporting settings, which the plugin stores. A failed call keeps the last answer.
 * Fix: the "Load more photos" button in the media modal tab shows only when more photos are left.
 * Fix: the suggested privacy policy text now says that usage data and error reports are sent when the site owner opts in.
 * New: user documentation for the photo library (README, FAQ, privacy text) and an External services entry that lists the requests it makes.
