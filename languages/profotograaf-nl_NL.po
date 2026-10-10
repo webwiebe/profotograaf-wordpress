@@ -1792,13 +1792,13 @@ msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
 #: includes/class-photo-file-route.php:227
-#: includes/class-photo-importer.php:328
+#: includes/class-photo-importer.php:329
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
 
 #: includes/class-photo-importer.php:227
 #: includes/class-photo-importer.php:235
-#: includes/class-photo-importer.php:367
+#: includes/class-photo-importer.php:368
 #: includes/class-virtual-attachments.php:197
 msgid "The photo could not be added to the Media Library."
 msgstr ""
@@ -1808,7 +1808,7 @@ msgstr ""
 msgid "This photo is being imported by another request. Try again in a moment."
 msgstr ""
 
-#: includes/class-photo-importer.php:319
+#: includes/class-photo-importer.php:320
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
 

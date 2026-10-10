@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T17:48:42+00:00\n"
+"POT-Creation-Date: 2026-10-10T18:54:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -449,7 +449,7 @@ msgid "The photo is not on the Profotograaf platform, so it was not served."
 msgstr ""
 
 #: includes/class-photo-file-route.php:227
-#: includes/class-photo-importer.php:328
+#: includes/class-photo-importer.php:329
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
 
@@ -496,12 +496,12 @@ msgstr ""
 
 #: includes/class-photo-importer.php:227
 #: includes/class-photo-importer.php:235
-#: includes/class-photo-importer.php:367
+#: includes/class-photo-importer.php:368
 #: includes/class-virtual-attachments.php:197
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 
-#: includes/class-photo-importer.php:319
+#: includes/class-photo-importer.php:320
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
 
