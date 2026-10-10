@@ -3,7 +3,7 @@
 // plugin writes data-* attributes and the script draws the gallery from them.
 // Each test asserts the attribute the plugin emitted and the layout it produced.
 const { test, expect } = require( '@playwright/test' );
-const { publishPost, shortcode, block, openEmbed, expectTiles, measure } = require( './embed-helpers' );
+const { publishPost, shortcode, block, openEmbed, expectTiles, measure, wp } = require( './embed-helpers' );
 
 const TOTAL = 19;
 const CLOSE = 1;
@@ -14,6 +14,17 @@ const CLOSE = 1;
  * @param {Awaited<ReturnType<typeof measure>>} box
  */
 const columnsOf = ( box ) => new Set( box.tiles.map( ( tile ) => Math.round( tile.left ) ) ).size;
+
+/**
+ * Masonry keeps each photo's own shape, so the tiles differ in height.
+ *
+ * @param {import('@playwright/test').Locator} host
+ */
+async function expectTilesOfDifferentHeights( host ) {
+	const { tiles } = await measure( host );
+	const heights = new Set( tiles.map( ( tile ) => Math.round( tile.height ) ) );
+	expect( heights.size, 'masonry tiles share one height' ).toBeGreaterThan( 1 );
+}
 
 /**
  * @param {string} content
@@ -98,8 +109,8 @@ test.describe( 'display options with the real script', () => {
 		await context.close();
 	} );
 
-	test( 'ratio 1:1 crops every tile to a square', async ( { browser } ) => {
-		const { context, host } = await draw( shortcode( { layout: 'masonry', ratio: '1-1' } ), { width: 1440, height: 900 }, browser );
+	test( 'ratio 1:1 crops every grid tile to a square', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { layout: 'grid', ratio: '1-1' } ), { width: 1440, height: 900 }, browser );
 
 		await expect( host ).toHaveAttribute( 'data-ratio', '1:1' );
 		const { tiles } = await measure( host );
@@ -107,6 +118,32 @@ test.describe( 'display options with the real script', () => {
 			expect( Math.abs( tile.width - tile.height ) ).toBeLessThanOrEqual( CLOSE );
 		}
 		await context.close();
+	} );
+
+	test( 'masonry ignores a block ratio and keeps each photo shape', async ( { browser } ) => {
+		const { context, host } = await draw( shortcode( { layout: 'masonry', ratio: '1-1' } ), { width: 1440, height: 900 }, browser );
+
+		await expect( host ).not.toHaveAttribute( 'data-ratio', /.*/ );
+		await expectTilesOfDifferentHeights( host );
+		await context.close();
+	} );
+
+	test( 'masonry ignores the site-wide 1:1 photo shape and draws tiles of different heights', async ( { browser } ) => {
+		const current = wp( 'eval', "$o = get_option( 'profotograaf_settings', array() ); echo $o['gallery_ratio'] ?? '';" );
+		const setRatio = ( value ) => wp( 'eval', `$o = get_option( 'profotograaf_settings', array() ); $o['gallery_ratio'] = '${ value }'; update_option( 'profotograaf_settings', $o );` );
+		setRatio( '1-1' );
+		try {
+			const masonry = await draw( shortcode( { layout: 'masonry' } ), { width: 1440, height: 900 }, browser );
+			await expect( masonry.host ).not.toHaveAttribute( 'data-ratio', /.*/ );
+			await expectTilesOfDifferentHeights( masonry.host );
+			await masonry.context.close();
+
+			const grid = await draw( shortcode( { layout: 'grid' } ), { width: 1440, height: 900 }, browser );
+			await expect( grid.host ).toHaveAttribute( 'data-ratio', '1:1' );
+			await grid.context.close();
+		} finally {
+			setRatio( current );
+		}
 	} );
 
 	test( 'duotone applies the pf-duo filter to every photo', async ( { browser } ) => {

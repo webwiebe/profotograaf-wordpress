@@ -370,6 +370,11 @@ class Gallery_Renderer {
 			if ( '' === $value ) {
 				continue;
 			}
+			// Masonry keeps each photo's own shape, so it sends no ratio, from the
+			// block or from the site-wide Photo shape.
+			if ( 'ratio' === $key && 'masonry' === $layout ) {
+				continue;
+			}
 			// Ratios are stored as 4-3 (a colon is not allowed in an option key).
 			$attributes[ $option['data'] ] = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
 		}

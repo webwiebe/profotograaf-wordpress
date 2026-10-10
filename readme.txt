@@ -185,6 +185,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* Fix: a fixed photo shape no longer turns masonry into a square grid. Masonry keeps each photo's own shape and ignores the Photo shape of the block, the shortcode and the site-wide setting; the plugin sends no ratio for it. In the block editor the Photo shape control gives way to the hint "Masonry keeps each photo's own shape." when the layout is masonry, also when the site default layout is masonry. The Photo shape setting on the Galleries tab says it applies to grid and slideshow.
 * Fix: the duotone filter of the Gallery block (Styles) now tints the photos. The plugin passes the block's duotone, a preset or two colours, to the site embed, and a block without a duotone keeps the site-wide one.
 * Fix: a gallery that draws nothing no longer leaves a blank box for 8 seconds before the page jumps. When embed.js reports that the gallery is empty or failed (`data-pf-state` and the `profotograaf:state` event), the reserved space is released at once and a failed gallery shows its fallback link right away. An older embed.js keeps the 8 second release.
 * New: the Gallery block is wide by default, so a new gallery uses more of the screen on themes that support wide blocks.

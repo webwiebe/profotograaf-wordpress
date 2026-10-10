@@ -31,7 +31,8 @@ defined( 'ABSPATH' ) || exit;
  *   last gallery list, whichever is known. When neither is known it is
  *   DEFAULT_ROWS rows. Capped at MAX_ROWS, because the page below a taller
  *   gallery is out of view anyway.
- * - Tile shape: data-ratio. Without one (empty or `original`) a grid draws
+ * - Tile shape: data-ratio, which masonry ignores because a fixed shape
+ *   contradicts it (Gallery_Renderer sends none). Without one (empty or `original`) a grid draws
  *   square tiles and a masonry gallery of mixed photos is estimated at 4:3,
  *   a little flatter than a mix of portrait and landscape photos, so the
  *   estimate errs short. A slideshow is one 3:2 tile.
@@ -166,7 +167,7 @@ final class Reserved_Space {
 	 * @param int|null             $count  Photo count of the gallery, when known.
 	 */
 	public static function style( string $layout = 'grid', array $data = array(), ?int $count = null ): string {
-		$shape   = self::shape( $layout, $data['data-ratio'] ?? '' );
+		$shape   = self::shape( $layout, 'masonry' === $layout ? '' : ( $data['data-ratio'] ?? '' ) );
 		$columns = self::columns( $layout, $data );
 		$shown   = self::shown( $data['data-per-page'] ?? '', $count );
 		$styles  = array();
