@@ -59,7 +59,7 @@ jobs:
       - name: PHPStan config guard
         run: node --test scripts/phpstan-config.test.mjs
       - name: PHPStan
-        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=2G
       - name: Composer audit gate tests
         run: node --test scripts/composer-audit-gate.test.mjs
       - name: Composer audit (high and critical block)

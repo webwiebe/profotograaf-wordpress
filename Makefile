@@ -22,7 +22,7 @@ build:
 	$(PNPM) pnpm build
 
 phpstan:
-	$(DOCKER_RUN) $(PHP_IMAGE) vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+	$(DOCKER_RUN) $(PHP_IMAGE) vendor/bin/phpstan analyse --no-progress --memory-limit=2G
 
 php-cov-image:
 	docker build -q -t $(PHP_COV_IMAGE) -f tests/php.Dockerfile tests
