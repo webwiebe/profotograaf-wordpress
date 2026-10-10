@@ -241,29 +241,29 @@ msgstr "Diese Verbindung darf Galerien noch nicht einschalten. Verbinde diese We
 msgid "A lead needs a name and an email address."
 msgstr "Ein Lead braucht einen Namen und eine E-Mail-Adresse."
 
-#: includes/class-api-client.php:308
+#: includes/class-api-client.php:314
 msgid "That page is not on the Profotograaf platform."
 msgstr "Diese Seite gehört nicht zur Profotograaf-Plattform."
 
-#: includes/class-api-client.php:318
-#: includes/class-api-client.php:458
-#: includes/class-api-client.php:463
+#: includes/class-api-client.php:324
+#: includes/class-api-client.php:464
+#: includes/class-api-client.php:469
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf konnte nicht erreicht werden."
 
-#: includes/class-api-client.php:325
+#: includes/class-api-client.php:331
 msgid "The public page could not be loaded."
 msgstr "Die öffentliche Seite konnte nicht geladen werden."
 
-#: includes/class-api-client.php:350
+#: includes/class-api-client.php:356
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "Die Verbindung wird erneuert. Versuche es gleich noch einmal."
 
-#: includes/class-api-client.php:374
+#: includes/class-api-client.php:380
 msgid "The connection was ended in your Profotograaf account."
 msgstr "Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/class-api-client.php:443
+#: includes/class-api-client.php:449
 msgid "The request could not be encoded."
 msgstr "Die Anfrage konnte nicht kodiert werden."
 
