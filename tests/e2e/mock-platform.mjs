@@ -283,6 +283,7 @@ const routes = {
 			: json( res, 200, { script_url: `/share/embed/embed.${ EMBED_VERSION }.js`, version: EMBED_VERSION } ),
 	'GET /api/v1/embed/photos': authed( libraryPage ),
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY ] ) ),
+	'GET /api/v1/embed/galleries/g-e2e-error': ( { res } ) => json( res, 503, { error: 'unavailable' }, { 'access-control-allow-origin': '*' } ),
 	'GET /share/embed/embed.js': embedScript,
 	'HEAD /share/embed/embed.js': embedScript,
 	'GET /api/v1/embed/galleries/g-e2e': ( { req, res } ) =>
@@ -325,6 +326,7 @@ function emptyGallery( { req, res, url } ) {
 		{ 'access-control-allow-origin': '*' }
 	);
 }
+
 
 const EMBEDDABLE = /^\/api\/v1\/embed\/galleries\/[^/]+\/embeddable$/;
 const PHOTOS = /^\/api\/v1\/embed\/galleries\/g-e2e\/photos$/;

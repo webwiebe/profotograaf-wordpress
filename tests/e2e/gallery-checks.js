@@ -13,6 +13,10 @@ const WIDTHS = { desktop: 1280, tablet: 768, mobile: 390 };
 
 /** The reserved space is given back after this many seconds (Reserved_Space::RELEASE_AFTER), plus a margin. */
 const RELEASE_MS = 8_000 + 4_000;
+// A host with data-pf-state releases its box within this time.
+const RELEASE_AFTER_STATE_MS = 1_000;
+// How long expectFallback waits for a state before it treats embed.js as an older one.
+const STATE_WAIT_MS = 1_500;
 
 /**
  * Waits until the gallery drew at least `min` tiles and every tile image that
@@ -132,6 +136,10 @@ async function checkLoadMore( host, perPage ) {
  * fallback link still there and, once the reservation is released, no tall
  * blank box.
  *
+ * An embed.js that reports its state (data-pf-state, professionals#2338)
+ * releases the box at once: within RELEASE_AFTER_STATE_MS of the state. An
+ * older one sets no state and keeps the 8 second release timer.
+ *
  * @param {import('@playwright/test').Locator} host
  */
 async function expectFallback( host ) {
@@ -139,8 +147,14 @@ async function expectFallback( host ) {
 	await expect( host ).toHaveAttribute( 'data-pf-ready', '' );
 	expect( await host.evaluate( ( el ) => el.shadowRoot?.querySelectorAll( '.tile' ).length ?? 0 ) ).toBe( 0 );
 	await expect( host.locator( ':scope > a' ) ).toBeVisible();
+	const reported = await expect( host )
+		.toHaveAttribute( 'data-pf-state', /./, { timeout: STATE_WAIT_MS } )
+		.then( () => true, () => false );
 	await expect
-		.poll( () => host.evaluate( ( el ) => el.getBoundingClientRect().height ), { message: 'the blank box is released', timeout: RELEASE_MS } )
+		.poll( () => host.evaluate( ( el ) => el.getBoundingClientRect().height ), {
+			message: reported ? 'the blank box is released at once' : 'the blank box is released',
+			timeout: reported ? RELEASE_AFTER_STATE_MS : RELEASE_MS,
+		} )
 		.toBeLessThan( 120 );
 }
 

@@ -55,11 +55,16 @@ defined( 'ABSPATH' ) || exit;
  * animation switches the ratio to auto after RELEASE_AFTER seconds for those,
  * and the noscript rule releases it at once without JavaScript.
  *
+ * An embed.js that reports its outcome sets data-pf-state on the host:
+ * `empty` and `error` release the box at once, `drawn` keeps it. An older
+ * embed.js sets no state and keeps the release animation.
+ *
  * A gallery without photos the embed can show carries `data-pf-empty`
  * (Empty_Gallery). It holds no space, hides the fallback link and keeps the
- * editor hint. A failed gallery (`data-profotograaf-failed`) keeps its
- * space until the release animation ends, and its fallback link stays inside
- * the block at the start edge.
+ * editor hint. A failed gallery (`data-profotograaf-failed`, or state `error`)
+ * shows its fallback link inside the block at the start edge. A script that
+ * never loads sets no state, so that case keeps its space until the release
+ * animation ends.
  */
 final class Reserved_Space {
 
@@ -185,9 +190,10 @@ final class Reserved_Space {
 			. '@media(max-width:900px){' . $host . '{aspect-ratio:var(--pf-ar-t)}}'
 			. '@media(max-width:600px){' . $host . '{aspect-ratio:var(--pf-ar-m)}}'
 			. '@keyframes pf-release{to{aspect-ratio:auto}}'
-			. '[data-pf-empty]{display:block;aspect-ratio:auto!important;animation:none}'
-			. '[data-pf-empty],[data-profotograaf-failed]{overflow:visible;text-indent:0;text-align:start}'
-			. '[data-pf-empty]>a,[data-pf-empty]>noscript{display:none!important}'
+			. '[data-pf-empty],[data-pf-state=empty]{display:block;aspect-ratio:auto!important;animation:none}'
+			. '[data-pf-state=error]{aspect-ratio:auto!important;animation:none}'
+			. '[data-pf-empty],[data-pf-state=empty],[data-profotograaf-failed],[data-pf-state=error]{overflow:visible;text-indent:0;text-align:start}'
+			. '[data-pf-empty]>a,[data-pf-empty]>noscript,[data-pf-state=empty]>a,[data-pf-state=empty]>noscript{display:none!important}'
 			. $host . '>a{max-width:100%;overflow-wrap:anywhere;text-indent:0}'
 			. '</style>'
 			. '<noscript><style>' . $host . '{aspect-ratio:auto!important}</style></noscript>';

@@ -2033,12 +2033,12 @@ msgstr ""
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr ""
 
-#: includes/class-empty-gallery.php:70
+#: includes/class-empty-gallery.php:76
 #: build/gallery/index.js:8
 msgid "This gallery has no photos that can be shown on your site."
 msgstr ""
 
-#: includes/class-empty-gallery.php:77
+#: includes/class-empty-gallery.php:83
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet. Visitors do not see this note."
 msgstr ""
 

@@ -5,7 +5,17 @@
 // block, never the failed look. A script that does not load keeps the failed
 // state with a visible fallback link.
 const { test, expect } = require( '@playwright/test' );
+const fs = require( 'fs' );
+const path = require( 'path' );
 const { wp, publishPost, shortcode, openEmbed } = require( './embed-helpers' );
+
+// The embed.js from before the state contract (professionals#2338): it sets
+// data-pf-ready and nothing else.
+const LEGACY_EMBED = fs.readFileSync( path.join( __dirname, 'fixtures', 'embed-legacy.js' ) );
+const useLegacyEmbed = ( /** @type {import('@playwright/test').BrowserContext} */ ctx ) =>
+	ctx.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/, ( route ) =>
+		route.fulfill( { status: 200, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' }, body: LEGACY_EMBED } )
+	);
 
 const INDEX_OPTION = 'profotograaf_gallery_index';
 const host = ( /** @type {import('@playwright/test').Page} */ page, /** @type {string} */ id ) =>
@@ -51,6 +61,7 @@ test.describe( 'a gallery with nothing to show', () => {
 			urls[ id ] = publishPost( `Nothing to show ${ id }`, shortcode( { id, url: url( id ), title: id } ) );
 		}
 		urls.failed = publishPost( 'Script blocked', shortcode() );
+		urls[ 'g-e2e-error' ] = publishPost( 'Platform error', shortcode( { id: 'g-e2e-error', url: url( 'g-e2e-error' ), title: 'Error' } ) );
 	} );
 
 	test.afterAll( () => {
@@ -97,6 +108,51 @@ test.describe( 'a gallery with nothing to show', () => {
 		const link = failed.locator( 'a' );
 		await expect( link ).toBeVisible();
 		expect( await insideOf( failed, link ) ).toBe( true );
+		await context.close();
+	} );
+
+	test( 'embed.js reports empty: the box is released within a second', async ( { browser } ) => {
+		const { context, page } = await openEmbed( browser, urls[ 'g-e2e-png' ] );
+		const png = host( page, 'g-e2e-png' );
+
+		await expect( png ).toHaveAttribute( 'data-pf-state', 'empty' );
+		await expect.poll( () => heightOf( png ), { message: 'released at once', timeout: 1_000 } ).toBeLessThan( 4 );
+		await context.close();
+	} );
+
+	test( 'embed.js reports error: the failed look and the fallback link show within a second', async ( { browser } ) => {
+		const { context, page } = await openEmbed( browser, urls[ 'g-e2e-error' ] );
+		const failed = host( page, 'g-e2e-error' );
+
+		await expect( failed ).toHaveAttribute( 'data-pf-state', 'error' );
+		await expect( failed ).toHaveAttribute( 'data-profotograaf-failed', '', { timeout: 1_000 } );
+		await expect( failed ).not.toHaveAttribute( 'data-pf-empty' );
+		await expect.poll( () => heightOf( failed ), { message: 'released at once', timeout: 1_000 } ).toBeLessThan( 120 );
+		const link = failed.locator( ':scope > a' );
+		await expect( link ).toBeVisible();
+		expect( await insideOf( failed, link ) ).toBe( true );
+		await context.close();
+	} );
+
+	test( 'an embed.js that sets no state keeps the reserved box until the 8 second release', async ( { browser } ) => {
+		const { context, page } = await openEmbed( browser, urls[ 'g-e2e-error' ], undefined, useLegacyEmbed );
+		const failed = host( page, 'g-e2e-error' );
+
+		await expect( failed ).toHaveAttribute( 'data-pf-ready', '' );
+		await page.waitForTimeout( 2_000 );
+		await expect( failed ).not.toHaveAttribute( 'data-pf-state' );
+		expect( await heightOf( failed ) ).toBeGreaterThan( 120 );
+		await expect.poll( () => heightOf( failed ), { message: 'the 8 second release', timeout: 12_000 } ).toBeLessThan( 120 );
+		await context.close();
+	} );
+
+	test( 'an embed.js that sets no state still collapses an empty gallery through the fallback detection', async ( { browser } ) => {
+		const { context, page } = await openEmbed( browser, urls[ 'g-e2e-png' ], undefined, useLegacyEmbed );
+		const png = host( page, 'g-e2e-png' );
+
+		await expect( png ).toHaveAttribute( 'data-pf-empty', '' );
+		await expect( png ).not.toHaveAttribute( 'data-pf-state' );
+		expect( await heightOf( png ) ).toBeLessThan( 4 );
 		await context.close();
 	} );
 } );
