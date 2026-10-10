@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T15:31:23+00:00\n"
+"POT-Creation-Date: 2026-10-10T15:58:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -68,6 +68,7 @@ msgstr ""
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
 #: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:458
@@ -1097,6 +1098,30 @@ msgstr ""
 
 #: includes/modules/class-privacy.php:238
 msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
+msgstr ""
+
+#: includes/modules/class-review-notice.php:75
+msgid "Leave a review"
+msgstr ""
+
+#: includes/modules/class-review-notice.php:77
+msgid "Later"
+msgstr ""
+
+#: includes/modules/class-review-notice.php:79
+msgid "Don't ask again"
+msgstr ""
+
+#: includes/modules/class-review-notice.php:148
+msgid "A client just downloaded photos from a gallery you share with Profotograaf. If the plugin helps your work, a short review on WordPress.org helps other photographers find it."
+msgstr ""
+
+#: includes/modules/class-review-notice.php:151
+msgid "Your Profotograaf galleries have been viewed on your site at least 10 times. If the plugin works well for you, a short review on WordPress.org helps other photographers find it."
+msgstr ""
+
+#: includes/modules/class-review-notice.php:153
+msgid "If the Profotograaf plugin works well for you, a short review on WordPress.org helps other photographers find it."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:175
