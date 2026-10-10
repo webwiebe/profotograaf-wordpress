@@ -437,7 +437,7 @@ const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
 function writeRoute( method, pathname ) {
 	if ( method === 'POST' && UPLOAD.test( pathname ) ) {
 		return authed( ( { res, req } ) =>
-			json( res, 201, { id: 'p-up-1', gallery_id: pathname.split( '/' )[ 5 ], filename: String( req.headers[ 'content-type' ] ).startsWith( 'multipart/' ) ? 'upload.jpg' : '' } )
+			json( res, 202, { id: 'p-up-1', status: 'uploaded', gallery_id: pathname.split( '/' )[ 5 ], filename: String( req.headers[ 'content-type' ] ).startsWith( 'multipart/' ) ? 'upload.jpg' : '' } )
 		);
 	}
 	if ( method === 'PATCH' && PHOTO.test( pathname ) ) {

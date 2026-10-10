@@ -490,7 +490,7 @@ class Api_Client_Test extends Wp_Test_Case {
 	public function test_upload_photo_sends_a_multipart_file_part(): void {
 		$this->write_connect();
 		$path = $this->temp_file( 'JPEGBYTES' );
-		$this->http->reply( 201, array( 'id' => 'p7', 'gallery_id' => 'g1', 'filename' => 'IMG_1.jpg' ) );
+		$this->http->reply( 202, array( 'id' => 'p7', 'gallery_id' => 'g1', 'filename' => 'IMG_1.jpg' ) );
 
 		$result = $this->api->upload_photo( 'g1', $path, '', 'image/jpeg' );
 
