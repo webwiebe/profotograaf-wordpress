@@ -261,13 +261,23 @@ class Photo_Reimport_Test extends Gallery_Test_Case {
 
 	public function test_it_keeps_an_existing_text_baseline_so_a_local_text_edit_stays_visible(): void {
 		$this->meta[40]['_profotograaf_text_hash'] = 'written-by-importer';
-		$this->meta[40]['_profotograaf_origin']    = 'upload';
+		$this->meta[40]['_profotograaf_origin']    = 'import';
 
 		$this->importer->reimport( 40 );
 
 		$this->assertSame( 'written-by-importer', $this->meta[40]['_profotograaf_text_hash'] );
-		$this->assertSame( 'upload', $this->meta[40]['_profotograaf_origin'] );
+		$this->assertSame( 'import', $this->meta[40]['_profotograaf_origin'] );
 		$this->assertSame( sha1( 'replaced original' ), $this->meta[40]['_profotograaf_file_hash'] );
+	}
+
+	public function test_a_file_the_site_sent_is_not_re_imported(): void {
+		$this->meta[40]['_profotograaf_origin'] = 'upload';
+
+		$result = $this->importer->reimport( 40 );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'profotograaf_reimport_uploaded', $result->get_error_code() );
+		$this->assertSame( array(), $this->downloads );
 	}
 
 	public function test_the_old_files_go_only_after_the_new_ones_are_in_place(): void {

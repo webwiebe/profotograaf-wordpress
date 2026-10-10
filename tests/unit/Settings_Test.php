@@ -72,6 +72,7 @@ class Settings_Test extends Wp_Test_Case {
 				'fallback_link_label'    => 'Open the gallery',
 				'client_portal_path'     => '/client',
 				'media_source'           => false,
+				'media_upload'           => false,
 				'default_layout'         => 'slideshow',
 				'leads_enabled'          => false,
 				'leads_alert_email'      => '',
@@ -110,6 +111,18 @@ class Settings_Test extends Wp_Test_Case {
 		$this->options['profotograaf_settings'] = array( 'media_source' => false );
 		$this->options['profotograaf_settings'] = $this->settings->sanitize( array( 'media_source' => 'junk' ) );
 		$this->assertFalse( $this->settings->media_source_enabled(), 'An unusable value keeps the saved off state.' );
+	}
+
+	public function test_media_upload_is_off_by_default_and_saving_it_on_turns_it_on(): void {
+		$this->assertFalse( Settings_Schema::defaults()['media_upload'] );
+		$this->assertFalse( $this->settings->media_upload_enabled() );
+
+		$this->options['profotograaf_settings'] = $this->settings->sanitize( array( 'media_upload' => '1' ) );
+		$this->assertTrue( $this->settings->media_upload_enabled() );
+
+		$this->options['profotograaf_settings'] = array( 'media_upload' => false );
+		$this->options['profotograaf_settings'] = $this->settings->sanitize( array( 'media_upload' => 'junk' ) );
+		$this->assertFalse( $this->settings->media_upload_enabled(), 'An unusable value keeps the saved off state.' );
 	}
 
 	public function test_the_media_source_checkbox_lives_on_the_general_tab_and_unchecking_turns_it_off(): void {
@@ -219,6 +232,7 @@ class Settings_Test extends Wp_Test_Case {
 				'fallback_link_label'    => '',
 				'client_portal_path'     => '/client',
 				'media_source'           => false,
+				'media_upload'           => false,
 				'default_layout'         => 'masonry',
 				'leads_enabled'          => true,
 				'leads_alert_email'      => '',
