@@ -68,6 +68,7 @@ msgstr "Anfrageformulare"
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
 #: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:234
 #: includes/modules/class-settings-page.php:261
 #: includes/modules/class-settings-page.php:458
@@ -2122,4 +2123,28 @@ msgstr ""
 #: build/gallery/index.js:11
 #, js-format
 msgid "Shown as %s on your site."
+msgstr ""
+
+#: includes/modules/class-review-notice.php:75
+msgid "Leave a review"
+msgstr ""
+
+#: includes/modules/class-review-notice.php:77
+msgid "Later"
+msgstr ""
+
+#: includes/modules/class-review-notice.php:79
+msgid "Don't ask again"
+msgstr ""
+
+#: includes/modules/class-review-notice.php:148
+msgid "A client just downloaded photos from a gallery you share with Profotograaf. If the plugin helps your work, a short review on WordPress.org helps other photographers find it."
+msgstr ""
+
+#: includes/modules/class-review-notice.php:151
+msgid "Your Profotograaf galleries have been viewed on your site at least 10 times. If the plugin works well for you, a short review on WordPress.org helps other photographers find it."
+msgstr ""
+
+#: includes/modules/class-review-notice.php:153
+msgid "If the Profotograaf plugin works well for you, a short review on WordPress.org helps other photographers find it."
 msgstr ""
