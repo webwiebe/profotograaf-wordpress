@@ -4,7 +4,7 @@
 // against the real platform in sample-pages.spec.js; both use gallery-checks.js.
 // See docs/gallery-display-matrix.md for the options and where each is applied.
 const { test, expect } = require( '@playwright/test' );
-const { publishPost, block, openEmbed } = require( './embed-helpers' );
+const { publishPost, block, openEmbed, wp } = require( './embed-helpers' );
 const { WIDTHS, expectPhotos, checkLightbox, checkSlideshow, checkLoadMore, expectFallback, shoot } = require( './gallery-checks' );
 
 const TOTAL = 19;
@@ -39,6 +39,15 @@ test.beforeAll( () => {
 	urls.masonryFour = publishPost( 'Display masonry four columns', block( { layout: 'masonry', columns: '4', perPage: '10' } ) );
 	urls.phoneThree = publishPost( 'Display phone three', block( { layout: 'grid', columns: '5', columnsMobile: '3', perPage: '10' } ) );
 	urls.duotone = publishPost( 'Display duotone', block( { layout: 'grid', style: { color: { duotone: [ '#1a1a2e', '#f5c542' ] } } } ) );
+	// The gallery list remembers the platform layout of a gallery, which the render reads
+	// on the platform default. The mock lists g-e2e-parallax with layout `parallax`.
+	wp(
+		'eval',
+		"$i = get_option( 'profotograaf_gallery_index', array() ); $i['g-e2e-parallax'] = array( 'title' => 'Sample parallax', 'url' => 'http://mock-platform:8090/share/g/sample-parallax', 'count' => 19, 'layout' => 'parallax', 'embed_layout' => '' ); update_option( 'profotograaf_gallery_index', $i, false );"
+	);
+	const parallax = { galleryId: 'g-e2e-parallax', galleryTitle: 'Sample parallax', galleryUrl: 'http://mock-platform:8090/share/g/sample-parallax' };
+	urls.parallaxDefault = publishPost( 'Display parallax default', block( parallax ) );
+	urls.parallaxGrid = publishPost( 'Display parallax grid', block( { ...parallax, layout: 'grid' } ) );
 	urls.duotonePreset = publishPost( 'Display duotone preset', block( { layout: 'grid', style: { color: { duotone: 'var:preset|duotone|dark-grayscale' } } } ) );
 } );
 
@@ -57,6 +66,26 @@ test.describe( 'gallery display with the mock platform', () => {
 			await context.close();
 		} );
 	}
+
+	test( 'a parallax gallery on the platform default is drawn as a slideshow', async ( { browser } ) => {
+		const { context, page, problems } = await openEmbed( browser, urls.parallaxDefault );
+		const host = hostOf( page, 'g-e2e-parallax' );
+		await expect( host ).toHaveAttribute( 'data-layout', 'slideshow' );
+		await expectPhotos( host, 1 );
+		await checkSlideshow( page, host );
+		expect( problems ).toEqual( [] );
+		await context.close();
+	} );
+
+	test( 'a block that picks the grid keeps it for a parallax gallery', async ( { browser } ) => {
+		const { context, page, problems } = await openEmbed( browser, urls.parallaxGrid );
+		const host = hostOf( page, 'g-e2e-parallax' );
+		await expect( host ).toHaveAttribute( 'data-layout', 'grid' );
+		await expectPhotos( host, TOTAL );
+		await expect( host.locator( '.slides' ) ).toHaveCount( 0 );
+		expect( problems ).toEqual( [] );
+		await context.close();
+	} );
 
 	test( 'a new block is wide by default', async ( { browser } ) => {
 		const { context, host } = await openEmbed( browser, urls.grid );

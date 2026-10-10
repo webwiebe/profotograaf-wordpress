@@ -296,7 +296,8 @@ class Gallery_Renderer {
 	 * Renders a gallery.
 	 *
 	 * Keys of $args: id (required), layout (grid, masonry or slideshow; the
-	 * default layout from the settings when empty or unknown), title and url
+	 * default layout from the settings when empty or unknown; when that is the
+	 * platform default, the drawn layout of the gallery from the index), title and url
 	 * (the fallback link; looked up when both are empty), class (extra CSS
 	 * classes for the div), the display options listed in OPTIONS and wrapper
 	 * (a callable that takes the div's attributes and returns the attribute
@@ -321,6 +322,10 @@ class Gallery_Renderer {
 		}
 
 		$layout = (string) $this->settings->resolve( 'default_layout', array( 'default_layout' => $args['layout'] ?? '' ) );
+		if ( '' === $layout ) {
+			// Platform default: the layout of the gallery on Profotograaf, as embed.js draws it.
+			$layout = $this->index->drawn_layout( $id );
+		}
 
 		$this->script->enqueue();
 

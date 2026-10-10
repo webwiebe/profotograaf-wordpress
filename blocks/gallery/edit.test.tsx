@@ -77,6 +77,49 @@ describe( 'Edit without a gallery', () => {
 	} );
 } );
 
+describe( 'Edit layout hint', () => {
+	const chosen: GalleryAttributes = {
+		galleryId: 'g-1',
+		galleryTitle: 'Spring wedding',
+		galleryUrl: 'https://studio.example/share/g/spring-wedding',
+		layout: '',
+		imageText: [],
+		...DISPLAY_DEFAULTS,
+		...EXCLUDE_DEFAULTS,
+	};
+
+	it( 'says what the platform layout is drawn as when the block is on the site default', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow( { layout: 'parallax' } ) ] );
+		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		expect( await screen.findByText( 'Parallax on Profotograaf, shown as Slideshow on your site' ) ).toBeTruthy();
+	} );
+
+	it( 'says so when the layout is unknown', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow( { layout: 'carousel' } ) ] );
+		render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+		expect( await screen.findByText( /does not know that layout/ ) ).toBeTruthy();
+	} );
+
+	it( 'shows no hint when the block picks a layout', async () => {
+		fetchMock.mockResolvedValue( [ galleryRow( { layout: 'parallax' } ) ] );
+		render( <Edit attributes={ { ...chosen, layout: 'grid' } } setAttributes={ vi.fn() } /> );
+		await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
+		expect( screen.queryByText( /on Profotograaf, shown as/ ) ).toBeNull();
+	} );
+
+	it( 'shows no hint when the site settings pick a layout', async () => {
+		( globalThis as { profotograafGalleryDefaults?: unknown } ).profotograafGalleryDefaults = { layout: 'masonry' };
+		try {
+			fetchMock.mockResolvedValue( [ galleryRow( { layout: 'parallax' } ) ] );
+			render( <Edit attributes={ chosen } setAttributes={ vi.fn() } /> );
+			await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
+			expect( screen.queryByText( /on Profotograaf, shown as/ ) ).toBeNull();
+		} finally {
+			delete ( globalThis as { profotograafGalleryDefaults?: unknown } ).profotograafGalleryDefaults;
+		}
+	} );
+} );
+
 describe( 'Edit with a gallery', () => {
 	const chosen: GalleryAttributes = {
 		galleryId: 'g-1',

@@ -26,7 +26,8 @@ final class Settings {
 
 	public const LAYOUTS = array( 'grid', 'masonry', 'slideshow' );
 
-	public const DEFAULT_LAYOUT = 'grid';
+	/** Empty stands for the platform default: each gallery uses the layout it has on Profotograaf. */
+	public const DEFAULT_LAYOUT = '';
 
 	/**
 	 * Registers the option with WordPress: sanitiser, default and REST schema.

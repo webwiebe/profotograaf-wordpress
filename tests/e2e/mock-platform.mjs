@@ -58,6 +58,17 @@ const GALLERY = {
 	updated_at: '2026-09-01T10:00:00Z',
 };
 
+// A gallery whose platform layout the embed does not draw. embed.js draws
+// `parallax` as a grid unless the host says otherwise (wiebe-xyz/professionals#2359).
+const GALLERY_PARALLAX = {
+	...GALLERY,
+	id: 'g-e2e-parallax',
+	slug: 'sample-parallax',
+	title: 'Sample parallax',
+	url: 'http://localhost:8090/share/g/sample-parallax',
+	layout: 'parallax',
+};
+
 function oembed( { req, res, url } ) {
 	const match = /\/share\/g\/([^/?#]+)/.exec( url.searchParams.get( 'url' ) || '' );
 	if ( ! match || match[ 1 ] !== 'spring-wedding' ) {
@@ -118,7 +129,7 @@ function variantSize( photo, variant ) {
 	return [ Math.round( photo.width * scale ), Math.round( photo.height * scale ) ];
 }
 
-function publicGallery( origin ) {
+function publicGallery( origin, overrides = {} ) {
 	return {
 		id: 'g-e2e',
 		slug: 'spring-wedding',
@@ -141,6 +152,7 @@ function publicGallery( origin ) {
 			} ),
 		} ) ),
 		version: 'e2e0000000000001',
+		...overrides,
 	};
 }
 
@@ -282,12 +294,19 @@ const routes = {
 			? json( res, 403, { error: 'this app is not allowed to use this endpoint', code: 'forbidden' } )
 			: json( res, 200, { script_url: `/share/embed/embed.${ EMBED_VERSION }.js`, version: EMBED_VERSION } ),
 	'GET /api/v1/embed/photos': authed( libraryPage ),
-	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY ] ) ),
+	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY, GALLERY_PARALLAX ] ) ),
 	'GET /api/v1/embed/galleries/g-e2e-error': ( { res } ) => json( res, 503, { error: 'unavailable' }, { 'access-control-allow-origin': '*' } ),
 	'GET /share/embed/embed.js': embedScript,
 	'HEAD /share/embed/embed.js': embedScript,
 	'GET /api/v1/embed/galleries/g-e2e': ( { req, res } ) =>
 		json( res, 200, publicGallery( `http://${ req.headers.host }` ), { 'access-control-allow-origin': '*' } ),
+	'GET /api/v1/embed/galleries/g-e2e-parallax': ( { req, res } ) =>
+		json(
+			res,
+			200,
+			publicGallery( `http://${ req.headers.host }`, { id: 'g-e2e-parallax', slug: 'sample-parallax', title: 'Sample parallax', layout: 'parallax' } ),
+			{ 'access-control-allow-origin': '*' }
+		),
 	'POST /share/embed/view': ( { res } ) => {
 		res.writeHead( 204, { 'access-control-allow-origin': '*' } );
 		return res.end();

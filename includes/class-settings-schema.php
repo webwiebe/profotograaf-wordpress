@@ -107,8 +107,9 @@ final class Settings_Schema {
 				'type'        => 'enum',
 				'default'     => Settings::DEFAULT_LAYOUT,
 				'label'       => __( 'Default gallery layout', 'profotograaf' ),
-				'description' => __( 'Used when a gallery block or shortcode does not choose a layout.', 'profotograaf' ),
+				'description' => __( 'Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow.', 'profotograaf' ),
 				'choices'     => array(
+					''          => __( 'Profotograaf default', 'profotograaf' ),
 					'grid'      => __( 'Grid', 'profotograaf' ),
 					'masonry'   => __( 'Masonry', 'profotograaf' ),
 					'slideshow' => __( 'Slideshow', 'profotograaf' ),

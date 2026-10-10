@@ -1,0 +1,19 @@
+{
+	"fallback": "grid",
+	"drawn": [ "grid", "masonry", "slideshow" ],
+	"map": {
+		"grid": "grid",
+		"masonry": "masonry",
+		"justified": "masonry",
+		"mosaic": "masonry",
+		"lighttable": "masonry",
+		"parallax": "slideshow",
+		"direct": "slideshow",
+		"cinema": "slideshow",
+		"filmstrip": "slideshow",
+		"slideout": "slideshow",
+		"flickr": "grid",
+		"instagram": "grid",
+		"duo": "grid"
+	}
+}

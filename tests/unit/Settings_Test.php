@@ -36,7 +36,7 @@ class Settings_Test extends Wp_Test_Case {
 	}
 
 	public function test_nothing_saved_gives_the_built_in_defaults(): void {
-		$this->assertSame( 'grid', $this->settings->default_layout() );
+		$this->assertSame( '', $this->settings->default_layout() );
 		$this->assertSame( '', $this->settings->get( 'fallback_link_label' ) );
 		$this->assertTrue( $this->settings->get( 'leads_enabled' ) );
 		$this->assertFalse( $this->settings->get( 'keep_data_on_uninstall' ) );
@@ -47,13 +47,13 @@ class Settings_Test extends Wp_Test_Case {
 
 	public function test_a_saved_junk_value_falls_back_to_the_default(): void {
 		$this->options['profotograaf_settings'] = array( 'default_layout' => 'carousel' );
-		$this->assertSame( 'grid', $this->settings->default_layout() );
+		$this->assertSame( '', $this->settings->default_layout() );
 
 		$this->options['profotograaf_settings'] = array( 'default_layout' => 'masonry' );
 		$this->assertSame( 'masonry', $this->settings->default_layout() );
 
 		$this->options['profotograaf_settings'] = 'nonsense';
-		$this->assertSame( 'grid', $this->settings->default_layout() );
+		$this->assertSame( '', $this->settings->default_layout() );
 	}
 
 	public function test_sanitising_cleans_each_type(): void {
@@ -122,8 +122,8 @@ class Settings_Test extends Wp_Test_Case {
 	}
 
 	public function test_sanitising_refuses_invalid_values(): void {
-		$this->assertSame( 'grid', $this->settings->sanitize( array( 'default_layout' => '<script>' ) )['default_layout'] );
-		$this->assertSame( 'grid', $this->settings->sanitize( 'nonsense' )['default_layout'] );
+		$this->assertSame( '', $this->settings->sanitize( array( 'default_layout' => '<script>' ) )['default_layout'] );
+		$this->assertSame( '', $this->settings->sanitize( 'nonsense' )['default_layout'] );
 		$this->assertSame( '', $this->settings->sanitize( array( 'fallback_link_label' => array( 'x' ) ) )['fallback_link_label'] );
 		$this->assertTrue( $this->settings->sanitize( array( 'leads_enabled' => 'maybe' ) )['leads_enabled'] );
 	}
@@ -190,7 +190,7 @@ class Settings_Test extends Wp_Test_Case {
 	}
 
 	public function test_the_built_in_default_comes_last(): void {
-		$this->assertSame( 'grid', $this->settings->resolve( 'default_layout', array( 'default_layout' => 'carousel' ) ) );
+		$this->assertSame( '', $this->settings->resolve( 'default_layout', array( 'default_layout' => 'carousel' ) ) );
 		$this->assertSame( '', $this->settings->resolve( 'fallback_link_label' ) );
 		$this->assertNull( $this->settings->resolve( 'no_such_option', array( 'no_such_option' => 'x' ) ) );
 	}
@@ -275,7 +275,7 @@ class Settings_Test extends Wp_Test_Case {
 		$schema = $registered[2]['show_in_rest']['schema'];
 		$this->assertSame( 'object', $schema['type'] );
 		$this->assertSame( array_keys( Settings_Schema::entries() ), array_keys( $schema['properties'] ) );
-		$this->assertSame( array( 'grid', 'masonry', 'slideshow' ), $schema['properties']['default_layout']['enum'] );
+		$this->assertSame( array( '', 'grid', 'masonry', 'slideshow' ), $schema['properties']['default_layout']['enum'] );
 		$this->assertSame( 'boolean', $schema['properties']['leads_enabled']['type'] );
 	}
 
