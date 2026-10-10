@@ -22,6 +22,9 @@ defined( 'ABSPATH' ) || exit;
  * - `exif:GPS*` properties in XMP. They are replaced by spaces, which keeps
  *   every length in the file unchanged.
  *
+ * - PNG text chunks with a `Raw profile type` keyword (the hex dump that
+ *   ImageMagick writes for EXIF, IPTC and XMP) are removed whole.
+ *
  * An EXIF block that cannot be parsed is removed whole, because the position
  * cannot be shown to be absent from it. The file length of the other parts
  * never changes, so no offset needs to be fixed.
@@ -138,6 +141,12 @@ final class Location_Stripper {
 			}
 			$data = substr( $bytes, $pos + 8, $size );
 			$new  = $data;
+			if ( in_array( $type, array( 'tEXt', 'zTXt', 'iTXt' ), true ) && 0 === stripos( $data, 'Raw profile type ' ) ) {
+				// ImageMagick stores EXIF, IPTC and XMP as a hex dump, often compressed. It cannot be cleaned in place, so the chunk goes.
+				$bytes  = substr_replace( $bytes, '', $pos, 12 + $size );
+				$length = strlen( $bytes );
+				continue;
+			}
 			if ( 'eXIf' === $type ) {
 				$tiff = self::strip_tiff( $data );
 				$new  = null === $tiff ? str_repeat( "\0", $size ) : $tiff;
@@ -148,7 +157,7 @@ final class Location_Stripper {
 				$bytes = substr_replace( $bytes, $new . pack( 'N', crc32( $type . $new ) ), $pos + 8, $size + 4 );
 			}
 			$pos += 12 + $size;
-		}
+		}//end while
 		return $bytes;
 	}
 

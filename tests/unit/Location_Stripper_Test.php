@@ -131,6 +131,15 @@ class Location_Stripper_Test extends TestCase {
 		$this->assertSame( crc32( 'eXIf' . $data ), unpack( 'N', substr( $output, $start + 4 + $size, 4 ) )[1] );
 	}
 
+	public function test_a_png_raw_profile_text_chunk_is_removed(): void {
+		$chunk = static fn( string $type, string $data ): string => pack( 'N', strlen( $data ) ) . $type . $data . pack( 'N', crc32( $type . $data ) );
+		$head  = "\x89PNG\r\n\x1A\n" . $chunk( 'IHDR', str_repeat( "\0", 13 ) );
+		$tail  = $chunk( 'tEXt', "Comment\0kept" ) . $chunk( 'IEND', '' );
+		$input = $head . $chunk( 'zTXt', "Raw profile type exif\0\0secretbytes" ) . $tail;
+
+		$this->assertSame( $head . $tail, Location_Stripper::strip( $input ) );
+	}
+
 	public function test_a_webp_exif_chunk_is_cleaned(): void {
 		$tiff = $this->tiff();
 		$body = 'WEBPVP8 ' . pack( 'V', 4 ) . 'dataEXIF' . pack( 'V', strlen( $tiff ) ) . $tiff;
