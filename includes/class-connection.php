@@ -54,6 +54,25 @@ class Connection {
 	}
 
 	/**
+	 * Whether the platform granted this scope to the stored token.
+	 *
+	 * False while the granted list is unknown (see scopes_known()).
+	 *
+	 * @param string $scope Scope name, for example "galleries:write".
+	 */
+	public function has_scope( string $scope ): bool {
+		return in_array( $scope, (array) $this->data()['scopes'], true );
+	}
+
+	/**
+	 * Whether the granted scope list is stored. A connection made before the
+	 * plugin kept the list has none until the next token refresh.
+	 */
+	public function scopes_known(): bool {
+		return null !== $this->data()['scopes'];
+	}
+
+	/**
 	 * Summary for the settings page.
 	 *
 	 * @return array{state:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool}
@@ -86,6 +105,7 @@ class Connection {
 				'last_error'     => '',
 				'scope_revision' => $previous['scope_revision'],
 				'embed_denied'   => $previous['embed_denied'],
+				'scopes'         => $this->scopes_from( $response ),
 			)
 		);
 	}
@@ -228,7 +248,7 @@ class Connection {
 	/**
 	 * Default stored shape.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,scopes:list<string>|null}
 	 */
 	private function defaults(): array {
 		return array(
@@ -240,13 +260,14 @@ class Connection {
 			'last_error'     => '',
 			'scope_revision' => 0,
 			'embed_denied'   => false,
+			'scopes'         => null,
 		);
 	}
 
 	/**
 	 * Stored data merged over the defaults.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,scopes:list<string>|null}
 	 */
 	private function data(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -258,10 +279,35 @@ class Connection {
 			$data[ $key ] = isset( $stored[ $key ] ) ? (string) $stored[ $key ] : '';
 		}
 		$data['embed_denied'] = ! empty( $stored['embed_denied'] );
+		if ( isset( $stored['scopes'] ) && is_array( $stored['scopes'] ) ) {
+			$data['scopes'] = array_values( array_filter( array_map( 'strval', $stored['scopes'] ), static fn( string $scope ): bool => '' !== $scope ) );
+		}
 		foreach ( array( 'expires_at', 'connected_at', 'scope_revision' ) as $key ) {
 			$data[ $key ] = isset( $stored[ $key ] ) ? (int) $stored[ $key ] : 0;
 		}
 		return $data;
+	}
+
+	/**
+	 * Reads the granted scope list from a token or refresh response. The
+	 * platform sends it as a space separated string (RFC 6749 section 3.3).
+	 * A response without the field stores an empty list, so the list counts
+	 * as known and the connection does not refresh again to fill it.
+	 *
+	 * @param array<string,mixed> $response Decoded response body.
+	 * @return list<string>
+	 */
+	private function scopes_from( array $response ): array {
+		if ( ! array_key_exists( 'scope', $response ) && $this->scopes_known() ) {
+			// RFC 6749 section 5.1: an omitted scope means it is unchanged.
+			return (array) $this->data()['scopes'];
+		}
+		$raw = $response['scope'] ?? '';
+		if ( is_array( $raw ) ) {
+			$raw = implode( ' ', array_map( 'strval', $raw ) );
+		}
+		$parts = preg_split( '/\s+/', trim( (string) $raw ), -1, PREG_SPLIT_NO_EMPTY );
+		return array_values( array_unique( false === $parts ? array() : $parts ) );
 	}
 
 	/**

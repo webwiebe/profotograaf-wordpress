@@ -239,11 +239,17 @@ class Api_Client {
 			return Api_Errors::not_connected();
 		}
 
+		// A connection made before the granted scope list was stored refreshes
+		// once to fill it. Nothing prompts the owner.
 		if ( $this->connection->access_expires_at() <= $this->now() + self::SKEW ) {
 			$refreshed = $this->refresh_tokens();
 			if ( is_wp_error( $refreshed ) ) {
 				return $refreshed;
 			}
+		} elseif ( ! $this->connection->scopes_known() ) {
+			// The token is still valid, so a failed fill must not fail the call.
+			// The next call tries again.
+			$this->refresh_tokens();
 		}
 
 		$token    = $this->connection->access_token();
@@ -352,7 +358,7 @@ class Api_Client {
 
 		try {
 			$this->connection->flush_cache();
-			if ( $this->tokens_usable( $now, $rejected_token ) ) {
+			if ( $this->tokens_usable( $now, $rejected_token ) && $this->connection->scopes_known() ) {
 				return true;
 			}
 			$refresh = $this->connection->refresh_token();
