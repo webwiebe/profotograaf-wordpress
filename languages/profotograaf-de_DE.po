@@ -367,15 +367,15 @@ msgstr "Diese Galerie benötigt JavaScript, um hier angezeigt zu werden."
 msgid "View this gallery on Profotograaf"
 msgstr "Diese Galerie auf Profotograaf ansehen"
 
-#: includes/class-pairing.php:103
+#: includes/class-pairing.php:105
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr "Profotograaf hat die Verbindung nicht gestartet. Versuche es gleich noch einmal."
 
-#: includes/class-pairing.php:230
+#: includes/class-pairing.php:232
 msgid "Could not check the connection. Trying again."
 msgstr "Die Verbindung konnte nicht geprüft werden. Ein neuer Versuch läuft."
 
-#: includes/class-pairing.php:252
+#: includes/class-pairing.php:254
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf hat die Verbindung genehmigt, aber keine Token gesendet. Starte erneut."
 

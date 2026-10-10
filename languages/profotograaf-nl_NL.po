@@ -217,15 +217,15 @@ msgstr "Profotograaf antwoordde met HTTP %d."
 msgid "This site is not connected to Profotograaf."
 msgstr "Deze site is niet verbonden met Profotograaf."
 
-#: includes/class-pairing.php:103
+#: includes/class-pairing.php:105
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr "Profotograaf heeft de verbinding niet gestart. Probeer het zo opnieuw."
 
-#: includes/class-pairing.php:230
+#: includes/class-pairing.php:232
 msgid "Could not check the connection. Trying again."
 msgstr "De verbinding kon niet worden gecontroleerd. Nieuwe poging."
 
-#: includes/class-pairing.php:252
+#: includes/class-pairing.php:254
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin opnieuw."
 
