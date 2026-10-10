@@ -13,6 +13,7 @@ use Profotograaf\Module;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
 use Profotograaf\Plugin;
+use Profotograaf\Sync_Panel;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -88,8 +89,14 @@ class Media_Import_Screen implements Module {
 	 */
 	public function render(): void {
 		printf(
-			'<div class="wrap"><h1>%1$s</h1><div id="profotograaf-import-root" data-admin-url="%2$s"></div></div>',
-			esc_html__( 'Import from Profotograaf', 'profotograaf' ),
+			'<div class="wrap"><h1>%1$s</h1>',
+			esc_html__( 'Import from Profotograaf', 'profotograaf' )
+		);
+		if ( null !== $this->plugin ) {
+			Sync_Panel::render( $this->plugin->connection() );
+		}
+		printf(
+			'<div id="profotograaf-import-root" data-admin-url="%1$s"></div></div>',
 			esc_url( admin_url() )
 		);
 	}

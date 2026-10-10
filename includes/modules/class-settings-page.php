@@ -11,6 +11,7 @@ use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Admin\Settings_Fields;
 use Profotograaf\Admin\Upload_Panel;
 use Profotograaf\Cron_Health;
+use Profotograaf\Sync_Panel;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
 use Profotograaf\Settings_Schema;
@@ -322,6 +323,8 @@ class Settings_Page implements Module {
 			<?php ( new Settings_Fields( $this->plugin()->settings() ) )->render_form( $tab ); ?>
 
 			<?php if ( Settings_Schema::TAB_GENERAL === $tab && 'connected' === $status['state'] ) : ?>
+				<h2><?php esc_html_e( 'Photo changes', 'profotograaf' ); ?></h2>
+				<?php Sync_Panel::render( $connection ); ?>
 				<?php $this->render_origin_sync(); ?>
 				<?php ( new Upload_Panel( $this->plugin() ) )->render(); ?>
 			<?php endif; ?>

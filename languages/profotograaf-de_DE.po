@@ -20,18 +20,20 @@ msgstr ""
 #: includes/admin/class-network-page.php:53
 #: includes/admin/class-network-page.php:54
 #: includes/admin/class-network-page.php:92
-#: includes/class-cron-health.php:160
-#: includes/class-cron-health.php:175
-#: includes/modules/class-media-import-screen.php:207
-#: includes/modules/class-media-import-screen.php:220
+#: includes/class-cron-health.php:209
+#: includes/class-cron-health.php:224
+#: includes/class-cron-health.php:245
+#: includes/class-cron-health.php:258
+#: includes/modules/class-media-import-screen.php:214
+#: includes/modules/class-media-import-screen.php:227
 #: includes/modules/class-media-upload.php:283
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
-#: includes/modules/class-settings-page.php:75
 #: includes/modules/class-settings-page.php:76
-#: includes/modules/class-settings-page.php:275
-#: includes/modules/class-site-health.php:356
-#: includes/modules/class-site-health.php:426
+#: includes/modules/class-settings-page.php:77
+#: includes/modules/class-settings-page.php:276
+#: includes/modules/class-site-health.php:357
+#: includes/modules/class-site-health.php:428
 #: assets/admin/media-source.js:29
 #: build/inserter-category/index.js:1
 #: build/media-modal/index.js:3
@@ -71,9 +73,9 @@ msgstr "Anfrageformulare"
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:185
 #: includes/modules/class-review-notice.php:89
-#: includes/modules/class-settings-page.php:240
-#: includes/modules/class-settings-page.php:267
-#: includes/modules/class-settings-page.php:471
+#: includes/modules/class-settings-page.php:241
+#: includes/modules/class-settings-page.php:268
+#: includes/modules/class-settings-page.php:474
 #: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
 msgstr "Du hast keine Berechtigung dafür."
@@ -309,44 +311,44 @@ msgstr "Die Plattform hat einen Fehler gemeldet (HTTP %d). Versuche es später e
 msgid "Profotograaf answered with HTTP %d."
 msgstr "Profotograaf hat mit HTTP %d geantwortet."
 
-#: includes/class-cron-health.php:142
+#: includes/class-cron-health.php:187
 msgid "Profotograaf lead delivery"
 msgstr "Profotograaf-Lead-Zustellung"
 
-#: includes/class-cron-health.php:157
+#: includes/class-cron-health.php:206
 msgid "Profotograaf can deliver leads"
 msgstr "Profotograaf kann Leads zustellen"
 
-#: includes/class-cron-health.php:163
+#: includes/class-cron-health.php:212
 msgid "WP-Cron has run recently, so queued leads are delivered on time."
 msgstr "WP-Cron wurde kürzlich ausgeführt, daher werden Leads in der Warteschlange rechtzeitig zugestellt."
 
-#: includes/class-cron-health.php:171
+#: includes/class-cron-health.php:220
 msgid "WP-Cron is disabled and leads cannot be delivered"
 msgstr "WP-Cron ist deaktiviert und Leads können nicht zugestellt werden"
 
-#: includes/class-cron-health.php:172
+#: includes/class-cron-health.php:221
 msgid "WP-Cron has stopped running and leads cannot be delivered"
 msgstr "WP-Cron läuft nicht mehr und Leads können nicht zugestellt werden"
 
-#: includes/class-cron-health.php:179
+#: includes/class-cron-health.php:228
 msgid "Run WordPress cron from the server. Add this line to the crontab of the site:"
 msgstr "Führe den WordPress-Cron vom Server aus. Füge diese Zeile zur Crontab der Website hinzu:"
 
-#: includes/class-cron-health.php:195
+#: includes/class-cron-health.php:288
 msgid "Run WordPress cron from the server with this crontab line:"
 msgstr "Führe den WordPress-Cron mit dieser Crontab-Zeile vom Server aus:"
 
-#: includes/class-cron-health.php:214
+#: includes/class-cron-health.php:307
 msgid "This site sets DISABLE_WP_CRON and no scheduled run has been seen."
 msgstr "Diese Website setzt DISABLE_WP_CRON und es wurde keine geplante Ausführung beobachtet."
 
-#: includes/class-cron-health.php:215
+#: includes/class-cron-health.php:308
 msgid "No scheduled run has been seen for more than three hours."
 msgstr "Seit mehr als drei Stunden wurde keine geplante Ausführung beobachtet."
 
 #. translators: %d: number of leads waiting for delivery.
-#: includes/class-cron-health.php:221
+#: includes/class-cron-health.php:314
 #, php-format
 msgid "%d lead is waiting for delivery."
 msgid_plural "%d leads are waiting for delivery."
@@ -742,7 +744,7 @@ msgid "Profotograaf is no longer connected. The connection was ended in your Pro
 msgstr "Profotograaf ist nicht mehr verbunden. Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
 #: includes/modules/class-admin-notices.php:122
-#: includes/modules/class-settings-page.php:183
+#: includes/modules/class-settings-page.php:184
 msgid "Connect this site again"
 msgstr "Diese Website erneut verbinden"
 
@@ -849,118 +851,118 @@ msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr "Die Datenschutzerklärung von Profotograaf findest du unter https://profotograaf.nl/privacy."
 
 #: includes/admin/class-network-page.php:109
-#: includes/modules/class-settings-page.php:106
+#: includes/modules/class-settings-page.php:107
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: includes/modules/class-settings-page.php:181
+#: includes/modules/class-settings-page.php:182
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr "Profotograaf braucht eine neue Berechtigung, um Galerien für die Einbettung einzuschalten."
 
-#: includes/modules/class-settings-page.php:215
+#: includes/modules/class-settings-page.php:216
 msgid "Disconnected from Profotograaf."
 msgstr "Von Profotograaf getrennt."
 
-#: includes/modules/class-settings-page.php:219
+#: includes/modules/class-settings-page.php:220
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr "Getrennt. Diese Website hat keinen Zugriff mehr. Um sie auch aus deinem Konto zu entfernen, öffne Verbundene Apps in den Kontoeinstellungen von Profotograaf."
 
-#: includes/modules/class-settings-page.php:250
+#: includes/modules/class-settings-page.php:251
 msgid "Connected to Profotograaf."
 msgstr "Mit Profotograaf verbunden."
 
-#: includes/modules/class-settings-page.php:253
+#: includes/modules/class-settings-page.php:254
 msgid "The connection was declined in Profotograaf."
 msgstr "Die Verbindung wurde in Profotograaf abgelehnt."
 
-#: includes/modules/class-settings-page.php:256
+#: includes/modules/class-settings-page.php:257
 msgid "The code expired. Start the connection again."
 msgstr "Der Code ist abgelaufen. Starte die Verbindung neu."
 
 #: includes/admin/class-network-page.php:98
-#: includes/modules/class-settings-page.php:280
-#: includes/modules/class-site-health.php:361
+#: includes/modules/class-settings-page.php:281
+#: includes/modules/class-site-health.php:362
 msgid "Connection"
 msgstr "Verbindung"
 
 #: includes/admin/class-network-page.php:69
-#: includes/modules/class-settings-page.php:285
+#: includes/modules/class-settings-page.php:286
 msgid "Connected"
 msgstr "Verbunden"
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:289
+#: includes/modules/class-settings-page.php:290
 #, php-format
 msgid "since %s."
 msgstr "seit %s."
 
-#: includes/modules/class-settings-page.php:295
+#: includes/modules/class-settings-page.php:296
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr "Diese Verbindung wurde hergestellt, bevor Profotograaf dieser Website erlauben konnte, Galerien für die Einbettung einzuschalten. Verbinde erneut, um diese Berechtigung zu erteilen. Deine Galerien und Einstellungen bleiben unverändert."
 
-#: includes/modules/class-settings-page.php:297
-#: includes/modules/class-settings-page.php:303
+#: includes/modules/class-settings-page.php:298
+#: includes/modules/class-settings-page.php:304
 msgid "Connect again"
 msgstr "Erneut verbinden"
 
-#: includes/modules/class-settings-page.php:305
+#: includes/modules/class-settings-page.php:306
 msgid "Disconnect"
 msgstr "Trennen"
 
 #: includes/admin/class-network-page.php:75
-#: includes/modules/class-settings-page.php:308
+#: includes/modules/class-settings-page.php:309
 msgid "Not connected"
 msgstr "Nicht verbunden"
 
-#: includes/modules/class-settings-page.php:313
+#: includes/modules/class-settings-page.php:314
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr "Verbinde diese Website mit deinem Profotograaf-Konto, um Galerien einzubinden und Anfragen zu empfangen. Du genehmigst die Verbindung in Profotograaf, daher erreicht dein Passwort diese Website nie."
 
-#: includes/modules/class-settings-page.php:315
+#: includes/modules/class-settings-page.php:316
 msgid "Connect to Profotograaf"
 msgstr "Mit Profotograaf verbinden"
 
-#: includes/modules/class-settings-page.php:320
+#: includes/modules/class-settings-page.php:321
 msgid "Set up the enquiry forms"
 msgstr "Die Anfrageformulare einrichten"
 
-#: includes/modules/class-settings-page.php:363
+#: includes/modules/class-settings-page.php:366
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bestätige diesen Code in Profotograaf, um die Verbindung abzuschließen:"
 
-#: includes/modules/class-settings-page.php:366
+#: includes/modules/class-settings-page.php:369
 msgid "Open the approval page"
 msgstr "Genehmigungsseite öffnen"
 
-#: includes/modules/class-settings-page.php:368
+#: includes/modules/class-settings-page.php:371
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Warten darauf, dass du die Verbindung in Profotograaf genehmigst."
 
-#: includes/modules/class-settings-page.php:369
+#: includes/modules/class-settings-page.php:372
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: includes/modules/class-settings-page.php:380
+#: includes/modules/class-settings-page.php:383
 msgid "Embedding on this site"
 msgstr "Einbettung auf dieser Website"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:385
+#: includes/modules/class-settings-page.php:388
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s darf deine Profotograaf-Seiten in einem Frame anzeigen."
 
-#: includes/modules/class-settings-page.php:389
+#: includes/modules/class-settings-page.php:392
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf erlaubt die Einbettung nur auf Websites, die über https ausgeliefert werden. Liefere diese Website über https aus, um deine Seiten in einem Frame einzubetten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:394
+#: includes/modules/class-settings-page.php:397
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Um deine Profotograaf-Seiten in einem Frame auf dieser Website anzuzeigen, füge %s unter \"Websites, die meine Seiten einbetten dürfen\" in den Kontoeinstellungen von Profotograaf hinzu."
 
-#: includes/modules/class-settings-page.php:402
+#: includes/modules/class-settings-page.php:405
 msgid "Check again"
 msgstr "Erneut prüfen"
 
@@ -1122,67 +1124,67 @@ msgstr "Öffne den Leads-Bildschirm, um sie erneut zu versuchen oder zu exportie
 msgid "never"
 msgstr "nie"
 
-#: includes/modules/class-site-health.php:358
+#: includes/modules/class-site-health.php:359
 msgid "Plugin version"
 msgstr "Plugin-Version"
 
-#: includes/modules/class-site-health.php:359
+#: includes/modules/class-site-health.php:360
 msgid "WordPress version"
 msgstr "WordPress-Version"
 
-#: includes/modules/class-site-health.php:360
+#: includes/modules/class-site-health.php:361
 msgid "PHP version"
 msgstr "PHP-Version"
 
-#: includes/modules/class-site-health.php:362
+#: includes/modules/class-site-health.php:363
 msgid "Connected since"
 msgstr "Verbunden seit"
 
-#: includes/modules/class-site-health.php:363
+#: includes/modules/class-site-health.php:364
 msgid "Active modules"
 msgstr "Aktive Module"
 
-#: includes/modules/class-site-health.php:364
+#: includes/modules/class-site-health.php:365
 msgid "Leads waiting"
 msgstr "Wartende Leads"
 
-#: includes/modules/class-site-health.php:365
+#: includes/modules/class-site-health.php:366
 msgid "Leads failed"
 msgstr "Fehlgeschlagene Leads"
 
-#: includes/modules/class-site-health.php:366
+#: includes/modules/class-site-health.php:367
 msgid "Embed script version"
 msgstr "Version des Embed-Skripts"
 
-#: includes/modules/class-site-health.php:366
+#: includes/modules/class-site-health.php:367
 msgid "unknown"
 msgstr "unbekannt"
 
-#: includes/modules/class-site-health.php:368
+#: includes/modules/class-site-health.php:369
 msgid "WP-Cron"
 msgstr "WP-Cron"
 
-#: includes/modules/class-site-health.php:369
+#: includes/modules/class-site-health.php:370
 msgid "disabled"
 msgstr "deaktiviert"
 
-#: includes/modules/class-site-health.php:369
+#: includes/modules/class-site-health.php:370
 msgid "enabled"
 msgstr "aktiviert"
 
-#: includes/modules/class-site-health.php:370
+#: includes/modules/class-site-health.php:371
 msgid "last delivery run"
 msgstr "letzter Zustelllauf"
 
-#: includes/modules/class-site-health.php:372
+#: includes/modules/class-site-health.php:374
 msgid "Recent errors"
 msgstr "Letzte Fehler"
 
-#: includes/modules/class-site-health.php:372
+#: includes/modules/class-site-health.php:374
 msgid "none"
 msgstr "keine"
 
-#: includes/modules/class-site-health.php:439
+#: includes/modules/class-site-health.php:441
 msgid "Open the leads screen"
 msgstr "Den Leads-Bildschirm öffnen"
 
@@ -1755,7 +1757,7 @@ msgstr ""
 msgid "same tab"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:314
+#: includes/modules/class-settings-page.php:315
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
 msgstr ""
 
@@ -1834,20 +1836,20 @@ msgstr ""
 msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:77
 #: includes/modules/class-media-import-screen.php:78
-#: includes/modules/class-media-import-screen.php:92
+#: includes/modules/class-media-import-screen.php:79
+#: includes/modules/class-media-import-screen.php:93
 msgid "Import from Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:236
+#: includes/modules/class-media-import-screen.php:243
 msgid "Source"
 msgstr ""
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:204
-#: includes/modules/class-media-import-screen.php:217
+#: includes/modules/class-media-import-screen.php:211
+#: includes/modules/class-media-import-screen.php:224
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr ""
@@ -1979,11 +1981,11 @@ msgstr ""
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:212
+#: includes/modules/class-media-import-screen.php:219
 msgid "Open on Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:231
+#: includes/modules/class-media-import-screen.php:238
 msgid "Re-import"
 msgstr ""
 
@@ -2164,11 +2166,11 @@ msgstr ""
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:181
+#: includes/modules/class-settings-page.php:182
 msgid "Sending files needs a new permission."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:301
+#: includes/modules/class-settings-page.php:302
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr ""
 
@@ -2390,7 +2392,7 @@ msgstr ""
 msgid "Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery before you send it again."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:224
+#: includes/modules/class-media-import-screen.php:231
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr ""
 
@@ -2506,6 +2508,81 @@ msgstr "Die Fotoliste konnte nicht aktualisiert werden."
 #: includes/trait-api-client-feed.php:43
 msgid "Profotograaf sent an answer this plugin cannot read."
 msgstr "Profotograaf hat eine Antwort gesendet, die dieses Plugin nicht lesen kann."
+
+#: includes/class-cron-health.php:191
+msgid "Profotograaf photo change check"
+msgstr ""
+
+#: includes/class-cron-health.php:242
+msgid "Profotograaf checks for photo changes"
+msgstr ""
+
+#: includes/class-cron-health.php:248
+msgid "Changes to imported photos on Profotograaf are checked on time, or nothing needs checking yet."
+msgstr ""
+
+#: includes/class-cron-health.php:255
+msgid "Profotograaf has not checked for photo changes"
+msgstr ""
+
+#: includes/class-cron-health.php:262
+msgid "Use \"Check now\" on the Profotograaf settings page, or run WordPress cron from the server. Add this line to the crontab of the site:"
+msgstr ""
+
+#: includes/class-cron-health.php:324
+msgid "This site sets DISABLE_WP_CRON, so photo changes on Profotograaf have not been checked for more than three hours."
+msgstr ""
+
+#: includes/class-cron-health.php:325
+msgid "Photo changes on Profotograaf have not been checked for more than three hours."
+msgstr ""
+
+#: includes/class-sync-panel.php:29
+msgid "Photo changes have not been checked yet."
+msgstr ""
+
+#. translators: %s: time since the last check, for example "5 minutes".
+#: includes/class-sync-panel.php:33
+#, php-format
+msgid "Photo changes last checked %s ago."
+msgstr ""
+
+#: includes/class-sync-panel.php:50
+msgid "Check now"
+msgstr ""
+
+#: includes/class-sync-rest.php:116
+msgid "Connect this site to Profotograaf first."
+msgstr ""
+
+#: includes/modules/class-settings-page.php:326
+msgid "Photo changes"
+msgstr ""
+
+#: includes/modules/class-site-health.php:373
+msgid "Photo changes last checked"
+msgstr ""
+
+#: assets/admin/sync.js:37
+msgid "A check is already running."
+msgstr ""
+
+#: assets/admin/sync.js:40
+msgid "Checking is paused until the account is confirmed."
+msgstr ""
+
+#: assets/admin/sync.js:43
+#: assets/admin/sync.js:63
+msgid "The check did not finish. Try again later."
+msgstr ""
+
+#: assets/admin/sync.js:45
+msgid "Photo changes were checked."
+msgstr ""
+
+#: assets/admin/sync.js:54
+msgid "Checking…"
+msgstr ""
 
 #: includes/class-gallery-look.php:161
 #: build/gallery/index.js:4

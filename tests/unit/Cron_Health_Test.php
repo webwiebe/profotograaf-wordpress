@@ -8,6 +8,7 @@
 namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
+use Profotograaf\Change_Poller;
 use Profotograaf\Cron_Health;
 use Profotograaf\Leads\Delivery;
 use Profotograaf\Modules\Settings_Page;
@@ -15,8 +16,8 @@ use Profotograaf\Tests\Leads\Leads_Test_Case;
 
 class Cron_Health_Test extends Leads_Test_Case {
 
-	private function health( bool $disabled ): Cron_Health {
-		return new Cron_Health( $this->queue, fn() => $disabled );
+	private function health( bool $disabled, bool $watching = false ): Cron_Health {
+		return new Cron_Health( $this->queue, fn() => $disabled, fn() => $watching );
 	}
 
 	private function queue_lead(): void {
@@ -188,5 +189,90 @@ class Cron_Health_Test extends Leads_Test_Case {
 		$this->assertSame( '', $notice( 'dashboard', true ) );
 		$this->assertSame( '', $notice( 'settings_page_profotograaf', false ) );
 		$this->assertStringContainsString( 'notice-warning', $notice( 'settings_page_profotograaf', true ) );
+	}
+
+	public function test_a_poll_that_is_not_watched_is_never_stale(): void {
+		$this->now += 10 * Cron_Health::STALE_AFTER;
+		$health     = $this->health( true, false );
+
+		$this->assertFalse( $health->poll_status()['stale'] );
+		$this->assertSame( 'good', $health->poll_result()['status'] );
+	}
+
+	public function test_a_recent_poll_is_healthy(): void {
+		$this->options[ Change_Poller::OPTION_LAST_OK ] = $this->now - 600;
+		$health = $this->health( false, true );
+
+		$status = $health->poll_status();
+
+		$this->assertTrue( $status['watched'] );
+		$this->assertSame( $this->now - 600, $status['last_ok'] );
+		$this->assertFalse( $status['stale'] );
+		$this->assertSame( 'good', $health->poll_result()['status'] );
+	}
+
+	public function test_an_old_poll_is_stale_and_names_the_crontab_line(): void {
+		$this->options[ Change_Poller::OPTION_LAST_OK ] = $this->now - Cron_Health::STALE_AFTER - 1;
+		$health = $this->health( false, true );
+
+		$result = $health->poll_result();
+
+		$this->assertTrue( $health->poll_status()['stale'] );
+		$this->assertSame( 'recommended', $result['status'] );
+		$this->assertStringContainsString( 'Photo changes on Profotograaf have not been checked', $result['description'] );
+		$this->assertStringContainsString( '*/5 * * * * curl', $result['actions'] );
+		$this->assertStringContainsString( 'Check now', $result['actions'] );
+	}
+
+	public function test_a_poll_that_never_ran_is_stale_when_cron_is_disabled_without_a_heartbeat(): void {
+		$result = $this->health( true, true )->poll_result();
+
+		$this->assertSame( 'recommended', $result['status'] );
+		$this->assertStringContainsString( 'DISABLE_WP_CRON', $result['description'] );
+	}
+
+	public function test_a_poll_that_never_ran_is_healthy_when_a_heartbeat_shows_cron_works(): void {
+		$health = $this->health( true, true );
+		$health->beat();
+
+		$this->assertFalse( $health->poll_status()['stale'] );
+	}
+
+	public function test_a_poll_that_never_ran_is_stale_when_its_event_is_overdue(): void {
+		Functions\when( 'wp_next_scheduled' )->justReturn( $this->now - Cron_Health::STALE_AFTER - 1 );
+
+		$this->assertTrue( $this->health( false, true )->poll_status()['stale'] );
+	}
+
+	public function test_the_site_health_tests_include_the_poll(): void {
+		$tests = $this->health( false )->add_test( array() );
+
+		$this->assertArrayHasKey( Cron_Health::POLL_TEST, $tests['direct'] );
+	}
+
+	public function test_the_notice_shows_for_a_stale_poll_without_waiting_leads(): void {
+		$this->options[ Change_Poller::OPTION_LAST_OK ] = $this->now - Cron_Health::STALE_AFTER - 1;
+
+		ob_start();
+		$this->health( false, true )->render_notice();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'notice-warning', $html );
+		$this->assertStringContainsString( 'Photo changes on Profotograaf have not been checked', $html );
+		$this->assertStringContainsString( 'wp-cron.php', $html );
+		$this->assertStringNotContainsString( 'lead', $html );
+	}
+
+	public function test_the_notice_names_both_problems_with_one_crontab_line(): void {
+		$this->queue_lead();
+		$this->options[ Change_Poller::OPTION_LAST_OK ] = $this->now - Cron_Health::STALE_AFTER - 1;
+
+		ob_start();
+		$this->health( true, true )->render_notice();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( '1 lead is waiting', $html );
+		$this->assertStringContainsString( 'photo changes on Profotograaf have not been checked', $html );
+		$this->assertSame( 1, substr_count( $html, 'wp-cron.php' ) );
 	}
 }
