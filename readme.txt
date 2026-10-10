@@ -185,6 +185,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: photos imported from Profotograaf now carry a baseline of what the plugin wrote (file, and title, caption and alt text), so a later check can tell an edited copy from an untouched one. Copies imported earlier get their baseline from their current values in the admin, so edits made before the update are not detected. Nothing is sent anywhere.
 * New: the plugin asks for the galleries:write permission when it connects, for sending Media Library files to Profotograaf later. A connection made earlier keeps working. Only a site that switches sending on is asked to connect again, when the stored permissions lack it or Profotograaf refuses a write call (403).
 * New: a review notice on the dashboard and the settings page, for administrators, once Profotograaf says your site has earned the request (a client downloaded photos, or your galleries were viewed 10 times). Leave a review opens the plugin's review page on WordPress.org, Later hides the notice for 14 days and Don't ask again removes it for good. Your choice is reported to Profotograaf with the next status call, and kept when that call fails.
 * Change: the error reporting destination (address, project and key) comes from the Profotograaf status call. Without it the plugin sends no error reports, and the opt-in for anonymous usage data still gates everything. The key built into the plugin for errors is removed.

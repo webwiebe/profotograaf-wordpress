@@ -6,6 +6,28 @@
  * @package Profotograaf
  */
 
+if ( ! class_exists( 'WP_Post' ) ) {
+	/**
+	 * Minimal WP_Post.
+	 */
+	class WP_Post {
+
+		/**
+		 * Title.
+		 *
+		 * @var string
+		 */
+		public $post_title = '';
+
+		/**
+		 * Caption.
+		 *
+		 * @var string
+		 */
+		public $post_excerpt = '';
+	}
+}
+
 if ( ! class_exists( 'WP_Error' ) ) {
 	/**
 	 * Minimal WP_Error.

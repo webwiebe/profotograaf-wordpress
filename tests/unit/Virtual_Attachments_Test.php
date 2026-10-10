@@ -139,6 +139,8 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 				'sizes'  => array(),
 			)
 		);
+		Functions\when( 'wp_get_original_image_path' )->justReturn( false );
+		Functions\when( 'get_post' )->justReturn( null );
 		Functions\when( 'get_attached_file' )->alias( fn( $id ) => '/uploads/' . ( $this->meta[ $id ]['_wp_attached_file'] ?? '' ) );
 		Functions\when( 'update_attached_file' )->alias(
 			function () {
