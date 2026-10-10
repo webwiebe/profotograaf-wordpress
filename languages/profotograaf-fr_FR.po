@@ -352,15 +352,15 @@ msgstr[1] "%d contacts attendent leur livraison."
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Cette galerie n'a pas pu être chargée. Veuillez réessayer plus tard."
 
-#: includes/class-gallery-renderer.php:327
+#: includes/class-gallery-renderer.php:319
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr "La galerie Profotograaf ne peut pas être affichée car son identifiant est manquant ou invalide. Choisissez à nouveau la galerie."
 
-#: includes/class-gallery-renderer.php:338
+#: includes/class-gallery-renderer.php:330
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Cette galerie Profotograaf est introuvable dans votre compte. Elle a peut-être été supprimée. Choisissez une autre galerie."
 
-#: includes/class-gallery-renderer.php:359
+#: includes/class-gallery-renderer.php:351
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Cette galerie nécessite JavaScript pour s'afficher ici."
 

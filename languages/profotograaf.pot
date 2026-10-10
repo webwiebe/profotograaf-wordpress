@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T12:45:06+00:00\n"
+"POT-Creation-Date: 2026-10-10T13:26:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -410,15 +410,15 @@ msgstr ""
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
-#: includes/class-gallery-renderer.php:327
+#: includes/class-gallery-renderer.php:319
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:338
+#: includes/class-gallery-renderer.php:330
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:359
+#: includes/class-gallery-renderer.php:351
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
