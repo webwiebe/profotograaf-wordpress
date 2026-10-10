@@ -98,6 +98,68 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertArrayNotHasKey( 'profotograaf_refresh_lock', $this->options );
 	}
 
+	public function test_a_refresh_stores_the_granted_scope_list(): void {
+		$this->connect( 10 );
+		$this->http->reply(
+			200,
+			array(
+				'status'        => 'approved',
+				'access_token'  => 'access-2',
+				'refresh_token' => 'refresh-2',
+				'expires_in'    => 900,
+				'scope'         => 'galleries:read galleries:write  leads:write',
+			)
+		);
+		$this->http->reply( 200, array() );
+
+		$this->api->list_galleries();
+
+		$connection = new Connection();
+		$this->assertTrue( $connection->has_scope( 'galleries:write' ) );
+		$this->assertTrue( $connection->has_scope( 'galleries:read' ) );
+		$this->assertFalse( $connection->has_scope( 'galleries:embed' ) );
+		$this->assertTrue( $connection->scopes_known() );
+	}
+
+	public function test_a_connection_without_a_stored_scope_refreshes_once_to_fill_it(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', null );
+		$this->http->reply(
+			200,
+			array(
+				'status'        => 'approved',
+				'access_token'  => 'access-2',
+				'refresh_token' => 'refresh-2',
+				'expires_in'    => 900,
+				'scope'         => 'galleries:read leads:write galleries:embed',
+			)
+		);
+		$this->http->reply( 200, array() );
+		$this->http->reply( 200, array() );
+
+		$this->assertFalse( ( new Connection() )->scopes_known() );
+		$this->api->request( 'GET', '/api/v1/ping' );
+		$this->api->request( 'GET', '/api/v1/ping' );
+
+		$this->assertCount( 3, $this->http->requests, 'one refresh, then two plain calls' );
+		$this->assertSame( 'https://profotograaf.nl/api/v1/auth/devices/refresh', $this->http->requests[0]['url'] );
+		$this->assertTrue( ( new Connection() )->has_scope( 'galleries:embed' ) );
+		$this->assertArrayNotHasKey( 'profotograaf_refresh_lock', $this->options );
+	}
+
+	public function test_a_refresh_without_a_scope_field_does_not_repeat(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', null );
+		$this->refresh_reply();
+		$this->http->reply( 200, array() );
+		$this->http->reply( 200, array() );
+
+		$this->api->request( 'GET', '/api/v1/ping' );
+		$this->api->request( 'GET', '/api/v1/ping' );
+
+		$this->assertCount( 3, $this->http->requests );
+		$this->assertTrue( ( new Connection() )->scopes_known() );
+		$this->assertFalse( ( new Connection() )->has_scope( 'galleries:read' ) );
+	}
+
 	public function test_a_401_refreshes_once_and_retries(): void {
 		$this->connect();
 		$this->http->reply( 401, array( 'error' => 'expired' ) );

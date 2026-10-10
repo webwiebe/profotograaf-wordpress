@@ -186,6 +186,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 = 0.1.0 =
 * New: the plugin tells Profotograaf its version, the WordPress version and the PHP version when you connect, and once a day while connected. Profotograaf answers with the review prompt and error reporting settings, which the plugin stores. A failed call keeps the last answer.
+* Internal: the connection keeps the list of scopes the platform granted. A site paired earlier fills it with one background token refresh, without a prompt.
 * Fix: the "Load more photos" button in the media modal tab shows only when more photos are left.
 * Fix: the suggested privacy policy text now says that usage data and error reports are sent when the site owner opts in.
 * New: user documentation for the photo library (README, FAQ, privacy text) and an External services entry that lists the requests it makes.

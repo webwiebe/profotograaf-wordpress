@@ -121,8 +121,9 @@ abstract class Wp_Test_Case extends TestCase {
 	 * @param int    $expires_in Seconds until the access token expires.
 	 * @param string $access     Access token.
 	 * @param string $refresh    Refresh token.
+	 * @param string|null $scope Granted scope list, null for a connection that predates it.
 	 */
-	protected function connect( int $expires_in = 900, string $access = 'access-1', string $refresh = 'refresh-1' ): void {
+	protected function connect( int $expires_in = 900, string $access = 'access-1', string $refresh = 'refresh-1', ?string $scope = 'galleries:read leads:write galleries:embed' ): void {
 		$this->options['profotograaf_connection'] = array(
 			'access_token'  => $access,
 			'refresh_token' => $refresh,
@@ -131,6 +132,9 @@ abstract class Wp_Test_Case extends TestCase {
 			'connected_at'  => $this->now - 100,
 			'last_error'    => '',
 		);
+		if ( null !== $scope ) {
+			$this->options['profotograaf_connection']['scopes'] = explode( ' ', $scope );
+		}
 	}
 
 	/**

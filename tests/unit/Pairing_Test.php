@@ -246,12 +246,15 @@ class Pairing_Test extends Wp_Test_Case {
 				'token_type'    => 'Bearer',
 				'expires_in'    => 900,
 				'device_id'     => 'device-9',
+				'scope'         => 'galleries:read leads:write galleries:embed galleries:write',
 			)
 		);
 
 		$result = $this->pairing->poll();
 
 		$this->assertSame( 'approved', $result['status'] );
+		$this->assertTrue( $this->connection->has_scope( 'galleries:write' ) );
+		$this->assertFalse( $this->connection->has_scope( 'media:delete' ) );
 		$this->assertTrue( $this->connection->is_connected() );
 		$this->assertSame( 'access-1', $this->connection->access_token() );
 		$this->assertSame( 'refresh-1', $this->connection->refresh_token() );

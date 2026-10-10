@@ -39,6 +39,7 @@ function tokenPair() {
 		token_type: 'Bearer',
 		expires_in: 900,
 		device_id: 'device-e2e',
+		scope: 'galleries:read leads:write galleries:embed',
 	};
 }
 
