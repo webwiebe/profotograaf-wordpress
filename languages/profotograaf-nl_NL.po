@@ -794,7 +794,7 @@ msgstr ""
 msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
 msgstr ""
 
-#: includes/class-embed-script.php:187
+#: includes/class-embed-script.php:206
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 

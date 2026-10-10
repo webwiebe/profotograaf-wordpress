@@ -9,6 +9,7 @@ namespace Profotograaf\Tests;
 
 // phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript -- the tests assert on script markup.
 
+use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use Profotograaf\Embed_Script;
 use Profotograaf\Empty_Gallery;
@@ -163,10 +164,15 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( '<script async src="https://profotograaf.nl/share/embed/embed.js" onerror="console.error(', $html );
 	}
 
-	public function test_the_queued_script_gets_the_empty_gallery_watcher_after_it(): void {
+	public function test_the_queued_script_keeps_async_and_the_watcher_goes_to_the_footer_once(): void {
+		Actions\expectAdded( 'wp_footer' )->once()->with( array( $this->script, 'print_watcher' ), 100 );
+
+		$this->script->enqueue();
 		$this->script->enqueue();
 
-		$this->assertSame( array( Empty_Gallery::script() ), $this->inline_scripts[ Embed_Script::HANDLE ] );
+		ob_start();
+		$this->script->print_watcher();
+		$this->assertSame( '<script>' . Empty_Gallery::script() . '</script>', ob_get_clean() );
 	}
 
 	public function test_a_hand_printed_tag_is_followed_by_the_empty_gallery_watcher(): void {

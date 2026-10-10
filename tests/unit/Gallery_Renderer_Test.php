@@ -810,7 +810,7 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 	public function test_the_stylesheet_collapses_empty_and_failed_galleries(): void {
 		$rule = Reserved_Space::rule();
 
-		$this->assertStringContainsString( '[data-pf-empty],[data-profotograaf-failed]{display:block;aspect-ratio:auto!important', $rule );
+		$this->assertStringContainsString( '[data-pf-empty]{display:block;aspect-ratio:auto!important;animation:none}[data-pf-empty],[data-profotograaf-failed]{overflow:visible', $rule );
 		$this->assertStringContainsString( '[data-pf-empty]>a,[data-pf-empty]>noscript{display:none!important}', $rule );
 		$this->assertStringContainsString( '[data-profotograaf-gallery]>a{max-width:100%', $rule );
 	}

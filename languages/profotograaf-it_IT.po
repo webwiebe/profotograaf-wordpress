@@ -348,7 +348,7 @@ msgid_plural "%d leads are waiting for delivery."
 msgstr[0] "%d contatto è in attesa di consegna."
 msgstr[1] "%d contatti sono in attesa di consegna."
 
-#: includes/class-embed-script.php:187
+#: includes/class-embed-script.php:206
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Non è stato possibile caricare questa galleria. Riprova più tardi."
 

@@ -33,29 +33,19 @@ async function insideOf( outer, inner ) {
 }
 
 test.describe( 'a gallery with nothing to show', () => {
-	/** @type {string|null} */
-	let savedIndex = null;
 	/** @type {Record<string,string>} */
 	const urls = {};
 
 	test.beforeAll( () => {
-		try {
-			savedIndex = wp( 'option', 'get', INDEX_OPTION, '--format=json' );
-		} catch {
-			savedIndex = null;
-		}
 		const url = ( /** @type {string} */ id ) => `http://mock-platform:8090/share/g/${ id }`;
-		wp( 'option', 'delete', INDEX_OPTION );
-		// The PNG gallery is counted by the list, so only the script can tell.
+		// Merged into the index, so the entries other specs rely on stay. The PNG
+		// gallery is counted by the list, so only the script can tell.
 		wp(
-			'option',
-			'update',
-			INDEX_OPTION,
-			JSON.stringify( {
-				'g-e2e-empty': { title: 'Empty', url: url( 'g-e2e-empty' ), count: 0 },
-				'g-e2e-png': { title: 'PNG only', url: url( 'g-e2e-png' ), count: 1 },
-			} ),
-			'--format=json'
+			'eval',
+			`$i = get_option( '${ INDEX_OPTION }', array() ); $i = is_array( $i ) ? $i : array(); ` +
+				`$i['g-e2e-empty'] = array( 'title' => 'Empty', 'url' => '${ url( 'g-e2e-empty' ) }', 'count' => 0 ); ` +
+				`$i['g-e2e-png'] = array( 'title' => 'PNG only', 'url' => '${ url( 'g-e2e-png' ) }', 'count' => 1 ); ` +
+				`update_option( '${ INDEX_OPTION }', $i, false );`
 		);
 		for ( const id of [ 'g-e2e-empty', 'g-e2e-png' ] ) {
 			urls[ id ] = publishPost( `Nothing to show ${ id }`, shortcode( { id, url: url( id ), title: id } ) );
@@ -64,11 +54,10 @@ test.describe( 'a gallery with nothing to show', () => {
 	} );
 
 	test.afterAll( () => {
-		if ( savedIndex === null ) {
-			wp( 'option', 'delete', INDEX_OPTION );
-		} else {
-			wp( 'option', 'update', INDEX_OPTION, savedIndex, '--format=json' );
-		}
+		wp(
+			'eval',
+			`$i = get_option( '${ INDEX_OPTION }', array() ); unset( $i['g-e2e-empty'], $i['g-e2e-png'] ); update_option( '${ INDEX_OPTION }', $i, false );`
+		);
 	} );
 
 	test( 'a gallery listed with no photos is collapsed from the first byte, without a link or the failed look', async ( { browser } ) => {
