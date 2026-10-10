@@ -160,6 +160,28 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertFalse( ( new Connection() )->has_scope( 'galleries:read' ) );
 	}
 
+	public function test_a_failed_scope_fill_does_not_fail_the_call(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', null );
+		$this->http->reply( 503, array( 'error' => 'down' ) );
+		$this->http->reply( 200, array( 'ok' => true ) );
+
+		$result = $this->api->request( 'GET', '/api/v1/ping' );
+
+		$this->assertFalse( is_wp_error( $result ) );
+		$this->assertSame( 'access-1', ( new Connection() )->access_token() );
+		$this->assertFalse( ( new Connection() )->scopes_known() );
+	}
+
+	public function test_a_refresh_that_omits_scope_keeps_the_stored_list(): void {
+		$this->connect( 10 );
+		$this->refresh_reply();
+		$this->http->reply( 200, array() );
+
+		$this->api->request( 'GET', '/api/v1/ping' );
+
+		$this->assertTrue( ( new Connection() )->has_scope( 'leads:write' ) );
+	}
+
 	public function test_a_401_refreshes_once_and_retries(): void {
 		$this->connect();
 		$this->http->reply( 401, array( 'error' => 'expired' ) );

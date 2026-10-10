@@ -298,6 +298,10 @@ class Connection {
 	 * @return list<string>
 	 */
 	private function scopes_from( array $response ): array {
+		if ( ! array_key_exists( 'scope', $response ) && $this->scopes_known() ) {
+			// RFC 6749 section 5.1: an omitted scope means it is unchanged.
+			return (array) $this->data()['scopes'];
+		}
 		$raw = $response['scope'] ?? '';
 		if ( is_array( $raw ) ) {
 			$raw = implode( ' ', array_map( 'strval', $raw ) );
