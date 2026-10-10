@@ -4,6 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import Edit from './edit';
 import { DISPLAY_DEFAULTS } from './display-options';
 import { EXCLUDE_DEFAULTS } from './exclude';
+import { LOOK_DEFAULTS } from './look-options';
 import { galleryRow, photoRow } from '../test-support/fixtures';
 import type { GalleryAttributes } from './types';
 
@@ -20,6 +21,7 @@ const empty: GalleryAttributes = {
 	layout: '',
 	imageText: [],
 	...DISPLAY_DEFAULTS,
+	...LOOK_DEFAULTS,
 	...EXCLUDE_DEFAULTS,
 };
 
@@ -85,6 +87,7 @@ describe( 'Edit layout hint', () => {
 		layout: '',
 		imageText: [],
 		...DISPLAY_DEFAULTS,
+		...LOOK_DEFAULTS,
 		...EXCLUDE_DEFAULTS,
 	};
 
@@ -128,6 +131,7 @@ describe( 'Edit with a gallery', () => {
 		layout: 'slideshow',
 		imageText: [],
 		...DISPLAY_DEFAULTS,
+		...LOOK_DEFAULTS,
 		...EXCLUDE_DEFAULTS,
 	};
 

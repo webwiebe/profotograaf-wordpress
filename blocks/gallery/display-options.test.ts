@@ -107,9 +107,9 @@ describe( 'link controls', () => {
 } );
 
 describe( 'displayControls', () => {
-	it( 'has one control per display attribute', () => {
+	it( 'has one control per display attribute, except the gap of the Spacing and shape panel', () => {
 		expect( displayControls().map( ( c ) => c.attribute ).sort() ).toEqual(
-			Object.keys( DISPLAY_DEFAULTS ).sort()
+			Object.keys( DISPLAY_DEFAULTS ).filter( ( key ) => key !== 'gap' ).sort()
 		);
 	} );
 } );

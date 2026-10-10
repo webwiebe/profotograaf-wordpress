@@ -93,6 +93,14 @@ class Settings_Test extends Wp_Test_Case {
 				'gallery_duotone'        => '',
 				'gallery_link_to'        => '',
 				'gallery_link_new_tab'   => '',
+				'gallery_gap_row'        => '',
+				'gallery_gap_column'     => '',
+				'gallery_radius'         => '',
+				'gallery_hover'          => '',
+				'gallery_hover_strength' => '',
+				'gallery_frame_color'    => '',
+				'gallery_frame_width'    => '',
+				'gallery_shadow'         => '',
 			),
 			$clean
 		);
@@ -253,6 +261,14 @@ class Settings_Test extends Wp_Test_Case {
 				'gallery_duotone'        => '',
 				'gallery_link_to'        => '',
 				'gallery_link_new_tab'   => '',
+				'gallery_gap_row'        => '',
+				'gallery_gap_column'     => '',
+				'gallery_radius'         => '',
+				'gallery_hover'          => '',
+				'gallery_hover_strength' => '',
+				'gallery_frame_color'    => '',
+				'gallery_frame_width'    => '',
+				'gallery_shadow'         => '',
 			),
 			$this->options['profotograaf_settings']
 		);

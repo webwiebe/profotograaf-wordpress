@@ -23,6 +23,7 @@ import {
 import { DisplayPanel } from './display-panel';
 import { ExcludePanel } from './exclude-panel';
 import { ImageTextPanel } from './image-text-panel';
+import { LookPanel } from './look-panel';
 import { PreviewGrid } from './preview-grid';
 import { usePhotos, type PhotosState } from './use-photos';
 import { useShowable } from './use-showable';
@@ -174,6 +175,7 @@ function InspectorPanels( {
 		<>
 			<InspectorPanel attributes={ attributes } setAttributes={ setAttributes } listed={ listed } />
 			<DisplayPanel attributes={ attributes } setAttributes={ setAttributes } row={ listed } />
+			<LookPanel attributes={ attributes } setAttributes={ setAttributes } defaults={ platformDefaults( blockDefaults( attributes, siteDefaults() ), listed ) } />
 			<ImageTextPanel
 				items={ attributes.imageText }
 				setItems={ ( imageText ) => setAttributes( { imageText } ) }

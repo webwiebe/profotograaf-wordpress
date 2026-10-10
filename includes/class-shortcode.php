@@ -20,7 +20,9 @@ defined( 'ABSPATH' ) || exit;
  * load_more, lightbox, duotone, link_to and link_new_tab) override the site
  * default. `link_to` is none, page, site or file and `link_new_tab` is on or
  * off; both apply only when the lightbox is off. `ratio` crops the photos.
- * `duotone` is two hex colours such as "#1a1a2e,#f5c542".
+ * `duotone` is two hex colours such as "#1a1a2e,#f5c542". The spacing and
+ * shape options (gap_row, gap_column, radius, hover, hover_strength,
+ * frame_color, frame_width and shadow) are listed in Gallery_Look.
  * `image_text` sets a caption and alt text per photo as JSON, for example
  * image_text='[{"id":"p1","caption":"Sunrise","alt":"Sun over the sea"}]'.
  * Optional `exclude` takes photo ids separated by commas and leaves those

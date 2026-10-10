@@ -97,6 +97,38 @@
 			"type": "string",
 			"default": ""
 		},
+		"gapRow": {
+			"type": "string",
+			"default": ""
+		},
+		"gapColumn": {
+			"type": "string",
+			"default": ""
+		},
+		"radius": {
+			"type": "string",
+			"default": ""
+		},
+		"hover": {
+			"type": "string",
+			"default": ""
+		},
+		"hoverStrength": {
+			"type": "string",
+			"default": ""
+		},
+		"frameColor": {
+			"type": "string",
+			"default": ""
+		},
+		"frameWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"shadow": {
+			"type": "string",
+			"default": ""
+		},
 		"imageText": {
 			"type": "array",
 			"default": [],

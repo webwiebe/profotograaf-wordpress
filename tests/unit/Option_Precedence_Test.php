@@ -10,6 +10,7 @@
 namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
+use Profotograaf\Gallery_Look;
 use Profotograaf\Gallery_Renderer;
 use Profotograaf\Option_Resolver;
 use Profotograaf\Settings;
@@ -23,7 +24,7 @@ class Option_Precedence_Test extends Gallery_Test_Case {
 	}
 
 	/**
-	 * Per option: setting, site value, a block value with the attribute it
+	 * Per option (the frame is Gallery_Look_Test): setting, site value, a block value with the attribute it
 	 * writes, and the block's explicit off value (null when the option has none)
 	 * with the attribute that writes (null for none).
 	 *
@@ -44,6 +45,12 @@ class Option_Precedence_Test extends Gallery_Test_Case {
 			'duotone'        => array( 'duotone', 'gallery_duotone', '#111111,#eeeeee', '#000,#fff', 'data-duotone="#000,#fff"', 'none', null ),
 			'link_to'        => array( 'link_to', 'gallery_link_to', 'file', 'page', 'data-link-to="page"', 'none', 'data-link-to="none"' ),
 			'link_new_tab'   => array( 'link_new_tab', 'gallery_link_new_tab', 'on', 'off', 'data-link-new-tab="off"', 'off', 'data-link-new-tab="off"' ),
+			'gap_row'        => array( 'gap_row', 'gallery_gap_row', 10, '6', 'data-gap-row="6"', '0', 'data-gap-row="0"' ),
+			'gap_column'     => array( 'gap_column', 'gallery_gap_column', 10, '6', 'data-gap-column="6"', '0', 'data-gap-column="0"' ),
+			'radius'         => array( 'radius', 'gallery_radius', 'rounded', 'subtle', 'data-radius="4"', 'none', 'data-radius="0"' ),
+			'hover'          => array( 'hover', 'gallery_hover', 'grow', 'zoom', 'data-hover="zoom"', 'none', 'data-hover="none"' ),
+			'hover_strength' => array( 'hover_strength', 'gallery_hover_strength', 'strong', 'subtle', 'data-hover-strength="subtle"', null, null ),
+			'shadow'         => array( 'shadow', 'gallery_shadow', 'soft', 'strong', 'data-shadow="strong"', 'none', 'data-shadow="none"' ),
 		);
 	}
 
@@ -110,7 +117,7 @@ class Option_Precedence_Test extends Gallery_Test_Case {
 
 		$html = $this->renderer->render( array( 'id' => 'g-1', $key => '' ) );
 
-		$value = 'ratio' === $key ? str_replace( '-', ':', (string) $site ) : (string) $site;
+		$value = 'ratio' === $key ? str_replace( '-', ':', (string) $site ) : ( Gallery_Look::RADIUS[ 'radius' === $key ? $site : '' ] ?? (string) $site );
 		$this->assertStringContainsString( ' ' . self::data_name( $key ) . '"' . $value . '"', $html );
 	}
 

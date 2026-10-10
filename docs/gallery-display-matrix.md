@@ -86,7 +86,11 @@ does not send it.
 | block duotone (`style.color.duotone`) | preset or two colours | none | `data-duotone`: the plugin resolves a preset through `wp_get_global_settings( array( 'color', 'duotone' ) )`; WordPress still writes its own filter rule for `.wp-block-profotograaf-gallery img`, which finds no photo in the light DOM | none | SVG filter `#pf-duo` on every tile image. A preset that is missing or not two hex colours leaves the site duotone in place; `unset` turns duotone off |
 | `align` | `wide`, `full` | `wide` for a new block (`block.json` default; a saved block without the attribute renders wide too). Shortcode: content width of the theme | `alignwide` / `alignfull` class | box width only | draws into whatever width the host has |
 | color, typography, border, spacing | block supports | theme | inline style on the host `div` | none | `:host{all:initial}` resets inherited text styles; only the host box (background, border, padding, margin) shows |
-| `data-radius` | 0 to 64 px | 4px | never written by the plugin | none | `--radius` on tiles |
+| `gapRow` / `gap_row`, `gapColumn` / `gap_column` | 0 to 96 px; empty | `gap` | `data-gap-row`, `data-gap-column`; not written for a slideshow | ignored | row and column gap; each falls back to `data-gap`, then 8 |
+| `radius` / `radius` | `none`, `subtle`, `rounded`, `full` | 4px | `data-radius`: `0`, `4`, `12` or `full` | none | `--radius` on tiles; `full` draws a circle on square crops only (a grid without `ratio`, or `1-1`). The editor offers Circle only for those |
+| `hover` / `hover`, `hoverStrength` / `hover_strength` | `zoom`, `grow`, `none`; `subtle`, `strong` | `zoom`, `subtle` | `data-hover`, `data-hover-strength`; `grow` is not written for a slideshow | `[data-hover=grow]{overflow:visible}`, so a grown tile at the edge is not clipped | zoom inside the tile, or grow the tile above its neighbours; off under reduced motion, also on keyboard focus |
+| `frameColor` / `frame_color`, `frameWidth` / `frame_width` | hex colour; 0 to 24 px | no frame | one `data-frame="#hex,width"`, only for a width above 0 (white when no colour); not written for a slideshow | none | a matte around each tile |
+| `shadow` / `shadow` | `none`, `soft`, `strong` | `none` | `data-shadow`; not written for a slideshow | none | box shadow on each tile |
 
 ## Defaults for a new block
 

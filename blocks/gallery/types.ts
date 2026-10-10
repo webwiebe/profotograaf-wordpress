@@ -1,5 +1,6 @@
 import type { DisplayAttributes } from './display-options';
 import type { ExcludeAttributes } from './exclude';
+import type { LookAttributes } from './look-options';
 
 /** A row of the /profotograaf/v1/galleries/{id}/photos REST route. */
 export interface PhotoRow {
@@ -45,6 +46,7 @@ export type GalleryAttributes = {
 	layout: '' | 'auto' | 'grid' | 'masonry' | 'slideshow';
 	imageText: ImageText[];
 } & DisplayAttributes &
+	LookAttributes &
 	ExcludeAttributes;
 
 /** What the REST layer rejects with. */

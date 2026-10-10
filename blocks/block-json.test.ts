@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { layoutOptions } from './gallery/helpers';
 import { DISPLAY_DEFAULTS } from './gallery/display-options';
+import { LOOK_DEFAULTS } from './gallery/look-options';
 import { EXCLUDE_DEFAULTS } from './gallery/exclude';
 import { previewCopy } from './client-galleries/helpers';
 import type { ClientGalleriesAttributes } from './client-galleries/helpers';
@@ -72,7 +73,7 @@ describe( 'gallery variations', () => {
 describe( 'gallery display attributes', () => {
 	it( 'match the editor defaults and are empty, meaning the site default', () => {
 		const json = load( 'gallery' );
-		for ( const key of Object.keys( DISPLAY_DEFAULTS ) ) {
+		for ( const key of Object.keys( { ...DISPLAY_DEFAULTS, ...LOOK_DEFAULTS } ) ) {
 			expect( json.attributes[ key ], key ).toEqual( { type: 'string', default: '' } );
 		}
 	} );

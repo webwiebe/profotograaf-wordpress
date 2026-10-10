@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T22:25:11+00:00\n"
+"POT-Creation-Date: 2026-10-10T22:51:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -555,15 +555,137 @@ msgstr ""
 msgid "View this gallery on Profotograaf"
 msgstr ""
 
-#: includes/class-gallery-renderer.php:330
+#: includes/class-gallery-look.php:150
+#: includes/class-settings-schema.php:123
+#: includes/class-settings-schema.php:191
+msgid "Profotograaf default"
+msgstr ""
+
+#: includes/class-gallery-look.php:161
+#: build/gallery/index.js:4
+msgid "Space between rows (pixels)"
+msgstr ""
+
+#: includes/class-gallery-look.php:161
+#: includes/class-gallery-look.php:162
+msgid "From 0 to 96 pixels. Empty uses the gap between photos."
+msgstr ""
+
+#: includes/class-gallery-look.php:162
+#: build/gallery/index.js:4
+msgid "Space between columns (pixels)"
+msgstr ""
+
+#: includes/class-gallery-look.php:167
+#: build/gallery/index.js:4
+msgid "Corners"
+msgstr ""
+
+#: includes/class-gallery-look.php:168
+msgid "Rounded corners on every photo. Circle applies to square photos only; other shapes keep the default corners."
+msgstr ""
+
+#: includes/class-gallery-look.php:175
+#: build/gallery/index.js:4
+msgid "Hover effect"
+msgstr ""
+
+#: includes/class-gallery-look.php:176
+msgid "What a photo does under the mouse or keyboard focus. Grow lifts the whole photo above its neighbours; the slideshow does not grow. Visitors who ask for less motion see no effect."
+msgstr ""
+
+#: includes/class-gallery-look.php:183
+#: build/gallery/index.js:4
+msgid "Hover strength"
+msgstr ""
+
+#: includes/class-gallery-look.php:186
+#: build/gallery/index.js:4
+msgid "Subtle"
+msgstr ""
+
+#: includes/class-gallery-look.php:187
+#: includes/class-gallery-look.php:216
+#: build/gallery/index.js:4
+msgid "Strong"
+msgstr ""
+
+#: includes/class-gallery-look.php:194
+#: build/gallery/index.js:4
+msgid "Frame colour"
+msgstr ""
+
+#: includes/class-gallery-look.php:195
+msgid "The colour of the frame around each photo, as a hex code such as #ffffff. White when only a width is set."
+msgstr ""
+
+#: includes/class-gallery-look.php:204
+#: build/gallery/index.js:4
+msgid "Frame width (pixels)"
+msgstr ""
+
+#: includes/class-gallery-look.php:205
+msgid "A frame around each photo, from 1 to 24 pixels. 0 means no frame. Not drawn in a slideshow."
+msgstr ""
+
+#: includes/class-gallery-look.php:211
+#: build/gallery/index.js:4
+msgid "Shadow"
+msgstr ""
+
+#: includes/class-gallery-look.php:212
+msgid "A shadow under each photo. Not drawn in a slideshow."
+msgstr ""
+
+#: includes/class-gallery-look.php:214
+#: includes/class-gallery-look.php:245
+#: build/gallery/index.js:4
+msgid "None"
+msgstr ""
+
+#: includes/class-gallery-look.php:215
+#: build/gallery/index.js:4
+msgid "Soft"
+msgstr ""
+
+#: includes/class-gallery-look.php:229
+#: build/gallery/index.js:4
+msgid "Square corners"
+msgstr ""
+
+#: includes/class-gallery-look.php:230
+#: build/gallery/index.js:4
+msgid "Subtle (4 pixels)"
+msgstr ""
+
+#: includes/class-gallery-look.php:231
+#: build/gallery/index.js:4
+msgid "Rounded (12 pixels)"
+msgstr ""
+
+#: includes/class-gallery-look.php:232
+msgid "Circle (square photos only)"
+msgstr ""
+
+#: includes/class-gallery-look.php:243
+#: build/gallery/index.js:4
+msgid "Zoom inside the frame"
+msgstr ""
+
+#: includes/class-gallery-look.php:244
+#: build/gallery/index.js:4
+msgid "Grow above the neighbours"
+msgstr ""
+
+#: includes/class-gallery-renderer.php:331
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:345
+#: includes/class-gallery-renderer.php:346
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr ""
 
-#: includes/class-gallery-renderer.php:366
+#: includes/class-gallery-renderer.php:367
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
@@ -692,314 +814,309 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-settings-schema.php:87
+#: includes/class-settings-schema.php:76
+#: includes/class-settings-schema.php:196
+msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
+msgstr ""
+
+#: includes/class-settings-schema.php:91
 msgid "Gallery link text"
 msgstr ""
 
-#: includes/class-settings-schema.php:88
+#: includes/class-settings-schema.php:92
 msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
 msgstr ""
 
-#: includes/class-settings-schema.php:94
+#: includes/class-settings-schema.php:98
 msgid "Client portal path"
 msgstr ""
 
-#: includes/class-settings-schema.php:95
+#: includes/class-settings-schema.php:99
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr ""
 
-#: includes/class-settings-schema.php:102
+#: includes/class-settings-schema.php:106
 msgid "Use Profotograaf photos in the editor"
 msgstr ""
 
-#: includes/class-settings-schema.php:103
+#: includes/class-settings-schema.php:107
 msgid "Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested."
 msgstr ""
 
-#: includes/class-settings-schema.php:109
+#: includes/class-settings-schema.php:113
 msgid "Send Media Library files to Profotograaf"
 msgstr ""
 
-#: includes/class-settings-schema.php:110
+#: includes/class-settings-schema.php:114
 msgid "Lets editors who can upload files send images to a Profotograaf gallery you link below. A file is sent only after a person chooses a linked gallery for it, in the attachment details, with the bulk action in the Media Library list, or automatically for a gallery where you switch that on. The original image goes to Profotograaf with its EXIF data except the GPS position, which is removed first. Later changes to the title, caption and alt text of a sent file are sent too. Files are sent in the background, never while you save."
 msgstr ""
 
-#: includes/class-settings-schema.php:116
+#: includes/class-settings-schema.php:120
 msgid "Default gallery layout"
 msgstr ""
 
-#: includes/class-settings-schema.php:117
+#: includes/class-settings-schema.php:121
 msgid "Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow."
 msgstr ""
 
-#: includes/class-settings-schema.php:119
-#: includes/class-settings-schema.php:187
-msgid "Profotograaf default"
-msgstr ""
-
-#: includes/class-settings-schema.php:120
+#: includes/class-settings-schema.php:124
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Grid"
 msgstr ""
 
-#: includes/class-settings-schema.php:121
+#: includes/class-settings-schema.php:125
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Masonry"
 msgstr ""
 
-#: includes/class-settings-schema.php:122
+#: includes/class-settings-schema.php:126
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Slideshow"
 msgstr ""
 
-#: includes/class-settings-schema.php:129
+#: includes/class-settings-schema.php:133
 msgid "Collect enquiries"
 msgstr ""
 
-#: includes/class-settings-schema.php:130
+#: includes/class-settings-schema.php:134
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr ""
 
-#: includes/class-settings-schema.php:136
+#: includes/class-settings-schema.php:140
 msgid "Failure alerts go to"
 msgstr ""
 
-#: includes/class-settings-schema.php:137
+#: includes/class-settings-schema.php:141
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr ""
 
-#: includes/class-settings-schema.php:144
+#: includes/class-settings-schema.php:148
 msgid "Mail undeliverable enquiries to"
 msgstr ""
 
-#: includes/class-settings-schema.php:145
+#: includes/class-settings-schema.php:149
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr ""
 
-#: includes/class-settings-schema.php:154
+#: includes/class-settings-schema.php:158
 msgid "Keep undeliverable enquiries for (days)"
 msgstr ""
 
-#: includes/class-settings-schema.php:155
+#: includes/class-settings-schema.php:159
 msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr ""
 
-#: includes/class-settings-schema.php:161
+#: includes/class-settings-schema.php:165
 msgid "Share anonymous usage data"
 msgstr ""
 
-#: includes/class-settings-schema.php:162
+#: includes/class-settings-schema.php:166
 msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
 msgstr ""
 
-#: includes/class-settings-schema.php:165
+#: includes/class-settings-schema.php:169
 #: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr ""
 
-#: includes/class-settings-schema.php:172
+#: includes/class-settings-schema.php:176
 msgid "Keep my data when the plugin is deleted"
 msgstr ""
 
-#: includes/class-settings-schema.php:173
+#: includes/class-settings-schema.php:177
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
-#: includes/class-settings-schema.php:189
+#: includes/class-settings-schema.php:193
 #: build/gallery/index.js:3
 msgid "On"
 msgstr ""
 
-#: includes/class-settings-schema.php:190
+#: includes/class-settings-schema.php:194
 #: build/gallery/index.js:3
 msgid "Off"
 msgstr ""
 
-#: includes/class-settings-schema.php:192
-msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
-msgstr ""
-
-#: includes/class-settings-schema.php:201
+#: includes/class-settings-schema.php:205
 #: build/gallery/index.js:3
 msgid "Columns"
 msgstr ""
 
-#: includes/class-settings-schema.php:202
+#: includes/class-settings-schema.php:206
 msgid "Columns on wide screens, from 1 to 8."
 msgstr ""
 
-#: includes/class-settings-schema.php:210
+#: includes/class-settings-schema.php:214
 #: build/gallery/index.js:3
 msgid "Columns on tablets"
 msgstr ""
 
-#: includes/class-settings-schema.php:211
+#: includes/class-settings-schema.php:215
 msgid "Columns on medium screens, from 1 to 8."
 msgstr ""
 
-#: includes/class-settings-schema.php:219
+#: includes/class-settings-schema.php:223
 #: build/gallery/index.js:3
 msgid "Columns on phones"
 msgstr ""
 
-#: includes/class-settings-schema.php:220
+#: includes/class-settings-schema.php:224
 msgid "Columns on narrow screens, from 1 to 4."
 msgstr ""
 
-#: includes/class-settings-schema.php:228
-#: build/gallery/index.js:3
+#: includes/class-settings-schema.php:232
 msgid "Gap between photos (pixels)"
 msgstr ""
 
-#: includes/class-settings-schema.php:229
+#: includes/class-settings-schema.php:233
 msgid "Space between photos, from 0 to 96 pixels."
-msgstr ""
-
-#: includes/class-settings-schema.php:235
-#: build/gallery/index.js:3
-msgid "Photo shape"
-msgstr ""
-
-#: includes/class-settings-schema.php:236
-msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
-msgstr ""
-
-#: includes/class-settings-schema.php:238
-#: build/gallery/index.js:3
-msgid "Original"
 msgstr ""
 
 #: includes/class-settings-schema.php:239
 #: build/gallery/index.js:3
+msgid "Photo shape"
+msgstr ""
+
+#: includes/class-settings-schema.php:240
+msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
+msgstr ""
+
+#: includes/class-settings-schema.php:242
+#: build/gallery/index.js:3
+msgid "Original"
+msgstr ""
+
+#: includes/class-settings-schema.php:243
+#: build/gallery/index.js:3
 msgid "Square (1:1)"
-msgstr ""
-
-#: includes/class-settings-schema.php:251
-#: build/gallery/index.js:3
-msgid "Captions"
-msgstr ""
-
-#: includes/class-settings-schema.php:252
-msgid "Whether photo captions show and where."
-msgstr ""
-
-#: includes/class-settings-schema.php:254
-#: build/gallery/index.js:3
-msgid "Hidden"
 msgstr ""
 
 #: includes/class-settings-schema.php:255
 #: build/gallery/index.js:3
-msgid "Below the photo"
+msgid "Captions"
 msgstr ""
 
 #: includes/class-settings-schema.php:256
+msgid "Whether photo captions show and where."
+msgstr ""
+
+#: includes/class-settings-schema.php:258
+#: build/gallery/index.js:3
+msgid "Hidden"
+msgstr ""
+
+#: includes/class-settings-schema.php:259
+#: build/gallery/index.js:3
+msgid "Below the photo"
+msgstr ""
+
+#: includes/class-settings-schema.php:260
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr ""
 
-#: includes/class-settings-schema.php:263
+#: includes/class-settings-schema.php:267
 #: build/gallery/index.js:3
 msgid "Sort order"
 msgstr ""
 
-#: includes/class-settings-schema.php:264
+#: includes/class-settings-schema.php:268
 msgid "The order of the photos."
 msgstr ""
 
-#: includes/class-settings-schema.php:266
+#: includes/class-settings-schema.php:270
 #: build/gallery/index.js:3
 msgid "Newest first"
 msgstr ""
 
-#: includes/class-settings-schema.php:267
+#: includes/class-settings-schema.php:271
 #: build/gallery/index.js:3
 msgid "Oldest first"
 msgstr ""
 
-#: includes/class-settings-schema.php:268
+#: includes/class-settings-schema.php:272
 #: build/gallery/index.js:3
 msgid "By file name"
 msgstr ""
 
-#: includes/class-settings-schema.php:269
+#: includes/class-settings-schema.php:273
 #: build/gallery/index.js:3
 msgid "Random"
 msgstr ""
 
-#: includes/class-settings-schema.php:278
+#: includes/class-settings-schema.php:282
 #: build/gallery/index.js:3
 msgid "Photos per page"
 msgstr ""
 
-#: includes/class-settings-schema.php:279
+#: includes/class-settings-schema.php:283
 msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
 msgstr ""
 
-#: includes/class-settings-schema.php:285
+#: includes/class-settings-schema.php:289
 #: build/gallery/index.js:3
 msgid "Load more button"
 msgstr ""
 
-#: includes/class-settings-schema.php:286
+#: includes/class-settings-schema.php:290
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr ""
 
-#: includes/class-settings-schema.php:293
+#: includes/class-settings-schema.php:297
 #: build/gallery/index.js:3
 msgid "Lightbox"
 msgstr ""
 
-#: includes/class-settings-schema.php:294
+#: includes/class-settings-schema.php:298
 msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr ""
 
-#: includes/class-settings-schema.php:301
+#: includes/class-settings-schema.php:305
 msgid "Duotone colours"
 msgstr ""
 
-#: includes/class-settings-schema.php:302
+#: includes/class-settings-schema.php:306
 msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
-msgstr ""
-
-#: includes/class-settings-schema.php:309
-#: build/gallery/index.js:3
-msgid "Link photos to"
-msgstr ""
-
-#: includes/class-settings-schema.php:310
-msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
-msgstr ""
-
-#: includes/class-settings-schema.php:312
-#: build/gallery/index.js:3
-msgid "Nothing"
 msgstr ""
 
 #: includes/class-settings-schema.php:313
 #: build/gallery/index.js:3
-msgid "The photo page on Profotograaf"
+msgid "Link photos to"
 msgstr ""
 
 #: includes/class-settings-schema.php:314
+msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
+msgstr ""
+
+#: includes/class-settings-schema.php:316
+#: build/gallery/index.js:3
+msgid "Nothing"
+msgstr ""
+
+#: includes/class-settings-schema.php:317
+#: build/gallery/index.js:3
+msgid "The photo page on Profotograaf"
+msgstr ""
+
+#: includes/class-settings-schema.php:318
 #: build/gallery/index.js:3
 msgid "Your photographer site"
 msgstr ""
 
-#: includes/class-settings-schema.php:315
+#: includes/class-settings-schema.php:319
 #: build/gallery/index.js:3
 msgid "The original photo file"
 msgstr ""
 
-#: includes/class-settings-schema.php:322
+#: includes/class-settings-schema.php:326
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
 msgstr ""
 
-#: includes/class-settings-schema.php:323
+#: includes/class-settings-schema.php:327
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr ""
 
@@ -2081,6 +2198,7 @@ msgstr ""
 
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Site default"
 msgstr ""
 
@@ -2209,6 +2327,7 @@ msgid "Duo"
 msgstr ""
 
 #: build/gallery/index.js:3
+#: build/gallery/index.js:4
 msgid "Leave empty for the site default."
 msgstr ""
 
@@ -2267,6 +2386,58 @@ msgstr ""
 
 #: build/gallery/index.js:4
 msgid "Add a photo"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Circle"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Circle (square photos only, not drawn now)"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Gap between photos"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "None (0 pixels)"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Small (4 pixels)"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Medium (12 pixels)"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Large (24 pixels)"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Custom"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Custom gap (pixels)"
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "From 1 to 24 pixels; 0 means no frame. Leave empty for the site default."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "White when only a width is set."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Leave empty to use the gap between photos."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "Spacing and shape"
 msgstr ""
 
 #: build/gallery/index.js:4

@@ -196,6 +196,8 @@ final class Reserved_Space {
 			. '[data-pf-empty],[data-pf-state=empty],[data-profotograaf-failed],[data-pf-state=error]{overflow:visible;text-indent:0;text-align:start}'
 			. '[data-pf-empty]>a,[data-pf-empty]>noscript,[data-pf-state=empty]>a,[data-pf-state=empty]>noscript{display:none!important}'
 			. $host . '>a{max-width:100%;overflow-wrap:anywhere;text-indent:0}'
+			// A grown tile draws a few pixels past the host's edge (#198).
+			. $host . '[data-hover=grow]{overflow:visible}'
 			. '</style>'
 			. '<noscript><style>' . $host . '{aspect-ratio:auto!important}</style></noscript>';
 	}

@@ -111,6 +111,24 @@ export const SelectControl = ( {
 	</>
 );
 
+export const BaseControl = ( { label, children }: WithChildren & { label: string } ) => (
+	<fieldset aria-label={ label }>{ children }</fieldset>
+);
+
+export const ColorPalette = ( {
+	value,
+	onChange,
+}: {
+	value?: string;
+	onChange: ( color?: string ) => void;
+} ) => (
+	<input
+		aria-label="Colour"
+		value={ value ?? '' }
+		onChange={ ( e: ChangeEvent< HTMLInputElement > ) => onChange( e.target.value || undefined ) }
+	/>
+);
+
 export const InspectorControls = ( { children }: WithChildren ) => (
 	<aside data-testid="inspector">{ children }</aside>
 );
