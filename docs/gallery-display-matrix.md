@@ -50,7 +50,7 @@ and embed.js uses its own default.
 | `linkNewTab` / `link_new_tab` | `on`, `off` | `on` | `data-link-new-tab` | none | `target="_blank"` on the tile link |
 | `imageText` / `image_text` | list of `{id, caption, alt}` | none | `data-image-text` JSON | none | not read by the embed.js release of the fixture commit |
 | site duotone / `duotone` | two hex colours | none | `data-duotone` | none | SVG filter `#pf-duo` on every tile image |
-| block duotone (`style.color.duotone`) | preset or two colours | none | WordPress adds a filter rule for `.wp-block-profotograaf-gallery img`, and the plugin drops `data-duotone` | none | none: the photos are in the shadow root, so the WordPress filter cannot reach them |
+| block duotone (`style.color.duotone`) | preset or two colours | none | `data-duotone`: the plugin resolves a preset through `wp_get_global_settings( array( 'color', 'duotone' ) )`; WordPress still writes its own filter rule for `.wp-block-profotograaf-gallery img`, which finds no photo in the light DOM | none | SVG filter `#pf-duo` on every tile image. A preset that is missing or not two hex colours leaves the site duotone in place; `unset` turns duotone off |
 | `align` | `wide`, `full` | `wide` for a new block (`block.json` default; a saved block without the attribute renders wide too). Shortcode: content width of the theme | `alignwide` / `alignfull` class | box width only | draws into whatever width the host has |
 | color, typography, border, spacing | block supports | theme | inline style on the host `div` | none | `:host{all:initial}` resets inherited text styles; only the host box (background, border, padding, margin) shows |
 | `data-radius` | 0 to 64 px | 4px | never written by the plugin | none | `--radius` on tiles |
@@ -96,7 +96,7 @@ are the pairs and triples where one option changes what another does.
 | columns x breakpoints | columns alone step down: tablet min(columns, 3), phone min(columns, 2) for a grid and 1 for masonry; an explicit tablet or phone value wins | `gallery-display.spec.js` (5 columns at 1440, 800 and 390px), `embed-options.spec.js`, `sample-pages.spec.js` (`combo-wide` at 390px) |
 | columns x photo count | a gallery with fewer photos than columns leaves empty cells | `sample-pages.spec.js` (`grid-few`, `masonry-few`) |
 | align x layout | wide and full change the width the columns divide; full width has no side gutter | `sample-pages.spec.js` (`combo-wide`, `combo-full`) |
-| duotone (site) x duotone (block) | the block value turns the site value off and draws nothing itself | `sample-pages.spec.js` (`combo-duotone`) |
+| duotone (site) x duotone (block) | the block value replaces the site value in `data-duotone`; without a block value the site value stays | `Gallery_Renderer_Test.php`, `gallery-display.spec.js`, `sample-pages.spec.js` (`combo-duotone`) |
 | gap 0 x radius | a gap of 0 squares the corners | `embed-options.spec.js`, `sample-pages.spec.js` (`combo-flush`) |
 | captions x ratio | overlay captions sit on cropped tiles; captions below add height masonry must balance | `sample-pages.spec.js` (`combo-captions`) |
 | empty or failed x layout | the reserved box shows as a blank area until it is released | `embed-empty.spec.js`, `gallery-display.spec.js` (failed platform call), `sample-pages.spec.js` (`slideshow-empty`, `combo-empty`) |

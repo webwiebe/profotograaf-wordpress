@@ -303,7 +303,7 @@ const routes = {
 // public payload leaves it out (wiebe-xyz/professionals#2330).
 const NOTHING_TO_SHOW = /^\/api\/v1\/embed\/galleries\/(g-e2e-empty|g-e2e-png)$/;
 
-function emptyGallery( { req, res, url } ) {
+function nothingToShow( { req, res, url } ) {
 	const id = url.pathname.split( '/' ).pop();
 	const origin = `http://${ req.headers.host }`;
 	return json(
@@ -405,7 +405,7 @@ function findRoute( method, pathname ) {
 		return embedScript;
 	}
 	if ( method === 'GET' && NOTHING_TO_SHOW.test( pathname ) ) {
-		return emptyGallery;
+		return nothingToShow;
 	}
 	if ( method === 'GET' && IMAGE.test( pathname ) ) {
 		return image;
