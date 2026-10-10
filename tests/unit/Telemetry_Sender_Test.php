@@ -12,6 +12,7 @@ use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
 use Profotograaf\Modules\Telemetry_Consent;
+use Profotograaf\Platform_Status;
 use Profotograaf\Plugin;
 use Profotograaf\Settings;
 use Profotograaf\Telemetry_Delivery;
@@ -78,6 +79,15 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		Functions\when( 'wp_get_environment_type' )->justReturn( 'production' );
 		Functions\when( 'wp_remote_retrieve_header' )->alias( fn( $response, $name ) => $this->headers[ $name ] ?? '' );
 		Functions\when( 'wp_remote_retrieve_response_code' )->alias( fn( $response ) => is_int( $response ) ? $response : 0 );
+
+		$this->options[ Platform_Status::OPTION ] = array(
+			'error_reporting' => array(
+				'endpoint'    => 'https://bb.profotograaf.nl',
+				'project'     => 'wordpress-plugin',
+				'key'         => 'ingest-key',
+				'environment' => 'production',
+			),
+		);
 
 		$this->connection = new Connection();
 		$this->plugin     = new Plugin( $this->connection, new Api_Client( $this->connection, new Fake_Transport(), $this->clock() ), $this->clock() );
@@ -184,8 +194,8 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertCount( 2, $errors );
 		$this->assertSame( 'https://bb.profotograaf.nl/api/v1/events', $errors[0]['url'] );
 		$headers = $errors[0]['args']['headers'];
-		$this->assertSame( Telemetry_Delivery::BUGBARN_KEY, $headers['X-BugBarn-Api-Key'] );
-		$this->assertSame( 'profotograaf-wordpress', $headers['X-BugBarn-Project'] );
+		$this->assertSame( 'ingest-key', $headers['X-BugBarn-Api-Key'] );
+		$this->assertSame( 'wordpress-plugin', $headers['X-BugBarn-Project'] );
 		$this->assertArrayNotHasKey( 'Authorization', $headers );
 		$this->assertArrayNotHasKey( 'x-api-key', $headers );
 
@@ -320,6 +330,50 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 			array( 'https://usage.example.org/api/v1/events', 'https://errors.example.org/api/v1/events' ),
 			array_column( $this->posts, 'url' )
 		);
+	}
+
+	public function test_without_an_error_reporting_block_no_error_is_sent(): void {
+		unset( $this->options[ Platform_Status::OPTION ] );
+		$sender = $this->opt_in();
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
+
+		$sender->run();
+
+		$this->assertSame( array( 'https://f.profotograaf.nl/api/v1/events' ), array_column( $this->posts, 'url' ) );
+		$this->assertSame( '', $sender->endpoint() );
+	}
+
+	public function test_an_incomplete_error_reporting_block_sends_no_error(): void {
+		$this->options[ Platform_Status::OPTION ] = array( 'error_reporting' => array( 'endpoint' => 'https://bb.profotograaf.nl' ) );
+		$sender                                   = $this->opt_in();
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
+
+		$sender->run();
+
+		$this->assertSame( array( 'https://f.profotograaf.nl/api/v1/events' ), array_column( $this->posts, 'url' ) );
+	}
+
+	public function test_the_block_endpoint_and_headers_are_used(): void {
+		$this->options[ Platform_Status::OPTION ]['error_reporting']['endpoint'] = 'https://errors.example.org/';
+		$sender = $this->opt_in();
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
+
+		$sender->run();
+
+		$errors = array_values( array_filter( $this->posts, fn( $post ) => str_starts_with( $post['url'], 'https://errors.example.org' ) ) );
+		$this->assertCount( 1, $errors );
+		$this->assertSame( 'https://errors.example.org/api/v1/events', $errors[0]['url'] );
+		$this->assertSame( 'ingest-key', $errors[0]['args']['headers']['X-BugBarn-Api-Key'] );
+		$this->assertSame( 'wordpress-plugin', $errors[0]['args']['headers']['X-BugBarn-Project'] );
+		$this->assertSame( 'production', json_decode( (string) $errors[0]['args']['body'], true )['environment'] );
+	}
+
+	public function test_opt_in_off_sends_no_error_even_with_a_block(): void {
+		$sender = $this->sender();
+
+		$this->assertFalse( $sender->add_error( array( 'error_code' => 'a_code' ) ) );
+		$this->assertSame( 0, $sender->run() );
+		$this->assertSame( array(), $this->posts );
 	}
 
 	public function test_an_empty_or_invalid_endpoint_sends_nothing(): void {

@@ -90,7 +90,7 @@ class Platform_Status {
 			array(
 				'fetched_at'      => $this->now(),
 				'review_prompt'   => $this->review_prompt( $answer['review_prompt'] ?? null ),
-				'error_reporting' => $this->error_reporting( $answer['error_reporting'] ?? null ),
+				'error_reporting' => self::error_reporting( $answer['error_reporting'] ?? null ),
 			)
 		);
 		return true;
@@ -109,7 +109,7 @@ class Platform_Status {
 			'fetched_at'      => (int) ( $stored['fetched_at'] ?? 0 ),
 			'attempted_at'    => (int) ( $stored['attempted_at'] ?? 0 ),
 			'review_prompt'   => $this->review_prompt( $stored['review_prompt'] ?? null ),
-			'error_reporting' => $this->error_reporting( $stored['error_reporting'] ?? null ),
+			'error_reporting' => self::error_reporting( $stored['error_reporting'] ?? null ),
 		);
 	}
 
@@ -173,7 +173,7 @@ class Platform_Status {
 	 * @param mixed $block Block from the platform or the option.
 	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
 	 */
-	private function error_reporting( $block ): ?array {
+	public static function error_reporting( $block ): ?array {
 		if ( ! is_array( $block ) ) {
 			return null;
 		}
@@ -190,6 +190,17 @@ class Platform_Status {
 			return null;
 		}
 		return $block;
+	}
+
+	/**
+	 * The stored error reporting block without a Platform_Status instance, for
+	 * code that only reads it.
+	 *
+	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
+	 */
+	public static function stored_error_reporting(): ?array {
+		$stored = get_option( self::OPTION, array() );
+		return is_array( $stored ) ? self::error_reporting( $stored['error_reporting'] ?? null ) : null;
 	}
 
 	/**
