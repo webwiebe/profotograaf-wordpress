@@ -122,6 +122,43 @@ trait Api_Client_Writes {
 	}
 
 	/**
+	 * Looks for a file by name in a gallery, to settle an upload whose answer was lost.
+	 *
+	 * Calls `GET /api/v1/embed/galleries/{id}/photos?q=<name>` (galleries:read).
+	 * The platform searches title, caption and alt text, and answers 404 for a
+	 * gallery that is not embeddable, so a WP_Error is an inconclusive result.
+	 * A photo matches when its `filename` or `title` equals the file name, with
+	 * or without the extension.
+	 *
+	 * @param string $gallery_id Gallery id.
+	 * @param string $filename   File name that was sent.
+	 * @return string|null|WP_Error Photo id, null when the gallery has no such photo.
+	 */
+	public function find_photo_by_name( string $gallery_id, string $filename ) {
+		if ( '' === trim( $gallery_id ) || '' === trim( $filename ) ) {
+			return Api_Errors::make( 'profotograaf_invalid', __( 'A gallery id and a file name are required.', 'profotograaf' ), 0, false );
+		}
+		$stem   = pathinfo( $filename, PATHINFO_FILENAME );
+		$result = $this->request( 'GET', '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/photos?limit=200&q=' . rawurlencode( $stem ) );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		$rows = is_array( $result ) && isset( $result['photos'] ) && is_array( $result['photos'] ) ? $result['photos'] : array();
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) || empty( $row['id'] ) ) {
+				continue;
+			}
+			foreach ( array( 'filename', 'title' ) as $key ) {
+				$value = isset( $row[ $key ] ) && is_scalar( $row[ $key ] ) ? (string) $row[ $key ] : '';
+				if ( '' !== $value && ( $value === $filename || $value === $stem ) ) {
+					return (string) $row['id'];
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Updates the title, caption or alt text of a photo.
 	 *
 	 * Calls `PATCH /api/v1/embed/photos/{id}`. Needs the galleries:write

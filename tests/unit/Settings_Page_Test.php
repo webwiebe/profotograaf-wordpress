@@ -7,7 +7,6 @@
 
 namespace Profotograaf\Tests;
 
-use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
@@ -133,7 +132,7 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->page->reconnect_notice();
 		$this->assertSame( '', (string) ob_get_clean(), 'upload is off' );
 
-		Filters\expectApplied( 'profotograaf_media_upload_enabled' )->andReturn( true );
+		$this->options[ \Profotograaf\Settings::OPTION ] = array( 'media_upload' => true );
 		ob_start();
 		$this->page->reconnect_notice();
 		$html = (string) ob_get_clean();

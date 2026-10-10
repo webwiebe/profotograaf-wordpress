@@ -148,6 +148,10 @@ final class Photo_Importer {
 		if ( ! $this->settings->media_source_enabled() ) {
 			return Api_Errors::make( 'profotograaf_media_source_off', __( 'Using Profotograaf photos in the editor is switched off in the plugin settings.', 'profotograaf' ), 403, false );
 		}
+		if ( Media_Baseline::is_upload( $attachment_id ) ) {
+			// The platform serves a 1600 px web variant only. Re-importing would replace the full-size original the site sent.
+			return Api_Errors::make( 'profotograaf_reimport_uploaded', __( 'This file was sent from this site, so there is nothing to re-import.', 'profotograaf' ), 400, false );
+		}
 		$photo_id = (string) get_post_meta( $attachment_id, self::META_PHOTO_ID, true );
 		if ( '' === $photo_id || null === $this->catalogue ) {
 			return Api_Errors::make( 'profotograaf_reimport_not_imported', __( 'This file was not imported from Profotograaf.', 'profotograaf' ), 400, false );

@@ -102,6 +102,13 @@ final class Settings_Schema {
 				'label'       => __( 'Use Profotograaf photos in the editor', 'profotograaf' ),
 				'description' => __( 'Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors\' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested.', 'profotograaf' ),
 			),
+			'media_upload'           => array(
+				'tab'         => self::TAB_GENERAL,
+				'type'        => 'bool',
+				'default'     => false,
+				'label'       => __( 'Send Media Library files to Profotograaf', 'profotograaf' ),
+				'description' => __( 'Lets editors who can upload files send images to a Profotograaf gallery you link below. A file is sent only after a person chooses a linked gallery for it, in the attachment details, with the bulk action in the Media Library list, or automatically for a gallery where you switch that on. The original image goes to Profotograaf with its EXIF data except the GPS position, which is removed first. Later changes to the title, caption and alt text of a sent file are sent too. Files are sent in the background, never while you save.', 'profotograaf' ),
+			),
 			'default_layout'         => array(
 				'tab'         => self::TAB_GALLERIES,
 				'type'        => 'enum',

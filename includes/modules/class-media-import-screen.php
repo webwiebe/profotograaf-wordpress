@@ -8,6 +8,7 @@
 namespace Profotograaf\Modules;
 
 use Profotograaf\Config;
+use Profotograaf\Media_Baseline;
 use Profotograaf\Module;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
@@ -219,7 +220,9 @@ class Media_Import_Screen implements Module {
 				: esc_html__( 'Profotograaf', 'profotograaf' ) . ', ' . $link;
 		}//end if
 
-		if ( $this->active() && current_user_can( 'edit_post', $id ) ) {
+		if ( Media_Baseline::is_upload( $id ) ) {
+			$html .= '<p class="description">' . esc_html__( 'Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too.', 'profotograaf' ) . '</p>';
+		} elseif ( $this->active() && current_user_can( 'edit_post', $id ) ) {
 			// The attachment edit screen does not load the media views, so the field asks for its own script.
 			$this->enqueue_reimport();
 			$html .= sprintf(
