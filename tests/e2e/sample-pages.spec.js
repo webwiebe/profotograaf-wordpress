@@ -131,7 +131,7 @@ test.describe( 'interaction on the real platform', () => {
 		await expectFallback( gallery( page, 'grid-few' ) );
 	} );
 
-	test.fixme( 'a gallery of PNG photos draws them (professionals#2330)', async ( { page } ) => {
+	test( 'a gallery of PNG photos draws them (professionals#2330)', async ( { page } ) => {
 		await openSample( page, 'sample-combinations' );
 		await expectPhotos( gallery( page, 'combo-png' ) );
 	} );

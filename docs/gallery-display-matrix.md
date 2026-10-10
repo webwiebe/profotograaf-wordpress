@@ -76,7 +76,7 @@ and embed.js uses its own default.
 | Platform error (non-200) or script error | fallback link stays | box held 8 seconds, then released | sets `data-pf-ready`, draws nothing |
 | Gallery with no photos | fallback link stays | box held 8 seconds, then released | draws nothing |
 | All photos excluded | fallback link stays | as above | draws nothing |
-| PNG photos (professionals#2330) | as drawn | as drawn | the API leaves the photos out, so the gallery counts as empty |
+| PNG photos (professionals#2330, fixed) | as drawn | as drawn | served through JPEG variants and drawn like any photo |
 | No JavaScript | fallback link and `noscript` note | released at once by the `noscript` rule | none |
 | Gallery deleted on the platform | notice for editors, nothing extra for visitors | as above | draws nothing |
 
