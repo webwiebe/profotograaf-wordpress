@@ -82,6 +82,32 @@ class Reserved_Space_Test extends TestCase {
 		$this->assertSame( array( '6/2', '4/3', '3/4' ), $this->ratios( Reserved_Space::style( 'grid', $data ) ) );
 	}
 
+	public function test_step_down_caps_the_tablet_at_three_and_the_phone_at_two_or_one(): void {
+		$this->assertSame( array( 3, 2 ), Reserved_Space::step_down( 'grid', 5 ) );
+		$this->assertSame( array( 3, 1 ), Reserved_Space::step_down( 'masonry', 5 ) );
+		$this->assertSame( array( 2, 2 ), Reserved_Space::step_down( 'grid', 2 ) );
+		$this->assertSame( array( 1, 1 ), Reserved_Space::step_down( 'grid', 1 ) );
+		$this->assertNull( Reserved_Space::step_down( 'slideshow', 5 ) );
+	}
+
+	public function test_set_columns_without_tablet_or_phone_step_down_like_the_markup(): void {
+		$data = array(
+			'data-columns'  => '5',
+			'data-per-page' => '12',
+		);
+		$this->assertSame( array( '5/3', '3/4', '2/6' ), $this->ratios( Reserved_Space::style( 'grid', $data ) ) );
+		$this->assertSame( array( '20/9', '12/12', '4/30' ), $this->ratios( Reserved_Space::style( 'masonry', $data ) ) );
+	}
+
+	public function test_an_explicit_tablet_value_caps_the_phone_estimate(): void {
+		$data = array(
+			'data-columns'        => '5',
+			'data-columns-tablet' => '1',
+			'data-per-page'       => '12',
+		);
+		$this->assertSame( array( '5/3', '1/10', '1/10' ), $this->ratios( Reserved_Space::style( 'grid', $data ) ) );
+	}
+
 	public function test_a_photo_shape_replaces_the_unknown_one(): void {
 		$this->assertSame( array( '16/9', '12/9', '8/9' ), $this->ratios( Reserved_Space::style( 'grid', array( 'data-ratio' => '4:3' ) ) ) );
 		$this->assertSame( array( '4/3', '3/3', '2/3' ), $this->ratios( Reserved_Space::style( 'grid', array( 'data-ratio' => '1:1' ) ) ) );

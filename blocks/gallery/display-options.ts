@@ -49,6 +49,8 @@ export interface DisplayControl {
 	label: string;
 	kind: 'select' | 'number';
 	help?: string;
+	/** Shown in an empty number control: the value that applies. */
+	placeholder?: string;
 	options?: ChoiceOption[];
 	min?: number;
 	max?: number;
@@ -66,10 +68,25 @@ function onOff(): ChoiceOption[] {
 	];
 }
 
-function ratioOptions(): ChoiceOption[] {
+/**
+ * The photo shapes. A grid does not draw Original yet (embed.js crops every
+ * tile to one shape, wiebe-xyz/professionals#2339), so the option is left out
+ * for the grid layout. A block that already holds it keeps the option, marked,
+ * so the control still shows the stored value and the author can change it.
+ */
+function ratioOptions( layout: string, current: string ): ChoiceOption[] {
+	const original: ChoiceOption[] = [];
+	if ( layout !== 'grid' ) {
+		original.push( { label: __( 'Original', 'profotograaf' ), value: 'original' } );
+	} else if ( current === 'original' ) {
+		original.push( {
+			label: __( 'Original (not drawn in a grid yet)', 'profotograaf' ),
+			value: 'original',
+		} );
+	}
 	return [
 		siteDefault(),
-		{ label: __( 'Original', 'profotograaf' ), value: 'original' },
+		...original,
 		{ label: __( 'Square (1:1)', 'profotograaf' ), value: '1-1' },
 		{ label: '4:3', value: '4-3' },
 		{ label: '3:2', value: '3-2' },
@@ -108,14 +125,66 @@ function sortOptions(): ChoiceOption[] {
 	];
 }
 
+/** The most columns on a tablet when only the desktop columns are set. */
+const TABLET_COLUMNS = 3;
+
+/** The most columns on a phone when only the desktop columns are set. */
+const PHONE_COLUMNS: Record< string, number > = { grid: 2, masonry: 1 };
+const DEFAULT_PHONE_COLUMNS = 2;
+
+/**
+ * The columns on tablets and phones that apply to a block, the way
+ * Gallery_Renderer and Reserved_Space work them out: a value set on the block
+ * or the site wins; otherwise they step down from the desktop columns (tablet
+ * at most 3, phone at most 2 for a grid and 1 for masonry). Empty strings when
+ * no columns are set anywhere, because embed.js then picks its own, or for a
+ * slideshow.
+ */
+export function effectiveColumns(
+	attributes: Pick< DisplayAttributes, 'columns' | 'columnsTablet' | 'columnsMobile' >,
+	defaults: SiteDefaults,
+	layout: string
+): { tablet: string; mobile: string } {
+	const resolved = layout || defaults.layout || 'grid';
+	const desktop = firstSet( attributes.columns, defaults.columns );
+	const canStep = desktop > 0 && resolved !== 'slideshow';
+	const tablet = firstSet( attributes.columnsTablet, defaults.columnsTablet ) || ( canStep ? Math.min( desktop, TABLET_COLUMNS ) : 0 );
+	const phoneCap = PHONE_COLUMNS[ resolved ] ?? DEFAULT_PHONE_COLUMNS;
+	const mobile = firstSet( attributes.columnsMobile, defaults.columnsMobile ) || ( canStep ? Math.min( tablet, phoneCap ) : 0 );
+	return { tablet: tablet ? String( tablet ) : '', mobile: mobile ? String( mobile ) : '' };
+}
+
+/** The first of two stored strings that holds a column count, else 0. */
+function firstSet( own: string, site: string ): number {
+	return wholeColumns( own ) || wholeColumns( site );
+}
+
+/** A column count of 1 or more from a stored string, else 0. */
+function wholeColumns( value: string ): number {
+	return /^\d+$/.test( value ) ? Number( value ) : 0;
+}
+
 /** The inspector controls, in display order. */
-export function displayControls(): DisplayControl[] {
+export function displayControls(
+	attributes: Partial< DisplayAttributes > & { layout?: string } = {},
+	defaults: SiteDefaults = NO_SITE_DEFAULTS
+): DisplayControl[] {
+	const shown = effectiveColumns(
+		{
+			columns: attributes.columns ?? '',
+			columnsTablet: attributes.columnsTablet ?? '',
+			columnsMobile: attributes.columnsMobile ?? '',
+		},
+		defaults,
+		attributes.layout ?? ''
+	);
+	const layout = attributes.layout || defaults.layout || 'grid';
 	return [
 		{ attribute: 'columns', label: __( 'Columns', 'profotograaf' ), kind: 'number', min: 1, max: 8 },
-		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8 },
-		{ attribute: 'columnsMobile', label: __( 'Columns on phones', 'profotograaf' ), kind: 'number', min: 1, max: 4 },
+		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8, placeholder: shown.tablet },
+		{ attribute: 'columnsMobile', label: __( 'Columns on phones', 'profotograaf' ), kind: 'number', min: 1, max: 4, placeholder: shown.mobile },
 		{ attribute: 'gap', label: __( 'Gap between photos (pixels)', 'profotograaf' ), kind: 'number', min: 0, max: 96 },
-		{ attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions() },
+		{ attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions( layout, attributes.ratio ?? '' ) },
 		{ attribute: 'captions', label: __( 'Captions', 'profotograaf' ), kind: 'select', options: captionOptions() },
 		{ attribute: 'sort', label: __( 'Sort order', 'profotograaf' ), kind: 'select', options: sortOptions() },
 		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200 },
@@ -162,21 +231,31 @@ export function cssRatio( ratio: string ): string {
  */
 export type SiteDefaults = {
 	columns: string;
+	columnsTablet: string;
+	columnsMobile: string;
 	gap: string;
 	ratio: string;
+	layout: string;
 };
 
-const NO_SITE_DEFAULTS: SiteDefaults = { columns: '', gap: '', ratio: '' };
+const NO_SITE_DEFAULTS: SiteDefaults = {
+	columns: '',
+	columnsTablet: '',
+	columnsMobile: '',
+	gap: '',
+	ratio: '',
+	layout: '',
+};
 
 /** The site defaults the server passed to the editor, or none. */
 export function siteDefaults(): SiteDefaults {
 	const passed = ( globalThis as { profotograafGalleryDefaults?: Partial< SiteDefaults > } )
 		.profotograafGalleryDefaults;
-	return {
-		columns: String( passed?.columns ?? '' ),
-		gap: String( passed?.gap ?? '' ),
-		ratio: String( passed?.ratio ?? '' ),
-	};
+	const result = { ...NO_SITE_DEFAULTS };
+	for ( const key of Object.keys( result ) as Array< keyof SiteDefaults > ) {
+		result[ key ] = String( passed?.[ key ] ?? '' );
+	}
+	return result;
 }
 
 /**

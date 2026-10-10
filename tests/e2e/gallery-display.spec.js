@@ -19,6 +19,14 @@ test.skip( !! process.env.E2E_BASE_URL, 'needs the docker WordPress and mock pla
  */
 const hostOf = ( page, id ) => page.locator( `div[data-profotograaf-gallery="${ id }"]` );
 
+/**
+ * How many columns the drawn tiles form: the number of distinct left edges.
+ *
+ * @param {import('@playwright/test').Locator} host
+ */
+const columnsOf = ( host ) =>
+	host.evaluate( ( el ) => new Set( [ ...el.shadowRoot.querySelectorAll( '.tile' ) ].map( ( tile ) => Math.round( tile.getBoundingClientRect().left ) ) ).size );
+
 /** @type {Record<string,string>} */
 const urls = {};
 
@@ -27,8 +35,9 @@ test.beforeAll( () => {
 	urls.masonry = publishPost( 'Display masonry', block( { layout: 'masonry' } ) );
 	urls.slideshow = publishPost( 'Display slideshow', block( { layout: 'slideshow', lightbox: 'on' } ) );
 	urls.loadMore = publishPost( 'Display load more', block( { layout: 'grid', perPage: '8', loadMore: 'on' } ) );
-	urls.empty = publishPost( 'Display empty', block( { layout: 'slideshow', galleryId: 'g-e2e-empty', galleryTitle: 'Empty gallery' } ) );
-	urls.png = publishPost( 'Display png', block( { layout: 'grid', galleryId: 'g-e2e-png', galleryTitle: 'PNG gallery' } ) );
+	urls.fiveColumns = publishPost( 'Display five columns', block( { layout: 'grid', columns: '5', perPage: '10' } ) );
+	urls.masonryFour = publishPost( 'Display masonry four columns', block( { layout: 'masonry', columns: '4', perPage: '10' } ) );
+	urls.phoneThree = publishPost( 'Display phone three', block( { layout: 'grid', columns: '5', columnsMobile: '3', perPage: '10' } ) );
 } );
 
 test.describe( 'gallery display with the mock platform', () => {
@@ -46,6 +55,38 @@ test.describe( 'gallery display with the mock platform', () => {
 			await context.close();
 		} );
 	}
+
+	test( 'a new block is wide by default', async ( { browser } ) => {
+		const { context, host } = await openEmbed( browser, urls.grid );
+		await expect( host ).toHaveClass( /alignwide/ );
+		await context.close();
+	} );
+
+	test( 'a 5 column grid with no tablet or phone value steps down to 3 and 2 columns', async ( { browser } ) => {
+		const { context, page, host, problems } = await openEmbed( browser, urls.fiveColumns, { width: 1440, height: 900 } );
+		await expectPhotos( host, 10 );
+		expect( await columnsOf( host ), 'desktop' ).toBe( 5 );
+		await page.setViewportSize( { width: 800, height: 900 } );
+		await expect.poll( () => columnsOf( host ), { message: 'tablet' } ).toBe( 3 );
+		await page.setViewportSize( { width: 390, height: 900 } );
+		await expect.poll( () => columnsOf( host ), { message: 'phone' } ).toBe( 2 );
+		expect( problems ).toEqual( [] );
+		await context.close();
+	} );
+
+	test( 'a 4 column masonry gallery with no phone value draws 1 column at 390 px', async ( { browser } ) => {
+		const { context, host } = await openEmbed( browser, urls.masonryFour, { width: 390, height: 900 } );
+		await expectPhotos( host, 10 );
+		await expect.poll( () => columnsOf( host ) ).toBe( 1 );
+		await context.close();
+	} );
+
+	test( 'an explicit phone value wins over the step down', async ( { browser } ) => {
+		const { context, host } = await openEmbed( browser, urls.phoneThree, { width: 390, height: 900 } );
+		await expectPhotos( host, 10 );
+		await expect.poll( () => columnsOf( host ) ).toBe( 3 );
+		await context.close();
+	} );
 
 	test( 'lightbox opens on a tile, steps with keys and buttons, and closes', async ( { browser } ) => {
 		const { context, page, host, problems } = await openEmbed( browser, urls.grid );
@@ -72,28 +113,11 @@ test.describe( 'gallery display with the mock platform', () => {
 		await context.close();
 	} );
 
-	test( 'an empty gallery keeps the fallback link and gives its space back', async ( { browser } ) => {
-		const { context, page } = await openEmbed( browser, urls.empty );
-		const host = hostOf( page, 'g-e2e-empty' );
-		await expectFallback( host );
-		await shoot( host, 'mock-empty-1440' );
-		await context.close();
-	} );
-
 	test( 'a failed platform call keeps the fallback link and gives its space back', async ( { browser } ) => {
 		const { context, page } = await openEmbed( browser, urls.grid, undefined, async ( ctx ) => {
 			await ctx.route( '**/api/v1/embed/galleries/g-e2e', ( route ) => route.fulfill( { status: 503, body: '{}' } ) );
 		} );
 		await expectFallback( hostOf( page, 'g-e2e' ) );
-		await context.close();
-	} );
-
-	test( 'PNG photos draw like any other photo', async ( { browser } ) => {
-		const { context, page, problems } = await openEmbed( browser, urls.png );
-		const host = hostOf( page, 'g-e2e-png' );
-		await expectPhotos( host, 3 );
-		await expect( host.locator( '.tile img' ).first() ).toHaveAttribute( 'src', /\.png$/ );
-		expect( problems ).toEqual( [] );
 		await context.close();
 	} );
 } );

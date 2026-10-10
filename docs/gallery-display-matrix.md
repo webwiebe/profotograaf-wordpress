@@ -36,10 +36,10 @@ and embed.js uses its own default.
 |---|---|---|---|---|---|
 | `layout` / `layout` | `grid`, `masonry`, `slideshow`; empty | site setting `default_layout` (`grid`) | `data-layout` always written | picks the column defaults and tile shape | `pickLayout()`: attribute, else the gallery's platform layout, else `grid`. Platform layouts such as `parallax` or `instagram` fall back to `grid` |
 | `columns` / `columns` | 1 to 8 (embed accepts 1 to 12) | grid: `auto-fill` of 140px minimum tiles; masonry: 220px wide columns | `data-columns` | `--pf-ar` (columns x rows) | `--cols`; `grid-template-columns` or `column-count` |
-| `columnsTablet` / `columns_tablet` | 1 to 8 | the desktop value (no automatic step down) | `data-columns-tablet` | `--pf-ar-t`, estimate min(desktop, 3 grid / 2 masonry) | `--cols-tablet` at 900px and below |
-| `columnsMobile` / `columns_mobile` | 1 to 4 | the tablet or desktop value | `data-columns-mobile` | `--pf-ar-m`, estimate min(tablet, 2 grid / 1 masonry) | `--cols-mobile` at 600px and below |
+| `columnsTablet` / `columns_tablet` | 1 to 8 | with columns set (block, shortcode or site): min(columns, 3), sent as `data-columns-tablet`. Without columns: embed.js default | `data-columns-tablet` | `--pf-ar-t`, the value sent | `--cols-tablet` at 900px and below |
+| `columnsMobile` / `columns_mobile` | 1 to 4 | with columns set: min(tablet, 2) for a grid, 1 for masonry, sent as `data-columns-mobile`. Without columns: embed.js default | `data-columns-mobile` | `--pf-ar-m`, the value sent | `--cols-mobile` at 600px and below |
 | `gap` / `gap` | 0 to 96 px | 8px | `data-gap` | ignored | `--gap`; a gap of 0 also sets `--radius:0` |
-| `ratio` / `ratio` | `original`, `1-1`, `4-3`, `3-2`, `16-9`, `3-4`, `2-3` | grid: square tiles; masonry: each photo's own shape; slideshow: 3:2 stage | `data-ratio`, `-` written as `:` | tile shape of the estimate | `--ratio`, crops with `object-fit: cover`. `original` does not parse, so a grid stays square |
+| `ratio` / `ratio` | `original`, `1-1`, `4-3`, `3-2`, `16-9`, `3-4`, `2-3` | grid: square tiles; masonry: each photo's own shape; slideshow: 3:2 stage | `data-ratio`, `-` written as `:` | tile shape of the estimate | `--ratio`, crops with `object-fit: cover`. `original` does not parse, so a grid stays square (professionals#2339). The block editor hides Original for the grid layout; a stored grid + original block keeps rendering, square |
 | `captions` / `captions` | `off`, `below`, `overlay` | `off` | `data-captions` | none | `figcaption.below` or `span.cap`; text is title and caption joined |
 | `sort` / `sort` | `newest`, `oldest`, `name`, `random` | platform order (oldest first) | `data-sort` | none | mapped to `reverse`, `default`, `title`, `random` |
 | `perPage` / `per_page` | 1 to 200 (embed 1 to 500) | all photos | `data-per-page` | rows of the estimate | first page; with `loadMore` off the rest is dropped |
@@ -51,9 +51,22 @@ and embed.js uses its own default.
 | `imageText` / `image_text` | list of `{id, caption, alt}` | none | `data-image-text` JSON | none | not read by the embed.js release of the fixture commit |
 | site duotone / `duotone` | two hex colours | none | `data-duotone` | none | SVG filter `#pf-duo` on every tile image |
 | block duotone (`style.color.duotone`) | preset or two colours | none | WordPress adds a filter rule for `.wp-block-profotograaf-gallery img`, and the plugin drops `data-duotone` | none | none: the photos are in the shadow root, so the WordPress filter cannot reach them |
-| `align` | `wide`, `full` | content width of the theme | `alignwide` / `alignfull` class | box width only | draws into whatever width the host has |
+| `align` | `wide`, `full` | `wide` for a new block (`block.json` default; a saved block without the attribute renders wide too). Shortcode: content width of the theme | `alignwide` / `alignfull` class | box width only | draws into whatever width the host has |
 | color, typography, border, spacing | block supports | theme | inline style on the host `div` | none | `:host{all:initial}` resets inherited text styles; only the host box (background, border, padding, margin) shows |
 | `data-radius` | 0 to 64 px | 4px | never written by the plugin | none | `--radius` on tiles |
+
+## Defaults for a new block
+
+- **Alignment.** `block.json` sets `align` to `wide`, so the editor adds
+  `alignwide` and the server render writes the same class on the host `div`.
+  A theme without wide support (no `align-wide`, or a block theme with no
+  `wideSize`) gives `alignwide` no rule, and the gallery keeps the content
+  width.
+- **Columns.** `Gallery_Renderer` writes `data-columns-tablet` and
+  `data-columns-mobile` whenever it writes `data-columns` and the block,
+  shortcode and site settings leave them empty. `Reserved_Space::step_down()`
+  holds the numbers, and `style()` estimates with them. The editor shows the
+  same values as placeholders in the tablet and phone controls.
 
 ## States
 
@@ -79,14 +92,14 @@ are the pairs and triples where one option changes what another does.
 | layout x perPage x loadMore | slideshow ignores both; grid and masonry show one page with or without the button | `gallery-display.spec.js`, `embed-layout.spec.js`, `sample-pages.spec.js` (`combo-load-more`, `combo-first-page`) |
 | loadMore x Reserved_Space | the box must grow with Show more and never clip | `embed-layout.spec.js`, `embed-cls.spec.js` |
 | layout x ratio | grid crops to the ratio (square without one), masonry keeps each photo's shape unless a ratio is set, slideshow letterboxes inside 3:2 | `sample-pages.spec.js` (`grid-landscape`, `grid-portrait`, `slideshow-portrait`) |
-| ratio `original` x grid | `original` is offered for every layout but a grid stays square | `sample-pages.spec.js` (`grid-landscape`) |
-| columns x breakpoints | tablet and phone values do not step down by themselves | `embed-options.spec.js`, `sample-pages.spec.js` (`combo-wide` at 390px) |
+| ratio `original` x grid | embed.js draws a grid square whatever the ratio, so the editor does not offer Original for a grid. A block that already holds it keeps rendering | `sample-pages.spec.js` (`grid-landscape`) |
+| columns x breakpoints | columns alone step down: tablet min(columns, 3), phone min(columns, 2) for a grid and 1 for masonry; an explicit tablet or phone value wins | `gallery-display.spec.js` (5 columns at 1440, 800 and 390px), `embed-options.spec.js`, `sample-pages.spec.js` (`combo-wide` at 390px) |
 | columns x photo count | a gallery with fewer photos than columns leaves empty cells | `sample-pages.spec.js` (`grid-few`, `masonry-few`) |
 | align x layout | wide and full change the width the columns divide; full width has no side gutter | `sample-pages.spec.js` (`combo-wide`, `combo-full`) |
 | duotone (site) x duotone (block) | the block value turns the site value off and draws nothing itself | `sample-pages.spec.js` (`combo-duotone`) |
 | gap 0 x radius | a gap of 0 squares the corners | `embed-options.spec.js`, `sample-pages.spec.js` (`combo-flush`) |
 | captions x ratio | overlay captions sit on cropped tiles; captions below add height masonry must balance | `sample-pages.spec.js` (`combo-captions`) |
-| empty or failed x layout | the reserved box shows as a blank area until it is released | `gallery-display.spec.js`, `sample-pages.spec.js` (`slideshow-empty`, `combo-empty`) |
+| empty or failed x layout | the reserved box shows as a blank area until it is released | `embed-empty.spec.js`, `gallery-display.spec.js` (failed platform call), `sample-pages.spec.js` (`slideshow-empty`, `combo-empty`) |
 
 ## Sample pages
 
