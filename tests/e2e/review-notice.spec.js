@@ -24,9 +24,17 @@ function wp( ...args ) {
  */
 function cleanUp() {
 	for ( const name of OPTIONS ) {
-		wp( 'option', 'delete', name );
+		try {
+			wp( 'option', 'delete', name );
+		} catch {
+			// The option does not exist yet.
+		}
 	}
-	wp( 'cron', 'event', 'delete', 'profotograaf_platform_status_soon' );
+	try {
+		wp( 'cron', 'event', 'delete', 'profotograaf_platform_status_soon' );
+	} catch {
+		// No event is queued.
+	}
 }
 
 /**
