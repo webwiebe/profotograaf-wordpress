@@ -189,10 +189,10 @@ test.describe( 'block markup and shortcode', () => {
 		const viewport = { width: 1440, height: 900 };
 		const fromShortcode = await openEmbed(
 			browser,
-			publishPost( 'Options shortcode', shortcode( { layout: 'grid', columns: '3', gap: '4', ratio: '4-3', per_page: '10', lightbox: 'off' } ) ),
+			publishPost( 'Options shortcode', shortcode( { layout: 'grid', columns: '3', gap: '4', ratio: '4-3', per_page: '10', lightbox: 'off', align: 'wide' } ) ),
 			viewport
 		);
-		// Per page is a Show more setting, so only 10 tiles are drawn.
+		// Per page is a Show more setting, so only 10 tiles are drawn. A new block is wide, so the shortcode asks for wide too.
 		const fromBlock = await openEmbed(
 			browser,
 			publishPost(
@@ -206,7 +206,7 @@ test.describe( 'block markup and shortcode', () => {
 
 		const attributes = ( /** @type {import('@playwright/test').Locator} */ host ) =>
 			host.evaluate( ( el ) => Object.fromEntries( el.getAttributeNames().filter( ( name ) => name.startsWith( 'data-' ) && name !== 'data-pf-ready' ).map( ( name ) => [ name, el.getAttribute( name ) ] ) ) );
-		const expected = { 'data-profotograaf-gallery': 'g-e2e', 'data-layout': 'grid', 'data-columns': '3', 'data-gap': '4', 'data-ratio': '4:3', 'data-per-page': '10', 'data-lightbox': 'off' };
+		const expected = { 'data-profotograaf-gallery': 'g-e2e', 'data-layout': 'grid', 'data-columns': '3', 'data-columns-tablet': '3', 'data-columns-mobile': '2', 'data-gap': '4', 'data-ratio': '4:3', 'data-per-page': '10', 'data-lightbox': 'off' };
 		expect( await attributes( fromShortcode.host ) ).toEqual( expected );
 		expect( await attributes( fromBlock.host ) ).toEqual( expected );
 
