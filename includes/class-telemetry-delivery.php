@@ -14,32 +14,47 @@ defined( 'ABSPATH' ) || exit;
  * counters go to FunnelBarn. Both hosts take `POST <base>/api/v1/events` with
  * their own key and project headers.
  *
- * The keys are ingest-only collector keys. They can write events and read
- * nothing, so they ship in the plugin source. They are never logged.
+ * The error destination (endpoint, project, key, environment) comes from the
+ * `error_reporting` block the platform hands out in the status call. Without
+ * that block no error is sent. The FunnelBarn key is an ingest-only collector
+ * key that ships in the plugin source. Keys are never logged.
  */
 final class Telemetry_Delivery {
 
-	public const ERRORS_ENDPOINT = 'https://bb.profotograaf.nl';
-	public const USAGE_ENDPOINT  = 'https://f.profotograaf.nl';
-	public const EVENTS_PATH     = '/api/v1/events';
-	public const PROJECT         = 'profotograaf-wordpress';
-	public const BUGBARN_KEY     = 'e7cae08b70cdf7934a71efb48b2f2b5f2bea4229';
-	public const FUNNELBARN_KEY  = '87e9507246186dde1a354a5e333d42b445c2a267';
-	public const PAUSE_OPTION    = 'profotograaf_telemetry_queued_pause';
-	public const DEFAULT_PAUSE   = 300;
-	public const MAX_PAUSE       = 86400;
+	public const USAGE_ENDPOINT = 'https://f.profotograaf.nl';
+	public const EVENTS_PATH    = '/api/v1/events';
+	public const PROJECT        = 'profotograaf-wordpress';
+	public const FUNNELBARN_KEY = '87e9507246186dde1a354a5e333d42b445c2a267';
+	public const PAUSE_OPTION   = 'profotograaf_telemetry_queued_pause';
+	public const DEFAULT_PAUSE  = 300;
+	public const MAX_PAUSE      = 86400;
 
 	/**
-	 * Base URL for error events, or an empty string when sending is disabled.
+	 * The error destination the platform handed out, or null without one.
+	 *
+	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
+	 */
+	public static function error_destination(): ?array {
+		return Platform_Status::stored_error_reporting();
+	}
+
+	/**
+	 * Base URL for error events, or an empty string when there is no error
+	 * destination or sending is disabled.
 	 */
 	public static function errors_endpoint(): string {
+		$destination = self::error_destination();
+		if ( null === $destination ) {
+			return '';
+		}
 		/**
-		 * Filters the base URL of the error destination (BugBarn). The plugin
-		 * appends /api/v1/events. An empty string disables sending errors.
+		 * Filters the base URL of the error destination (BugBarn). It starts as
+		 * the endpoint from the platform. The plugin appends /api/v1/events. An
+		 * empty string disables sending errors.
 		 *
 		 * @param string $url Base URL.
 		 */
-		return self::clean_base( apply_filters( 'profotograaf_telemetry_endpoint', self::ERRORS_ENDPOINT ) );
+		return self::clean_base( apply_filters( 'profotograaf_telemetry_endpoint', $destination['endpoint'] ) );
 	}
 
 	/**
@@ -72,20 +87,26 @@ final class Telemetry_Delivery {
 	public static function deliver( array $item ): bool {
 		$is_error = 'error' === ( $item['type'] ?? '' );
 		$base     = $is_error ? self::errors_endpoint() : self::usage_endpoint();
-		if ( '' === $base ) {
+		// An error needs the platform block for its key and project, besides the endpoint.
+		$destination = $is_error ? self::error_destination() : null;
+		if ( '' === $base || ( $is_error && null === $destination ) ) {
 			return true;
 		}
 		if ( self::paused_until() > 0 ) {
 			return false;
 		}
 
-		$event    = $is_error ? Telemetry_Payload::bugbarn_event( $item ) : Telemetry_Payload::funnelbarn_event( $item, self::environment() );
+		$event = $is_error ? Telemetry_Payload::bugbarn_event( $item ) : Telemetry_Payload::funnelbarn_event( $item, self::environment() );
+		if ( null !== $destination && '' !== $destination['environment'] ) {
+			// The BugBarn SDKs send the environment as an event attribute.
+			$event['attributes']['environment'] = $destination['environment'];
+		}
 		$response = wp_remote_post(
 			$base . self::EVENTS_PATH,
 			array(
 				'timeout'     => Config::http_timeout(),
 				'redirection' => 0,
-				'headers'     => self::headers( $is_error ),
+				'headers'     => self::headers( $destination ),
 				'body'        => (string) wp_json_encode( $event ),
 			)
 		);
@@ -109,15 +130,15 @@ final class Telemetry_Delivery {
 	 * Request headers. No Authorization or x-api-key header is sent, both
 	 * services answer 401 to them.
 	 *
-	 * @param bool $is_error Whether the request goes to BugBarn.
+	 * @param array{endpoint:string,project:string,key:string,environment:string}|null $destination Error destination, or null for a usage request.
 	 * @return array<string,string>
 	 */
-	private static function headers( bool $is_error ): array {
-		if ( $is_error ) {
+	private static function headers( ?array $destination ): array {
+		if ( null !== $destination ) {
 			return array(
 				'Content-Type'      => 'application/json',
-				'X-BugBarn-Api-Key' => self::BUGBARN_KEY,
-				'X-BugBarn-Project' => self::PROJECT,
+				'X-BugBarn-Api-Key' => $destination['key'],
+				'X-BugBarn-Project' => $destination['project'],
 			);
 		}
 		return array(

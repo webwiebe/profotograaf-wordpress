@@ -60,10 +60,10 @@ Telemetry goes to two services operated by the plugin author, one request per ev
 
 | Data | Service | Base URL | Request |
 |------|---------|----------|---------|
-| Error events | BugBarn | `https://bb.profotograaf.nl` | `POST /api/v1/events` |
+| Error events | BugBarn | from the platform status call, for example `https://bb.profotograaf.nl` | `POST /api/v1/events` |
 | Daily usage | FunnelBarn | `https://f.profotograaf.nl` | `POST /api/v1/events` |
 
-The plugin appends `/api/v1/events` to the base URL. Each base URL can be replaced with a filter, and an empty string turns that destination off:
+The plugin appends `/api/v1/events` to the base URL. The error destination (`endpoint`, `project`, `key`, `environment`) is the `error_reporting` block of the platform status call, and without that block no error is sent. Each base URL can be replaced with a filter, and an empty string turns that destination off:
 
 ```php
 add_filter( 'profotograaf_telemetry_endpoint', function () {
@@ -80,11 +80,11 @@ If an endpoint is empty, nothing is sent to it even when consent is given.
 
 ## Authentication and Batching
 
-Both services take an ingest-only collector key. The key can write events and cannot read anything, so it ships in the plugin source. The plugin sends no `Authorization` or `x-api-key` header, both services answer 401 to them.
+Both services take an ingest-only collector key. The key can write events and cannot read anything. The FunnelBarn key ships in the plugin source, the BugBarn key comes from the status call. The plugin sends no `Authorization` or `x-api-key` header, both services answer 401 to them.
 
 | Service | Headers |
 |---------|---------|
-| BugBarn | `X-BugBarn-Api-Key`, `X-BugBarn-Project: profotograaf-wordpress` |
+| BugBarn | `X-BugBarn-Api-Key` and `X-BugBarn-Project`, both from the status call block |
 | FunnelBarn | `X-FunnelBarn-Api-Key`, `X-FunnelBarn-Project: profotograaf-wordpress` |
 
 Common rules:
@@ -268,7 +268,7 @@ When you opt in to telemetry, Profotograaf sends anonymous usage and error data 
 For the default configuration, also add:
 
 ```
-The default endpoints are https://bb.profotograaf.nl (BugBarn, errors) and https://f.profotograaf.nl (FunnelBarn, usage). Both are operated by the plugin author.
+The default destinations are https://bb.profotograaf.nl (BugBarn, errors, handed out by the platform) and https://f.profotograaf.nl (FunnelBarn, usage). Both are operated by the plugin author.
 ```
 
 ## Summary
