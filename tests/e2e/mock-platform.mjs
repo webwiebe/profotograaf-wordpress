@@ -299,6 +299,11 @@ const routes = {
 			? json( res, 403, { error: 'this app is not allowed to use this endpoint', code: 'forbidden' } )
 			: json( res, 200, { script_url: `/share/embed/embed.${ EMBED_VERSION }.js`, version: EMBED_VERSION } ),
 	'GET /api/v1/embed/photos': authed( libraryPage ),
+	'POST /api/v1/embed/galleries': authed( ( { res, body } ) =>
+		body && body.title
+			? json( res, 201, { id: 'g-e2e-new', slug: 'new', title: body.title, url: 'http://localhost:8090/share/g/new' } )
+			: json( res, 400, { error: 'title required' } )
+	),
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY, GALLERY_PARALLAX ] ) ),
 	'GET /api/v1/embed/galleries/g-e2e-error': ( { res } ) => json( res, 503, { error: 'unavailable' }, { 'access-control-allow-origin': '*' } ),
 	'GET /share/embed/embed.js': embedScript,
@@ -353,6 +358,8 @@ function emptyGallery( { req, res, url } ) {
 
 
 const EMBEDDABLE = /^\/api\/v1\/embed\/galleries\/[^/]+\/embeddable$/;
+const UPLOAD = /^\/api\/v1\/embed\/galleries\/[^/]+\/photos$/;
+const PHOTO = /^\/api\/v1\/embed\/photos\/[^/]+$/;
 const PHOTOS = /^\/api\/v1\/embed\/galleries\/g-e2e\/photos$/;
 
 // The photo shape of the public gallery payload (docs/embed-api.md), as the
@@ -426,6 +433,30 @@ function photoPage( { res, url } ) {
 
 const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
 
+// Write routes of the platform (galleries:write): upload and photo metadata.
+function writeRoute( method, pathname ) {
+	if ( method === 'POST' && UPLOAD.test( pathname ) ) {
+		return authed( ( { res, req } ) =>
+			json( res, 201, { id: 'p-up-1', gallery_id: pathname.split( '/' )[ 5 ], filename: String( req.headers[ 'content-type' ] ).startsWith( 'multipart/' ) ? 'upload.jpg' : '' } )
+		);
+	}
+	if ( method === 'PATCH' && PHOTO.test( pathname ) ) {
+		return authed( ( { res, body } ) => {
+			const fields = body && typeof body === 'object' ? body : {};
+			if ( ! [ 'title', 'caption', 'alt' ].some( ( key ) => key in fields ) ) {
+				return json( res, 400, { error: 'nothing to update' } );
+			}
+			return json( res, 200, { id: pathname.split( '/' )[ 4 ], ...fields } );
+		} );
+	}
+	if ( method === 'PUT' && EMBEDDABLE.test( pathname ) ) {
+		return authed( ( { res } ) =>
+			json( res, 200, { id: pathname.split( '/' )[ 5 ], embeddable: true, available: true } )
+		);
+	}
+	return null;
+}
+
 function findRoute( method, pathname ) {
 	if ( ( method === 'GET' || method === 'HEAD' ) && EMBED_VERSIONED.test( pathname ) ) {
 		return embedScript;
@@ -439,10 +470,9 @@ function findRoute( method, pathname ) {
 	if ( method === 'GET' && PHOTOS.test( pathname ) ) {
 		return authed( photoPage );
 	}
-	if ( method === 'PUT' && EMBEDDABLE.test( pathname ) ) {
-		return authed( ( { res } ) =>
-			json( res, 200, { id: pathname.split( '/' )[ 5 ], embeddable: true, available: true } )
-		);
+	const write = writeRoute( method, pathname );
+	if ( write ) {
+		return write;
 	}
 	return routes[ `${ method } ${ pathname }` ];
 }

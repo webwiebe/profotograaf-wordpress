@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T16:25:19+00:00\n"
+"POT-Creation-Date: 2026-10-10T17:44:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -268,49 +268,33 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/class-api-client.php:148
-#: includes/class-gallery-rest.php:166
-#: includes/class-gallery-rest.php:184
-#: includes/class-gallery-rest.php:211
-#: includes/class-photo-list.php:56
-msgid "A gallery id is required."
-msgstr ""
-
-#: includes/class-api-client.php:165
-msgid "The request to switch embedding on is not valid."
-msgstr ""
-
-#: includes/class-api-client.php:175
-msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
-msgstr ""
-
-#: includes/class-api-client.php:214
+#: includes/class-api-client.php:162
 msgid "A lead needs a name and an email address."
 msgstr ""
 
-#: includes/class-api-client.php:316
+#: includes/class-api-client.php:277
 msgid "That page is not on the Profotograaf platform."
 msgstr ""
 
-#: includes/class-api-client.php:326
-#: includes/class-api-client.php:466
-#: includes/class-api-client.php:471
+#: includes/class-api-client.php:287
+#: includes/class-api-client.php:433
+#: includes/class-api-client.php:438
 msgid "Profotograaf could not be reached."
 msgstr ""
 
-#: includes/class-api-client.php:333
+#: includes/class-api-client.php:294
 msgid "The public page could not be loaded."
 msgstr ""
 
-#: includes/class-api-client.php:358
+#: includes/class-api-client.php:319
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr ""
 
-#: includes/class-api-client.php:382
+#: includes/class-api-client.php:343
 msgid "The connection was ended in your Profotograaf account."
 msgstr ""
 
-#: includes/class-api-client.php:451
+#: includes/class-api-client.php:418
 msgid "The request could not be encoded."
 msgstr ""
 
@@ -425,6 +409,15 @@ msgstr ""
 
 #: includes/class-gallery-renderer.php:356
 msgid "This gallery needs JavaScript to be shown here."
+msgstr ""
+
+#: includes/class-gallery-rest.php:166
+#: includes/class-gallery-rest.php:184
+#: includes/class-gallery-rest.php:211
+#: includes/class-photo-list.php:56
+#: includes/trait-api-client-writes.php:72
+#: includes/trait-api-client-writes.php:174
+msgid "A gallery id is required."
 msgstr ""
 
 #: includes/class-pairing.php:106
@@ -1467,6 +1460,43 @@ msgstr ""
 
 #: includes/modules/class-telemetry-consent.php:114
 msgid "Not now"
+msgstr ""
+
+#: includes/trait-api-client-writes.php:35
+msgid "A gallery needs a title."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:43
+msgid "Profotograaf did not return the new gallery."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:75
+#: includes/trait-api-client-writes.php:79
+msgid "The file could not be read."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:106
+msgid "Your Profotograaf storage is full. Free up space or upgrade your plan to send more files."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:115
+msgid "Profotograaf did not return the new photo."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:138
+msgid "A photo id is required."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:147
+msgid "Nothing to update: give a title, caption or alt text."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:191
+msgid "The request to switch embedding on is not valid."
+msgstr ""
+
+#: includes/trait-api-client-writes.php:201
+msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr ""
 
 #: patterns/client-portal-cta.php:13
