@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [] };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [] };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -234,7 +234,7 @@ const routes = {
 		return json( res, 200, { ok: true } );
 	},
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [] } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [] } );
 		return json( res, 200, { ok: true } );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
@@ -250,6 +250,17 @@ const routes = {
 		state.refreshes += 1;
 		return json( res, 200, { status: 'approved', ...tokenPair() } );
 	},
+	// The plugin stats call (wiebe-xyz/professionals#1705, #1710). Any scope works.
+	'POST /api/v1/auth/devices/status': authed( ( { res, body } ) => {
+		state.statusCalls.push( body );
+		return json( res, 200, {
+			device_id: 'e2e-device',
+			client_id: 'wordpress',
+			site_url: typeof body.site_url === 'string' ? body.site_url : '',
+			review_prompt: { eligible: false, reason: '', at: '' },
+			error_reporting: { endpoint: 'http://localhost:8090', project: 'wordpress-plugin', key: 'e2e-key', environment: 'e2e' },
+		} );
+	} ),
 	'POST /api/v1/auth/devices/signout': authed( ( { res } ) => {
 		res.writeHead( 204 );
 		return res.end();
