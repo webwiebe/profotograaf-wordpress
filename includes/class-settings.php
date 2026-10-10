@@ -114,17 +114,12 @@ final class Settings {
 	}
 
 	/**
-	 * Whether the site sends Media Library files to Profotograaf. Off until
-	 * the upload feature adds its setting. The filter lets that setting, or a
-	 * site, switch it on.
+	 * Whether the site sends Media Library files to Profotograaf. Off until the
+	 * owner switches on "Send Media Library files to Profotograaf". No UI and no
+	 * request exists while it is off.
 	 */
 	public function media_upload_enabled(): bool {
-		/**
-		 * Filters whether upload to Profotograaf is enabled on this site.
-		 *
-		 * @param bool $enabled Default false.
-		 */
-		return true === apply_filters( 'profotograaf_media_upload_enabled', false );
+		return true === $this->get( 'media_upload' );
 	}
 
 	/**

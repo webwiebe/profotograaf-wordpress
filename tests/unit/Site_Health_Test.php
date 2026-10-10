@@ -77,6 +77,31 @@ class Site_Health_Test extends Leads_Test_Case {
 		$this->assertStringContainsString( 'profotograaf/v1/health/embed', $tests['async'][ Site_Health::EMBED_TEST ]['test'] );
 	}
 
+	public function test_the_upload_test_exists_only_while_upload_is_on(): void {
+		$empty = array( 'direct' => array(), 'async' => array() );
+		$this->assertArrayNotHasKey( Site_Health::UPLOAD_TEST, $this->module()->add_tests( $empty )['direct'] );
+
+		$this->options[ \Profotograaf\Settings::OPTION ] = array( 'media_upload' => true );
+		$this->assertArrayHasKey( Site_Health::UPLOAD_TEST, $this->module()->add_tests( $empty )['direct'] );
+	}
+
+	public function test_no_failed_uploads_is_good(): void {
+		Functions\when( 'get_posts' )->justReturn( array() );
+		$result = $this->module()->upload_result();
+
+		$this->assertSame( 'good', $result['status'] );
+		$this->assertSame( Site_Health::UPLOAD_TEST, $result['test'] );
+	}
+
+	public function test_failed_uploads_are_recommended_with_their_count(): void {
+		Functions\when( 'get_posts' )->alias( fn() => array( 4, 5 ) );
+
+		$result = $this->module()->upload_result();
+
+		$this->assertSame( 'recommended', $result['status'] );
+		$this->assertStringContainsString( '2 files could not be sent', $result['description'] );
+	}
+
 	public function test_it_leaves_a_foreign_value_alone(): void {
 		$this->assertSame( 'text', $this->module()->add_tests( 'text' ) );
 		$this->assertSame( 'text', $this->module()->add_debug_information( 'text' ) );

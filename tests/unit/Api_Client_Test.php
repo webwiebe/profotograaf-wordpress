@@ -505,6 +505,53 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertGreaterThan( 30, $request['timeout'] );
 	}
 
+	public function test_find_photo_by_name_returns_the_id_of_a_matching_photo(): void {
+		$this->write_connect();
+		$this->http->reply(
+			200,
+			array(
+				'photos' => array(
+					array( 'id' => 'p1', 'filename' => 'other.jpg' ),
+					'junk',
+					array( 'filename' => 'IMG_1.jpg' ),
+					array( 'id' => 'p2', 'filename' => 'IMG_1.jpg' ),
+				),
+			)
+		);
+
+		$this->assertSame( 'p2', $this->api->find_photo_by_name( 'g 1', 'IMG_1.jpg' ) );
+
+		$request = $this->http->requests[0];
+		$this->assertSame( 'GET', $request['method'] );
+		$this->assertStringEndsWith( '/api/v1/embed/galleries/g%201/photos?limit=200&q=IMG_1', $request['url'] );
+	}
+
+	public function test_find_photo_by_name_matches_a_title_without_extension(): void {
+		$this->write_connect();
+		$this->http->reply( 200, array( 'photos' => array( array( 'id' => 'p3', 'title' => 'IMG_1' ) ) ) );
+
+		$this->assertSame( 'p3', $this->api->find_photo_by_name( 'g1', 'IMG_1.jpg' ) );
+	}
+
+	public function test_find_photo_by_name_returns_null_when_nothing_matches(): void {
+		$this->write_connect();
+		$this->http->reply( 200, array( 'photos' => array( array( 'id' => 'p1', 'filename' => 'x.jpg' ) ) ) );
+		$this->http->reply( 200, array() );
+
+		$this->assertNull( $this->api->find_photo_by_name( 'g1', 'IMG_1.jpg' ) );
+		$this->assertNull( $this->api->find_photo_by_name( 'g1', 'IMG_1.jpg' ) );
+	}
+
+	public function test_find_photo_by_name_passes_a_failed_lookup_on_and_refuses_empty_input(): void {
+		$this->write_connect();
+		$this->http->reply( 404, array( 'error' => 'not found' ) );
+
+		$this->assertWPError( $this->api->find_photo_by_name( 'g1', 'IMG_1.jpg' ), 'profotograaf_http' );
+		$this->assertWPError( $this->api->find_photo_by_name( '', 'IMG_1.jpg' ), 'profotograaf_invalid' );
+		$this->assertWPError( $this->api->find_photo_by_name( 'g1', ' ' ), 'profotograaf_invalid' );
+		$this->assertCount( 1, $this->http->requests );
+	}
+
 	public function test_upload_photo_cleans_the_file_name(): void {
 		$this->write_connect();
 		$path = $this->temp_file( 'x' );

@@ -60,6 +60,20 @@ final class Plugin {
 	private ?Review_Prompt $review_prompt = null;
 
 	/**
+	 * Linked galleries for the Media Library upload.
+	 *
+	 * @var Upload_Links|null
+	 */
+	private ?Upload_Links $upload_links = null;
+
+	/**
+	 * Upload queue.
+	 *
+	 * @var Upload_Queue|null
+	 */
+	private ?Upload_Queue $upload_queue = null;
+
+	/**
 	 * Clock override for tests.
 	 *
 	 * @var callable|null
@@ -172,6 +186,26 @@ final class Plugin {
 			$this->review_prompt = new Review_Prompt( $this->clock );
 		}
 		return $this->review_prompt;
+	}
+
+	/**
+	 * The galleries the Media Library may send files to.
+	 */
+	public function upload_links(): Upload_Links {
+		if ( null === $this->upload_links ) {
+			$this->upload_links = new Upload_Links();
+		}
+		return $this->upload_links;
+	}
+
+	/**
+	 * The queue that sends Media Library files to Profotograaf.
+	 */
+	public function upload_queue(): Upload_Queue {
+		if ( null === $this->upload_queue ) {
+			$this->upload_queue = new Upload_Queue( $this->settings(), $this->upload_links(), $this->api(), $this->connection(), $this->clock );
+		}
+		return $this->upload_queue;
 	}
 
 	/**

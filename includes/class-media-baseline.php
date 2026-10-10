@@ -14,7 +14,8 @@ defined( 'ABSPATH' ) || exit;
  * can tell a local edit from an untouched copy (docs/media-lifecycle.md,
  * rule 2).
  *
- * - `_profotograaf_origin`: `import` for photos pulled from the platform.
+ * - `_profotograaf_origin`: `import` for photos pulled from the platform,
+ *   `upload` for files this site sent. A missing value means `import`.
  * - `_profotograaf_file_hash`: sha1 of the stored original at write time.
  * - `_profotograaf_text_hash`: hash of title, caption and alt as written.
  *
@@ -29,6 +30,7 @@ final class Media_Baseline {
 	public const META_TEXT_HASH = '_profotograaf_text_hash';
 
 	public const ORIGIN_IMPORT = 'import';
+	public const ORIGIN_UPLOAD = 'upload';
 
 	/**
 	 * Option that holds `done` once every earlier copy has a baseline.
@@ -86,6 +88,41 @@ final class Media_Baseline {
 		}
 		update_post_meta( $attachment_id, self::META_TEXT_HASH, self::text_hash( $title, $caption, $alt ) );
 		self::record_file( $attachment_id );
+	}
+
+	/**
+	 * Baseline for an attachment the site sent to the platform: origin
+	 * `upload`, the stored original and the text as it was sent.
+	 *
+	 * @param int $attachment_id Attachment id.
+	 */
+	public static function record_upload( int $attachment_id ): void {
+		update_post_meta( $attachment_id, self::META_ORIGIN, self::ORIGIN_UPLOAD );
+		self::record_file( $attachment_id );
+		self::record_current_text( $attachment_id );
+	}
+
+	/**
+	 * Whether the site sent this attachment, rather than importing it.
+	 *
+	 * @param int $attachment_id Attachment id.
+	 */
+	public static function is_upload( int $attachment_id ): bool {
+		return self::ORIGIN_UPLOAD === (string) get_post_meta( $attachment_id, self::META_ORIGIN, true );
+	}
+
+	/**
+	 * Hash of the text the attachment has now, in the form text_hash() makes.
+	 *
+	 * @param int $attachment_id Attachment id.
+	 */
+	public static function current_text_hash( int $attachment_id ): string {
+		$post = get_post( $attachment_id );
+		if ( ! $post instanceof \WP_Post ) {
+			return '';
+		}
+		$alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+		return self::text_hash( (string) $post->post_title, (string) $post->post_excerpt, is_scalar( $alt ) ? (string) $alt : '' );
 	}
 
 	/**
@@ -166,12 +203,10 @@ final class Media_Baseline {
 	 *
 	 * @param int $attachment_id Attachment id.
 	 */
-	private static function record_current_text( int $attachment_id ): void {
-		$post = get_post( $attachment_id );
-		if ( ! $post instanceof \WP_Post ) {
-			return;
+	public static function record_current_text( int $attachment_id ): void {
+		$hash = self::current_text_hash( $attachment_id );
+		if ( '' !== $hash ) {
+			update_post_meta( $attachment_id, self::META_TEXT_HASH, $hash );
 		}
-		$alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
-		update_post_meta( $attachment_id, self::META_TEXT_HASH, self::text_hash( (string) $post->post_title, (string) $post->post_excerpt, is_scalar( $alt ) ? (string) $alt : '' ) );
 	}
 }

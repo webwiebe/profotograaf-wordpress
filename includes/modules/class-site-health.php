@@ -37,6 +37,7 @@ class Site_Health implements Module {
 	public const EMBED_TEST      = 'profotograaf_embed';
 	public const BACKLOG_TEST    = 'profotograaf_backlog';
 	public const FAILED_TEST     = 'profotograaf_failed_leads';
+	public const UPLOAD_TEST     = 'profotograaf_failed_uploads';
 
 	/**
 	 * Seconds an access token may stay expired before the background refresh counts as stuck.
@@ -147,7 +148,13 @@ class Site_Health implements Module {
 			'label' => __( 'Profotograaf failed leads', 'profotograaf' ),
 			'test'  => array( $this, 'failed_result' ),
 		);
-		$tests['async'][ self::EMBED_TEST ]       = array(
+		if ( null !== $this->plugin && $this->plugin->settings()->media_upload_enabled() ) {
+			$tests['direct'][ self::UPLOAD_TEST ] = array(
+				'label' => __( 'Profotograaf file uploads', 'profotograaf' ),
+				'test'  => array( $this, 'upload_result' ),
+			);
+		}
+		$tests['async'][ self::EMBED_TEST ] = array(
 			'label'             => __( 'Profotograaf gallery script', 'profotograaf' ),
 			'test'              => rest_url( Gallery_Rest::NAMESPACE . '/health/embed' ),
 			'has_rest'          => true,
@@ -294,6 +301,31 @@ class Site_Health implements Module {
 				$failed
 			),
 			'<p>' . esc_html__( 'Open the leads screen to retry them or export them before they are removed.', 'profotograaf' ) . '</p>' . $this->leads_link()
+		);
+	}
+
+	/**
+	 * Files from the Media Library that could not be sent.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function upload_result(): array {
+		$counts = null === $this->plugin ? array( 'failed' => 0 ) : $this->plugin->upload_queue()->counts();
+		$failed = $counts['failed'];
+
+		if ( $failed < 1 ) {
+			return $this->result( self::UPLOAD_TEST, 'good', __( 'No Profotograaf file uploads failed', 'profotograaf' ), __( 'Every file was sent or is still waiting.', 'profotograaf' ) );
+		}
+		return $this->result(
+			self::UPLOAD_TEST,
+			'recommended',
+			__( 'Profotograaf file uploads failed', 'profotograaf' ),
+			sprintf(
+				/* translators: %d: number of files that could not be sent. */
+				_n( '%d file could not be sent to Profotograaf.', '%d files could not be sent to Profotograaf.', $failed, 'profotograaf' ),
+				$failed
+			),
+			'<p>' . esc_html__( 'Open the file in the Media Library to read why, and send it again.', 'profotograaf' ) . '</p>'
 		);
 	}
 

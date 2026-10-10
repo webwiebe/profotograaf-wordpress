@@ -9,6 +9,7 @@ namespace Profotograaf\Modules;
 
 use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Admin\Settings_Fields;
+use Profotograaf\Admin\Upload_Panel;
 use Profotograaf\Cron_Health;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
@@ -322,6 +323,7 @@ class Settings_Page implements Module {
 
 			<?php if ( Settings_Schema::TAB_GENERAL === $tab && 'connected' === $status['state'] ) : ?>
 				<?php $this->render_origin_sync(); ?>
+				<?php ( new Upload_Panel( $this->plugin() ) )->render(); ?>
 			<?php endif; ?>
 		</div>
 		<?php

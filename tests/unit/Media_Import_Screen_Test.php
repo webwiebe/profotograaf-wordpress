@@ -250,6 +250,18 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		$this->assertStringNotContainsString( 'evil.example', $html );
 	}
 
+	public function test_an_uploaded_photo_shows_a_note_and_no_reimport_button(): void {
+		$this->meta[12] = array(
+			'_profotograaf_photo_id' => 'p-1',
+			'_profotograaf_origin'   => 'upload',
+		);
+
+		$html = $this->screen->source_field( array(), (object) array( 'ID' => 12 ) )['profotograaf_source']['html'];
+
+		$this->assertStringContainsString( 'Sent from this site', $html );
+		$this->assertStringNotContainsString( 'profotograaf-reimport__button', $html );
+	}
+
 	public function test_an_imported_photo_gets_a_reimport_button_for_users_who_may_edit_it(): void {
 		$this->meta[12] = array( '_profotograaf_photo_id' => 'p-1' );
 
