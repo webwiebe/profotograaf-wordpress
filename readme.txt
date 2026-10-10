@@ -189,6 +189,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: a reconcile step that decides, for every photo imported from Profotograaf, whether it is in sync, changed on Profotograaf, missing there or edited on both sides. It only records a state in the plugin's own attachment meta and never deletes or changes a file. Nothing is flagged from an outdated photo list, a failed request or after the site connected to a different account. No screen or schedule uses it yet.
 * New: API client calls to create a gallery, upload a file to a gallery and update a photo's title, caption and alt text on Profotograaf. A full storage (413) is reported as its own error. No screen uses them yet.
 * New: photos imported from Profotograaf now carry a baseline of what the plugin wrote (file, and title, caption and alt text), so a later check can tell an edited copy from an untouched one. Copies imported earlier get their baseline from their current values in the admin, so edits made before the update are not detected. Nothing is sent anywhere.
 * New: the plugin asks for the galleries:write permission when it connects, for sending Media Library files to Profotograaf later. A connection made earlier keeps working. Only a site that switches sending on is asked to connect again, when the stored permissions lack it or Profotograaf refuses a write call (403).
