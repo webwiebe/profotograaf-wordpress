@@ -354,15 +354,15 @@ msgstr[1] "%d contactos esperan su entrega."
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "No se pudo cargar esta galería. Inténtalo de nuevo más tarde."
 
-#: includes/class-gallery-renderer.php:320
+#: includes/class-gallery-renderer.php:330
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr "La galería de Profotograaf no se puede mostrar porque falta su ID o no es válido. Elige la galería de nuevo."
 
-#: includes/class-gallery-renderer.php:335
+#: includes/class-gallery-renderer.php:345
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Esta galería de Profotograaf no se encontró en tu cuenta. Puede que se haya eliminado. Elige otra galería."
 
-#: includes/class-gallery-renderer.php:356
+#: includes/class-gallery-renderer.php:366
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Esta galería necesita JavaScript para mostrarse aquí."
 
@@ -2190,4 +2190,28 @@ msgstr ""
 
 #: includes/trait-api-client-writes.php:147
 msgid "Nothing to update: give a title, caption or alt text."
+msgstr ""
+
+#: build/gallery/index.js:1
+msgid "Profotograaf default (the gallery's own layout)"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Gallery order"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Automatic columns"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "All photos"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Ignores the site default."
+msgstr ""
+
+#: build/gallery/index.js:4
+msgid "all photos"
 msgstr ""
