@@ -9,6 +9,7 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Gallery_Index;
+use Profotograaf\Gallery_Look;
 use Profotograaf\Gallery_Renderer;
 use Profotograaf\Reserved_Space;
 
@@ -778,10 +779,10 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( Gallery_Renderer::IMAGE_TEXT_LENGTH, strlen( $decoded[0]['caption'] ) );
 	}
 
-	public function test_crop_and_radius_have_no_option_of_their_own(): void {
+	public function test_crop_is_the_ratio_and_the_radius_is_a_look_option(): void {
 		$this->assertArrayHasKey( 'ratio', Gallery_Renderer::OPTIONS );
 		$this->assertArrayNotHasKey( 'crop', Gallery_Renderer::OPTIONS );
-		$this->assertArrayNotHasKey( 'radius', Gallery_Renderer::OPTIONS );
+		$this->assertSame( Gallery_Look::OPTIONS['radius'], Gallery_Renderer::OPTIONS['radius'] );
 	}
 
 	/**

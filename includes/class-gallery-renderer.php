@@ -30,8 +30,9 @@ class Gallery_Renderer {
 	 *
 	 * An entry with `list` set holds photo ids, has no site default and is
 	 * written comma separated (an array from the block, a string from the
-	 * shortcode). Cropping is the `ratio` option and the corner radius is the
-	 * border radius block support, so neither has an entry of its own.
+	 * shortcode). Cropping is the `ratio` option. The spacing and shape options
+	 * (gap per axis, corners, hover, frame, shadow) are Gallery_Look::OPTIONS.
+	 * The border radius block support rounds the block box, not the photos.
 	 *
 	 * @var array<string,array{setting:string|null,attribute:string|null,data:string,list?:bool}>
 	 */
@@ -112,7 +113,7 @@ class Gallery_Renderer {
 			'attribute' => 'imageText',
 			'data'      => 'data-image-text',
 		),
-	);
+	) + Gallery_Look::OPTIONS;
 
 	/** Most photo ids one gallery block can leave out. */
 	public const MAX_EXCLUDED = 500;
@@ -232,7 +233,7 @@ class Gallery_Renderer {
 		if ( '' !== $block_duotone ) {
 			$args['duotone'] = $block_duotone;
 		}
-		if ( is_array( $args['image_text'] ) ) {
+		if ( is_array( $args['image_text'] ?? null ) ) {
 			$args['image_text'] = self::clean_image_text( $args['image_text'] );
 		}
 		return $args;
@@ -393,7 +394,7 @@ class Gallery_Renderer {
 			// Ratios are stored as 4-3 (a colon is not allowed in an option key).
 			$attributes[ $option['data'] ] = 'ratio' === $key ? str_replace( '-', ':', $value ) : $value;
 		}
-		return Reserved_Space::with_step_down( $attributes, $layout );
+		return Reserved_Space::with_step_down( Gallery_Look::finish( $attributes, $layout ), $layout );
 	}
 
 	/**

@@ -7,7 +7,8 @@ import { __, _n, sprintf } from '@wordpress/i18n';
  * behaviour whatever the site default says: the gallery's own order, all
  * photos, automatic columns. To add an option, add it here, to block.json
  * and to Gallery_Renderer::OPTIONS. `excludedPhotoIds` is a list of photo ids
- * and lives in exclude.ts.
+ * and lives in exclude.ts. The gap is set in the Spacing and shape panel with
+ * the options of look-options.ts.
  */
 export type DisplayAttributes = {
 	columns: string;
@@ -228,7 +229,6 @@ export function displayControls(
 		{ attribute: 'columns', label: __( 'Columns', 'profotograaf' ), kind: 'number', min: 1, max: 8, automatic: automaticColumns() },
 		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8, placeholder: shown.tablet, automatic: automaticColumns() },
 		{ attribute: 'columnsMobile', label: __( 'Columns on phones', 'profotograaf' ), kind: 'number', min: 1, max: 4, placeholder: shown.mobile, automatic: automaticColumns() },
-		{ attribute: 'gap', label: __( 'Gap between photos (pixels)', 'profotograaf' ), kind: 'number', min: 0, max: 96 },
 		shape,
 		{ attribute: 'captions', label: __( 'Captions', 'profotograaf' ), kind: 'select', options: captionOptions() },
 		{ attribute: 'sort', label: __( 'Sort order', 'profotograaf' ), kind: 'select', options: sortOptions() },

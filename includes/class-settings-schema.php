@@ -70,7 +70,11 @@ final class Settings_Schema {
 	 * @return array<string,Entry>
 	 */
 	public static function entries(): array {
-		return array_merge( self::base_entries(), self::gallery_display_entries() );
+		return array_merge(
+			self::base_entries(),
+			self::gallery_display_entries(),
+			Gallery_Look::schema_entries( self::TAB_GALLERIES, __( 'A block or shortcode can set its own. Leave empty for the Profotograaf default.', 'profotograaf' ) )
+		);
 	}
 
 	/**

@@ -137,6 +137,26 @@ test.describe( 'interaction on the real platform', () => {
 		await expect( gallery( page, 'combo-duotone-off' ) ).not.toHaveAttribute( 'data-duotone' );
 	} );
 
+	test( 'each gallery carries its own spacing and shape (#198)', async ( { page } ) => {
+		await openSample( page, 'sample-look' );
+		const airy = gallery( page, 'look-airy' );
+		await expect( airy ).toHaveAttribute( 'data-gap', '24' );
+		await expect( airy ).toHaveAttribute( 'data-radius', '12' );
+		await expect( airy ).toHaveAttribute( 'data-shadow', 'soft' );
+		await expect( gallery( page, 'look-grow' ) ).toHaveAttribute( 'data-hover', 'grow' );
+		await expect( gallery( page, 'look-grow' ) ).toHaveAttribute( 'data-radius', 'full' );
+		const matte = gallery( page, 'look-matte' );
+		await expect( matte ).toHaveAttribute( 'data-frame', '#f4f1ea,12' );
+		await expect( matte ).toHaveAttribute( 'data-gap-row', '24' );
+		await expect( matte ).toHaveAttribute( 'data-gap-column', '8' );
+		await expect( gallery( page, 'look-tight' ) ).toHaveAttribute( 'data-hover', 'none' );
+		const slideshow = gallery( page, 'look-slideshow' );
+		await expect( slideshow ).toHaveAttribute( 'data-radius', '12' );
+		await expect( slideshow ).not.toHaveAttribute( 'data-frame' );
+		await expect( slideshow ).not.toHaveAttribute( 'data-shadow' );
+		await expectPhotos( matte );
+	} );
+
 	test( 'a gallery of PNG photos draws them (professionals#2330)', async ( { page } ) => {
 		await openSample( page, 'sample-combinations' );
 		await expectPhotos( gallery( page, 'combo-png' ) );

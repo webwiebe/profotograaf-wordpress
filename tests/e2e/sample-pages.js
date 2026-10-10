@@ -93,6 +93,17 @@ const PAGES = [
 			{ anchor: 'combo-empty', role: 'empty', expect: 'empty', heading: 'Grid of an empty gallery', attrs: { layout: 'grid' } },
 		],
 	},
+	{
+		title: 'Sample: Spacing and shape',
+		slug: 'sample-look',
+		blocks: [
+			{ anchor: 'look-airy', role: 'large', heading: 'Grid, large gap, rounded corners, soft shadow, strong zoom', attrs: { layout: 'grid', columns: '4', ratio: '4-3', gap: '24', radius: 'rounded', hover: 'zoom', hoverStrength: 'strong', shadow: 'soft' } },
+			{ anchor: 'look-grow', role: 'large', heading: 'Square grid, circles that grow on hover', attrs: { layout: 'grid', columns: '5', gap: '12', radius: 'full', hover: 'grow', hoverStrength: 'strong' } },
+			{ anchor: 'look-matte', role: 'mixed', heading: 'Masonry, off-white matte, wide rows, strong shadow, subtle grow', attrs: { layout: 'masonry', columns: '3', gapRow: '24', gapColumn: '8', frameColor: '#f4f1ea', frameWidth: '12', shadow: 'strong', hover: 'grow', hoverStrength: 'subtle' } },
+			{ anchor: 'look-tight', role: 'portrait', heading: 'Grid 2:3, small gap, thin black frame, no hover effect', attrs: { layout: 'grid', columns: '4', ratio: '2-3', gap: '4', radius: 'subtle', frameColor: '#111111', frameWidth: '2', hover: 'none' } },
+			{ anchor: 'look-slideshow', role: 'large', heading: 'Slideshow with rounded corners (it ignores frame and shadow)', attrs: { layout: 'slideshow', radius: 'rounded', frameWidth: '8', shadow: 'soft' } },
+		],
+	},
 ];
 
 /**
