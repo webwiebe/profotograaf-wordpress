@@ -544,10 +544,6 @@ msgstr "Espacio entre las fotos, de 0 a 96 píxeles."
 msgid "Photo shape"
 msgstr "Forma de las fotos"
 
-#: includes/class-settings-schema.php:228
-msgid "Crop every photo to one aspect ratio, or keep each photo as shot."
-msgstr "Recorta cada foto a una sola proporción o conserva cada foto tal como se tomó."
-
 #: includes/class-settings-schema.php:230
 #: build/gallery/index.js:3
 msgid "Original"
@@ -2052,4 +2048,12 @@ msgstr ""
 
 #: build/gallery/index.js:3
 msgid "Original (not drawn in a grid yet)"
+msgstr ""
+
+#: includes/class-settings-schema.php:228
+msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Masonry keeps each photo's own shape."
 msgstr ""

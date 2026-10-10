@@ -115,6 +115,12 @@ describe( 'displayControls', () => {
 describe( 'previewLayout', () => {
 	const site = { ...siteDefaults(), columns: '5', gap: '0', ratio: '1-1' };
 
+	it( 'ignores the shape for masonry, from the block and from the site', () => {
+		expect( previewLayout( { ...DISPLAY_DEFAULTS, ratio: '3-2', layout: 'masonry' }, site ).ratio ).toBe( '4 / 3' );
+		expect( previewLayout( DISPLAY_DEFAULTS, { ...site, layout: 'masonry' } ).ratio ).toBe( '4 / 3' );
+		expect( previewLayout( { ...DISPLAY_DEFAULTS, layout: 'grid' }, { ...site, layout: 'masonry' } ).ratio ).toBe( '1 / 1' );
+	} );
+
 	it( 'uses the Profotograaf default with no attributes and no site defaults', () => {
 		expect( previewLayout( DISPLAY_DEFAULTS ) ).toEqual( { columns: 3, gap: 8, ratio: '4 / 3' } );
 	} );
@@ -226,16 +232,29 @@ describe( 'displayControls with a block', () => {
 	it( 'offers Original except for a grid', () => {
 		const values = ( layout: string, ratio = '' ) =>
 			find( displayControls( { ...DISPLAY_DEFAULTS, ratio, layout }, site ), 'ratio' )?.options?.map( ( o ) => o.value );
-		expect( values( 'masonry' ) ).toContain( 'original' );
 		expect( values( 'slideshow' ) ).toContain( 'original' );
 		expect( values( 'grid' ) ).not.toContain( 'original' );
 		expect( values( '' ) ).not.toContain( 'original' );
 		expect( values( '' ) ).toContain( '1-1' );
 	} );
 
+	it( 'replaces the Photo shape control with a hint for masonry', () => {
+		const control = find( displayControls( { ...DISPLAY_DEFAULTS, ratio: '1-1', layout: 'masonry' }, site ), 'ratio' );
+		expect( control?.kind ).toBe( 'note' );
+		expect( control?.options ).toBeUndefined();
+		expect( control?.help ).toBe( "Masonry keeps each photo's own shape." );
+	} );
+
 	it( 'follows the site layout when the block has none', () => {
-		const controls = displayControls( DISPLAY_DEFAULTS, { ...site, layout: 'masonry' } );
-		expect( find( controls, 'ratio' )?.options?.map( ( o ) => o.value ) ).toContain( 'original' );
+		const masonry = displayControls( DISPLAY_DEFAULTS, { ...site, layout: 'masonry' } );
+		expect( find( masonry, 'ratio' )?.kind ).toBe( 'note' );
+		const slideshow = displayControls( DISPLAY_DEFAULTS, { ...site, layout: 'slideshow' } );
+		expect( find( slideshow, 'ratio' )?.options?.map( ( o ) => o.value ) ).toContain( 'original' );
+	} );
+
+	it( 'lets an explicit grid block override a masonry site layout', () => {
+		const controls = displayControls( { ...DISPLAY_DEFAULTS, layout: 'grid' }, { ...site, layout: 'masonry' } );
+		expect( find( controls, 'ratio' )?.kind ).toBe( 'select' );
 	} );
 
 	it( 'keeps a stored Original on a grid, marked as not drawn yet', () => {

@@ -47,7 +47,7 @@ interface ChoiceOption {
 export interface DisplayControl {
 	attribute: DisplayKey;
 	label: string;
-	kind: 'select' | 'number';
+	kind: 'select' | 'number' | 'note';
 	help?: string;
 	/** Shown in an empty number control: the value that applies. */
 	placeholder?: string;
@@ -179,12 +179,22 @@ export function displayControls(
 		attributes.layout ?? ''
 	);
 	const layout = attributes.layout || defaults.layout || 'grid';
+	// A fixed shape contradicts masonry: the control gives way to a hint.
+	const shape: DisplayControl =
+		layout === 'masonry'
+			? {
+					attribute: 'ratio',
+					label: __( 'Photo shape', 'profotograaf' ),
+					kind: 'note',
+					help: __( "Masonry keeps each photo's own shape.", 'profotograaf' ),
+			  }
+			: { attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions( layout, attributes.ratio ?? '' ) };
 	return [
 		{ attribute: 'columns', label: __( 'Columns', 'profotograaf' ), kind: 'number', min: 1, max: 8 },
 		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8, placeholder: shown.tablet },
 		{ attribute: 'columnsMobile', label: __( 'Columns on phones', 'profotograaf' ), kind: 'number', min: 1, max: 4, placeholder: shown.mobile },
 		{ attribute: 'gap', label: __( 'Gap between photos (pixels)', 'profotograaf' ), kind: 'number', min: 0, max: 96 },
-		{ attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions( layout, attributes.ratio ?? '' ) },
+		shape,
 		{ attribute: 'captions', label: __( 'Captions', 'profotograaf' ), kind: 'select', options: captionOptions() },
 		{ attribute: 'sort', label: __( 'Sort order', 'profotograaf' ), kind: 'select', options: sortOptions() },
 		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200 },
@@ -263,14 +273,16 @@ export function siteDefaults(): SiteDefaults {
  * else the Profotograaf default (3 columns, 8 pixels, 4 / 3).
  */
 export function previewLayout(
-	attributes: Pick< DisplayAttributes, 'columns' | 'gap' | 'ratio' >,
+	attributes: Pick< DisplayAttributes, 'columns' | 'gap' | 'ratio' > & { layout?: string },
 	defaults: SiteDefaults = NO_SITE_DEFAULTS
 ): { columns: number; gap: number; ratio: string } {
 	const pick = ( own: string, site: string ) => ( own !== '' ? own : site );
 	const columns = Number( pick( attributes.columns, defaults.columns ) ) || 3;
 	const gapValue = pick( attributes.gap, defaults.gap );
 	const gap = gapValue === '' || ! Number.isFinite( Number( gapValue ) ) ? 8 : Number( gapValue );
-	return { columns, gap, ratio: cssRatio( pick( attributes.ratio, defaults.ratio ) ) };
+	// Masonry ignores the photo shape, so the sketch draws the default shape.
+	const masonry = ( attributes.layout || defaults.layout ) === 'masonry';
+	return { columns, gap, ratio: cssRatio( masonry ? '' : pick( attributes.ratio, defaults.ratio ) ) };
 }
 
 /**

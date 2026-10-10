@@ -131,6 +131,32 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertSame( '--pf-ar:64/27;--pf-ar-t:48/27;--pf-ar-m:32/27', $seen );
 	}
 
+	public function test_masonry_sends_no_ratio_from_the_block(): void {
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'layout' => 'masonry', 'ratio' => '1-1' ) );
+
+		$this->assertStringNotContainsString( 'data-ratio', $html );
+		$this->assertStringContainsString( 'style="--pf-ar:12/9;--pf-ar-t:8/9;--pf-ar-m:4/9"', $html );
+	}
+
+	public function test_masonry_sends_no_ratio_from_the_site_setting_or_the_shortcode(): void {
+		$this->options['profotograaf_settings'] = array( 'gallery_ratio' => '1-1', 'default_layout' => 'masonry' );
+
+		$site      = $this->renderer->render( array( 'id' => 'g-1' ) );
+		$shortcode = $this->renderer->render( array( 'id' => 'g-1', 'layout' => 'masonry' ), array( 'ratio' => '3-2' ) );
+
+		$this->assertStringContainsString( 'data-layout="masonry"', $site );
+		$this->assertStringNotContainsString( 'data-ratio', $site );
+		$this->assertStringNotContainsString( 'data-ratio', $shortcode );
+	}
+
+	public function test_a_grid_keeps_the_site_ratio(): void {
+		$this->options['profotograaf_settings'] = array( 'gallery_ratio' => '1-1', 'default_layout' => 'masonry' );
+
+		$html = $this->renderer->render( array( 'id' => 'g-1', 'layout' => 'grid' ) );
+
+		$this->assertStringContainsString( 'data-ratio="1:1"', $html );
+	}
+
 	public function test_an_original_ratio_reserves_a_three_by_two_tile(): void {
 		$html = $this->renderer->render( array( 'id' => 'g-1', 'ratio' => 'original' ) );
 

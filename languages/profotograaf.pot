@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T14:37:26+00:00\n"
+"POT-Creation-Date: 2026-10-10T15:01:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -694,7 +694,7 @@ msgid "Photo shape"
 msgstr ""
 
 #: includes/class-settings-schema.php:228
-msgid "Crop every photo to one aspect ratio, or keep each photo as shot."
+msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
 msgstr ""
 
 #: includes/class-settings-schema.php:230
@@ -1687,6 +1687,10 @@ msgstr ""
 
 #: build/gallery/index.js:3
 msgid "Original (not drawn in a grid yet)"
+msgstr ""
+
+#: build/gallery/index.js:3
+msgid "Masonry keeps each photo's own shape."
 msgstr ""
 
 #: build/gallery/index.js:3

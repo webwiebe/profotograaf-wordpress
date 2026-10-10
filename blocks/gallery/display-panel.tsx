@@ -22,7 +22,11 @@ export function DisplayPanel( { attributes, setAttributes }: PanelProps ) {
 				initialOpen={ false }
 			>
 				{ displayControls( attributes, siteDefaults() ).map( ( control ) =>
-					control.kind === 'select' ? (
+					control.kind === 'note' ? (
+						<p key={ control.attribute } className="profotograaf-photo-grid__help">
+							{ control.help }
+						</p>
+					) : control.kind === 'select' ? (
 						<SelectControl
 							key={ control.attribute }
 							label={ control.label }

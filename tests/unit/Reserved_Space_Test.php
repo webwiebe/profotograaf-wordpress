@@ -115,6 +115,10 @@ class Reserved_Space_Test extends TestCase {
 		$this->assertSame( array( '12/9', '8/9', '4/9' ), $this->ratios( Reserved_Space::style( 'masonry', array( 'data-ratio' => 'original' ) ) ) );
 	}
 
+	public function test_masonry_ignores_a_ratio(): void {
+		$this->assertSame( array( '12/9', '8/9', '4/9' ), $this->ratios( Reserved_Space::style( 'masonry', array( 'data-ratio' => '1:1' ) ) ) );
+	}
+
 	public function test_a_slideshow_is_one_tile(): void {
 		$data = array(
 			'data-columns'  => '4',

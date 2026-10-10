@@ -225,7 +225,7 @@ final class Settings_Schema {
 				'type'        => 'enum',
 				'default'     => '',
 				'label'       => __( 'Photo shape', 'profotograaf' ),
-				'description' => __( 'Crop every photo to one aspect ratio, or keep each photo as shot.', 'profotograaf' ) . ' ' . $note,
+				'description' => __( 'Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo\'s own shape.', 'profotograaf' ) . ' ' . $note,
 				'choices'     => $platform + array(
 					'original' => __( 'Original', 'profotograaf' ),
 					'1-1'      => __( 'Square (1:1)', 'profotograaf' ),

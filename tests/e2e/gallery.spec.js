@@ -293,7 +293,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 	} );
 
 	test( 'the host box is at least as tall as the gallery drawn inside it', async ( { browser } ) => {
-		const url = publishPost( 'Overflow E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9" layout="masonry"]' );
+		const url = publishPost( 'Overflow E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9" layout="grid"]' );
 
 		const visitor = await browser.newContext();
 		const page = await visitor.newPage();
@@ -322,13 +322,13 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 	test( 'the gallery demo page has no axe violations', async ( { browser } ) => {
 		const url = publishPost(
 			'Accessibility E2E',
-			'[profotograaf_gallery id="g-e2e"] [profotograaf_gallery id="g-e2e" layout="masonry" ratio="4-3"] [profotograaf_gallery id="g-e2e" layout="slideshow"]'
+			'[profotograaf_gallery id="g-e2e"] [profotograaf_gallery id="g-e2e" layout="masonry"] [profotograaf_gallery id="g-e2e" layout="grid" ratio="4-3"] [profotograaf_gallery id="g-e2e" layout="slideshow"]'
 		);
 
 		const visitor = await browser.newContext();
 		const page = await visitor.newPage();
 		await page.goto( url );
-		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveCount( 3 );
+		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveCount( 4 );
 
 		// Scoped to the plugin markup: the active theme is outside this repository.
 		const results = await new AxeBuilder( { page } ).include( '[data-profotograaf-gallery]' ).analyze();

@@ -52,7 +52,7 @@ export function PreviewGrid( {
 	imageText = [],
 	defaults = siteDefaults(),
 }: {
-	attributes: DisplayAttributes;
+	attributes: DisplayAttributes & { layout?: string };
 	cover?: string | undefined;
 	photos?: PhotoRow[] | null | undefined;
 	excluded?: string[];
