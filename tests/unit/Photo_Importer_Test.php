@@ -68,6 +68,11 @@ class Photo_Importer_Test extends Wp_Test_Case {
 
 	private string $tmp = '';
 
+	/**
+	 * The stored original the baseline hashes.
+	 */
+	private string $original = '';
+
 	protected function setUp(): void {
 		parent::setUp();
 		$this->options['profotograaf_settings'] = array( 'media_source' => true );
@@ -116,6 +121,12 @@ class Photo_Importer_Test extends Wp_Test_Case {
 			}
 		);
 
+		$this->original = (string) tempnam( sys_get_temp_dir(), 'pforg' );
+		file_put_contents( $this->original, 'stored original' );
+		$original = $this->original;
+		Functions\when( 'wp_get_original_image_path' )->alias( fn() => $original );
+		Functions\when( 'get_attached_file' )->alias( fn() => $original );
+
 		Functions\when( 'add_filter' )->alias(
 			function ( $hook, $callback ) {
 				$this->filters[ $hook ] = $callback;
@@ -143,6 +154,9 @@ class Photo_Importer_Test extends Wp_Test_Case {
 	protected function tearDown(): void {
 		if ( is_file( $this->tmp ) ) {
 			unlink( $this->tmp );
+		}
+		if ( is_file( $this->original ) ) {
+			unlink( $this->original );
 		}
 		parent::tearDown();
 	}
@@ -186,9 +200,28 @@ class Photo_Importer_Test extends Wp_Test_Case {
 				'_profotograaf_gallery_id' => 'g-1',
 				'_profotograaf_version'    => 'abc123def456',
 				'_wp_attachment_image_alt' => 'A bride dancing',
+				'_profotograaf_origin'     => 'import',
+				'_profotograaf_text_hash'  => sha1( (string) json_encode( array( 'Bride', 'First dance', 'A bride dancing' ) ) ),
+				'_profotograaf_file_hash'  => sha1( 'stored original' ),
 			),
 			$this->meta[501]
 		);
+	}
+
+	public function test_the_text_baseline_hashes_the_stored_alt_with_the_title_fallback(): void {
+		$this->importer->import( $this->photo( array( 'alt' => '' ) ) );
+
+		$this->assertSame( sha1( (string) json_encode( array( 'Bride', 'First dance', 'Bride' ) ) ), $this->meta[501]['_profotograaf_text_hash'] );
+	}
+
+	public function test_an_unreadable_original_gets_no_file_hash(): void {
+		Functions\when( 'wp_get_original_image_path' )->justReturn( false );
+		Functions\when( 'get_attached_file' )->justReturn( '/nowhere/missing.jpg' );
+
+		$this->importer->import( $this->photo() );
+
+		$this->assertArrayNotHasKey( '_profotograaf_file_hash', $this->meta[501] );
+		$this->assertSame( 'import', $this->meta[501]['_profotograaf_origin'] );
 	}
 
 	public function test_the_alt_text_falls_back_to_the_title(): void {

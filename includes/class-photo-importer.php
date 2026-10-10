@@ -248,6 +248,7 @@ final class Photo_Importer {
 		delete_post_meta( $attachment_id, '_wp_attachment_backup_sizes' );
 		update_post_meta( $attachment_id, self::META_GALLERY_ID, $this->text( $photo, 'gallery_id' ) );
 		update_post_meta( $attachment_id, self::META_VERSION, $this->text( $photo, 'version' ) );
+		Media_Baseline::record_reimport( $attachment_id );
 
 		if ( '' !== $old_file && $old_file !== $new_file ) {
 			wp_delete_attachment_files( $attachment_id, is_array( $old_meta ) ? $old_meta : array(), is_array( $old_backups ) ? $old_backups : array(), $old_file );
@@ -371,7 +372,9 @@ final class Photo_Importer {
 		update_post_meta( $attachment_id, self::META_PHOTO_ID, $photo_id );
 		update_post_meta( $attachment_id, self::META_GALLERY_ID, $this->text( $photo, 'gallery_id' ) );
 		update_post_meta( $attachment_id, self::META_VERSION, $this->text( $photo, 'version' ) );
-		update_post_meta( $attachment_id, '_wp_attachment_image_alt', '' !== $alt ? $alt : $title );
+		$stored_alt = '' !== $alt ? $alt : $title;
+		update_post_meta( $attachment_id, '_wp_attachment_image_alt', $stored_alt );
+		Media_Baseline::record_import( $attachment_id, $title, $caption, $stored_alt );
 
 		/**
 		 * Fires after a Profotograaf photo became a Media Library attachment.

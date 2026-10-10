@@ -103,6 +103,8 @@ class Photo_Rest_Test extends Gallery_Test_Case {
 		);
 		Functions\when( 'wp_delete_file' )->justReturn( true );
 		Functions\when( 'update_post_meta' )->justReturn( true );
+		Functions\when( 'wp_get_original_image_path' )->justReturn( false );
+		Functions\when( 'get_attached_file' )->justReturn( '' );
 		Functions\when( 'media_handle_sideload' )->alias( fn() => $this->next_id++ );
 
 		$settings   = new Settings();
