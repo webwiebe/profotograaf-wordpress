@@ -70,12 +70,24 @@ and embed.js uses its own default.
 
 ## States
 
+embed.js (platform change professionals#2338) sets `data-pf-state` on the host
+when it finishes: `drawn`, `empty` or `error`. It also dispatches a bubbling
+`profotograaf:state` event with `detail: { state }`. `data-pf-ready` is
+unchanged and still marks the start. The stylesheet from `Reserved_Space::rule()`
+releases the box at once for `empty` and `error` and keeps it for `drawn`. The
+footer watcher (`Empty_Gallery::script()`) marks the host from the state: `empty`
+sets `data-pf-empty`, `error` sets `data-profotograaf-failed`. An embed.js that
+sets no state keeps the 8 second release timer, and the watcher keeps its
+request based detection for it.
+
 | State | Plugin markup | CSS var | embed.js |
 |---|---|---|---|
-| Drawn | host with data attributes | ratio box until content sets the height | shadow root with tiles |
-| Platform error (non-200) or script error | fallback link stays | box held 8 seconds, then released | sets `data-pf-ready`, draws nothing |
-| Gallery with no photos | fallback link stays | box held 8 seconds, then released | draws nothing |
-| All photos excluded | fallback link stays | as above | draws nothing |
+| Drawn | host with data attributes | ratio box until content sets the height | shadow root with tiles, `data-pf-state="drawn"` |
+| Platform error (non-200) or script error | fallback link stays, failed look at once | released at once on `data-pf-state="error"` | sets `data-pf-ready` and `data-pf-state="error"`, draws nothing |
+| Older embed.js: platform error | fallback link stays | box held 8 seconds, then released | sets `data-pf-ready` only, draws nothing |
+| Script does not load | fallback link in the failed look | box held 8 seconds, then released | none |
+| Gallery with no photos | fallback link hidden, editor hint | released at once on `data-pf-state="empty"` | `data-pf-state="empty"`, draws nothing |
+| All photos excluded | as above | as above | `data-pf-state="empty"`, draws nothing |
 | PNG photos (professionals#2330, fixed) | as drawn | as drawn | served through JPEG variants and drawn like any photo |
 | No JavaScript | fallback link and `noscript` note | released at once by the `noscript` rule | none |
 | Gallery deleted on the platform | notice for editors, nothing extra for visitors | as above | draws nothing |

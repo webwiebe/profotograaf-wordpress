@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
-	"ignorePatterns": ["build", "dist", "node_modules", "vendor", "coverage", ".tools", "tests/e2e/fixtures/embed.js"],
+	"ignorePatterns": ["build", "dist", "node_modules", "vendor", "coverage", ".tools", "tests/e2e/fixtures/embed.js", "tests/e2e/fixtures/embed-legacy.js"],
 	"plugins": ["typescript", "unicorn", "oxc", "react"],
 	"categories": {
 		"correctness": "warn"

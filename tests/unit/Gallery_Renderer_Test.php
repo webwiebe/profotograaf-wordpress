@@ -858,11 +858,21 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringNotContainsString( 'style=', substr( $html, (int) strpos( $html, '<div ' ) ) );
 	}
 
+	public function test_the_stylesheet_releases_the_space_at_once_for_an_empty_or_failed_state(): void {
+		$rule = Reserved_Space::rule();
+
+		$this->assertStringContainsString( '[data-pf-state=error]{aspect-ratio:auto!important;animation:none}', $rule );
+		$this->assertStringNotContainsString( 'data-pf-state=drawn', $rule );
+		// The timer stays for an embed.js that sets no state.
+		$this->assertStringContainsString( 'animation:pf-release 1ms ' . Reserved_Space::RELEASE_AFTER . 's forwards', $rule );
+	}
+
 	public function test_the_stylesheet_collapses_empty_and_failed_galleries(): void {
 		$rule = Reserved_Space::rule();
 
-		$this->assertStringContainsString( '[data-pf-empty]{display:block;aspect-ratio:auto!important;animation:none}[data-pf-empty],[data-profotograaf-failed]{overflow:visible', $rule );
-		$this->assertStringContainsString( '[data-pf-empty]>a,[data-pf-empty]>noscript{display:none!important}', $rule );
+		$this->assertStringContainsString( '[data-pf-empty],[data-pf-state=empty]{display:block;aspect-ratio:auto!important;animation:none}', $rule );
+		$this->assertStringContainsString( '[data-pf-empty],[data-pf-state=empty],[data-profotograaf-failed],[data-pf-state=error]{overflow:visible', $rule );
+		$this->assertStringContainsString( '[data-pf-empty]>a,[data-pf-empty]>noscript,[data-pf-state=empty]>a,[data-pf-state=empty]>noscript{display:none!important}', $rule );
 		$this->assertStringContainsString( '[data-profotograaf-gallery]>a{max-width:100%', $rule );
 	}
 }

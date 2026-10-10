@@ -194,4 +194,12 @@ class Embed_Script_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( 'setAttribute("data-pf-empty","")', $js );
 		$this->assertStringContainsString( 'removeAttribute("data-profotograaf-failed")', $js );
 	}
+
+	public function test_the_watcher_listens_for_the_state_event_and_reads_the_state_attribute(): void {
+		$js = Empty_Gallery::script();
+
+		$this->assertStringContainsString( 'addEventListener("profotograaf:state"', $js );
+		$this->assertStringContainsString( 'getAttribute("data-pf-state")', $js );
+		$this->assertStringContainsString( 'setAttribute("data-profotograaf-failed","")', $js );
+	}
 }
