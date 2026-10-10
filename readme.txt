@@ -76,6 +76,10 @@ What is sent, and when. In the background (WP-Cron, never while an admin page lo
 
 Photos of people are personal data. You decide which files to send, and you are responsible for having the right to send them. A file can go to any of your galleries, including a client gallery.
 
+= Checking for changes to imported photos =
+
+While your site is connected, the plugin asks `https://profotograaf.nl/api/v1/embed/changes` once an hour in the background (WP-Cron, never while a page loads for a visitor) which photos and galleries changed on Profotograaf. The answer lists ids only. When a change names a photo you imported, or a gallery such a photo came from, the plugin also reads `https://profotograaf.nl/api/v1/embed/galleries` and `https://profotograaf.nl/api/v1/embed/photos`, and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a gallery whose photos it cannot account for, to see whether the photo is still listed. Nothing is sent from your site except the access token and the position in the change list. The plugin only records a state on the Media Library item. It never changes or deletes a file or a Media Library item by itself.
+
 = Showing a gallery on your site =
 
 A page that contains a Profotograaf gallery makes the visitor's browser load the embed script from `https://profotograaf.nl/share/embed/` and the gallery data and photos from `https://profotograaf.nl`. Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the script also reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
@@ -193,6 +197,8 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: the plugin checks Profotograaf for changes to imported photos once an hour in the background, with the cursor stored on your site, and hands them to the reconcile step. When the change list asks for a full check, copies are reconciled 50 at a time. The check follows the connection, so it keeps running when "Use Profotograaf photos in the editor" is off. It only records states and never deletes anything.
+* Fix: the reconcile step no longer reads every imported original on each run. A file is hashed only when Profotograaf lists another version or other text than the copy holds.
 * New: a reconcile step that decides, for every photo imported from Profotograaf, whether it is in sync, changed on Profotograaf, missing there or edited on both sides. It only records a state in the plugin's own attachment meta and never deletes or changes a file. Nothing is flagged from an outdated photo list, a failed request or after the site connected to a different account. No screen or schedule uses it yet.
 * New: send Media Library files to Profotograaf, off by default. Link galleries under Settings > Profotograaf, then choose a linked gallery on a file, with a bulk action, or switch on automatic sending for one gallery. Files are sent one at a time in the background with retries, and GPS location data is removed first. Title, caption and alt text changes are sent along afterwards, a failed file is reported in Site Health, and a file sent from this site cannot be re-imported over itself.
 * New: API client calls to create a gallery, upload a file to a gallery and update a photo's title, caption and alt text on Profotograaf. A full storage (413) is reported as its own error. No screen uses them yet.

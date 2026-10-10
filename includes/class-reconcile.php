@@ -52,10 +52,16 @@ final class Reconcile {
 	/**
 	 * Reads the rows plan() takes for imported attachments.
 	 *
-	 * @param array<int,int> $attachment_ids Attachment ids.
+	 * The file hash is the expensive part (sha1 of every original). With `$listed`, the
+	 * hash is computed only for copies the platform lists with another file version or other
+	 * text than the stored baseline, because plan() reads `file_edited` for no other copy.
+	 * Without `$listed`, every copy with a baseline is hashed.
+	 *
+	 * @param array<int,int>                         $attachment_ids Attachment ids.
+	 * @param array<string,array<string,mixed>>|null $listed         Catalogue rows by photo id, or null to hash every copy.
 	 * @return array<int,array<string,mixed>>
 	 */
-	public static function rows( array $attachment_ids ): array {
+	public static function rows( array $attachment_ids, ?array $listed = null ): array {
 		$rows = array();
 		foreach ( $attachment_ids as $attachment_id ) {
 			$attachment_id = (int) $attachment_id;
@@ -66,12 +72,24 @@ final class Reconcile {
 			$file_base = (string) get_post_meta( $attachment_id, Media_Baseline::META_FILE_HASH, true );
 			$text_base = (string) get_post_meta( $attachment_id, Media_Baseline::META_TEXT_HASH, true );
 			$text_now  = self::current_text_hash( $attachment_id );
-			$file_now  = '' !== $file_base ? Media_Baseline::file_hash( $attachment_id ) : '';
-			$rows[]    = array(
+			$version   = (string) get_post_meta( $attachment_id, Photo_Importer::META_VERSION, true );
+			$hash_file = '' !== $file_base;
+			if ( $hash_file && null !== $listed ) {
+				$hash_file = isset( $listed[ $photo_id ] ) && self::differs(
+					array(
+						'version'   => $version,
+						'text_base' => $text_base,
+						'text_now'  => $text_now,
+					),
+					$listed[ $photo_id ]
+				);
+			}
+			$file_now = $hash_file ? Media_Baseline::file_hash( $attachment_id ) : '';
+			$rows[]   = array(
 				'attachment_id'  => $attachment_id,
 				'photo_id'       => $photo_id,
 				'gallery_id'     => (string) get_post_meta( $attachment_id, Photo_Importer::META_GALLERY_ID, true ),
-				'version'        => (string) get_post_meta( $attachment_id, Photo_Importer::META_VERSION, true ),
+				'version'        => $version,
 				'state'          => self::stored_state( $attachment_id ),
 				'reason'         => (string) get_post_meta( $attachment_id, self::META_REASON, true ),
 				'since'          => (int) get_post_meta( $attachment_id, self::META_SINCE, true ),
@@ -79,7 +97,7 @@ final class Reconcile {
 				'text_base'      => $text_base,
 				'text_now'       => $text_now,
 				// A copy without a baseline counts as unedited. The file hash is empty when the file cannot be read.
-				'file_edited'    => '' !== $file_base && '' !== $file_now && $file_base !== $file_now,
+				'file_edited'    => $hash_file && '' !== $file_now && $file_base !== $file_now,
 				'text_edited'    => '' !== $text_base && '' !== $text_now && $text_base !== $text_now,
 			);
 		}//end foreach
@@ -268,9 +286,8 @@ final class Reconcile {
 		}
 
 		$remote  = (string) ( $photo['version'] ?? '' );
-		$file    = '' !== $remote && '' !== (string) $row['version'] && $remote !== (string) $row['version'];
-		$text    = self::text_changed( $row, $photo );
-		$changed = $file || $text;
+		$file    = self::file_changed( $row, $photo );
+		$changed = $file || self::text_changed( $row, $photo );
 		$edited  = ! empty( $row['file_edited'] ) || ! empty( $row['text_edited'] );
 
 		if ( ! $changed ) {
@@ -370,6 +387,27 @@ final class Reconcile {
 			'remote_version' => (string) $target['remote_version'],
 			'gallery_id'     => $gallery_up ? $gallery : '',
 		);
+	}
+
+	/**
+	 * Whether the platform lists another file version than the copy holds.
+	 *
+	 * @param array<string,mixed> $row   Imported copy.
+	 * @param array<string,mixed> $photo Catalogue row.
+	 */
+	private static function file_changed( array $row, array $photo ): bool {
+		$remote = (string) ( $photo['version'] ?? '' );
+		return '' !== $remote && '' !== (string) $row['version'] && $remote !== (string) $row['version'];
+	}
+
+	/**
+	 * Whether the platform file version or text differs from the copy.
+	 *
+	 * @param array<string,mixed> $row   Imported copy (`version`, `text_base`, `text_now`).
+	 * @param array<string,mixed> $photo Catalogue row.
+	 */
+	private static function differs( array $row, array $photo ): bool {
+		return self::file_changed( $row, $photo ) || self::text_changed( $row, $photo );
 	}
 
 	/**
