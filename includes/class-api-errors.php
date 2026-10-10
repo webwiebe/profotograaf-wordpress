@@ -140,4 +140,32 @@ final class Api_Errors {
 			)
 		);
 	}
+
+	/**
+	 * Turns a 403 from a write route into the reconnect state.
+	 *
+	 * Wrap the result of a request to a galleries:write route. A 403 means the
+	 * token lacks the scope. The connection remembers it and the caller gets a
+	 * profotograaf_reconnect error. Everything else passes through.
+	 *
+	 * @param mixed      $result     Result of Api_Client::request().
+	 * @param Connection $connection Stored connection state.
+	 * @return mixed
+	 */
+	public static function guard_write( $result, Connection $connection ) {
+		if ( ! is_wp_error( $result ) ) {
+			return $result;
+		}
+		$data = $result->get_error_data();
+		if ( 'profotograaf_http' === $result->get_error_code() && is_array( $data ) && 403 === ( $data['status'] ?? 0 ) ) {
+			$connection->flag_write_denied();
+			return self::make(
+				'profotograaf_reconnect',
+				__( 'Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it.', 'profotograaf' ),
+				403,
+				false
+			);
+		}
+		return $result;
+	}
 }

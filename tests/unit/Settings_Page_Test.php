@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Tests;
 
+use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
@@ -120,6 +121,25 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->page->reconnect_notice();
 
 		$this->assertSame( '', (string) ob_get_clean() );
+	}
+
+	public function test_the_write_reconnect_notice_shows_only_when_upload_is_enabled(): void {
+		$this->allow( true );
+		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://example.com/wp-admin/' . $path );
+		$this->connect();
+		$this->options['profotograaf_connection']['scope_revision'] = \Profotograaf\Config::SCOPE_REVISION;
+
+		ob_start();
+		$this->page->reconnect_notice();
+		$this->assertSame( '', (string) ob_get_clean(), 'upload is off' );
+
+		Filters\expectApplied( 'profotograaf_media_upload_enabled' )->andReturn( true );
+		ob_start();
+		$this->page->reconnect_notice();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'Sending files needs a new permission', $html );
+		$this->assertStringContainsString( 'Connect this site again', $html );
 	}
 
 	/**

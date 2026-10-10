@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T15:58:18+00:00\n"
+"POT-Creation-Date: 2026-10-10T16:25:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -28,7 +28,7 @@ msgstr ""
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:74
 #: includes/modules/class-settings-page.php:75
-#: includes/modules/class-settings-page.php:269
+#: includes/modules/class-settings-page.php:274
 #: includes/modules/class-site-health.php:324
 #: includes/modules/class-site-health.php:394
 #: assets/admin/media-source.js:29
@@ -69,9 +69,9 @@ msgstr ""
 #: includes/admin/class-leads-settings.php:486
 #: includes/modules/class-admin-notices.php:185
 #: includes/modules/class-review-notice.php:89
-#: includes/modules/class-settings-page.php:234
-#: includes/modules/class-settings-page.php:261
-#: includes/modules/class-settings-page.php:458
+#: includes/modules/class-settings-page.php:239
+#: includes/modules/class-settings-page.php:266
+#: includes/modules/class-settings-page.php:469
 #: includes/modules/class-telemetry-consent.php:126
 msgid "You do not have permission to do this."
 msgstr ""
@@ -224,7 +224,7 @@ msgid "The exported enquiries were removed."
 msgstr ""
 
 #: includes/admin/class-network-page.php:69
-#: includes/modules/class-settings-page.php:279
+#: includes/modules/class-settings-page.php:284
 msgid "Connected"
 msgstr ""
 
@@ -237,7 +237,7 @@ msgid "Plugin not active"
 msgstr ""
 
 #: includes/admin/class-network-page.php:75
-#: includes/modules/class-settings-page.php:296
+#: includes/modules/class-settings-page.php:307
 msgid "Not connected"
 msgstr ""
 
@@ -254,7 +254,7 @@ msgid "Site"
 msgstr ""
 
 #: includes/admin/class-network-page.php:98
-#: includes/modules/class-settings-page.php:274
+#: includes/modules/class-settings-page.php:279
 #: includes/modules/class-site-health.php:329
 msgid "Connection"
 msgstr ""
@@ -350,6 +350,10 @@ msgstr ""
 msgid "Profotograaf answered with HTTP %d."
 msgstr ""
 
+#: includes/class-api-errors.php:164
+msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
+msgstr ""
+
 #: includes/class-cron-health.php:142
 msgid "Profotograaf lead delivery"
 msgstr ""
@@ -423,15 +427,15 @@ msgstr ""
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-pairing.php:105
+#: includes/class-pairing.php:106
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr ""
 
-#: includes/class-pairing.php:232
+#: includes/class-pairing.php:233
 msgid "Could not check the connection. Trying again."
 msgstr ""
 
-#: includes/class-pairing.php:254
+#: includes/class-pairing.php:255
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr ""
 
@@ -948,7 +952,7 @@ msgid "Profotograaf is no longer connected. The connection was ended in your Pro
 msgstr ""
 
 #: includes/modules/class-admin-notices.php:122
-#: includes/modules/class-settings-page.php:177
+#: includes/modules/class-settings-page.php:182
 msgid "Connect this site again"
 msgstr ""
 
@@ -1124,101 +1128,110 @@ msgstr ""
 msgid "If the Profotograaf plugin works well for you, a short review on WordPress.org helps other photographers find it."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:175
+#: includes/modules/class-settings-page.php:180
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:209
+#: includes/modules/class-settings-page.php:180
+msgid "Sending files needs a new permission."
+msgstr ""
+
+#: includes/modules/class-settings-page.php:214
 msgid "Disconnected from Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:213
+#: includes/modules/class-settings-page.php:218
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:244
+#: includes/modules/class-settings-page.php:249
 msgid "Connected to Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:247
+#: includes/modules/class-settings-page.php:252
 msgid "The connection was declined in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:250
+#: includes/modules/class-settings-page.php:255
 msgid "The code expired. Start the connection again."
 msgstr ""
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:283
+#: includes/modules/class-settings-page.php:288
 #, php-format
 msgid "since %s."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:289
+#: includes/modules/class-settings-page.php:294
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:291
+#: includes/modules/class-settings-page.php:296
+#: includes/modules/class-settings-page.php:302
 msgid "Connect again"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:293
+#: includes/modules/class-settings-page.php:300
+msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
+msgstr ""
+
+#: includes/modules/class-settings-page.php:304
 msgid "Disconnect"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:301
+#: includes/modules/class-settings-page.php:312
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:302
+#: includes/modules/class-settings-page.php:313
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:303
+#: includes/modules/class-settings-page.php:314
 msgid "Connect to Profotograaf"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:308
+#: includes/modules/class-settings-page.php:319
 msgid "Set up the enquiry forms"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:350
+#: includes/modules/class-settings-page.php:361
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:353
+#: includes/modules/class-settings-page.php:364
 msgid "Open the approval page"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:355
+#: includes/modules/class-settings-page.php:366
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:356
+#: includes/modules/class-settings-page.php:367
 msgid "Cancel"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:367
+#: includes/modules/class-settings-page.php:378
 msgid "Embedding on this site"
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:372
+#: includes/modules/class-settings-page.php:383
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:376
+#: includes/modules/class-settings-page.php:387
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:381
+#: includes/modules/class-settings-page.php:392
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:389
+#: includes/modules/class-settings-page.php:400
 msgid "Check again"
 msgstr ""
 
