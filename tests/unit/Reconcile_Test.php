@@ -700,4 +700,105 @@ class Reconcile_Test extends Wp_Test_Case {
 		$this->assertFalse( $rows[1]['file_edited'], 'A copy without a baseline counts as unedited.' );
 		$this->assertFalse( $rows[1]['text_edited'] );
 	}
+
+	public function test_rows_hash_only_the_copies_the_platform_lists_with_a_change(): void {
+		$same    = (string) tempnam( sys_get_temp_dir(), 'pfrc' );
+		$changed = (string) tempnam( sys_get_temp_dir(), 'pfrc' );
+		file_put_contents( $same, 'edited' );
+		file_put_contents( $changed, 'edited' );
+		$hashed = array();
+		Functions\when( 'wp_get_original_image_path' )->alias(
+			function ( $id ) use ( $same, $changed, &$hashed ) {
+				$hashed[] = $id;
+				return 11 === $id ? $same : $changed;
+			}
+		);
+		Functions\when( 'get_post' )->alias(
+			function () {
+				$post               = new \WP_Post();
+				$post->post_title   = 'T';
+				$post->post_excerpt = 'C';
+				return $post;
+			}
+		);
+		foreach ( array(
+			11 => 'p1',
+			12 => 'p2',
+			13 => 'p3',
+		) as $id => $photo ) {
+			$this->meta[ $id ] = array(
+				'_profotograaf_photo_id'   => $photo,
+				'_profotograaf_version'    => 'aaaaaaaaaaaa',
+				'_profotograaf_file_hash'  => sha1( 'original' ),
+				'_profotograaf_text_hash'  => self::base_hash(),
+				'_wp_attachment_image_alt' => 'A',
+			);
+		}
+		$listed = array(
+			'p1' => self::photo(
+				array(
+					'id'      => 'p1',
+					'version' => 'aaaaaaaaaaaa',
+				)
+			),
+			'p2' => self::photo(
+				array(
+					'id'      => 'p2',
+					'version' => 'bbbbbbbbbbbb',
+				)
+			),
+		);
+
+		$rows = Reconcile::rows( array( 11, 12, 13 ), $listed );
+		unlink( $same );
+		unlink( $changed );
+
+		$this->assertSame( array( 12 ), $hashed, 'Only the copy with a newer platform version is hashed.' );
+		$this->assertFalse( $rows[0]['file_edited'] );
+		$this->assertTrue( $rows[1]['file_edited'] );
+		$this->assertFalse( $rows[2]['file_edited'], 'An unlisted copy is not hashed.' );
+	}
+
+	public function test_rows_hash_a_copy_whose_platform_text_changed(): void {
+		$file = (string) tempnam( sys_get_temp_dir(), 'pfrc' );
+		file_put_contents( $file, 'edited' );
+		$hashed = 0;
+		Functions\when( 'wp_get_original_image_path' )->alias(
+			function () use ( $file, &$hashed ) {
+				++$hashed;
+				return $file;
+			}
+		);
+		Functions\when( 'get_post' )->alias(
+			function () {
+				$post               = new \WP_Post();
+				$post->post_title   = 'T';
+				$post->post_excerpt = 'C';
+				return $post;
+			}
+		);
+		$this->meta[11] = array(
+			'_profotograaf_photo_id'   => 'p1',
+			'_profotograaf_version'    => 'aaaaaaaaaaaa',
+			'_profotograaf_file_hash'  => sha1( 'original' ),
+			'_profotograaf_text_hash'  => self::base_hash(),
+			'_wp_attachment_image_alt' => 'A',
+		);
+		$same           = array(
+			'id'      => 'p1',
+			'version' => 'aaaaaaaaaaaa',
+			'title'   => 'T',
+			'caption' => 'C',
+			'alt'     => 'A',
+		);
+
+		$unchanged = Reconcile::rows( array( 11 ), array( 'p1' => self::photo( $same ) ) );
+		$this->assertSame( 0, $hashed );
+		$this->assertFalse( $unchanged[0]['file_edited'] );
+
+		$retitled = Reconcile::rows( array( 11 ), array( 'p1' => self::photo( array_merge( $same, array( 'title' => 'New' ) ) ) ) );
+		unlink( $file );
+		$this->assertSame( 1, $hashed );
+		$this->assertTrue( $retitled[0]['file_edited'] );
+	}
 }

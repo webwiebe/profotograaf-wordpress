@@ -688,6 +688,80 @@ class Api_Client_Test extends Wp_Test_Case {
 	 * @param mixed  $value Value.
 	 * @param string $code  Expected code.
 	 */
+	public function test_changes_sends_the_cursor_and_normalises_the_feed(): void {
+		$this->connect();
+		$this->http->reply(
+			200,
+			array(
+				'cursor'    => 'c-9',
+				'has_more'  => true,
+				'resync'    => false,
+				'galleries' => array(
+					'created' => array( 'g1' ),
+					'updated' => array(),
+					'deleted' => array( 'g2', '' ),
+				),
+				'photos'    => array(
+					'created' => array(
+						array(
+							'id'         => 'p1',
+							'gallery_id' => 'g1',
+						),
+					),
+					'updated' => array(),
+					'deleted' => array( array( 'id' => 'p2' ), 'junk' ),
+				),
+			)
+		);
+
+		$feed = $this->api->changes( 'c-8 x', 5000 );
+
+		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/changes?limit=1000&since=c-8+x', $this->http->requests[0]['url'] );
+		$this->assertSame( 'c-9', $feed['cursor'] );
+		$this->assertTrue( $feed['has_more'] );
+		$this->assertFalse( $feed['resync'] );
+		$this->assertSame( array( 'g2' ), $feed['galleries']['deleted'] );
+		$this->assertSame(
+			array(
+				array(
+					'id'         => 'p1',
+					'gallery_id' => 'g1',
+				),
+			),
+			$feed['photos']['created']
+		);
+		$this->assertSame(
+			array(
+				array(
+					'id'         => 'p2',
+					'gallery_id' => '',
+				),
+			),
+			$feed['photos']['deleted']
+		);
+	}
+
+	public function test_changes_without_a_cursor_leaves_since_out_and_rejects_an_answer_without_a_cursor(): void {
+		$this->connect();
+		$this->http->reply( 200, array( 'resync' => true ) );
+
+		$result = $this->api->changes();
+
+		$this->assertStringEndsWith( '/api/v1/embed/changes?limit=500', $this->http->requests[0]['url'] );
+		$this->assertWPError( $result, 'profotograaf_bad_response' );
+	}
+
+	public function test_gallery_photo_ids_answers_false_for_a_gallery_the_platform_does_not_serve(): void {
+		$this->connect();
+		$this->http->reply( 200, array( 'photos' => array( array( 'id' => 'p1' ), array( 'id' => 'p2' ) ) ) );
+		$this->http->reply( 404, array( 'error' => 'not found' ) );
+		$this->http->reply( 503, array( 'error' => 'down' ) );
+
+		$this->assertSame( array( 'p1', 'p2' ), $this->api->gallery_photo_ids( 'g1' ) );
+		$this->assertFalse( $this->api->gallery_photo_ids( 'g2' ) );
+		$this->assertInstanceOf( \WP_Error::class, $this->api->gallery_photo_ids( 'g3' ) );
+	}
+
 	private function assertWPError( $value, string $code ): void {
 		$this->assertInstanceOf( \WP_Error::class, $value );
 		$this->assertSame( $code, $value->get_error_code() );

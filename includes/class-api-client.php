@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
 class Api_Client {
 
 	use Api_Client_Writes;
+	use Api_Client_Feed;
 
 	/**
 	 * Seconds before expiry at which a token counts as expired.

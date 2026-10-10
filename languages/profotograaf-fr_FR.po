@@ -243,33 +243,33 @@ msgstr "La demande d'activation de l'intégration n'est pas valide."
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Cette connexion n'est pas encore autorisée à activer des galeries. Reconnectez ce site sous Réglages > Profotograaf pour accorder la nouvelle autorisation."
 
-#: includes/class-api-client.php:162
+#: includes/class-api-client.php:163
 msgid "A lead needs a name and an email address."
 msgstr "Un contact doit avoir un nom et une adresse e-mail."
 
-#: includes/class-api-client.php:277
+#: includes/class-api-client.php:278
 msgid "That page is not on the Profotograaf platform."
 msgstr "Cette page n'appartient pas à la plateforme Profotograaf."
 
-#: includes/class-api-client.php:287
-#: includes/class-api-client.php:433
-#: includes/class-api-client.php:438
+#: includes/class-api-client.php:288
+#: includes/class-api-client.php:434
+#: includes/class-api-client.php:439
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf n'a pas pu être joint."
 
-#: includes/class-api-client.php:294
+#: includes/class-api-client.php:295
 msgid "The public page could not be loaded."
 msgstr "La page publique n'a pas pu être chargée."
 
-#: includes/class-api-client.php:319
+#: includes/class-api-client.php:320
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "La connexion est en cours de renouvellement. Réessayez dans un instant."
 
-#: includes/class-api-client.php:343
+#: includes/class-api-client.php:344
 msgid "The connection was ended in your Profotograaf account."
 msgstr "La connexion a été interrompue dans votre compte Profotograaf."
 
-#: includes/class-api-client.php:418
+#: includes/class-api-client.php:419
 msgid "The request could not be encoded."
 msgstr "La requête n'a pas pu être encodée."
 
@@ -2495,3 +2495,11 @@ msgstr ""
 #: includes/modules/class-privacy.php:236
 msgid "Only when the site owner turns on sending Media Library files: a person who can upload files chooses a linked Profotograaf gallery for an image, and this site then sends that image to profotograaf.nl in the background. The gallery can be a client gallery. Before an image is sent, the plugin removes the GPS position from it. The other metadata stays in the file, such as camera, lens and date. Later changes to the title, caption and alt text of a sent image are sent too. HEIC, video and RAW files are not sent. Photos of people are personal data, so the site owner needs a basis for sending them. Deleting a file here deletes nothing on Profotograaf. The Media Library keeps a few hidden fields per sent file (the photo and gallery identifiers, the send state and the time) until the file is deleted."
 msgstr ""
+
+#: includes/class-change-poller.php:394
+msgid "The photo list could not be refreshed."
+msgstr "La liste des photos n'a pas pu être actualisée."
+
+#: includes/trait-api-client-feed.php:43
+msgid "Profotograaf sent an answer this plugin cannot read."
+msgstr "Profotograaf a envoyé une réponse que ce plugin ne peut pas lire."
