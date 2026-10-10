@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T21:42:00+00:00\n"
+"POT-Creation-Date: 2026-10-10T22:12:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -1436,18 +1436,26 @@ msgid "Only when the site owner turns on the media source: editors who can uploa
 msgstr ""
 
 #: includes/modules/class-privacy.php:235
-msgid "Connection and diagnostics"
+msgid "Sending Media Library files"
 msgstr ""
 
 #: includes/modules/class-privacy.php:236
-msgid "When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form."
+msgid "Only when the site owner turns on sending Media Library files: a person who can upload files chooses a linked Profotograaf gallery for an image, and this site then sends that image to profotograaf.nl in the background. The gallery can be a client gallery. Before an image is sent, the plugin removes the GPS position from it. The other metadata stays in the file, such as camera, lens and date. Later changes to the title, caption and alt text of a sent image are sent too. HEIC, video and RAW files are not sent. Photos of people are personal data, so the site owner needs a basis for sending them. Deleting a file here deletes nothing on Profotograaf. The Media Library keeps a few hidden fields per sent file (the photo and gallery identifiers, the send state and the time) until the file is deleted."
 msgstr ""
 
 #: includes/modules/class-privacy.php:237
-msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
+msgid "Connection and diagnostics"
 msgstr ""
 
 #: includes/modules/class-privacy.php:238
+msgid "When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form."
+msgstr ""
+
+#: includes/modules/class-privacy.php:239
+msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
+msgstr ""
+
+#: includes/modules/class-privacy.php:240
 msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr ""
 
