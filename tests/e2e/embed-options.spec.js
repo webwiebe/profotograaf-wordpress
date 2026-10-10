@@ -205,7 +205,7 @@ test.describe( 'block markup and shortcode', () => {
 		await expectTiles( fromShortcode.host, 10 );
 
 		const attributes = ( /** @type {import('@playwright/test').Locator} */ host ) =>
-			host.evaluate( ( el ) => Object.fromEntries( el.getAttributeNames().filter( ( name ) => name.startsWith( 'data-' ) && name !== 'data-pf-ready' ).map( ( name ) => [ name, el.getAttribute( name ) ] ) ) );
+			host.evaluate( ( el ) => Object.fromEntries( el.getAttributeNames().filter( ( name ) => name.startsWith( 'data-' ) && name !== 'data-pf-ready' && name !== 'data-pf-state' ).map( ( name ) => [ name, el.getAttribute( name ) ] ) ) );
 		const expected = { 'data-profotograaf-gallery': 'g-e2e', 'data-layout': 'grid', 'data-columns': '3', 'data-columns-tablet': '3', 'data-columns-mobile': '2', 'data-gap': '4', 'data-ratio': '4:3', 'data-per-page': '10', 'data-lightbox': 'off' };
 		expect( await attributes( fromShortcode.host ) ).toEqual( expected );
 		expect( await attributes( fromBlock.host ) ).toEqual( expected );
