@@ -383,6 +383,63 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertTrue( ( new Connection() )->needs_reconnect() );
 	}
 
+	public function test_a_write_403_flags_the_connection_and_asks_to_reconnect(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
+		$this->options['profotograaf_connection']['scope_revision'] = \Profotograaf\Config::SCOPE_REVISION;
+		$this->http->reply( 403, array( 'error' => 'this app is not allowed to use this endpoint' ) );
+
+		$result = \Profotograaf\Api_Errors::guard_write( $this->api->request( 'POST', '/api/v1/embed/galleries/g1/photos', array() ), new Connection() );
+
+		$this->assertWPError( $result, 'profotograaf_reconnect' );
+		$this->assertStringContainsString( 'Connect this site again', $result->get_error_message() );
+		$connection = new Connection();
+		$this->assertTrue( $connection->needs_write_reconnect( true ) );
+		$this->assertFalse( $connection->needs_write_reconnect( false ) );
+		$this->assertFalse( $connection->needs_reconnect() );
+	}
+
+	public function test_a_write_404_stays_an_http_error_and_does_not_flag(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
+		$this->http->reply( 404, array( 'error' => 'gallery not found' ) );
+
+		$this->assertWPError( \Profotograaf\Api_Errors::guard_write( $this->api->request( 'POST', '/api/v1/embed/galleries/g1/photos', array() ), new Connection() ), 'profotograaf_http' );
+		$this->assertFalse( ( new Connection() )->needs_write_reconnect( true ) );
+	}
+
+	public function test_a_successful_write_passes_through(): void {
+		$this->connect();
+		$this->http->reply( 202, array( 'id' => 'p1' ) );
+
+		$result = \Profotograaf\Api_Errors::guard_write( $this->api->request( 'POST', '/api/v1/embed/galleries/g1/photos', array() ), new Connection() );
+
+		$this->assertSame( 'p1', $result['id'] );
+	}
+
+	public function test_the_write_reconnect_state_needs_a_known_grant_without_the_scope(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read leads:write galleries:embed' );
+		$connection = new Connection();
+		$this->assertTrue( $connection->needs_write_reconnect( true ) );
+		$this->assertFalse( $connection->needs_write_reconnect( false ), 'a site that never enables upload sees no prompt' );
+
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
+		$this->assertFalse( ( new Connection() )->needs_write_reconnect( true ) );
+
+		$this->connect( 900, 'access-1', 'refresh-1', null );
+		$this->assertFalse( ( new Connection() )->needs_write_reconnect( true ), 'an unknown grant is not a reason to prompt' );
+	}
+
+	public function test_a_new_grant_clears_the_write_denied_flag(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
+		$connection = new Connection();
+		$connection->flag_write_denied();
+		$this->assertTrue( ( new Connection() )->needs_write_reconnect( true ) );
+
+		$connection->record_grant( \Profotograaf\Config::SCOPE_REVISION );
+
+		$this->assertFalse( ( new Connection() )->needs_write_reconnect( true ) );
+		$this->assertFalse( $this->options['profotograaf_connection']['write_denied'] );
+	}
+
 	public function test_mark_embeddable_other_failures_stay_http_errors(): void {
 		$this->connect();
 		$this->http->reply( 404, array( 'error' => 'gallery not found' ) );

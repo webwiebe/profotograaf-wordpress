@@ -18,8 +18,8 @@ final class Config {
 
 	/**
 	 * The client id the platform registers for this plugin. It decides the
-	 * scopes the platform grants: galleries:read, leads:write and
-	 * galleries:embed. It is also the `source` value of a lead and the
+	 * scopes the platform grants: galleries:read, leads:write,
+	 * galleries:embed and galleries:write. It is also the `source` value of a lead and the
 	 * `platform` a pairing reports.
 	 */
 	public const CLIENT_ID = 'wordpress';
@@ -29,7 +29,16 @@ final class Config {
 	 * grants the scopes registered for the client id, so this is the request
 	 * the approval page shows, not a way to widen the grant.
 	 */
-	public const SCOPES = array( 'galleries:read', 'leads:write', 'galleries:embed' );
+	public const SCOPES = array( 'galleries:read', 'leads:write', 'galleries:embed', self::UPLOAD_SCOPE );
+
+	/**
+	 * The scope for the two write routes: creating a gallery and uploading a
+	 * photo. It covers nothing else. The plugin asks for it at pairing on
+	 * every site. A token paired before it existed lacks it, and the platform
+	 * grants the whole list registered for the client id whatever the request
+	 * names, so a narrower request does not give a narrower token.
+	 */
+	public const UPLOAD_SCOPE = 'galleries:write';
 
 	/**
 	 * Bumped when the plugin starts asking for a scope it did not ask for

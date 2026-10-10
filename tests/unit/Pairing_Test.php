@@ -91,7 +91,7 @@ class Pairing_Test extends Wp_Test_Case {
 				'wp_version'  => '6.8.1',
 				'php_version' => PHP_VERSION,
 				'hostname'    => 'photos.example.com',
-				'scope'       => 'galleries:read leads:write galleries:embed',
+				'scope'       => 'galleries:read leads:write galleries:embed galleries:write',
 				'site_url'    => 'https://photos.example.com',
 				'site_name'   => 'Example Photography',
 				'email'       => 'owner@example.com',

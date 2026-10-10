@@ -74,9 +74,10 @@ class Pairing {
 	/**
 	 * Starts a pairing and remembers it.
 	 *
+	 * @param array<int,string> $extra_scopes Scopes to request on top of Config::SCOPES.
 	 * @return array{user_code:string,verification_uri:string,expires_at:int,interval:int}|WP_Error
 	 */
-	public function start() {
+	public function start( array $extra_scopes = array() ) {
 		$host = (string) wp_parse_url( home_url(), PHP_URL_HOST );
 
 		$result = $this->api->public_request(
@@ -91,7 +92,7 @@ class Pairing {
 				'wp_version'  => (string) get_bloginfo( 'version' ),
 				'php_version' => PHP_VERSION,
 				'hostname'    => $host,
-				'scope'       => implode( ' ', Config::SCOPES ),
+				'scope'       => implode( ' ', array_values( array_unique( array_merge( Config::SCOPES, array_map( 'strval', $extra_scopes ) ) ) ) ),
 			) + $this->prefill()
 		);
 		if ( is_wp_error( $result ) ) {

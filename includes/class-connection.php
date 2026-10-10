@@ -105,6 +105,7 @@ class Connection {
 				'last_error'     => '',
 				'scope_revision' => $previous['scope_revision'],
 				'embed_denied'   => $previous['embed_denied'],
+				'write_denied'   => $previous['write_denied'],
 				'scopes'         => $this->scopes_from( $response ),
 			)
 		);
@@ -119,7 +120,38 @@ class Connection {
 		$data                   = $this->data();
 		$data['scope_revision'] = $revision;
 		$data['embed_denied']   = false;
+		$data['write_denied']   = false;
 		$this->write( $data );
+	}
+
+	/**
+	 * Remembers that the platform refused a write route (a 403).
+	 */
+	public function flag_write_denied(): void {
+		$data = $this->data();
+		if ( $data['write_denied'] ) {
+			return;
+		}
+		$data['write_denied'] = true;
+		$this->write( $data );
+	}
+
+	/**
+	 * Whether sending files needs a new pairing.
+	 *
+	 * Only a site that enables upload is asked. The stored grant decides when
+	 * it is known and lacks galleries:write. A 403 from a write route decides
+	 * when the platform refused the call anyway. An unknown grant is no reason
+	 * to ask.
+	 *
+	 * @param bool $upload_enabled Whether the site setting for upload is on.
+	 */
+	public function needs_write_reconnect( bool $upload_enabled ): bool {
+		if ( ! $upload_enabled || ! $this->is_connected() ) {
+			return false;
+		}
+		$data = $this->data();
+		return $data['write_denied'] || ( $this->scopes_known() && ! $this->has_scope( Config::UPLOAD_SCOPE ) );
 	}
 
 	/**
@@ -248,7 +280,7 @@ class Connection {
 	/**
 	 * Default stored shape.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,scopes:list<string>|null}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,scopes:list<string>|null}
 	 */
 	private function defaults(): array {
 		return array(
@@ -260,6 +292,7 @@ class Connection {
 			'last_error'     => '',
 			'scope_revision' => 0,
 			'embed_denied'   => false,
+			'write_denied'   => false,
 			'scopes'         => null,
 		);
 	}
@@ -267,7 +300,7 @@ class Connection {
 	/**
 	 * Stored data merged over the defaults.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,scopes:list<string>|null}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,scopes:list<string>|null}
 	 */
 	private function data(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -279,6 +312,7 @@ class Connection {
 			$data[ $key ] = isset( $stored[ $key ] ) ? (string) $stored[ $key ] : '';
 		}
 		$data['embed_denied'] = ! empty( $stored['embed_denied'] );
+		$data['write_denied'] = ! empty( $stored['write_denied'] );
 		if ( isset( $stored['scopes'] ) && is_array( $stored['scopes'] ) ) {
 			$data['scopes'] = array_values( array_filter( array_map( 'strval', $stored['scopes'] ), static fn( string $scope ): bool => '' !== $scope ) );
 		}
