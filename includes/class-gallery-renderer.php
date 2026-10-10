@@ -238,15 +238,7 @@ class Gallery_Renderer {
 	 *                     value, or null when the value is not two hex colours.
 	 */
 	public static function clean_duotone( $value ): ?string {
-		if ( ! is_scalar( $value ) ) {
-			return null;
-		}
-		$value = strtolower( trim( (string) $value ) );
-		if ( '' === $value ) {
-			return '';
-		}
-		$hex = '#[0-9a-f]{6}|#[0-9a-f]{3}';
-		return 1 === preg_match( '/^(?:' . $hex . '),(?:' . $hex . ')$/', $value ) ? $value : null;
+		return Block_Duotone::clean( $value );
 	}
 
 	/**

@@ -26,7 +26,7 @@ final class Block_Duotone {
 	 */
 	public static function resolve( $duotone ): string {
 		if ( is_array( $duotone ) ) {
-			return Gallery_Renderer::clean_duotone( implode( ',', array_filter( $duotone, 'is_string' ) ) ) ?? '';
+			return self::clean( implode( ',', array_filter( $duotone, 'is_string' ) ) ) ?? '';
 		}
 		if ( ! is_string( $duotone ) || '' === $duotone ) {
 			return '';
@@ -38,7 +38,7 @@ final class Block_Duotone {
 			return '';
 		}
 		$colors = self::preset_duotone( $match[1] );
-		return null === $colors ? '' : ( Gallery_Renderer::clean_duotone( implode( ',', $colors ) ) ?? '' );
+		return null === $colors ? '' : ( self::clean( implode( ',', $colors ) ) ?? '' );
 	}
 
 	/**
@@ -57,16 +57,51 @@ final class Block_Duotone {
 		if ( ! is_array( $presets ) ) {
 			return null;
 		}
-		$lists = isset( $presets['slug'] ) ? array( $presets ) : $presets;
 		$found = null;
-		foreach ( $lists as $list ) {
-			$items = is_array( $list ) && isset( $list['slug'] ) ? array( $list ) : (array) $list;
-			foreach ( $items as $item ) {
-				if ( is_array( $item ) && ( $item['slug'] ?? null ) === $slug && is_array( $item['colors'] ?? null ) ) {
+		foreach ( $presets as $entry ) {
+			foreach ( self::presets_in( $entry ) as $item ) {
+				if ( ( $item['slug'] ?? null ) === $slug && is_array( $item['colors'] ?? null ) ) {
 					$found = array_values( array_filter( $item['colors'], 'is_string' ) );
 				}
 			}
 		}
 		return $found;
+	}
+
+	/**
+	 * The presets in one entry of the settings: the entry itself when it is a
+	 * preset (a flat list), or its members when it is the list of one origin.
+	 *
+	 * @param mixed $entry An entry of the duotone settings.
+	 * @return array<int,array<mixed>>
+	 */
+	private static function presets_in( $entry ): array {
+		if ( ! is_array( $entry ) ) {
+			return array();
+		}
+		if ( isset( $entry['slug'] ) ) {
+			return array( $entry );
+		}
+		return array_values( array_filter( $entry, 'is_array' ) );
+	}
+
+	/**
+	 * Cleans two hex colours such as `#1a1a2e,#f5c542`, the duotone shadow and
+	 * highlight.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string|null The colours in lower case, an empty string for an empty
+	 *                     value, or null when the value is not two hex colours.
+	 */
+	public static function clean( $value ): ?string {
+		if ( ! is_scalar( $value ) ) {
+			return null;
+		}
+		$value = strtolower( trim( (string) $value ) );
+		if ( '' === $value ) {
+			return '';
+		}
+		$hex = '#[0-9a-f]{6}|#[0-9a-f]{3}';
+		return 1 === preg_match( '/^(?:' . $hex . '),(?:' . $hex . ')$/', $value ) ? $value : null;
 	}
 }
