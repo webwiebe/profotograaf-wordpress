@@ -81,6 +81,11 @@ class Photo_Reimport_Test extends Gallery_Test_Case {
 	private string $tmp = '';
 
 	/**
+	 * The stored original the baseline hashes.
+	 */
+	private string $original = '';
+
+	/**
 	 * What wp_handle_sideload returns.
 	 *
 	 * @var array<string,mixed>
@@ -144,6 +149,18 @@ class Photo_Reimport_Test extends Gallery_Test_Case {
 				return true;
 			}
 		);
+		$this->original = (string) tempnam( sys_get_temp_dir(), 'pfreo' );
+		file_put_contents( $this->original, 'replaced original' );
+		$original = $this->original;
+		Functions\when( 'wp_get_original_image_path' )->alias( fn() => $original );
+		Functions\when( 'get_post' )->alias(
+			function () {
+				$post               = new \WP_Post();
+				$post->post_title   = 'Bride';
+				$post->post_excerpt = 'Edited caption';
+				return $post;
+			}
+		);
 		Functions\when( 'get_attached_file' )->justReturn( '/uploads/2026/09/old.jpg' );
 		Functions\when( 'wp_get_attachment_metadata' )->justReturn(
 			array(
@@ -201,6 +218,9 @@ class Photo_Reimport_Test extends Gallery_Test_Case {
 		if ( is_file( $this->tmp ) ) {
 			unlink( $this->tmp );
 		}
+		if ( is_file( $this->original ) ) {
+			unlink( $this->original );
+		}
 		Logger::configure( null );
 		parent::tearDown();
 	}
@@ -231,10 +251,29 @@ class Photo_Reimport_Test extends Gallery_Test_Case {
 		$this->assertSame( 'g-1', $this->meta[40]['_profotograaf_gallery_id'] );
 	}
 
+	public function test_it_records_the_file_baseline_and_fills_in_a_missing_text_baseline(): void {
+		$this->importer->reimport( 40 );
+
+		$this->assertSame( sha1( 'replaced original' ), $this->meta[40]['_profotograaf_file_hash'] );
+		$this->assertSame( 'import', $this->meta[40]['_profotograaf_origin'] );
+		$this->assertSame( sha1( (string) json_encode( array( 'Bride', 'Edited caption', '' ) ) ), $this->meta[40]['_profotograaf_text_hash'] );
+	}
+
+	public function test_it_keeps_an_existing_text_baseline_so_a_local_text_edit_stays_visible(): void {
+		$this->meta[40]['_profotograaf_text_hash'] = 'written-by-importer';
+		$this->meta[40]['_profotograaf_origin']    = 'upload';
+
+		$this->importer->reimport( 40 );
+
+		$this->assertSame( 'written-by-importer', $this->meta[40]['_profotograaf_text_hash'] );
+		$this->assertSame( 'upload', $this->meta[40]['_profotograaf_origin'] );
+		$this->assertSame( sha1( 'replaced original' ), $this->meta[40]['_profotograaf_file_hash'] );
+	}
+
 	public function test_the_old_files_go_only_after_the_new_ones_are_in_place(): void {
 		$this->importer->reimport( 40 );
 
-		$this->assertSame( array( 'file', 'post', 'metadata', 'meta:_profotograaf_gallery_id', 'meta:_profotograaf_version', 'delete-old' ), $this->writes );
+		$this->assertSame( array( 'file', 'post', 'metadata', 'meta:_profotograaf_gallery_id', 'meta:_profotograaf_version', 'meta:_profotograaf_file_hash', 'meta:_profotograaf_origin', 'meta:_profotograaf_text_hash', 'delete-old' ), $this->writes );
 		$this->assertSame( 40, $this->deleted[0][0] );
 		$this->assertSame( 'old-150x150.jpg', $this->deleted[0][1]['sizes']['thumbnail']['file'] );
 		$this->assertSame( '/uploads/2026/09/old.jpg', $this->deleted[0][3] );
