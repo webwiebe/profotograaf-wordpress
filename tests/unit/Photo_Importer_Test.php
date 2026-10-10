@@ -73,6 +73,11 @@ class Photo_Importer_Test extends Wp_Test_Case {
 	 */
 	private string $original = '';
 
+	/**
+	 * The title the database holds after the insert filters ran.
+	 */
+	private string $stored_title = 'Bride';
+
 	protected function setUp(): void {
 		parent::setUp();
 		$this->options['profotograaf_settings'] = array( 'media_source' => true );
@@ -125,6 +130,14 @@ class Photo_Importer_Test extends Wp_Test_Case {
 		file_put_contents( $this->original, 'stored original' );
 		$original = $this->original;
 		Functions\when( 'wp_get_original_image_path' )->alias( fn() => $original );
+		Functions\when( 'get_post' )->alias(
+			function () {
+				$post               = new \WP_Post();
+				$post->post_title   = $this->stored_title;
+				$post->post_excerpt = 'First dance';
+				return $post;
+			}
+		);
 		Functions\when( 'get_attached_file' )->alias( fn() => $original );
 
 		Functions\when( 'add_filter' )->alias(
@@ -212,6 +225,12 @@ class Photo_Importer_Test extends Wp_Test_Case {
 		$this->importer->import( $this->photo( array( 'alt' => '' ) ) );
 
 		$this->assertSame( sha1( (string) json_encode( array( 'Bride', 'First dance', 'Bride' ) ) ), $this->meta[501]['_profotograaf_text_hash'] );
+	}
+
+	public function test_the_text_baseline_hashes_the_title_as_stored(): void {
+		$this->stored_title = 'Bride &amp; groom';
+		$this->importer->import( $this->photo( array( 'title' => 'Bride & groom' ) ) );
+		$this->assertSame( sha1( (string) json_encode( array( 'Bride &amp; groom', 'First dance', 'A bride dancing' ) ) ), $this->meta[501]['_profotograaf_text_hash'] );
 	}
 
 	public function test_an_unreadable_original_gets_no_file_hash(): void {

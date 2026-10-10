@@ -78,6 +78,12 @@ final class Media_Baseline {
 	 */
 	public static function record_import( int $attachment_id, string $title, string $caption, string $alt ): void {
 		update_post_meta( $attachment_id, self::META_ORIGIN, self::ORIGIN_IMPORT );
+		// Hash what the database holds: kses on the insert can change a title or caption the importer passed in.
+		$post = get_post( $attachment_id );
+		if ( $post instanceof \WP_Post ) {
+			$title   = (string) $post->post_title;
+			$caption = (string) $post->post_excerpt;
+		}
 		update_post_meta( $attachment_id, self::META_TEXT_HASH, self::text_hash( $title, $caption, $alt ) );
 		self::record_file( $attachment_id );
 	}
