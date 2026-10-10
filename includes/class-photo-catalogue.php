@@ -94,6 +94,43 @@ class Photo_Catalogue {
 		if ( ! $this->settings->media_source_enabled() ) {
 			return self::empty_result();
 		}
+		return $this->load();
+	}
+
+	/**
+	 * Refreshes the catalogue for the change feed poll, which keeps running
+	 * while the media source setting is off (docs/media-lifecycle.md).
+	 *
+	 * Behaves like refresh() without the setting gate. A caller that finds the
+	 * result stale or an error decides nothing from it.
+	 *
+	 * @return array{photos:array<int,array<string,mixed>>,stale:bool,fetched_at:int,dropped:int}|WP_Error
+	 */
+	public function refresh_for_sync() {
+		return $this->load();
+	}
+
+	/**
+	 * The stored catalogue when it is younger than `$max_age` seconds and not
+	 * stale, otherwise null. Reads no setting and makes no request.
+	 *
+	 * @param int $max_age Seconds.
+	 * @return array{photos:array<int,array<string,mixed>>,stale:bool,fetched_at:int,dropped:int}|null
+	 */
+	public function recent( int $max_age ): ?array {
+		$stored = $this->stored();
+		if ( null === $stored || $stored['stale'] || $this->now() - $stored['fetched_at'] > $max_age ) {
+			return null;
+		}
+		return $stored;
+	}
+
+	/**
+	 * Fetches and stores the catalogue, whatever the setting says.
+	 *
+	 * @return array{photos:array<int,array<string,mixed>>,stale:bool,fetched_at:int,dropped:int}|WP_Error
+	 */
+	private function load() {
 		$fetched = $this->fetch_all();
 		if ( is_wp_error( $fetched ) ) {
 			$data = $fetched->get_error_data();

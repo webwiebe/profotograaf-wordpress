@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' } };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: /** @type {Record<string, unknown>[]} */ ( [] ), changeCalls: /** @type {Record<string, unknown>[]} */ ( [] ) };
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
@@ -252,8 +252,15 @@ const routes = {
 		state.scenic = true;
 		return json( res, 200, { ok: true } );
 	},
+	// Queues the next answers of the change feed (a list of pages). Without a queued page the feed
+	// answers resync for a request with no cursor, and an empty page for one with a cursor.
+	'POST /__changes': ( { res, body } ) => {
+		state.changes = Array.isArray( body.pages ) ? body.pages : [];
+		return json( res, 200, { queued: state.changes.length } );
+	},
+	'GET /__changes': ( { res } ) => json( res, 200, state.changeCalls ),
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' } } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: [], changeCalls: [] } );
 		return json( res, 200, { ok: true } );
 	},
 	// Makes the status call answer that the site may be asked for a review.
@@ -298,6 +305,16 @@ const routes = {
 		bearer
 			? json( res, 403, { error: 'this app is not allowed to use this endpoint', code: 'forbidden' } )
 			: json( res, 200, { script_url: `/share/embed/embed.${ EMBED_VERSION }.js`, version: EMBED_VERSION } ),
+	'GET /api/v1/embed/changes': authed( ( { res, url } ) => {
+		const since = url.searchParams.get( 'since' ) || '';
+		state.changeCalls.push( { since, limit: Number( url.searchParams.get( 'limit' ) ) || 0 } );
+		const lists = { created: [], updated: [], deleted: [] };
+		const queued = state.changes.shift();
+		if ( queued ) {
+			return json( res, 200, { cursor: 'cursor-next', has_more: false, resync: false, galleries: lists, photos: lists, ...queued } );
+		}
+		return json( res, 200, { cursor: since || 'cursor-1', has_more: false, resync: '' === since, galleries: lists, photos: lists } );
+	} ),
 	'GET /api/v1/embed/photos': authed( libraryPage ),
 	'POST /api/v1/embed/galleries': authed( ( { res, body } ) =>
 		body && body.title
