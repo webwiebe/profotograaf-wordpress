@@ -8,6 +8,7 @@ import type {
 
 const PHOTOS_PATH = '/profotograaf/v1/photos';
 const IMPORT_PATH = '/profotograaf/v1/photos/import';
+const KEEP_PATH = '/profotograaf/v1/photos/keep';
 
 /** Photos per page of the grid. */
 const PER_PAGE = 24;
@@ -42,6 +43,15 @@ export function fetchPhotos( query: PhotoQuery ): Promise< PhotosResponse > {
 export function importPhotos( ids: string[] ): Promise< ImportResponse > {
 	return apiFetch< ImportResponse >( {
 		path: IMPORT_PATH,
+		method: 'POST',
+		data: { ids },
+	} );
+}
+
+/** Adds the photos as virtual attachments, without a download. */
+export function keepPhotos( ids: string[] ): Promise< ImportResponse > {
+	return apiFetch< ImportResponse >( {
+		path: KEEP_PATH,
 		method: 'POST',
 		data: { ids },
 	} );

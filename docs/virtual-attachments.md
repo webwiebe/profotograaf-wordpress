@@ -17,7 +17,7 @@ Ship the import path from `docs/media-source.md` first. Offer virtual attachment
 
 ## What was built
 
-All of it sits behind a hidden flag that is off by default and has no UI. With the flag off, nothing is hooked and no behaviour changes.
+All of it sat behind a hidden flag that was off by default and had no UI. Issue #151 replaced the flag with a setting (see "Switching it on"). With the setting off, nothing is hooked and no behaviour changes.
 
 | File | Role |
 | --- | --- |
@@ -31,7 +31,9 @@ All of it sits behind a hidden flag that is off by default and has no UI. With t
 
 ### Switching it on
 
-The flag is on only when `apply_filters( 'profotograaf_virtual_attachments', defined( 'PROFOTOGRAAF_VIRTUAL_ATTACHMENTS' ) && true === PROFOTOGRAAF_VIRTUAL_ATTACHMENTS )` returns the boolean `true`. A truthy string does not count.
+Since issue #151 the switch is the setting "Keep photos on Profotograaf" (`virtual_attachments` in `profotograaf_settings`, General tab, off by default). The spike's constant `PROFOTOGRAAF_VIRTUAL_ATTACHMENTS` is gone. The filter stays as an override: virtual attachments are on only when `apply_filters( 'profotograaf_virtual_attachments', $setting )` returns the boolean `true`. A truthy string does not count.
+
+With the setting on, Media > Import from Profotograaf shows a "Keep on Profotograaf" button next to Import, with a notice that explains the unpublish behaviour below. It posts the selected photo ids to `POST /profotograaf/v1/photos/keep`, which calls `create()` for each catalogue row. The route is registered only while the setting is on, and its permission check needs `upload_files` and the setting. `GET /profotograaf/v1/photos` marks a kept photo with `kept: true`, and the attachment details say "Kept on Profotograaf" and offer no Re-import. "Convert to local" has no UI yet (child issue 2).
 
 ### What the class does
 

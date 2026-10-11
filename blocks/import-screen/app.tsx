@@ -32,8 +32,23 @@ function ListStatus( { list }: { list: PhotoList } ) {
 	) : null;
 }
 
-/** The Import from Profotograaf screen. */
-export function App( { adminUrl }: { adminUrl: string } ) {
+/** What keeping a photo on Profotograaf means, shown while the choice is offered. */
+function KeepNotice() {
+	return (
+		<Notice status="info" isDismissible={ false } className="profotograaf-import__keep-notice">
+			{ __(
+				'Keep on Profotograaf adds a photo to the Media Library without a download. Your site shows it from Profotograaf and stores no copy. If you unpublish its gallery later, the photo stops loading from Profotograaf at once, but copies already held by edge caches and visitors\' browsers can keep showing it for up to a year. Import the photos you may want to withdraw.',
+				'profotograaf'
+			) }
+		</Notice>
+	);
+}
+
+/**
+ * The Import from Profotograaf screen. `canKeep` offers "Keep on Profotograaf"
+ * next to Import, while the setting "Keep photos on Profotograaf" is on.
+ */
+export function App( { adminUrl, canKeep = false }: { adminUrl: string; canKeep?: boolean } ) {
 	const [ query, setQuery ] = useState( { search: '', gallery: '', page: 1 } );
 	const list = usePhotoList( query );
 	const job = useImport();
@@ -48,6 +63,7 @@ export function App( { adminUrl }: { adminUrl: string } ) {
 				onSearch={ ( search ) => setQuery( { ...query, search, page: 1 } ) }
 				onGallery={ ( gallery ) => setQuery( { ...query, gallery, page: 1 } ) }
 			/>
+			{ canKeep && <KeepNotice /> }
 			<ListStatus list={ list } />
 			{ list.data && (
 				<PhotoGrid
@@ -56,6 +72,7 @@ export function App( { adminUrl }: { adminUrl: string } ) {
 					disabled={ job.progress !== null }
 					adminUrl={ adminUrl }
 					attachmentOf={ job.attachmentOf }
+					keptOf={ job.keptOf }
 					onToggle={ job.toggle }
 				/>
 			) }
@@ -64,7 +81,8 @@ export function App( { adminUrl }: { adminUrl: string } ) {
 					count={ chosen }
 					busy={ job.progress !== null }
 					canSelectPage={ photos.length > 0 }
-					onImport={ () => void job.start() }
+					onImport={ () => void job.start( 'import' ) }
+					onKeep={ canKeep ? () => void job.start( 'keep' ) : undefined }
 					onSelectPage={ () => job.select( photos.filter( ( photo ) => job.attachmentOf( photo ) === 0 ) ) }
 					onClear={ job.clear }
 				/>
@@ -75,7 +93,7 @@ export function App( { adminUrl }: { adminUrl: string } ) {
 				/>
 			</div>
 			{ job.progress && <ProgressBar progress={ job.progress } /> }
-			<Results summary={ job.summary } failures={ job.failures } />
+			<Results summary={ job.summary } failures={ job.failures } mode={ job.failedMode } />
 		</div>
 	);
 }

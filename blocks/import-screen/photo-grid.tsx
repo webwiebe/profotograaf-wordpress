@@ -4,6 +4,7 @@ import type { PhotoItem } from './types';
 interface CardProps {
 	photo: PhotoItem;
 	attachmentId: number;
+	kept: boolean;
 	selected: boolean;
 	disabled: boolean;
 	adminUrl: string;
@@ -13,6 +14,7 @@ interface CardProps {
 function PhotoCard( {
 	photo,
 	attachmentId,
+	kept,
 	selected,
 	disabled,
 	adminUrl,
@@ -23,6 +25,7 @@ function PhotoCard( {
 		'profotograaf-import__card',
 		selected ? 'is-selected' : '',
 		imported ? 'is-imported' : '',
+		imported && kept ? 'is-kept' : '',
 	];
 	return (
 		<li className={ classes.filter( Boolean ).join( ' ' ) }>
@@ -42,7 +45,9 @@ function PhotoCard( {
 			</button>
 			{ imported && (
 				<span className="profotograaf-import__badge">
-					{ __( 'Imported', 'profotograaf' ) }{ ' ' }
+					{ kept
+						? __( 'Kept on Profotograaf', 'profotograaf' )
+						: __( 'Imported', 'profotograaf' ) }{ ' ' }
 					<a href={ `${ adminUrl }post.php?post=${ attachmentId }&action=edit` }>
 						{ __( 'Open in Media Library', 'profotograaf' ) }
 					</a>
@@ -58,10 +63,11 @@ interface GridProps {
 	disabled: boolean;
 	adminUrl: string;
 	attachmentOf: ( photo: PhotoItem ) => number;
+	keptOf: ( photo: PhotoItem ) => boolean;
 	onToggle: ( photo: PhotoItem ) => void;
 }
 
-export function PhotoGrid( { photos, selected, attachmentOf, ...rest }: GridProps ) {
+export function PhotoGrid( { photos, selected, attachmentOf, keptOf, ...rest }: GridProps ) {
 	if ( photos.length === 0 ) {
 		return <p>{ __( 'No photos found.', 'profotograaf' ) }</p>;
 	}
@@ -72,6 +78,7 @@ export function PhotoGrid( { photos, selected, attachmentOf, ...rest }: GridProp
 					key={ photo.sourceId }
 					photo={ photo }
 					attachmentId={ attachmentOf( photo ) }
+					kept={ keptOf( photo ) }
 					selected={ Boolean( selected[ photo.sourceId ] ) }
 					{ ...rest }
 				/>

@@ -14,6 +14,7 @@ use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
 use Profotograaf\Plugin;
 use Profotograaf\Sync_Panel;
+use Profotograaf\Virtual_Attachments;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -85,7 +86,9 @@ class Media_Import_Screen implements Module {
 	}
 
 	/**
-	 * Prints the page. The app mounts on the root element.
+	 * Prints the page. The app mounts on the root element. `data-keep` offers
+	 * the "Keep on Profotograaf" choice and is printed only while the setting
+	 * "Keep photos on Profotograaf" is on.
 	 */
 	public function render(): void {
 		printf(
@@ -96,8 +99,9 @@ class Media_Import_Screen implements Module {
 			Sync_Panel::render( $this->plugin->connection() );
 		}
 		printf(
-			'<div id="profotograaf-import-root" data-admin-url="%1$s"></div></div>',
-			esc_url( admin_url() )
+			'<div id="profotograaf-import-root" data-admin-url="%1$s"%2$s></div></div>',
+			esc_url( admin_url() ),
+			Virtual_Attachments::enabled() ? ' data-keep="1"' : ''
 		);
 	}
 
@@ -227,7 +231,9 @@ class Media_Import_Screen implements Module {
 				: esc_html__( 'Profotograaf', 'profotograaf' ) . ', ' . $link;
 		}//end if
 
-		if ( Media_Baseline::is_upload( $id ) ) {
+		if ( Virtual_Attachments::enabled() && '1' === (string) get_post_meta( $id, Virtual_Attachments::META_VIRTUAL, true ) ) {
+			$html .= '<p class="description">' . esc_html__( 'Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy.', 'profotograaf' ) . '</p>';
+		} elseif ( Media_Baseline::is_upload( $id ) ) {
 			$html .= '<p class="description">' . esc_html__( 'Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too.', 'profotograaf' ) . '</p>';
 		} elseif ( $this->active() && current_user_can( 'edit_post', $id ) ) {
 			// The attachment edit screen does not load the media views, so the field asks for its own script.

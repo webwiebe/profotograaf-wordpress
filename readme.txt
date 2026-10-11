@@ -16,6 +16,7 @@ Profotograaf connects your WordPress site to your [Profotograaf](https://profoto
 
 * **Connect in one step.** Approve the connection in Profotograaf. Your password never reaches your WordPress site.
 * **Gallery block and shortcode.** Pick one of your galleries and place it on any page, in a grid, masonry or slideshow layout.
+* **Full-page gallery block.** Show one gallery across the whole page, in sections of different shapes: large single photos, pairs, grids, masonry and a filmstrip. Choose the Calm, Editorial or Playful preset, or build your own sequence and pick the photo for each spot.
 * **Paste a link.** A pasted gallery link turns into an embedded gallery.
 * **Client galleries entry.** A "Find your gallery" block that leads clients to the client portal, on your Profotograaf address or on your own domain.
 * **Photos in the editor.** Optional. Use the photos of your embeddable galleries in posts and pages through the block inserter, the Media Library and the media modal. A photo you use is stored on your site, so it stays when you unpublish it on Profotograaf.
@@ -38,6 +39,8 @@ The plugin sets no cookies and does not track your visitors. See "External servi
 **Export and erase.** Tools, Export Personal Data includes the waiting and failed enquiries of an email address, and Tools, Erase Personal Data removes them. The email address is matched without regard to case. Enquiries that were already delivered are held by Profotograaf and covered by its privacy policy.
 
 **Photo library in the editor (only if you turn it on).** The "Use Profotograaf photos in the editor" setting is off by default. When it is on, your server keeps a list of your photos (id, size, title, caption, gallery and image links) in the options table. A photo an editor adds or imports is downloaded (the web size, at most 1600 px on the long side) and stored in your Media Library like any upload, with the photo and gallery identifiers as hidden fields. It stays on your site until you delete it. Deleting the plugin leaves those photos in place. Visitors are not involved.
+
+**Keeping photos on Profotograaf (only if you turn it on).** The "Keep photos on Profotograaf" setting is off by default. When it is on, an editor can add a photo to the Media Library without a download. Your site then stores only the photo's data and image links, and visitors' browsers load the photo from `https://profotograaf.nl`, so Profotograaf receives their IP address and browser details in the way any web server does. If you unpublish the gallery, copies already held by edge caches and visitors' browsers can keep showing the photo for up to a year.
 
 **Sending Media Library files (only if you turn it on).** The "Send Media Library files to Profotograaf" setting is off by default, and nothing is sent while it is off. When it is on, a file leaves your site only after a person chooses a linked gallery for it, and it can go to any of your galleries, including a client gallery. Before an image is sent, the plugin removes the GPS position (Exif, XMP, and the raw profile chunks of PNG files). The rest of the metadata, such as camera, lens and date, is sent. We do not claim that Profotograaf removes it afterwards. HEIC, video and RAW files are not sent. Photos of people are personal data: you decide what to send and you need the right to send it. Per file, the Media Library keeps hidden fields (photo and gallery identifiers, send state and time). They stay when you delete the plugin.
 
@@ -94,6 +97,10 @@ Once a day, in the background, the plugin asks `https://profotograaf.nl/api/v1/e
 
 Pasting a gallery link into the editor makes WordPress ask `https://profotograaf.nl/oembed` for the embed code of that gallery.
 
+= Full-page gallery block =
+
+To draw a full-page gallery, your server asks `https://profotograaf.nl/api/v1/embed/galleries/<gallery>` for the public gallery data (titles, captions, sizes and image links) and keeps the answer for 5 minutes. The request carries no token and no data about your visitors. The visitor's browser then loads the photos from `https://profotograaf.nl`, and Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the page reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`, the same report as the gallery block. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
+
 = Client galleries block =
 
 The "Find your gallery" block is a plain link. It sends nothing to Profotograaf and asks for nothing while a visitor views your page. When a visitor clicks the button, their browser opens your client portal on profotograaf.nl (`https://profotograaf.nl/<your address>/client`), or on your own domain or Profotograaf subdomain when you entered one. The portal is where clients sign in, and the Profotograaf privacy policy covers that visit.
@@ -141,6 +148,10 @@ Add the block "Find your gallery" to a page. In the block settings, enter your P
 = Which address do I enter for a custom domain? =
 
 The domain you connected in Profotograaf, for example `photos.example.com`. The button then opens `https://photos.example.com/client`, so your clients never leave your own domain.
+
+= How do I show a gallery across the whole page? =
+
+Add the "Full-page gallery" block, choose a gallery and a preset (Calm, Editorial or Playful), or choose Custom to set the sections yourself and pick a photo for a spot. In the page settings, under Template, choose "Profotograaf full page" to hide the site header and footer on that page. The template works with block themes and classic themes. To turn an existing gallery block into a full-page gallery, use Transform in the block toolbar.
 
 = Do I need a Profotograaf account? =
 
@@ -209,6 +220,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: "Keep photos on Profotograaf" setting, off by default. With it on, Media > Import from Profotograaf offers "Keep on Profotograaf" next to Import: the photo is added to the Media Library without a download and shown from Profotograaf. The screen and the setting explain that a photo you unpublish can keep showing from edge and browser caches. Only users who can upload files can use it.
 * New: "Check now" for photo changes on the settings page and the Import screen, a "last checked" line, and one background check from the Media Library, the Import screen and the settings page when the last check is more than six hours old. Site Health and the settings page notice name a photo change check that has not run for three hours and show the crontab line, for hosts without WP-Cron.
 * New: the plugin checks Profotograaf for changes to imported photos once an hour in the background, with the cursor stored on your site, and hands them to the reconcile step. When the change list asks for a full check, copies are reconciled 50 at a time. The check follows the connection, so it keeps running when "Use Profotograaf photos in the editor" is off. It only records states and never deletes anything.
 * Fix: the reconcile step no longer reads every imported original on each run. A file is hashed only when Profotograaf lists another version or other text than the copy holds.

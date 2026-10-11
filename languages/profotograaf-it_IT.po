@@ -24,8 +24,8 @@ msgstr ""
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
-#: includes/modules/class-media-import-screen.php:214
-#: includes/modules/class-media-import-screen.php:227
+#: includes/modules/class-media-import-screen.php:218
+#: includes/modules/class-media-import-screen.php:231
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -206,7 +206,7 @@ msgstr "Le richieste che non è stato possibile inviare restano su questo sito f
 #: includes/admin/class-leads-settings.php:368
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
-#: build/import-screen/index.js:5
+#: build/import-screen/index.js:7
 msgid "Try again"
 msgstr "Riprova"
 
@@ -419,253 +419,253 @@ msgstr "Percorso del portale clienti"
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr "Il percorso del portale clienti sul tuo indirizzo Profotograaf, usato dal blocco \"Trova la tua galleria\". Un blocco può impostare il proprio. Il valore predefinito è /client."
 
-#: includes/class-settings-schema.php:120
+#: includes/class-settings-schema.php:127
 msgid "Default gallery layout"
 msgstr "Layout predefinito della galleria"
 
-#: includes/class-settings-schema.php:124
+#: includes/class-settings-schema.php:131
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Grid"
 msgstr "Griglia"
 
-#: includes/class-settings-schema.php:125
+#: includes/class-settings-schema.php:132
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/class-settings-schema.php:126
+#: includes/class-settings-schema.php:133
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Slideshow"
 msgstr "Presentazione"
 
-#: includes/class-settings-schema.php:133
+#: includes/class-settings-schema.php:140
 msgid "Collect enquiries"
 msgstr "Raccogli le richieste"
 
-#: includes/class-settings-schema.php:134
+#: includes/class-settings-schema.php:141
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr "Ascolta gli invii dei plugin di moduli supportati. Ogni modulo ha comunque il proprio interruttore nella schermata dei moduli di richiesta."
 
-#: includes/class-settings-schema.php:140
+#: includes/class-settings-schema.php:147
 msgid "Failure alerts go to"
 msgstr "Gli avvisi di errore vanno a"
 
-#: includes/class-settings-schema.php:141
+#: includes/class-settings-schema.php:148
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr "Riceve un'email, senza dati personali, quando una richiesta non può essere consegnata o viene scartata. Lascia vuoto per usare l'indirizzo email dell'amministratore del sito."
 
-#: includes/class-settings-schema.php:148
+#: includes/class-settings-schema.php:155
 msgid "Mail undeliverable enquiries to"
 msgstr "Invia per email le richieste non consegnabili a"
 
-#: includes/class-settings-schema.php:149
+#: includes/class-settings-schema.php:156
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr "Quando una richiesta non può essere consegnata a Profotograaf, viene inviata per email a questo indirizzo. L'email contiene la richiesta. Lascia vuoto per disattivare."
 
-#: includes/class-settings-schema.php:158
+#: includes/class-settings-schema.php:165
 msgid "Keep undeliverable enquiries for (days)"
 msgstr "Conserva le richieste non consegnabili per (giorni)"
 
-#: includes/class-settings-schema.php:159
+#: includes/class-settings-schema.php:166
 msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr "Le richieste che non è stato possibile consegnare restano nel database finché non le esporti o finché non trascorre questo numero di giorni, da 1 a 90. Ricevi un'email prima che vengano rimosse."
 
-#: includes/class-settings-schema.php:165
+#: includes/class-settings-schema.php:172
 msgid "Share anonymous usage data"
 msgstr "Condividi dati di utilizzo anonimi"
 
-#: includes/class-settings-schema.php:166
+#: includes/class-settings-schema.php:173
 msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
 msgstr "Aiuta a migliorare Profotograaf condividendo dati anonimi di utilizzo e di errori. È facoltativo e puoi disattivarlo in qualsiasi momento. Non vengono raccolte informazioni personali. Disattivandolo, l'invio si interrompe subito e i dati in attesa di invio vengono eliminati."
 
-#: includes/class-settings-schema.php:169
+#: includes/class-settings-schema.php:176
 #: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr "Cosa viene condiviso"
 
-#: includes/class-settings-schema.php:176
+#: includes/class-settings-schema.php:183
 msgid "Keep my data when the plugin is deleted"
 msgstr "Conserva i miei dati quando il plugin viene eliminato"
 
-#: includes/class-settings-schema.php:177
+#: includes/class-settings-schema.php:184
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr "Lascia le impostazioni e la connessione nel database quando elimini il plugin, ad esempio per reinstallarlo più tardi."
 
 #: includes/class-gallery-look.php:150
-#: includes/class-settings-schema.php:123
-#: includes/class-settings-schema.php:191
+#: includes/class-settings-schema.php:130
+#: includes/class-settings-schema.php:198
 msgid "Profotograaf default"
 msgstr "Predefinito di Profotograaf"
 
-#: includes/class-settings-schema.php:193
+#: includes/class-settings-schema.php:200
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:3
 msgid "On"
 msgstr "Attivo"
 
-#: includes/class-settings-schema.php:194
+#: includes/class-settings-schema.php:201
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:3
 msgid "Off"
 msgstr "Disattivo"
 
 #: includes/class-settings-schema.php:76
-#: includes/class-settings-schema.php:196
+#: includes/class-settings-schema.php:203
 msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
 msgstr "Un blocco o uno shortcode può impostare il proprio valore. Lascia vuoto per il predefinito di Profotograaf."
 
-#: includes/class-settings-schema.php:205
+#: includes/class-settings-schema.php:212
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns"
 msgstr "Colonne"
 
-#: includes/class-settings-schema.php:206
+#: includes/class-settings-schema.php:213
 msgid "Columns on wide screens, from 1 to 8."
 msgstr "Colonne sugli schermi ampi, da 1 a 8."
 
-#: includes/class-settings-schema.php:214
+#: includes/class-settings-schema.php:221
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns on tablets"
 msgstr "Colonne sui tablet"
 
-#: includes/class-settings-schema.php:215
+#: includes/class-settings-schema.php:222
 msgid "Columns on medium screens, from 1 to 8."
 msgstr "Colonne sugli schermi medi, da 1 a 8."
 
-#: includes/class-settings-schema.php:223
+#: includes/class-settings-schema.php:230
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns on phones"
 msgstr "Colonne sugli smartphone"
 
-#: includes/class-settings-schema.php:224
+#: includes/class-settings-schema.php:231
 msgid "Columns on narrow screens, from 1 to 4."
 msgstr "Colonne sugli schermi stretti, da 1 a 4."
 
-#: includes/class-settings-schema.php:232
+#: includes/class-settings-schema.php:239
 msgid "Gap between photos (pixels)"
 msgstr "Spazio tra le foto (pixel)"
 
-#: includes/class-settings-schema.php:233
+#: includes/class-settings-schema.php:240
 msgid "Space between photos, from 0 to 96 pixels."
 msgstr "Spazio tra le foto, da 0 a 96 pixel."
 
-#: includes/class-settings-schema.php:239
+#: includes/class-settings-schema.php:246
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photo shape"
 msgstr "Forma delle foto"
 
-#: includes/class-settings-schema.php:242
+#: includes/class-settings-schema.php:249
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Original"
 msgstr "Originale"
 
-#: includes/class-settings-schema.php:243
+#: includes/class-settings-schema.php:250
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Square (1:1)"
 msgstr "Quadrata (1:1)"
 
-#: includes/class-settings-schema.php:255
+#: includes/class-settings-schema.php:262
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Captions"
 msgstr "Didascalie"
 
-#: includes/class-settings-schema.php:256
+#: includes/class-settings-schema.php:263
 msgid "Whether photo captions show and where."
 msgstr "Se mostrare le didascalie delle foto e dove."
 
-#: includes/class-settings-schema.php:258
+#: includes/class-settings-schema.php:265
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Hidden"
 msgstr "Nascoste"
 
-#: includes/class-settings-schema.php:259
+#: includes/class-settings-schema.php:266
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Below the photo"
 msgstr "Sotto la foto"
 
-#: includes/class-settings-schema.php:260
+#: includes/class-settings-schema.php:267
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr "Sopra la foto"
 
-#: includes/class-settings-schema.php:267
+#: includes/class-settings-schema.php:274
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Sort order"
 msgstr "Ordinamento"
 
-#: includes/class-settings-schema.php:268
+#: includes/class-settings-schema.php:275
 msgid "The order of the photos."
 msgstr "L'ordine delle foto."
 
-#: includes/class-settings-schema.php:270
+#: includes/class-settings-schema.php:277
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Newest first"
 msgstr "Prima le più recenti"
 
-#: includes/class-settings-schema.php:271
+#: includes/class-settings-schema.php:278
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Oldest first"
 msgstr "Prima le più vecchie"
 
-#: includes/class-settings-schema.php:272
+#: includes/class-settings-schema.php:279
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "By file name"
 msgstr "Per nome del file"
 
-#: includes/class-settings-schema.php:273
+#: includes/class-settings-schema.php:280
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Random"
 msgstr "Casuale"
 
-#: includes/class-settings-schema.php:282
+#: includes/class-settings-schema.php:289
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photos per page"
 msgstr "Foto per pagina"
 
-#: includes/class-settings-schema.php:283
+#: includes/class-settings-schema.php:290
 msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
 msgstr "Mostra inizialmente questo numero di foto, da 1 a 200. Lascia vuoto per mostrarle tutte."
 
-#: includes/class-settings-schema.php:289
+#: includes/class-settings-schema.php:296
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Load more button"
 msgstr "Pulsante Carica altre"
 
-#: includes/class-settings-schema.php:290
+#: includes/class-settings-schema.php:297
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr "Aggiunge un pulsante che mostra le foto successive quando \"Foto per pagina\" è impostato."
 
-#: includes/class-settings-schema.php:297
+#: includes/class-settings-schema.php:304
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Lightbox"
 msgstr "Lightbox"
 
-#: includes/class-settings-schema.php:298
+#: includes/class-settings-schema.php:305
 msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr "Apre una foto in una vista più grande quando un visitatore ci clicca."
 
@@ -1423,19 +1423,19 @@ msgstr "layout: %s"
 #: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 #: build/import-screen/index.js:2
 #: build/media-modal/index.js:1
 msgid "Gallery"
 msgstr "Galleria"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 msgid "Layout"
 msgstr "Layout"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 msgid "Choose another gallery"
 msgstr "Scegli un'altra galleria"
@@ -1444,7 +1444,7 @@ msgstr "Scegli un'altra galleria"
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr "Questa galleria non è stata trovata nel tuo account Profotograaf. Potrebbe essere stata eliminata. Scegli un'altra galleria."
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 msgid "Choose one of your galleries."
 msgstr "Scegli una delle tue gallerie."
@@ -1533,27 +1533,27 @@ msgstr "Sito"
 msgid "Failed enquiries"
 msgstr "Richieste non consegnate"
 
-#: includes/class-settings-schema.php:305
+#: includes/class-settings-schema.php:312
 msgid "Duotone colours"
 msgstr "Colori bicromia"
 
-#: includes/class-settings-schema.php:306
+#: includes/class-settings-schema.php:313
 msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
 msgstr "Colora ogni foto con due colori, l'ombra e la luce, come due codici esadecimali separati da una virgola, ad esempio #1a1a2e,#f5c542. Un blocco può scegliere la propria bicromia. Lascia vuoto per i colori originali."
 
-#: includes/class-settings-schema.php:313
+#: includes/class-settings-schema.php:320
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Link photos to"
 msgstr "Collega le foto a"
 
-#: includes/class-settings-schema.php:316
+#: includes/class-settings-schema.php:323
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Nothing"
 msgstr "Niente"
 
-#: includes/class-settings-schema.php:317
+#: includes/class-settings-schema.php:324
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
@@ -1708,7 +1708,7 @@ msgid "Alt text"
 msgstr "Testo alternativo"
 
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:4
 msgid "Remove"
 msgstr "Rimuovi"
@@ -1779,29 +1779,29 @@ msgctxt "block variation keyword"
 msgid "slider"
 msgstr "slider"
 
-#: includes/class-settings-schema.php:314
+#: includes/class-settings-schema.php:321
 msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
 msgstr "Cosa succede con un clic su una foto. Vale solo quando la lightbox è disattivata, perché una lightbox aperta gestisce il clic da sola."
 
-#: includes/class-settings-schema.php:318
+#: includes/class-settings-schema.php:325
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Your photographer site"
 msgstr "Il tuo sito da fotografo"
 
-#: includes/class-settings-schema.php:319
+#: includes/class-settings-schema.php:326
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The original photo file"
 msgstr "Il file originale della foto"
 
-#: includes/class-settings-schema.php:326
+#: includes/class-settings-schema.php:333
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
 msgstr "Apri i link delle foto in una nuova scheda"
 
-#: includes/class-settings-schema.php:327
+#: includes/class-settings-schema.php:334
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr "Se il link di una foto si apre in una nuova scheda del browser. Vale solo quando la lightbox è disattivata e le foto rimandano a un link."
 
@@ -1846,26 +1846,26 @@ msgid "Only when the site owner turns on the media source: editors who can uploa
 msgstr "Solo quando il proprietario del sito attiva la sorgente media: gli editor che possono caricare file possono sfogliare le foto dell'account Profotograaf collegato nell'editor a blocchi. Il sito chiede a profotograaf.nl l'elenco delle foto e recupera le foto scelte da un editor. Il browser dell'editor carica le miniature da profotograaf.nl, che riceve l'indirizzo IP e i dati del browser di quell'editor. Una foto usata da un editor viene salvata nella Libreria media di questo sito e vi resta finché non viene eliminata. Non sono coinvolti dati dei visitatori."
 
 #: includes/class-photo-importer.php:90
-#: includes/class-virtual-attachments.php:155
+#: includes/class-virtual-attachments.php:153
 msgid "You are not allowed to add files to the Media Library."
 msgstr "Non hai il permesso di aggiungere file alla Libreria media."
 
 #: includes/class-photo-file-route.php:196
 #: includes/class-photo-importer.php:93
 #: includes/class-photo-importer.php:149
-#: includes/class-photo-rest.php:319
-#: includes/class-virtual-attachments.php:158
+#: includes/class-photo-rest.php:393
+#: includes/class-virtual-attachments.php:156
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr "L'uso delle foto di Profotograaf nell'editor è disattivato nelle impostazioni del plugin."
 
 #: includes/class-photo-importer.php:98
-#: includes/class-virtual-attachments.php:162
+#: includes/class-virtual-attachments.php:160
 msgid "This photo cannot be imported because it has no identifier."
 msgstr "Questa foto non può essere importata perché non ha un identificativo."
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:176
-#: includes/class-virtual-attachments.php:172
+#: includes/class-virtual-attachments.php:170
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr "La foto non si trova sulla piattaforma Profotograaf, quindi non è stata importata."
 
@@ -1877,7 +1877,7 @@ msgstr "Non è stato possibile scaricare la foto da Profotograaf. Riprova più t
 #: includes/class-photo-importer.php:231
 #: includes/class-photo-importer.php:239
 #: includes/class-photo-importer.php:372
-#: includes/class-virtual-attachments.php:197
+#: includes/class-virtual-attachments.php:195
 msgid "The photo could not be added to the Media Library."
 msgstr "Non è stato possibile aggiungere la foto alla Libreria media."
 
@@ -1890,34 +1890,34 @@ msgstr "Questa foto è in fase di importazione da parte di un'altra richiesta. R
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr "Profotograaf ha reindirizzato il download della foto, quindi non è stata importata."
 
-#: includes/class-photo-rest.php:244
+#: includes/class-photo-rest.php:318
 msgid "Choose at least one photo to import."
 msgstr "Scegli almeno una foto da importare."
 
 #. translators: %d: largest number of photos one import takes.
-#: includes/class-photo-rest.php:251
+#: includes/class-photo-rest.php:325
 #, php-format
 msgid "Import at most %d photos at a time."
 msgstr "Importa al massimo %d foto alla volta."
 
-#: includes/class-photo-rest.php:273
+#: includes/class-photo-rest.php:347
 msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
 msgstr "Questa foto non è più nella tua libreria Profotograaf. Aggiorna l'elenco e riprova."
 
-#: includes/modules/class-media-import-screen.php:78
 #: includes/modules/class-media-import-screen.php:79
-#: includes/modules/class-media-import-screen.php:93
+#: includes/modules/class-media-import-screen.php:80
+#: includes/modules/class-media-import-screen.php:96
 msgid "Import from Profotograaf"
 msgstr "Importa da Profotograaf"
 
-#: includes/modules/class-media-import-screen.php:243
+#: includes/modules/class-media-import-screen.php:249
 msgid "Source"
 msgstr "Origine"
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:211
-#: includes/modules/class-media-import-screen.php:224
+#: includes/modules/class-media-import-screen.php:215
+#: includes/modules/class-media-import-screen.php:228
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr "Profotograaf, galleria %s"
@@ -1973,44 +1973,44 @@ msgid_plural "Import %d photos"
 msgstr[0] "Importa %d foto"
 msgstr[1] "Importa %d foto"
 
-#: build/import-screen/index.js:4
+#: build/import-screen/index.js:5
 msgid "Select all on this page"
 msgstr "Seleziona tutto in questa pagina"
 
-#: build/import-screen/index.js:4
+#: build/import-screen/index.js:5
 msgid "Clear selection"
 msgstr "Annulla selezione"
 
 #: includes/modules/class-media-upload.php:304
-#: build/import-screen/index.js:4
+#: build/import-screen/index.js:5
 msgid "Imported"
 msgstr "Importata"
 
-#: build/import-screen/index.js:4
+#: build/import-screen/index.js:5
 msgid "Open in Media Library"
 msgstr "Apri nella Libreria media"
 
-#: build/import-screen/index.js:4
+#: build/import-screen/index.js:5
 #: build/media-modal/index.js:3
 msgid "No photos found."
 msgstr "Nessuna foto trovata."
 
 #. translators: 1: photos handled so far, 2: photos to import.
-#: build/import-screen/index.js:5
+#: build/import-screen/index.js:7
 #, js-format
 msgid "Importing %1$d of %2$d"
 msgstr "Importazione di %1$d su %2$d"
 
-#: build/import-screen/index.js:5
+#: build/import-screen/index.js:7
 msgid "These photos could not be imported:"
 msgstr "Non è stato possibile importare queste foto:"
 
-#: build/import-screen/index.js:5
+#: build/import-screen/index.js:7
 msgid "Profotograaf could not be reached, so this list may be out of date."
 msgstr "Non è stato possibile raggiungere Profotograaf, quindi questo elenco potrebbe non essere aggiornato."
 
 #. translators: %d: number of photos added to the Media Library.
-#: build/import-screen/index.js:6
+#: build/import-screen/index.js:9
 #, js-format
 msgid "%d photo imported."
 msgid_plural "%d photos imported."
@@ -2049,11 +2049,11 @@ msgstr "Questo file non è stato importato da Profotograaf."
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr "Questa foto non è più disponibile su Profotograaf. La copia nella tua Libreria media è invariata."
 
-#: includes/modules/class-media-import-screen.php:219
+#: includes/modules/class-media-import-screen.php:223
 msgid "Open on Profotograaf"
 msgstr "Apri su Profotograaf"
 
-#: includes/modules/class-media-import-screen.php:238
+#: includes/modules/class-media-import-screen.php:244
 msgid "Re-import"
 msgstr "Reimporta"
 
@@ -2103,16 +2103,12 @@ msgstr "Quando il proprietario del sito collega il sito, il plugin invia a profo
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
 msgstr "Solo quando il proprietario del sito acconsente ai dati di utilizzo anonimi, il plugin invia un rapporto di utilizzo giornaliero e segnalazioni dei propri errori a servizi gestiti dall'autore del plugin. Contengono le versioni del plugin, di WordPress e di PHP, la lingua del sito, i moduli del plugin attivi, il numero di connessioni e consegne di richieste non riuscite e i codici di errore. Non contengono l'indirizzo del sito, dati dei visitatori, richieste o token."
 
-#: includes/class-virtual-attachments.php:152
-msgid "Virtual attachments are switched off."
-msgstr "Gli allegati virtuali sono disattivati."
-
-#: includes/class-virtual-attachments.php:231
+#: includes/class-virtual-attachments.php:229
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr "Questo file non è un allegato virtuale di Profotograaf."
 
 #: includes/class-empty-gallery.php:76
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:11
 msgid "This gallery has no photos that can be shown on your site."
 msgstr "Questa galleria non ha foto che possano essere mostrate sul tuo sito."
@@ -2126,7 +2122,7 @@ msgstr "Le foto potrebbero essere ancora in elaborazione, oppure la galleria con
 msgid "0 visible"
 msgstr "0 visibili"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:11
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
 msgstr "Le foto potrebbero essere ancora in elaborazione, oppure la galleria contiene video o tipi di file che l'incorporamento nel sito non può ancora mostrare."
@@ -2136,7 +2132,7 @@ msgstr "Le foto potrebbero essere ancora in elaborazione, oppure la galleria con
 msgid "Original (not drawn in a grid yet)"
 msgstr "Originale (non ancora disegnata in una griglia)"
 
-#: includes/class-settings-schema.php:240
+#: includes/class-settings-schema.php:247
 msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
 msgstr "Ritaglia ogni foto in una griglia o presentazione a un unico rapporto d'aspetto, oppure mantieni ogni foto come è stata scattata. Il masonry mantiene sempre la forma propria di ogni foto."
 
@@ -2145,7 +2141,7 @@ msgstr "Ritaglia ogni foto in una griglia o presentazione a un unico rapporto d'
 msgid "Masonry keeps each photo's own shape."
 msgstr "Il masonry mantiene la forma propria di ogni foto."
 
-#: includes/class-settings-schema.php:121
+#: includes/class-settings-schema.php:128
 msgid "Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow."
 msgstr "Usato quando un blocco galleria o uno shortcode non sceglie un layout. Il predefinito di Profotograaf mostra ogni galleria nel layout più vicino che il tuo sito può disegnare: griglia, masonry o presentazione."
 
@@ -2416,11 +2412,11 @@ msgstr "L'invio di file a Profotograaf è disattivato nelle impostazioni del plu
 msgid "This file was sent from this site, so there is nothing to re-import."
 msgstr "Questo file è stato inviato da questo sito, quindi non c'è nulla da reimportare."
 
-#: includes/class-settings-schema.php:113
+#: includes/class-settings-schema.php:120
 msgid "Send Media Library files to Profotograaf"
 msgstr "Invia i file della Libreria media a Profotograaf"
 
-#: includes/class-settings-schema.php:114
+#: includes/class-settings-schema.php:121
 msgid "Lets editors who can upload files send images to a Profotograaf gallery you link below. A file is sent only after a person chooses a linked gallery for it, in the attachment details, with the bulk action in the Media Library list, or automatically for a gallery where you switch that on. The original image goes to Profotograaf with its EXIF data except the GPS position, which is removed first. Later changes to the title, caption and alt text of a sent file are sent too. Files are sent in the background, never while you save."
 msgstr "Permette agli editor che possono caricare file di inviare immagini a una galleria Profotograaf che colleghi qui sotto. Un file viene inviato solo dopo che una persona sceglie una galleria collegata per esso, nei dettagli dell'allegato, con l'azione di gruppo nell'elenco della Libreria media, oppure automaticamente per una galleria in cui lo attivi. L'immagine originale va a Profotograaf con i suoi dati EXIF, tranne la posizione GPS, che viene rimossa prima. Anche le modifiche successive al titolo, alla didascalia e al testo alternativo di un file inviato vengono inviate. I file vengono inviati in background, mai durante il salvataggio."
 
@@ -2461,7 +2457,7 @@ msgstr "Profotograaf non conosce la galleria a cui era destinato questo file. Il
 msgid "Profotograaf does not accept this kind of file."
 msgstr "Profotograaf non accetta questo tipo di file."
 
-#: includes/modules/class-media-import-screen.php:231
+#: includes/modules/class-media-import-screen.php:237
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr "Inviato da questo sito. Anche le modifiche al titolo, alla didascalia e al testo alternativo vengono inviate a Profotograaf."
 
@@ -2654,6 +2650,7 @@ msgid "Checking…"
 msgstr "Controllo in corso…"
 
 #: includes/class-gallery-look.php:161
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Space between rows (pixels)"
 msgstr "Spazio tra le righe (pixel)"
@@ -2664,11 +2661,13 @@ msgid "From 0 to 96 pixels. Empty uses the gap between photos."
 msgstr "Da 0 a 96 pixel. Se vuoto, usa lo spazio tra le foto."
 
 #: includes/class-gallery-look.php:162
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Space between columns (pixels)"
 msgstr "Spazio tra le colonne (pixel)"
 
 #: includes/class-gallery-look.php:167
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Corners"
 msgstr "Angoli"
@@ -2678,6 +2677,7 @@ msgid "Rounded corners on every photo. Circle applies to square photos only; oth
 msgstr "Angoli arrotondati su ogni foto. Cerchio vale solo per le foto quadrate; le altre forme mantengono gli angoli predefiniti."
 
 #: includes/class-gallery-look.php:175
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Hover effect"
 msgstr "Effetto al passaggio"
@@ -2687,22 +2687,26 @@ msgid "What a photo does under the mouse or keyboard focus. Grow lifts the whole
 msgstr "Cosa fa una foto sotto il mouse o con il focus della tastiera. Ingrandisci solleva l'intera foto sopra quelle vicine; la presentazione non si ingrandisce. I visitatori che chiedono meno movimento non vedono alcun effetto."
 
 #: includes/class-gallery-look.php:183
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Hover strength"
 msgstr "Intensità dell'effetto"
 
 #: includes/class-gallery-look.php:186
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Subtle"
 msgstr "Leggero"
 
 #: includes/class-gallery-look.php:187
 #: includes/class-gallery-look.php:216
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Strong"
 msgstr "Forte"
 
 #: includes/class-gallery-look.php:194
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Frame colour"
 msgstr "Colore della cornice"
@@ -2712,6 +2716,7 @@ msgid "The colour of the frame around each photo, as a hex code such as #ffffff.
 msgstr "Il colore della cornice attorno a ogni foto, come codice esadecimale, ad esempio #ffffff. Bianco quando è impostata solo una larghezza."
 
 #: includes/class-gallery-look.php:204
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Frame width (pixels)"
 msgstr "Larghezza della cornice (pixel)"
@@ -2721,6 +2726,7 @@ msgid "A frame around each photo, from 1 to 24 pixels. 0 means no frame. Not dra
 msgstr "Una cornice attorno a ogni foto, da 1 a 24 pixel. 0 significa nessuna cornice. Non disegnata in una presentazione."
 
 #: includes/class-gallery-look.php:211
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Shadow"
 msgstr "Ombra"
@@ -2731,26 +2737,32 @@ msgstr "Un'ombra sotto ogni foto. Non disegnata in una presentazione."
 
 #: includes/class-gallery-look.php:214
 #: includes/class-gallery-look.php:245
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "None"
 msgstr "Nessuna"
 
 #: includes/class-gallery-look.php:215
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Soft"
 msgstr "Morbida"
 
 #: includes/class-gallery-look.php:229
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Square corners"
 msgstr "Angoli squadrati"
 
 #: includes/class-gallery-look.php:230
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Subtle (4 pixels)"
 msgstr "Leggeri (4 pixel)"
 
 #: includes/class-gallery-look.php:231
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Rounded (12 pixels)"
 msgstr "Arrotondati (12 pixel)"
@@ -2760,48 +2772,59 @@ msgid "Circle (square photos only)"
 msgstr "Cerchio (solo foto quadrate)"
 
 #: includes/class-gallery-look.php:243
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Zoom inside the frame"
 msgstr "Zoom all'interno della cornice"
 
 #: includes/class-gallery-look.php:244
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Grow above the neighbours"
 msgstr "Ingrandisci sopra le foto vicine"
 
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Circle"
 msgstr "Cerchio"
 
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Circle (square photos only, not drawn now)"
 msgstr "Cerchio (solo foto quadrate, ora non disegnato)"
 
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Gap between photos"
 msgstr "Spazio tra le foto"
 
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "None (0 pixels)"
 msgstr "Nessuno (0 pixel)"
 
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Small (4 pixels)"
 msgstr "Piccolo (4 pixel)"
 
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Medium (12 pixels)"
 msgstr "Medio (12 pixel)"
 
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Large (24 pixels)"
 msgstr "Grande (24 pixel)"
 
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Custom"
 msgstr "Personalizzato"
 
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "Custom gap (pixels)"
 msgstr "Spazio personalizzato (pixel)"
@@ -2810,6 +2833,7 @@ msgstr "Spazio personalizzato (pixel)"
 msgid "From 1 to 24 pixels; 0 means no frame. Leave empty for the site default."
 msgstr "Da 1 a 24 pixel; 0 significa nessuna cornice. Lascia vuoto per l'impostazione predefinita del sito."
 
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "White when only a width is set."
 msgstr "Bianco quando è impostata solo una larghezza."
@@ -2818,6 +2842,7 @@ msgstr "Bianco quando è impostata solo una larghezza."
 msgid "Leave empty to use the gap between photos."
 msgstr "Lascia vuoto per usare lo spazio tra le foto."
 
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "Spacing and shape"
 msgstr "Spaziatura e forma"
@@ -2911,10 +2936,6 @@ msgid "Number of photos"
 msgstr "Numero di foto"
 
 #: build/full-page-gallery/index.js:4
-msgid "Space between photos (px)"
-msgstr "Spazio tra le foto (px)"
-
-#: build/full-page-gallery/index.js:4
 msgid "Height (% of the screen height)"
 msgstr "Altezza (% rispetto all'altezza dello schermo)"
 
@@ -2957,82 +2978,83 @@ msgid "Default (%s)"
 msgstr "Predefinito (%s)"
 
 #. translators: 1: lowest allowed number, 2: highest allowed number.
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:8
 #, js-format
 msgid "From %1$d to %2$d."
 msgstr "Da %1$d a %2$d."
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:8
 msgid "picked"
 msgstr "scelta"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:8
 msgid "Close"
 msgstr "Chiudi"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:8
 msgid "Choose photo"
 msgstr "Scegli la foto"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:8
 msgid "Clear"
 msgstr "Cancella"
 
 #. translators: 1: section type such as Hero photo, 2: its number in the gallery.
-#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:9
 #, js-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
 
 #. translators: 1: section type such as Hero photo, 2: its number in the gallery, 3: photo position in it.
-#: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:10
 #, js-format
 msgid "%1$s %2$d, photo %3$d"
 msgstr "%1$s %2$d, foto %3$d"
 
-#: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:10
 msgid "Pick the photos for the large slots. A photo shows once, in the slot it was last picked for."
 msgstr "Scegli le foto per gli spazi grandi. Una foto compare una sola volta, nello spazio per cui è stata scelta per ultima."
 
 #. translators: 1: position of the section in the list, 2: section type such as Grid.
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 #, js-format
 msgid "Section %1$d: %2$s"
 msgstr "Sezione %1$d: %2$s"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Type"
 msgstr "Tipo"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Move up"
 msgstr "Sposta su"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Move down"
 msgstr "Sposta giù"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Add a section. Without a section that shows photos, the gallery uses the default preset."
 msgstr "Aggiungi una sezione. Senza una sezione che mostra foto, la galleria usa la preimpostazione predefinita."
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Add a section"
 msgstr "Aggiungi una sezione"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Preset"
 msgstr "Preimpostazione"
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "The pattern of sections repeats until every photo is shown."
 msgstr "La sequenza di sezioni si ripete finché tutte le foto non sono mostrate."
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "No gallery chosen yet."
 msgstr "Nessuna galleria ancora scelta."
 
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:11
 msgid "Full-page gallery"
 msgstr "Galleria a pagina intera"
 
@@ -3051,6 +3073,67 @@ msgstr "Carica di nuovo"
 #: includes/trait-upload-queue-outcome.php:56
 msgid "Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery, and choose Upload again if the photo is not there."
 msgstr "Non è stato possibile raggiungere Profotograaf dopo diversi tentativi. Il file potrebbe esistere su Profotograaf. Guarda nella galleria e scegli Carica di nuovo se la foto non c'è."
+
+#. translators: %d: a number of pixels.
+#: build/full-page-gallery/index.js:6
+#, js-format
+msgid "%d pixels"
+msgstr "%d pixel"
+
+#: build/full-page-gallery/index.js:6
+msgid "Same as the gap between photos"
+msgstr "Uguale allo spazio tra le foto"
+
+#: includes/class-photo-rest.php:292
+#: includes/class-virtual-attachments.php:150
+msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
+msgstr "Mantenere le foto su Profotograaf è disattivato nelle impostazioni del plugin."
+
+#: includes/class-settings-schema.php:113
+msgid "Keep photos on Profotograaf"
+msgstr "Mantieni le foto su Profotograaf"
+
+#: includes/class-settings-schema.php:114
+msgid "Adds the choice \"Keep on Profotograaf\" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs \"Use Profotograaf photos in the editor\". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site."
+msgstr "Aggiunge la scelta \"Mantieni su Profotograaf\" accanto a Importa nella schermata Importa da Profotograaf, per gli editor che possono caricare file. Una foto mantenuta su Profotograaf viene aggiunta alla Libreria media senza download. Questo sito la mostra da Profotograaf e non ne salva alcuna copia. Richiede \"Usa le foto di Profotograaf nell'editor\". Se annulli la pubblicazione di una galleria su Profotograaf, le sue foto smettono subito di caricarsi da Profotograaf, ma le copie già conservate dalle cache edge e dai browser dei visitatori possono restare visibili fino a un anno. Importa le foto che potresti voler ritirare in seguito. Se lo disattivi, le foto mantenute su Profotograaf non vengono più mostrate su questo sito."
+
+#: includes/modules/class-media-import-screen.php:235
+msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
+msgstr "Mantenuta su Profotograaf. Questo sito mostra la foto da Profotograaf e non ne salva alcuna copia."
+
+#. translators: %d: number of selected photos.
+#: build/import-screen/index.js:5
+#, js-format
+msgid "Keep %d photo on Profotograaf"
+msgid_plural "Keep %d photos on Profotograaf"
+msgstr[0] "Mantieni %d foto su Profotograaf"
+msgstr[1] "Mantieni %d foto su Profotograaf"
+
+#: build/import-screen/index.js:5
+msgid "Kept on Profotograaf"
+msgstr "Mantenuta su Profotograaf"
+
+#. translators: 1: photos handled so far, 2: photos to keep on Profotograaf.
+#: build/import-screen/index.js:6
+#, js-format
+msgid "Keeping %1$d of %2$d on Profotograaf"
+msgstr "Mantenimento su Profotograaf: %1$d su %2$d"
+
+#: build/import-screen/index.js:7
+msgid "These photos could not be kept on Profotograaf:"
+msgstr "Non è stato possibile mantenere queste foto su Profotograaf:"
+
+#: build/import-screen/index.js:7
+msgid "Keep on Profotograaf adds a photo to the Media Library without a download. Your site shows it from Profotograaf and stores no copy. If you unpublish its gallery later, the photo stops loading from Profotograaf at once, but copies already held by edge caches and visitors' browsers can keep showing it for up to a year. Import the photos you may want to withdraw."
+msgstr "Mantieni su Profotograaf aggiunge una foto alla Libreria media senza download. Il tuo sito la mostra da Profotograaf e non ne salva alcuna copia. Se in seguito annulli la pubblicazione della sua galleria, la foto smette subito di caricarsi da Profotograaf, ma le copie già conservate dalle cache edge e dai browser dei visitatori possono continuare a mostrarla fino a un anno. Importa le foto che potresti voler ritirare."
+
+#. translators: %d: number of photos added to the Media Library without a download.
+#: build/import-screen/index.js:8
+#, js-format
+msgid "%d photo kept on Profotograaf."
+msgid_plural "%d photos kept on Profotograaf."
+msgstr[0] "%d foto mantenuta su Profotograaf."
+msgstr[1] "%d foto mantenute su Profotograaf."
 
 #: includes/admin/class-client-links-panel.php:83
 msgid "Client galleries"

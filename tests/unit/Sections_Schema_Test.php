@@ -71,13 +71,21 @@ class Sections_Schema_Test extends Wp_Test_Case {
 		);
 		$this->assertSame(
 			array(
-				'type'     => 'grid',
-				'columns'  => 6,
-				'rows'     => 1,
-				'ratio'    => '3-2',
-				'gap'      => 8,
-				'captions' => 'below',
-				'photoIds' => array( 'a1', '', 'b2' ),
+				'type'          => 'grid',
+				'columns'       => 6,
+				'rows'          => 1,
+				'ratio'         => '3-2',
+				'gap'           => 8,
+				'gapRow'        => '',
+				'gapColumn'     => '',
+				'captions'      => 'below',
+				'radius'        => 'none',
+				'hover'         => 'zoom',
+				'hoverStrength' => 'subtle',
+				'frameColor'    => '#ffffff',
+				'frameWidth'    => 0,
+				'shadow'        => 'none',
+				'photoIds'      => array( 'a1', '', 'b2' ),
 			),
 			$section
 		);
