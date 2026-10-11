@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T01:17:39+00:00\n"
+"POT-Creation-Date: 2026-10-11T03:30:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -204,6 +204,7 @@ msgid "Enquiries that could not be sent are kept on this site until you export a
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:368
+#: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #: build/import-screen/index.js:5
 msgid "Try again"
@@ -326,6 +327,7 @@ msgstr ""
 
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: build/full-page-gallery/index.js:9
 #: build/gallery/index.js:11
 #: build/import-screen/index.js:2
 #: build/media-modal/index.js:1
@@ -544,6 +546,7 @@ msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
 #: includes/class-empty-gallery.php:76
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:11
 msgid "This gallery has no photos that can be shown on your site."
 msgstr ""
@@ -562,6 +565,15 @@ msgstr ""
 
 #: includes/class-full-page-renderer.php:168
 msgid "Made with Profotograaf"
+msgstr ""
+
+#: includes/class-full-page-template.php:37
+#: includes/class-full-page-template.php:65
+msgid "Profotograaf full page"
+msgstr ""
+
+#: includes/class-full-page-template.php:38
+msgid "Shows the page content without the site header and footer, for a full-page gallery."
 msgstr ""
 
 #: includes/class-gallery-look.php:150
@@ -870,12 +882,14 @@ msgid "Used when a gallery block or shortcode does not choose a layout. Profotog
 msgstr ""
 
 #: includes/class-settings-schema.php:124
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Grid"
 msgstr ""
 
 #: includes/class-settings-schema.php:125
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Masonry"
@@ -941,16 +955,21 @@ msgid "Leave the settings and the connection in the database when you delete the
 msgstr ""
 
 #: includes/class-settings-schema.php:193
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "On"
 msgstr ""
 
 #: includes/class-settings-schema.php:194
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Off"
 msgstr ""
 
 #: includes/class-settings-schema.php:205
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns"
 msgstr ""
@@ -960,6 +979,7 @@ msgid "Columns on wide screens, from 1 to 8."
 msgstr ""
 
 #: includes/class-settings-schema.php:214
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns on tablets"
 msgstr ""
@@ -969,6 +989,7 @@ msgid "Columns on medium screens, from 1 to 8."
 msgstr ""
 
 #: includes/class-settings-schema.php:223
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns on phones"
 msgstr ""
@@ -986,6 +1007,7 @@ msgid "Space between photos, from 0 to 96 pixels."
 msgstr ""
 
 #: includes/class-settings-schema.php:239
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photo shape"
 msgstr ""
@@ -995,16 +1017,19 @@ msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each
 msgstr ""
 
 #: includes/class-settings-schema.php:242
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Original"
 msgstr ""
 
 #: includes/class-settings-schema.php:243
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Square (1:1)"
 msgstr ""
 
 #: includes/class-settings-schema.php:255
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Captions"
 msgstr ""
@@ -1014,21 +1039,25 @@ msgid "Whether photo captions show and where."
 msgstr ""
 
 #: includes/class-settings-schema.php:258
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Hidden"
 msgstr ""
 
 #: includes/class-settings-schema.php:259
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Below the photo"
 msgstr ""
 
 #: includes/class-settings-schema.php:260
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr ""
 
 #: includes/class-settings-schema.php:267
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Sort order"
 msgstr ""
@@ -1038,26 +1067,31 @@ msgid "The order of the photos."
 msgstr ""
 
 #: includes/class-settings-schema.php:270
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Newest first"
 msgstr ""
 
 #: includes/class-settings-schema.php:271
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Oldest first"
 msgstr ""
 
 #: includes/class-settings-schema.php:272
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "By file name"
 msgstr ""
 
 #: includes/class-settings-schema.php:273
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Random"
 msgstr ""
 
 #: includes/class-settings-schema.php:282
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photos per page"
 msgstr ""
@@ -1067,6 +1101,7 @@ msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of
 msgstr ""
 
 #: includes/class-settings-schema.php:289
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Load more button"
 msgstr ""
@@ -1076,6 +1111,7 @@ msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr ""
 
 #: includes/class-settings-schema.php:297
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Lightbox"
 msgstr ""
@@ -1093,6 +1129,7 @@ msgid "Tint every photo with two colours, the shadow and the highlight, as two h
 msgstr ""
 
 #: includes/class-settings-schema.php:313
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Link photos to"
 msgstr ""
@@ -1102,26 +1139,31 @@ msgid "What a click on a photo does. This applies only when the lightbox is off,
 msgstr ""
 
 #: includes/class-settings-schema.php:316
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Nothing"
 msgstr ""
 
 #: includes/class-settings-schema.php:317
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
 msgstr ""
 
 #: includes/class-settings-schema.php:318
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Your photographer site"
 msgstr ""
 
 #: includes/class-settings-schema.php:319
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The original photo file"
 msgstr ""
 
 #: includes/class-settings-schema.php:326
+#: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
 msgstr ""
@@ -2171,10 +2213,12 @@ msgid "Open in a new tab"
 msgstr ""
 
 #: build/client-galleries/index.js:1
+#: build/full-page-gallery/index.js:4
 msgid "Text"
 msgstr ""
 
 #: build/client-galleries/index.js:1
+#: build/full-page-gallery/index.js:4
 msgid "Heading"
 msgstr ""
 
@@ -2214,6 +2258,360 @@ msgstr ""
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr ""
 
+#: build/full-page-gallery/index.js:1
+#: build/gallery/index.js:1
+msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
+msgstr ""
+
+#: build/full-page-gallery/index.js:1
+#: build/gallery/index.js:1
+msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
+msgstr ""
+
+#: build/full-page-gallery/index.js:1
+#: build/gallery/index.js:1
+msgid "Profotograaf is receiving too many requests. Try again in a moment."
+msgstr ""
+
+#. translators: %d: number of seconds to wait.
+#: build/full-page-gallery/index.js:2
+#: build/gallery/index.js:2
+#, js-format
+msgid "Profotograaf is receiving too many requests. Try again in %d second."
+msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/full-page-gallery/index.js:2
+#: build/gallery/index.js:2
+msgid "Profotograaf could not be reached. Check your connection and try again."
+msgstr ""
+
+#: build/full-page-gallery/index.js:2
+#: build/gallery/index.js:2
+msgid "Profotograaf reported a problem. Try again later."
+msgstr ""
+
+#: build/full-page-gallery/index.js:2
+#: build/gallery/index.js:2
+msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
+msgstr ""
+
+#: build/full-page-gallery/index.js:2
+#: build/gallery/index.js:2
+msgid "0 visible"
+msgstr ""
+
+#. translators: %d: number of photos in a gallery.
+#: build/full-page-gallery/index.js:3
+#: build/gallery/index.js:3
+#, js-format
+msgid "%d photo"
+msgid_plural "%d photos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/full-page-gallery/index.js:3
+#: build/gallery/index.js:3
+msgid "There are no galleries in your Profotograaf account yet."
+msgstr ""
+
+#. translators: %d: number of photos left out of the gallery.
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+#, js-format
+msgid "%d photo left out"
+msgid_plural "%d photos left out"
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Select a photo to leave it out of this gallery block."
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Show all photos"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "This gallery has no photos yet."
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Photos"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Photo ID"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+#: build/gallery/index.js:7
+msgid "Caption"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Alt text"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:9
+#: build/gallery/index.js:4
+msgid "Remove"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Photo captions and alt text"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Add a photo"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:1
+#: build/gallery/index.js:3
+#: build/gallery/index.js:4
+msgid "Site default"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Original (not drawn in a grid yet)"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Automatic columns"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Masonry keeps each photo's own shape."
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Gallery order"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "All photos"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Applies only when the lightbox is off. An open lightbox handles the click itself."
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Applies only when the lightbox is off and photos link somewhere."
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Display"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:11
+msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Calm"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Editorial"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Playful"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Custom"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Large photos in a row"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Hero photo"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "One large and two small photos"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Filmstrip"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Rows"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Number of photos"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Space between photos (px)"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Height (% of the screen height)"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Row height (px)"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Side of the large photo"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Swap sides on every second pair"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Title over the photo"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Alignment"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Left"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Center"
+msgstr ""
+
+#: build/full-page-gallery/index.js:4
+msgid "Right"
+msgstr ""
+
+#. translators: %s: the default value of a setting, such as 3:2 or Editorial.
+#: build/full-page-gallery/index.js:5
+#, js-format
+msgid "Default (%s)"
+msgstr ""
+
+#. translators: 1: lowest allowed number, 2: highest allowed number.
+#: build/full-page-gallery/index.js:6
+#, js-format
+msgid "From %1$d to %2$d."
+msgstr ""
+
+#: build/full-page-gallery/index.js:6
+msgid "picked"
+msgstr ""
+
+#: build/full-page-gallery/index.js:6
+msgid "Close"
+msgstr ""
+
+#: build/full-page-gallery/index.js:6
+msgid "Choose photo"
+msgstr ""
+
+#: build/full-page-gallery/index.js:6
+msgid "Clear"
+msgstr ""
+
+#. translators: 1: section type such as Hero photo, 2: its number in the gallery.
+#: build/full-page-gallery/index.js:7
+#, js-format
+msgid "%1$s %2$d"
+msgstr ""
+
+#. translators: 1: section type such as Hero photo, 2: its number in the gallery, 3: photo position in it.
+#: build/full-page-gallery/index.js:8
+#, js-format
+msgid "%1$s %2$d, photo %3$d"
+msgstr ""
+
+#: build/full-page-gallery/index.js:8
+msgid "Pick the photos for the large slots. A photo shows once, in the slot it was last picked for."
+msgstr ""
+
+#. translators: 1: position of the section in the list, 2: section type such as Grid.
+#: build/full-page-gallery/index.js:9
+#, js-format
+msgid "Section %1$d: %2$s"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Type"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Move up"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Move down"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Add a section. Without a section that shows photos, the gallery uses the default preset."
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Add a section"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+#: build/gallery/index.js:11
+msgid "Layout"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Preset"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "The pattern of sections repeats until every photo is shown."
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "No gallery chosen yet."
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+#: build/gallery/index.js:11
+msgid "Choose another gallery"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+msgid "Full-page gallery"
+msgstr ""
+
+#: build/full-page-gallery/index.js:9
+#: build/gallery/index.js:11
+msgid "Choose one of your galleries."
+msgstr ""
+
 #: build/full-page-gallery/view.js:1
 msgid "Scroll back"
 msgstr ""
@@ -2239,89 +2637,7 @@ msgid "Close viewer"
 msgstr ""
 
 #: build/gallery/index.js:1
-#: build/gallery/index.js:3
-#: build/gallery/index.js:4
-msgid "Site default"
-msgstr ""
-
-#: build/gallery/index.js:1
 msgid "Profotograaf default (the gallery's own layout)"
-msgstr ""
-
-#: build/gallery/index.js:1
-msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
-msgstr ""
-
-#: build/gallery/index.js:1
-msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
-msgstr ""
-
-#: build/gallery/index.js:1
-msgid "Profotograaf is receiving too many requests. Try again in a moment."
-msgstr ""
-
-#. translators: %d: number of seconds to wait.
-#: build/gallery/index.js:2
-#, js-format
-msgid "Profotograaf is receiving too many requests. Try again in %d second."
-msgid_plural "Profotograaf is receiving too many requests. Try again in %d seconds."
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/gallery/index.js:2
-msgid "Profotograaf could not be reached. Check your connection and try again."
-msgstr ""
-
-#: build/gallery/index.js:2
-msgid "Profotograaf reported a problem. Try again later."
-msgstr ""
-
-#: build/gallery/index.js:2
-msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
-msgstr ""
-
-#: build/gallery/index.js:2
-msgid "0 visible"
-msgstr ""
-
-#. translators: %d: number of photos in a gallery.
-#: build/gallery/index.js:3
-#, js-format
-msgid "%d photo"
-msgid_plural "%d photos"
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/gallery/index.js:3
-msgid "There are no galleries in your Profotograaf account yet."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Original (not drawn in a grid yet)"
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Gallery order"
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Automatic columns"
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Masonry keeps each photo's own shape."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "All photos"
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Applies only when the lightbox is off. An open lightbox handles the click itself."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Applies only when the lightbox is off and photos link somewhere."
 msgstr ""
 
 #: build/gallery/index.js:3
@@ -2349,10 +2665,6 @@ msgid "Cinema"
 msgstr ""
 
 #: build/gallery/index.js:3
-msgid "Filmstrip"
-msgstr ""
-
-#: build/gallery/index.js:3
 msgid "Slideout"
 msgstr ""
 
@@ -2375,59 +2687,6 @@ msgstr ""
 
 #: build/gallery/index.js:3
 msgid "Ignores the site default."
-msgstr ""
-
-#: build/gallery/index.js:3
-msgid "Display"
-msgstr ""
-
-#. translators: %d: number of photos left out of the gallery.
-#: build/gallery/index.js:4
-#, js-format
-msgid "%d photo left out"
-msgid_plural "%d photos left out"
-msgstr[0] ""
-msgstr[1] ""
-
-#: build/gallery/index.js:4
-msgid "Select a photo to leave it out of this gallery block."
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Show all photos"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "This gallery has no photos yet."
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Photos"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Photo ID"
-msgstr ""
-
-#: build/gallery/index.js:4
-#: build/gallery/index.js:7
-msgid "Caption"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Alt text"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Remove"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Photo captions and alt text"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Add a photo"
 msgstr ""
 
 #: build/gallery/index.js:4
@@ -2456,10 +2715,6 @@ msgstr ""
 
 #: build/gallery/index.js:4
 msgid "Large (24 pixels)"
-msgstr ""
-
-#: build/gallery/index.js:4
-msgid "Custom"
 msgstr ""
 
 #: build/gallery/index.js:4
@@ -2552,23 +2807,7 @@ msgid "Shown as %s on your site."
 msgstr ""
 
 #: build/gallery/index.js:11
-msgid "Layout"
-msgstr ""
-
-#: build/gallery/index.js:11
-msgid "Choose another gallery"
-msgstr ""
-
-#: build/gallery/index.js:11
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
-msgstr ""
-
-#: build/gallery/index.js:11
-msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
-msgstr ""
-
-#: build/gallery/index.js:11
-msgid "Choose one of your galleries."
 msgstr ""
 
 #: build/import-screen/index.js:1

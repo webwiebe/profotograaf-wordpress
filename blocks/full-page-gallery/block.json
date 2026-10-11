@@ -90,6 +90,8 @@
 			"margin": true
 		}
 	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
 	"viewScript": "file:./view.js",
 	"style": "file:./style-view.css"
 }

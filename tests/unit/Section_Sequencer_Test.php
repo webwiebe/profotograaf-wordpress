@@ -217,6 +217,9 @@ class Section_Sequencer_Test extends Wp_Test_Case {
 		);
 		$this->assertSame( array( 'p-2', 'p-0', 'p-1' ), self::ids( Section_Sequencer::sequence( self::photos( 3 ), 'custom', $custom ) ) );
 
+		$open = array( array( 'type' => 'feature', 'count' => 3, 'photoIds' => array( '', '', 'p-0' ) ) );
+		$this->assertSame( array( 'p-1', 'p-2', 'p-0' ), self::ids( Section_Sequencer::sequence( self::photos( 3 ), 'custom', array_map( array( Sections_Schema::class, 'normalise' ), $open ) ) ), 'an open position takes the flow' );
+
 		$only_text = array( array( 'type' => 'text' ) );
 		$this->assertSame( 'hero', Section_Sequencer::sequence( self::photos( 19 ), 'custom', $only_text )[0]['type'], 'falls back to the default preset' );
 	}

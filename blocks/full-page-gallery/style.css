@@ -264,12 +264,16 @@
 }
 
 .pf-fp-text[style*="--pf-align:left"] h2,
-.pf-fp-text[style*="--pf-align:left"] p {
+.pf-fp-text[style*="--pf-align:left"] p,
+.pf-fp-text[style*="--pf-align: left"] h2,
+.pf-fp-text[style*="--pf-align: left"] p {
 	margin-inline-start: 0;
 }
 
 .pf-fp-text[style*="--pf-align:right"] h2,
-.pf-fp-text[style*="--pf-align:right"] p {
+.pf-fp-text[style*="--pf-align:right"] p,
+.pf-fp-text[style*="--pf-align: right"] h2,
+.pf-fp-text[style*="--pf-align: right"] p {
 	margin-inline-end: 0;
 }
 
