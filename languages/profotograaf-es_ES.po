@@ -3871,3 +3871,7 @@ msgstr "Esta foto se mantiene en Profotograaf, así que este sitio no tiene ning
 #: includes/modules/class-virtual-edit-guard.php:127
 msgid "Set when the photo is kept on Profotograaf and has no file on this site."
 msgstr "Presente cuando la foto se mantiene en Profotograaf y no tiene ningún archivo en este sitio."
+
+#: includes/modules/class-virtual-plugin-compat.php:190
+msgid "This photo is kept on Profotograaf, so this site has no file to make thumbnails from. Profotograaf serves its sizes. Convert it to local if you need the files on this site."
+msgstr "Esta foto se mantiene en Profotograaf, así que este sitio no tiene ningún archivo para crear miniaturas. Profotograaf sirve sus tamaños. Conviértela en local si necesitas los archivos en este sitio."
