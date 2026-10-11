@@ -50,7 +50,8 @@ function profotograaf_uninstall_site(): void {
 	delete_option( 'profotograaf_log' );
 
 	// The backup state on Media Library items (`_profotograaf_backup_state` and the other `_profotograaf_backup_` fields).
-	// Other post meta of the plugin stays, like the imported photos it describes. The copies the backup made stay on Profotograaf.
+	// Other post meta of the plugin stays, like the imported photos it describes. The copies the backup made stay on Profotograaf,
+	// and so does their record (`_profotograaf_copy_*`), so a reinstall recognises a copied file by its checksum and does not send it again.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_profotograaf_backup_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
 
 	$transients = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_profotograaf_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.

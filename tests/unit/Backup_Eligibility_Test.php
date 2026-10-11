@@ -448,13 +448,13 @@ class Backup_Eligibility_Test extends Wp_Test_Case {
 	}
 
 	public function test_every_meta_key_starts_with_the_prefix_uninstall_removes(): void {
-		$keys = array_filter( ( new \ReflectionClass( Backup_State::class ) )->getConstants(), fn( $name ) => 0 === strpos( $name, 'META_' ), ARRAY_FILTER_USE_KEY );
+		$keys = array_filter( ( new \ReflectionClass( Backup_State::class ) )->getConstants(), fn( $name ) => 0 === strpos( $name, 'META_' ) && 0 !== strpos( $name, 'META_COPY_' ), ARRAY_FILTER_USE_KEY );
 
 		$this->assertCount( 8, $keys );
 		foreach ( $keys as $key ) {
 			$this->assertStringStartsWith( '_profotograaf_backup_', $key );
 		}
-		$this->assertSame( array( 'queued', 'done', 'skipped', 'failed' ), Backup_State::STATES );
+		$this->assertSame( array( 'queued', 'uploading', 'done', 'skipped', 'failed', 'needs_check' ), Backup_State::STATES );
 	}
 
 	public function test_the_queue_lists_queued_attachments_lowest_id_first(): void {
