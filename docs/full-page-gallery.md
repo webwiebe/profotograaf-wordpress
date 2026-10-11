@@ -6,6 +6,23 @@ plugin renders it on the server from the public embed payload, so all sections
 share one lightbox, the photos are in the HTML with their size, and the page
 shows them without JavaScript.
 
+## Using the block
+
+1. Add the "Full-page gallery" block and choose a gallery.
+2. Choose a preset: Calm, Editorial or Playful. Each repeats its sequence of
+   sections until every photo is shown. Custom lets you set the sections
+   yourself.
+3. Click a spot in a hero, feature or pair section to pick the photo for it.
+   Clear the spot to let the sequence fill it again.
+4. In the page settings, under Template, choose "Profotograaf full page" to
+   hide the site header and footer. Block themes get a block template and
+   classic themes a page template.
+
+Transform in the block toolbar turns a gallery block into a full-page gallery
+and back, keeping the gallery. The sample page `sample-full-page`
+(tests/e2e/sample-pages.js) shows every preset on 50 photos, and
+docs/review/full-page holds its screenshots at 1280 and 390 px.
+
 ## Shared vocabulary
 
 `includes/sections.json` holds the section types, the default and the range of
