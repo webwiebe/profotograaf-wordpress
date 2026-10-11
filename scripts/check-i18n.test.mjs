@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { comparePot, findHardcodedStrings, scanTree } from "./check-i18n.mjs";
+import { comparePot, findHardcodedStrings, findUntranslated, parsePo, scanTree } from "./check-i18n.mjs";
 
 const script = fileURLToPath(new URL("./check-i18n.mjs", import.meta.url));
 const found = (src, file = "blocks/x/edit.tsx") => findHardcodedStrings(src, file).map((f) => f.text);
@@ -114,4 +114,49 @@ test("the strings subcommand exits 1 on a hardcoded string", () => {
 
 test("the real repo has no hardcoded strings", () => {
   assert.deepEqual(scanTree("."), []);
+});
+
+const HEADER = 'msgid ""\nmsgstr ""\n"Language: nl_NL\\n"\n"Plural-Forms: nplurals=2; plural=(n != 1);\\n"\n';
+const po = (...entries) => [HEADER, ...entries].join("\n");
+
+test("parsePo skips the header and joins continuation lines", () => {
+  const [entry] = parsePo(po('msgctxt "verb"\nmsgid ""\n"Open the "\n"gallery"\nmsgstr "Open de \\"galerij\\""\n'));
+  assert.deepEqual(entry, { msgctxt: "verb", msgid: "Open the gallery", msgstr: ['Open de "galerij"'], fuzzy: false });
+});
+
+test("parsePo skips obsolete entries", () => {
+  assert.deepEqual(parsePo(po('#~ msgid "Old"\n#~ msgstr ""\n')), []);
+});
+
+test("a fully translated file has nothing to report", () => {
+  const text = po(
+    'msgid "Gallery"\nmsgstr "Galerij"\n',
+    'msgid "%d photo"\nmsgid_plural "%d photos"\nmsgstr[0] "%d foto"\nmsgstr[1] "%d foto\'s"\n',
+  );
+  assert.deepEqual(findUntranslated(text), []);
+});
+
+test("an empty msgstr, an empty plural form and a fuzzy entry are reported", () => {
+  const text = po(
+    'msgid "Gallery"\nmsgstr ""\n',
+    'msgid "%d photo"\nmsgid_plural "%d photos"\nmsgstr[0] "%d foto"\nmsgstr[1] ""\n',
+    '#, fuzzy, php-format\nmsgid "Photo"\nmsgstr "Foto"\n',
+  );
+  assert.deepEqual(
+    findUntranslated(text).map((h) => `${h.reason}: ${h.msgid}`),
+    ["untranslated: Gallery", "untranslated: %d photo", "fuzzy: Photo"],
+  );
+});
+
+test("the po subcommand exits 1 on an untranslated string and 0 when complete", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "i18n-"));
+  fs.writeFileSync(path.join(dir, "x-nl_NL.po"), po('msgid "Gallery"\nmsgstr ""\n'));
+  assert.equal(spawnSync(process.execPath, [script, "po", dir]).status, 1);
+  fs.writeFileSync(path.join(dir, "x-nl_NL.po"), po('msgid "Gallery"\nmsgstr "Galerij"\n'));
+  assert.equal(spawnSync(process.execPath, [script, "po", dir]).status, 0);
+});
+
+test("the po subcommand fails when there is no .po file to check", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "i18n-"));
+  assert.equal(spawnSync(process.execPath, [script, "po", dir]).status, 1);
 });
