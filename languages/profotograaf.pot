@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T02:21:25+00:00\n"
+"POT-Creation-Date: 2026-10-11T03:30:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: includes/class-cron-health.php:258
 #: includes/modules/class-media-import-screen.php:214
 #: includes/modules/class-media-import-screen.php:227
-#: includes/modules/class-media-upload.php:283
+#: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:76
@@ -72,6 +72,7 @@ msgstr ""
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:241
 #: includes/modules/class-settings-page.php:268
@@ -184,7 +185,7 @@ msgid "Automatic (no field found)"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:325
-#: includes/modules/class-media-upload.php:169
+#: includes/modules/class-media-upload.php:171
 msgid "Do not send"
 msgstr ""
 
@@ -390,7 +391,7 @@ msgid "Link this gallery"
 msgstr ""
 
 #: includes/admin/class-upload-panel.php:307
-#: includes/class-upload-queue.php:164
+#: includes/class-upload-queue.php:165
 msgid "Sending files to Profotograaf is switched off in the plugin settings."
 msgstr ""
 
@@ -1189,36 +1190,40 @@ msgstr ""
 msgid "Connect this site to Profotograaf first."
 msgstr ""
 
-#: includes/class-upload-queue.php:168
+#: includes/class-upload-queue.php:169
 msgid "This gallery is not linked for sending files."
 msgstr ""
 
-#: includes/class-upload-queue.php:171
+#: includes/class-upload-queue.php:172
 msgid "Only JPEG, PNG, WebP and GIF images can be sent to Profotograaf."
 msgstr ""
 
-#: includes/class-upload-queue.php:174
+#: includes/class-upload-queue.php:175
 msgid "This file is on Profotograaf already."
 msgstr ""
 
-#: includes/class-upload-queue.php:357
+#: includes/class-upload-queue.php:214
+msgid "This file is not waiting for a new upload."
+msgstr ""
+
+#: includes/class-upload-queue.php:386
 msgid "The gallery this file was meant for is no longer linked. Choose a linked gallery to send it again."
 msgstr ""
 
-#: includes/class-upload-queue.php:363
-#: includes/class-upload-queue.php:400
+#: includes/class-upload-queue.php:392
+#: includes/class-upload-queue.php:429
 msgid "The file could not be read from this site."
 msgstr ""
 
-#: includes/class-upload-queue.php:368
+#: includes/class-upload-queue.php:397
 msgid "The file is too large for this site to send. Resize it and send it again."
 msgstr ""
 
-#: includes/class-upload-queue.php:389
-msgid "The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery before you send it again."
+#: includes/class-upload-queue.php:418
+msgid "The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there."
 msgstr ""
 
-#: includes/class-upload-queue.php:405
+#: includes/class-upload-queue.php:434
 msgid "The file could not be prepared for sending."
 msgstr ""
 
@@ -1413,35 +1418,35 @@ msgid "Source"
 msgstr ""
 
 #. translators: %s: date the file was sent.
-#: includes/modules/class-media-upload.php:130
+#: includes/modules/class-media-upload.php:132
 #, php-format
 msgid "Sent to Profotograaf on %s."
 msgstr ""
 
-#: includes/modules/class-media-upload.php:136
+#: includes/modules/class-media-upload.php:138
 msgid "Waiting to be sent to Profotograaf."
 msgstr ""
 
-#: includes/modules/class-media-upload.php:138
+#: includes/modules/class-media-upload.php:140
 msgid "Sending needs a new permission. Connect this site again under Settings > Profotograaf."
 msgstr ""
 
-#: includes/modules/class-media-upload.php:151
+#: includes/modules/class-media-upload.php:153
 msgid "Send to Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-upload.php:166
+#: includes/modules/class-media-upload.php:168
 msgid "Link a gallery under Settings > Profotograaf to send files."
 msgstr ""
 
 #. translators: %s: gallery title.
-#: includes/modules/class-media-upload.php:210
+#: includes/modules/class-media-upload.php:212
 #, php-format
 msgid "Send to Profotograaf: %s"
 msgstr ""
 
 #. translators: %d: number of files queued.
-#: includes/modules/class-media-upload.php:261
+#: includes/modules/class-media-upload.php:263
 #, php-format
 msgid "%d file will be sent to Profotograaf in the background."
 msgid_plural "%d files will be sent to Profotograaf in the background."
@@ -1449,33 +1454,37 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of files skipped.
-#: includes/modules/class-media-upload.php:267
+#: includes/modules/class-media-upload.php:269
 #, php-format
 msgid "%d file was skipped: it is not a supported image, is on Profotograaf already, or you may not edit it."
 msgid_plural "%d files were skipped: they are not supported images, are on Profotograaf already, or you may not edit them."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-media-upload.php:302
-#: includes/modules/class-media-upload.php:309
+#: includes/modules/class-media-upload.php:304
+#: includes/modules/class-media-upload.php:311
 msgid "Sent"
 msgstr ""
 
-#: includes/modules/class-media-upload.php:302
+#: includes/modules/class-media-upload.php:304
 #: build/import-screen/index.js:4
 msgid "Imported"
 msgstr ""
 
-#: includes/modules/class-media-upload.php:307
+#: includes/modules/class-media-upload.php:309
 msgid "Waiting to be sent"
 msgstr ""
 
-#: includes/modules/class-media-upload.php:308
+#: includes/modules/class-media-upload.php:310
 msgid "Sending"
 msgstr ""
 
-#: includes/modules/class-media-upload.php:310
+#: includes/modules/class-media-upload.php:312
 msgid "Not sent"
+msgstr ""
+
+#: includes/modules/class-media-upload.php:341
+msgid "Upload again"
 msgstr ""
 
 #: includes/modules/class-patterns.php:54
@@ -2018,7 +2027,7 @@ msgid "Profotograaf does not accept this kind of file."
 msgstr ""
 
 #: includes/trait-upload-queue-outcome.php:56
-msgid "Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery before you send it again."
+msgid "Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery, and choose Upload again if the photo is not there."
 msgstr ""
 
 #: patterns/client-portal-cta.php:13
