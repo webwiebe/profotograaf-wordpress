@@ -16,6 +16,7 @@ Profotograaf connects your WordPress site to your [Profotograaf](https://profoto
 
 * **Connect in one step.** Approve the connection in Profotograaf. Your password never reaches your WordPress site.
 * **Gallery block and shortcode.** Pick one of your galleries and place it on any page, in a grid, masonry or slideshow layout.
+* **Full-page gallery block.** Show one gallery across the whole page, in sections of different shapes: large single photos, pairs, grids, masonry and a filmstrip. Choose the Calm, Editorial or Playful preset, or build your own sequence and pick the photo for each spot.
 * **Paste a link.** A pasted gallery link turns into an embedded gallery.
 * **Client galleries entry.** A "Find your gallery" block that leads clients to the client portal, on your Profotograaf address or on your own domain.
 * **Photos in the editor.** Optional. Use the photos of your embeddable galleries in posts and pages through the block inserter, the Media Library and the media modal. A photo you use is stored on your site, so it stays when you unpublish it on Profotograaf.
@@ -94,6 +95,10 @@ Once a day, in the background, the plugin asks `https://profotograaf.nl/api/v1/e
 
 Pasting a gallery link into the editor makes WordPress ask `https://profotograaf.nl/oembed` for the embed code of that gallery.
 
+= Full-page gallery block =
+
+To draw a full-page gallery, your server asks `https://profotograaf.nl/api/v1/embed/galleries/<gallery>` for the public gallery data (titles, captions, sizes and image links) and keeps the answer for 5 minutes. The request carries no token and no data about your visitors. The visitor's browser then loads the photos from `https://profotograaf.nl`, and Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the page reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`, the same report as the gallery block. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
+
 = Client galleries block =
 
 The "Find your gallery" block is a plain link. It sends nothing to Profotograaf and asks for nothing while a visitor views your page. When a visitor clicks the button, their browser opens your client portal on profotograaf.nl (`https://profotograaf.nl/<your address>/client`), or on your own domain or Profotograaf subdomain when you entered one. The portal is where clients sign in, and the Profotograaf privacy policy covers that visit.
@@ -141,6 +146,10 @@ Add the block "Find your gallery" to a page. In the block settings, enter your P
 = Which address do I enter for a custom domain? =
 
 The domain you connected in Profotograaf, for example `photos.example.com`. The button then opens `https://photos.example.com/client`, so your clients never leave your own domain.
+
+= How do I show a gallery across the whole page? =
+
+Add the "Full-page gallery" block, choose a gallery and a preset (Calm, Editorial or Playful), or choose Custom to set the sections yourself and pick a photo for a spot. In the page settings, under Template, choose "Profotograaf full page" to hide the site header and footer on that page. The template works with block themes and classic themes. To turn an existing gallery block into a full-page gallery, use Transform in the block toolbar.
 
 = Do I need a Profotograaf account? =
 
