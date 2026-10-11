@@ -1,7 +1,7 @@
 // @ts-check
-// The four sample pages that show every gallery layout and the display option
-// combinations from docs/gallery-display-matrix.md, on a site connected to the
-// real platform. tests/e2e/sample-pages.spec.js reads the same definitions, so
+// The sample pages that show every gallery layout, the display option
+// combinations from docs/gallery-display-matrix.md and the full-page gallery
+// presets (#194), on a site connected to the real platform. tests/e2e/sample-pages.spec.js reads the same definitions, so
 // the pages and the checks cannot drift apart.
 //
 // Each block carries an anchor (the `id` of the gallery div) that the spec
@@ -9,12 +9,17 @@
 // galleries on the platform, found by title in the plugin's gallery list, or
 // given on the command line:
 //
-//   node tests/e2e/sample-pages.js --compose ../profotograaf-wordpress-cms/docker-compose.yml \
-//     --large=<id> --few=<id> --mixed=<id> --png=<id> --empty=<id>
+//   node tests/e2e/sample-pages.js --compose=../profotograaf-wordpress-cms/docker-compose.yml \
+//     --large=<id> --few=<id> --mixed=<id> --png=<id> --empty=<id> --fifty=<id>
 //
 // It creates or updates the pages "Sample: Grid", "Sample: Masonry",
-// "Sample: Slideshow" and "Sample: Combinations" with wp-cli in the compose
-// project's cli service.
+// "Sample: Slideshow", "Sample: Combinations", "Sample: Spacing and shape" and
+// "Sample: Full page" with wp-cli in the compose project's cli service.
+//
+// A block is a gallery block unless it names another block type. A full-page
+// gallery has no anchor of its own, so its markup sits in a group that carries
+// the anchor. Attributes can depend on the gallery's photo ids, for a picked
+// photo; the builder reads them from the public payload.
 const { execFileSync } = require( 'node:child_process' );
 
 /** The platform gallery titles each role is looked up by. */
@@ -26,10 +31,14 @@ const ROLE_TITLES = {
 	few: 'Sample – Few (1 to 3)',
 	empty: 'Sample – Empty',
 	png: 'Sample – PNG',
+	fifty: 'Sample – Fifty',
 };
 
 /** Roles that fall back to another role when the platform has no gallery for them. */
-const ROLE_FALLBACK = { landscape: 'large', portrait: 'large', mixed: 'large' };
+const ROLE_FALLBACK = { landscape: 'large', portrait: 'large', mixed: 'large', fifty: 'large' };
+
+/** The block type of a full-page gallery sample block. */
+const FULL_PAGE = 'profotograaf/full-page-gallery';
 
 /**
  * The block duotone of the sample. It differs from the duotone the dev site
@@ -39,9 +48,14 @@ const ROLE_FALLBACK = { landscape: 'large', portrait: 'large', mixed: 'large' };
 const DUOTONE = [ 'rgb(32, 74, 135)', '#ffd6e0' ];
 
 /**
- * @typedef {{anchor:string, role:keyof typeof ROLE_TITLES, attrs?:Record<string,unknown>, expect?:'photos'|'empty'|'png', heading:string}} SampleBlock
+ * @typedef {{id:string, title:string, url:string, photoIds?:string[]}} SampleGallery
+ * @typedef {Record<string,unknown>|((gallery:SampleGallery) => Record<string,unknown>)} SampleAttrs
+ * @typedef {{anchor:string, role:keyof typeof ROLE_TITLES, block?:string, attrs?:SampleAttrs, expect?:'photos'|'empty'|'png', heading:string}} SampleBlock
  * @typedef {{title:string, slug:string, blocks:SampleBlock[]}} SamplePage
  */
+
+/** The position in gallery order of the photo the Custom sample picks as its hero. */
+const HERO_PICK = 11;
 
 /** @type {SamplePage[]} */
 const PAGES = [
@@ -104,26 +118,60 @@ const PAGES = [
 			{ anchor: 'look-slideshow', role: 'large', heading: 'Slideshow with rounded corners (it ignores frame and shadow)', attrs: { layout: 'slideshow', radius: 'rounded', frameWidth: '8', shadow: 'soft' } },
 		],
 	},
+	{
+		title: 'Sample: Full page',
+		slug: 'sample-full-page',
+		blocks: [
+			{ anchor: 'full-calm', role: 'fifty', block: FULL_PAGE, heading: 'Full-page gallery, calm preset', attrs: { preset: 'calm' } },
+			{ anchor: 'full-editorial', role: 'fifty', block: FULL_PAGE, heading: 'Full-page gallery, editorial preset', attrs: { preset: 'editorial' } },
+			{ anchor: 'full-playful', role: 'fifty', block: FULL_PAGE, heading: 'Full-page gallery, playful preset', attrs: { preset: 'playful' } },
+			{
+				anchor: 'full-custom',
+				role: 'fifty',
+				block: FULL_PAGE,
+				heading: 'Full-page gallery, custom sections with a text section and a picked hero',
+				attrs: ( gallery ) => ( {
+					preset: 'custom',
+					sections: [
+						{ type: 'hero', title: 'Spring', photoIds: gallery.photoIds?.[ HERO_PICK ] ? [ gallery.photoIds[ HERO_PICK ] ] : [] },
+						{ type: 'text', heading: 'The day in pictures', text: 'From the first light to the last dance.', align: 'center' },
+						{ type: 'grid', columns: 4, rows: 2, ratio: '1-1' },
+						{ type: 'pair', side: 'right' },
+						{ type: 'feature', count: 3 },
+					],
+				} ),
+			},
+			{ anchor: 'full-before', role: 'fifty', heading: 'The gallery block on the same photos, for comparison', attrs: { layout: 'grid' } },
+		],
+	},
 ];
 
 /**
  * The block markup of one sample block.
  *
- * @param {SampleBlock}                              block
- * @param {{id:string,title:string,url:string}}      gallery
+ * @param {SampleBlock}   block
+ * @param {SampleGallery} gallery
  * @return {string}
  */
 function blockMarkup( block, gallery ) {
-	const attrs = { galleryId: gallery.id, galleryTitle: gallery.title, galleryUrl: gallery.url, anchor: block.anchor, ...block.attrs };
+	const own = typeof block.attrs === 'function' ? block.attrs( gallery ) : block.attrs;
+	const attrs = { galleryId: gallery.id, galleryTitle: gallery.title, galleryUrl: gallery.url, ...own };
 	const heading = `<!-- wp:heading {"level":3} -->\n<h3 class="wp-block-heading">${ block.heading }</h3>\n<!-- /wp:heading -->`;
-	return `${ heading }\n\n<!-- wp:profotograaf/gallery ${ JSON.stringify( attrs ) } /-->`;
+	if ( block.block === FULL_PAGE ) {
+		const group = { anchor: block.anchor, align: 'full', layout: { type: 'default' } };
+		return (
+			`${ heading }\n\n<!-- wp:group ${ JSON.stringify( group ) } -->\n<div id="${ block.anchor }" class="wp-block-group alignfull">` +
+			`<!-- wp:${ FULL_PAGE } ${ JSON.stringify( attrs ) } /--></div>\n<!-- /wp:group -->`
+		);
+	}
+	return `${ heading }\n\n<!-- wp:profotograaf/gallery ${ JSON.stringify( { ...attrs, anchor: block.anchor } ) } /-->`;
 }
 
 /**
  * The post content of one sample page.
  *
  * @param {SamplePage} page
- * @param {Record<string,{id:string,title:string,url:string}>} galleries Gallery per role.
+ * @param {Record<string,SampleGallery>} galleries Gallery per role.
  * @return {string}
  */
 function pageContent( page, galleries ) {
@@ -172,6 +220,14 @@ function main( argv ) {
 		execFileSync( 'docker', [ 'compose', '-f', compose, 'run', '--rm', '-T', 'cli', 'wp', ...args ], { encoding: 'utf8', stdio: [ 'pipe', 'pipe', 'ignore' ] } ).trim();
 	const index = JSON.parse( wp( 'option', 'get', 'profotograaf_gallery_index', '--format=json' ) || '{}' );
 	const galleries = resolveRoles( index, options );
+	// The photo ids of the full-page gallery, for the picked hero, in gallery order.
+	const fifty = galleries.fifty;
+	const payload = wp( 'eval', `echo wp_remote_retrieve_body( wp_remote_get( Profotograaf\\Config::platform_endpoint( '/api/v1/embed/galleries/${ fifty.id }' ) ) );` );
+	try {
+		galleries.fifty = { ...fifty, photoIds: ( JSON.parse( payload ).photos || [] ).map( ( /** @type {{id:string}} */ photo ) => String( photo.id ) ) };
+	} catch {
+		process.stderr.write( 'Could not read the photos of the fifty gallery; the Custom sample has no picked hero.\n' );
+	}
 	for ( const page of PAGES ) {
 		const existing = wp( 'post', 'list', '--post_type=page', `--name=${ page.slug }`, '--field=ID' );
 		const fields = [ `--post_title=${ page.title }`, `--post_content=${ pageContent( page, galleries ) }`, '--post_status=publish' ];
@@ -186,4 +242,4 @@ if ( require.main === module ) {
 	main( process.argv.slice( 2 ) );
 }
 
-module.exports = { PAGES, ROLE_TITLES, pageContent, resolveRoles };
+module.exports = { PAGES, ROLE_TITLES, FULL_PAGE, HERO_PICK, pageContent, resolveRoles };

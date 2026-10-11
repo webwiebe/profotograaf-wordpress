@@ -2,6 +2,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { SelectControl, TextControl, TextareaControl } from '@wordpress/components';
 import { cleanNumber } from '../gallery/display-options';
 import { defaultLabel, fieldLabel, valueLabel, type FieldName } from './labels';
+import { isLookField } from './look';
+import { LookFields } from './look-fields';
 import { withField } from './section-list';
 import { fieldRule, sectionFields, type Section } from './sections';
 
@@ -111,13 +113,19 @@ function Field( props: FieldProps ) {
 	return <TextField { ...props } />;
 }
 
-/** The fields of one section, in the order of includes/sections.json. */
+/**
+ * The fields of one section, in the order of includes/sections.json, then
+ * the spacing and shape fields under their own heading.
+ */
 export function SectionFields( { section, onChange }: Omit< FieldProps, 'field' > ) {
 	return (
 		<>
-			{ sectionFields( section.type ).map( ( field ) => (
-				<Field key={ field } section={ section } field={ field } onChange={ onChange } />
-			) ) }
+			{ sectionFields( section.type )
+				.filter( ( field ) => ! isLookField( field ) )
+				.map( ( field ) => (
+					<Field key={ field } section={ section } field={ field } onChange={ onChange } />
+				) ) }
+			<LookFields section={ section } onChange={ onChange } />
 		</>
 	);
 }

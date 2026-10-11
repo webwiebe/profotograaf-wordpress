@@ -1,0 +1,79 @@
+/*
+ * Spacing and shape of the full-page gallery sections, the options #198 gave
+ * the gallery block. Full_Page_Look writes them on each section as custom
+ * properties (--pf-gap-row, --pf-gap-col, --pf-radius, --pf-frame,
+ * --pf-frame-color) and data attributes (data-hover, data-hover-strength,
+ * data-shadow). style.css imports this file first, so the gap selectors here
+ * add .pf-fp-s to win over its plain gap rules.
+ */
+
+/* Gap per axis, the section gap when a section sets none */
+
+.pf-fp-s.pf-fp-grid,
+.pf-fp-s.pf-fp-pair,
+.pf-fp-s.pf-fp-feature {
+	row-gap: var(--pf-gap-row, var(--pf-gap, 8px));
+	column-gap: var(--pf-gap-col, var(--pf-gap, 8px));
+}
+
+.pf-fp-s.pf-fp-masonry {
+	column-gap: var(--pf-gap-col, var(--pf-gap, 8px));
+}
+
+.pf-fp-s.pf-fp-masonry .pf-fp-photo {
+	margin-block-end: var(--pf-gap-row, var(--pf-gap, 8px));
+}
+
+/* Corners and frame, on the photo itself so a caption below stays outside */
+
+.pf-fp-s .pf-fp-open {
+	overflow: hidden;
+	border: var(--pf-frame, 0px) solid var(--pf-frame-color, #fff);
+	border-radius: var(--pf-radius, 0);
+}
+
+/* Shadow */
+
+.pf-fp-s[data-shadow] .pf-fp-photo {
+	overflow: visible;
+}
+
+.pf-fp-s[data-shadow="soft"] .pf-fp-open {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pf-fp-s[data-shadow="strong"] .pf-fp-open {
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover and keyboard focus. Visitors who ask for less motion see no effect. */
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.pf-fp-s[data-hover="zoom"] .pf-fp-open img,
+	.pf-fp-s[data-hover="grow"] .pf-fp-photo {
+		transition: transform 0.3s ease;
+	}
+
+	.pf-fp-s[data-hover="zoom"] .pf-fp-photo:hover img,
+	.pf-fp-s[data-hover="zoom"] .pf-fp-photo:focus-within img {
+		transform: scale(1.05);
+	}
+
+	.pf-fp-s[data-hover="zoom"][data-hover-strength="strong"] .pf-fp-photo:hover img,
+	.pf-fp-s[data-hover="zoom"][data-hover-strength="strong"] .pf-fp-photo:focus-within img {
+		transform: scale(1.12);
+	}
+
+	.pf-fp-s[data-hover="grow"] .pf-fp-photo:hover,
+	.pf-fp-s[data-hover="grow"] .pf-fp-photo:focus-within {
+		z-index: 1;
+		overflow: visible;
+		transform: scale(1.03);
+	}
+
+	.pf-fp-s[data-hover="grow"][data-hover-strength="strong"] .pf-fp-photo:hover,
+	.pf-fp-s[data-hover="grow"][data-hover-strength="strong"] .pf-fp-photo:focus-within {
+		transform: scale(1.08);
+	}
+}

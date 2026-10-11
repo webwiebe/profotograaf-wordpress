@@ -40,10 +40,28 @@ describe( 'sections vocabulary', () => {
 			rows: 2,
 			ratio: '3-2',
 			gap: 8,
+			gapRow: '',
+			gapColumn: '',
 			captions: 'off',
+			radius: 'none',
+			hover: 'zoom',
+			hoverStrength: 'subtle',
+			frameColor: '#ffffff',
+			frameWidth: 0,
+			shadow: 'none',
 			photoIds: [],
 		} );
-		expect( sectionDefaults( 'hero' ) ).toEqual( { height: 85, captions: 'off', title: '' } );
+		expect( sectionDefaults( 'hero' ) ).toEqual( {
+			height: 85,
+			captions: 'off',
+			title: '',
+			radius: 'none',
+			hover: 'zoom',
+			hoverStrength: 'subtle',
+			frameColor: '#ffffff',
+			frameWidth: 0,
+			shadow: 'none',
+		} );
 		expect( sectionFields( 'text' ) ).toEqual( [ 'heading', 'text', 'align' ] );
 	} );
 
