@@ -37,6 +37,15 @@
 		"openInNewTab": {
 			"type": "boolean",
 			"default": false
+		},
+		"gallery": {
+			"type": "string",
+			"default": ""
+		},
+		"linkTo": {
+			"type": "string",
+			"enum": [ "portal", "gallery" ],
+			"default": "portal"
 		}
 	},
 	"supports": {
@@ -54,6 +63,18 @@
 			"margin": true
 		}
 	},
+	"variations": [
+		{
+			"name": "delivered-gallery",
+			"title": "Open a delivered gallery",
+			"description": "A button that opens one delivered gallery through its share link.",
+			"icon": "format-gallery",
+			"keywords": [ "share", "delivered" ],
+			"attributes": { "linkTo": "gallery" },
+			"scope": [ "inserter", "transform" ],
+			"isActive": [ "linkTo" ]
+		}
+	],
 	"editorScript": "file:./index.js",
 	"style": "file:./style-index.css"
 }
