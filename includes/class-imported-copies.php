@@ -82,6 +82,7 @@ final class Imported_Copies {
 
 	/**
 	 * Keeps the feed entries that name an imported photo or a gallery of one.
+	 * Backup galleries and their photos are left out, whatever the feed says.
 	 *
 	 * @param array<string,mixed>                                        $page     Feed page from Api_Client::changes().
 	 * @param array<int,array{id:int,photo_id:string,gallery_id:string}> $imported Imported copies.
@@ -91,6 +92,9 @@ final class Imported_Copies {
 		$photos    = array();
 		$galleries = array();
 		foreach ( $imported as $copy ) {
+			if ( Backup_Galleries::contains( $copy['gallery_id'] ) ) {
+				continue;
+			}
 			$photos[ $copy['photo_id'] ] = true;
 			if ( '' !== $copy['gallery_id'] ) {
 				$galleries[ $copy['gallery_id'] ] = true;
@@ -98,7 +102,7 @@ final class Imported_Copies {
 		}
 		$deleted = array();
 		foreach ( $page['photos']['deleted'] as $entry ) {
-			if ( isset( $photos[ $entry['id'] ] ) ) {
+			if ( isset( $photos[ $entry['id'] ] ) && ! Backup_Galleries::contains( (string) ( $entry['gallery_id'] ?? '' ) ) ) {
 				$deleted[] = $entry;
 			}
 		}
