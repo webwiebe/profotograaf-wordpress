@@ -28,8 +28,8 @@ class Settings_Test extends Wp_Test_Case {
 		}
 	}
 
-	public function test_the_tabs_are_general_galleries_enquiry_forms_and_advanced(): void {
-		$this->assertSame( array( 'general', 'galleries', 'enquiry-forms', 'advanced' ), array_keys( Settings_Schema::tabs() ) );
+	public function test_the_tabs_are_general_galleries_enquiry_forms_backup_and_advanced(): void {
+		$this->assertSame( array( 'general', 'galleries', 'enquiry-forms', 'backup', 'advanced' ), array_keys( Settings_Schema::tabs() ) );
 		foreach ( array_keys( Settings_Schema::tabs() ) as $tab ) {
 			$this->assertNotSame( array(), Settings_Schema::in_tab( $tab ), $tab );
 		}
@@ -79,6 +79,8 @@ class Settings_Test extends Wp_Test_Case {
 				'leads_alert_email'      => '',
 				'leads_fallback_email'   => '',
 				'leads_failed_retention' => 7,
+				'backup'                 => false,
+				'backup_scope'           => 'used',
 				'telemetry_enabled'      => false,
 				'keep_data_on_uninstall' => true,
 				'gallery_columns'        => '',
@@ -248,6 +250,8 @@ class Settings_Test extends Wp_Test_Case {
 				'leads_alert_email'      => '',
 				'leads_fallback_email'   => '',
 				'leads_failed_retention' => 7,
+				'backup'                 => false,
+				'backup_scope'           => 'used',
 				'telemetry_enabled'      => false,
 				'keep_data_on_uninstall' => false,
 				'gallery_columns'        => '',

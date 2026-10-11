@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Admin\Backup_Intro;
 use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Admin\Settings_Fields;
 use Profotograaf\Admin\Upload_Panel;
@@ -19,8 +20,8 @@ use Profotograaf\Settings_Schema;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The settings page, in the tabs General, Galleries, Enquiry forms and
- * Advanced. General holds the connection status, connect and disconnect and
+ * The settings page, in the tabs General, Galleries, Enquiry forms, Backup
+ * and Advanced. General holds the connection status, connect and disconnect and
  * the allowed embed origin. The options on every tab come from
  * Settings_Schema.
  *
@@ -319,6 +320,9 @@ class Settings_Page implements Module {
 
 			<?php if ( Settings_Schema::TAB_ENQUIRY === $tab ) : ?>
 				<p><a href="<?php echo esc_url( Leads_Settings::url() ); ?>"><?php esc_html_e( 'Set up the enquiry forms', 'profotograaf' ); ?></a></p>
+			<?php endif; ?>
+			<?php if ( Settings_Schema::TAB_BACKUP === $tab ) : ?>
+				<?php Backup_Intro::render(); ?>
 			<?php endif; ?>
 			<?php ( new Settings_Fields( $this->plugin()->settings() ) )->render_form( $tab ); ?>
 
