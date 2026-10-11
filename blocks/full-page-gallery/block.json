@@ -1,0 +1,95 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "profotograaf/full-page-gallery",
+	"version": "0.1.0",
+	"title": "Full-page gallery",
+	"category": "media",
+	"icon": "format-gallery",
+	"description": "Show one of your Profotograaf galleries across the full page, in sections of different shapes.",
+	"keywords": [
+		"gallery",
+		"photos",
+		"profotograaf",
+		"full page"
+	],
+	"textdomain": "profotograaf",
+	"attributes": {
+		"align": {
+			"type": "string",
+			"default": "full"
+		},
+		"galleryId": {
+			"type": "string",
+			"default": ""
+		},
+		"galleryTitle": {
+			"type": "string",
+			"default": ""
+		},
+		"galleryUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"preset": {
+			"type": "string",
+			"default": ""
+		},
+		"sections": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"picks": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"excludedPhotoIds": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": []
+		},
+		"captions": {
+			"type": "string",
+			"default": ""
+		},
+		"lightbox": {
+			"type": "string",
+			"default": ""
+		},
+		"linkTo": {
+			"type": "string",
+			"default": ""
+		},
+		"linkNewTab": {
+			"type": "string",
+			"default": ""
+		},
+		"imageText": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		],
+		"spacing": {
+			"margin": true
+		}
+	},
+	"viewScript": "file:./view.js",
+	"style": "file:./style-view.css"
+}
