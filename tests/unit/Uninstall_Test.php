@@ -44,6 +44,8 @@ class Uninstall_Test extends Wp_Test_Case {
 		$wpdb = new class( $test ) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- uninstall.php reads the global.
 			public string $options = 'wp_options';
 
+			public string $postmeta = 'wp_postmeta';
+
 			private object $test;
 
 			public function __construct( object $test ) {
@@ -65,7 +67,31 @@ class Uninstall_Test extends Wp_Test_Case {
 			public function get_col( string $query ): array {
 				return $this->test->names( $query );
 			}
+
+			public function query( string $query ): int {
+				return $this->test->delete_meta( $query );
+			}
 		};
+	}
+
+	/**
+	 * Post meta keys per site id.
+	 *
+	 * @var array<int,array<int,string>>
+	 */
+	private array $meta = array();
+
+	/**
+	 * Deletes the post meta of the current site whose key starts with the prefix in the prepared query.
+	 *
+	 * @param string $query Prepared query.
+	 */
+	public function delete_meta( string $query ): int {
+		$this->assertStringStartsWith( 'DELETE FROM wp_postmeta WHERE meta_key LIKE %s|', $query );
+		$prefix                       = rtrim( substr( $query, strrpos( $query, '|' ) + 1 ), '%' );
+		$before                       = $this->meta[ $this->current ] ?? array();
+		$this->meta[ $this->current ] = array_values( array_filter( $before, fn( $key ) => 0 !== strpos( $key, $prefix ) ) );
+		return count( $before ) - count( $this->meta[ $this->current ] );
 	}
 
 	/**
@@ -98,6 +124,7 @@ class Uninstall_Test extends Wp_Test_Case {
 				'profotograaf_upload_lock'      => 1000000,
 				'blogname'                      => 'Site ' . $id,
 			);
+			$this->meta[ $id ]  = array( '_profotograaf_backup_state', '_profotograaf_backup_photo_id', '_profotograaf_photo_id', '_wp_attached_file' );
 		}
 
 		Functions\when( 'is_multisite' )->justReturn( true );
@@ -136,6 +163,9 @@ class Uninstall_Test extends Wp_Test_Case {
 		$this->assertSame( 0, $this->query['number'] );
 		foreach ( $this->sites as $id => $options ) {
 			$this->assertSame( array( 'blogname' ), array_keys( $options ), "site $id keeps only WordPress options" );
+		}
+		foreach ( $this->meta as $id => $keys ) {
+			$this->assertSame( array( '_profotograaf_photo_id', '_wp_attached_file' ), $keys, "site $id loses only the backup state" );
 		}
 		$this->assertContains( '150:profotograaf_refresh_tokens', $this->cleared );
 		$this->assertContains( '150:profotograaf_upload_queue', $this->cleared );

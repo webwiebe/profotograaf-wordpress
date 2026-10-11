@@ -34,7 +34,7 @@ The plugin sets no cookies and does not track your visitors. See "External servi
 
 **What the plugin stores.** The connection to Profotograaf (tokens and a random identifier of this installation) and your settings are stored in the WordPress options table. When you switch on a form, each submission is stored there as well, with the name, email address, phone, date, message and other fields of the form, until it is delivered to Profotograaf. A submission that cannot be delivered is kept for the retention period in the lead settings (7 days by default), so you can export or retry it.
 
-**Suggested policy text.** The plugin adds text for your privacy policy under Settings, Privacy, Policy Guide. It covers the galleries, enquiries, the photo library, sending Media Library files and the connection.
+**Suggested policy text.** The plugin adds text for your privacy policy under Settings, Privacy, Policy Guide. It covers the galleries, enquiries, the photo library, sending Media Library files, the backup and the connection.
 
 **Export and erase.** Tools, Export Personal Data includes the waiting and failed enquiries of an email address, and Tools, Erase Personal Data removes them. The email address is matched without regard to case. Enquiries that were already delivered are held by Profotograaf and covered by its privacy policy.
 
@@ -44,7 +44,9 @@ The plugin sets no cookies and does not track your visitors. See "External servi
 
 **Sending Media Library files (only if you turn it on).** The "Send Media Library files to Profotograaf" setting is off by default, and nothing is sent while it is off. When it is on, a file leaves your site only after a person chooses a linked gallery for it, and it can go to any of your galleries, including a client gallery. Before an image is sent, the plugin removes the GPS position (Exif, XMP, and the raw profile chunks of PNG files). The rest of the metadata, such as camera, lens and date, is sent. We do not claim that Profotograaf removes it afterwards. HEIC, video and RAW files are not sent. Photos of people are personal data: you decide what to send and you need the right to send it. Per file, the Media Library keeps hidden fields (photo and gallery identifiers, send state and time). They stay when you delete the plugin.
 
-**Uninstall.** Deleting the plugin removes the stored connection, settings and queued enquiries, unless you chose to keep the data on uninstall in the settings.
+**Backup to Profotograaf (only if you turn it on).** The "Back up the Media Library to Profotograaf" setting on the Backup tab is off by default, and nothing is sent while it is off. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on. When it is on, your server copies the Media Library files that the chosen scope selects to private galleries in your Profotograaf account: images, RAW files and videos, each as stored, with its file name and metadata, which can include the GPS position. The gallery names hold your site title. Photos of people are personal data: you need the right to send them. Per file, the Media Library keeps hidden fields (backup state, photo and gallery identifiers, a checksum).
+
+**Uninstall.** Deleting the plugin removes the stored connection, settings, queued enquiries and the backup fields on Media Library items, unless you chose to keep the data on uninstall in the settings. The copies the backup made stay in your Profotograaf account until you delete them there.
 
 == External services ==
 
@@ -82,6 +84,16 @@ What is sent, and when. In the background (WP-Cron, never while an admin page lo
 Photos of people are personal data. You decide which files to send, and you are responsible for having the right to send them. A file can go to any of your galleries, including a client gallery.
 
 What stays on your site: the file in the Media Library and a few hidden fields on it (`_profotograaf_photo_id`, `_profotograaf_gallery_id`, `_profotograaf_origin`, `_profotograaf_upload_gallery`, `_profotograaf_upload_state`, `_profotograaf_upload_error`, `_profotograaf_upload_attempts`, `_profotograaf_uploaded_at`, `_profotograaf_upload_next_at`, `_profotograaf_upload_started_at`, `_profotograaf_upload_check`, and hashes the plugin uses to see later edits). Deleting the plugin removes its settings, linked galleries and scheduled events and leaves these fields, as it leaves imported photos. Deleting a file in WordPress deletes nothing on Profotograaf.
+
+= Backup to Profotograaf (only if you opt in) =
+
+The backup is off until you switch on "Back up the Media Library to Profotograaf" on the Backup tab of the plugin settings. Nothing is sent before that. The choices for anonymous usage data, for Profotograaf photos in the editor and for sending Media Library files do not switch it on.
+
+What is sent, and when. In the background (WP-Cron, never while a page loads), the plugin creates private galleries in your account with `POST https://profotograaf.nl/api/v1/embed/galleries`, one per month, with your site title in the gallery name. It then sends one file at a time with `POST https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos`, a multipart request with the file, its file name and the access token. The files are the originals of the Media Library items that the chosen scope selects: images, RAW files and videos. Photos imported from Profotograaf are skipped. Each file is sent as stored, with its metadata, which can include the GPS position, the camera and the date. Backup galleries stay private, and the plugin never switches them on for embedding. These calls need the galleries:write permission. The copies count towards your Profotograaf storage.
+
+Photos of people are personal data. You are responsible for having the right to send them, and Profotograaf stores the copies for you.
+
+What stays. The backup copies a file once. Editing or deleting a file in WordPress later changes nothing on Profotograaf. Switching the backup off or deleting the plugin leaves the copies in your Profotograaf account until you delete them there. Deleting the plugin removes the backup settings and the hidden fields the backup keeps on Media Library items (`_profotograaf_backup_state` and the other fields that start with `_profotograaf_backup_`).
 
 = Checking for changes to imported photos =
 
@@ -220,6 +232,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: Backup tab in the settings, with "Back up the Media Library to Profotograaf" (off by default) and the scope: files used on the site, every file, or only the files you mark. The tab, readme.txt and the suggested privacy policy text say what is sent and where, and that the copies stay on Profotograaf after uninstall. Uninstall removes the backup fields on Media Library items.
 * New: "Keep photos on Profotograaf" setting, off by default. With it on, Media > Import from Profotograaf offers "Keep on Profotograaf" next to Import: the photo is added to the Media Library without a download and shown from Profotograaf. The screen and the setting explain that a photo you unpublish can keep showing from edge and browser caches. Only users who can upload files can use it.
 * New: "Convert to local" for photos kept on Profotograaf, as a row action and a bulk action in the Media Library list view and as a button in the attachment details. It downloads the photo into the Media Library like Import, with the usual sizes, and keeps the attachment, so posts that use it keep working. A photo Profotograaf no longer lists gets a notice that offers the conversion while Profotograaf still serves it. Photos kept while the setting was on stay convertible after you switch it off.
 * New: "Check now" for photo changes on the settings page and the Import screen, a "last checked" line, and one background check from the Media Library, the Import screen and the settings page when the last check is more than six hours old. Site Health and the settings page notice name a photo change check that has not run for three hours and show the crontab line, for hosts without WP-Cron.

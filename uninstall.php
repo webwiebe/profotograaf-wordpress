@@ -8,7 +8,8 @@
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 /**
- * Deletes the options, transients and scheduled events of one site.
+ * Deletes the options, transients, scheduled events and backup post meta of
+ * one site.
  *
  * Every option and event this plugin adds starts with `profotograaf_`, so
  * modules added later are covered without editing this file. The option
@@ -47,6 +48,10 @@ function profotograaf_uninstall_site(): void {
 	// Photo import locks (Photo_Importer::LOCK_PREFIX) left behind by a crashed request are covered by the same prefix.
 	// The log ring buffer (Logger::OPTION) is one of these options. Naming it keeps the removal explicit.
 	delete_option( 'profotograaf_log' );
+
+	// The backup state on Media Library items (`_profotograaf_backup_state` and the other `_profotograaf_backup_` fields).
+	// Other post meta of the plugin stays, like the imported photos it describes. The copies the backup made stay on Profotograaf.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_profotograaf_backup_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
 
 	$transients = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_profotograaf_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
 	foreach ( (array) $transients as $name ) {

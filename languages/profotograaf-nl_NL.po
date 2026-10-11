@@ -29,9 +29,9 @@ msgstr ""
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
-#: includes/modules/class-settings-page.php:76
 #: includes/modules/class-settings-page.php:77
-#: includes/modules/class-settings-page.php:276
+#: includes/modules/class-settings-page.php:78
+#: includes/modules/class-settings-page.php:277
 #: includes/modules/class-site-health.php:357
 #: includes/modules/class-site-health.php:428
 #: assets/admin/media-source.js:29
@@ -64,7 +64,7 @@ msgid "Profotograaf enquiries"
 msgstr "Profotograaf-aanvragen"
 
 #: includes/admin/class-leads-settings.php:106
-#: includes/class-settings-schema.php:62
+#: includes/class-settings-schema.php:63
 msgid "Enquiry forms"
 msgstr "Aanvraagformulieren"
 
@@ -74,9 +74,9 @@ msgstr "Aanvraagformulieren"
 #: includes/modules/class-admin-notices.php:185
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
-#: includes/modules/class-settings-page.php:241
-#: includes/modules/class-settings-page.php:268
-#: includes/modules/class-settings-page.php:474
+#: includes/modules/class-settings-page.php:242
+#: includes/modules/class-settings-page.php:269
+#: includes/modules/class-settings-page.php:478
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
 msgid "You do not have permission to do this."
@@ -264,11 +264,11 @@ msgid "Only editors see this note. The \"Find your gallery\" block has no Profot
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
 #: includes/admin/class-network-page.php:109
-#: includes/modules/class-settings-page.php:107
+#: includes/modules/class-settings-page.php:108
 msgid "Settings"
 msgstr "Instellingen"
 
-#: includes/modules/class-settings-page.php:371
+#: includes/modules/class-settings-page.php:375
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Wachten tot je de verbinding goedkeurt in Profotograaf."
 
@@ -276,135 +276,135 @@ msgstr "Wachten tot je de verbinding goedkeurt in Profotograaf."
 msgid "Could not check the connection. Reload this page to try again."
 msgstr "De verbinding kon niet worden gecontroleerd. Laad deze pagina opnieuw om het nog eens te proberen."
 
-#: includes/modules/class-settings-page.php:182
+#: includes/modules/class-settings-page.php:183
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr "Profotograaf heeft een nieuwe toestemming nodig om galerijen aan te zetten voor insluiten."
 
 #: includes/modules/class-admin-notices.php:122
-#: includes/modules/class-settings-page.php:184
+#: includes/modules/class-settings-page.php:185
 msgid "Connect this site again"
 msgstr "Koppel deze site opnieuw"
 
-#: includes/modules/class-settings-page.php:216
+#: includes/modules/class-settings-page.php:217
 msgid "Disconnected from Profotograaf."
 msgstr "Verbinding met Profotograaf verbroken."
 
-#: includes/modules/class-settings-page.php:220
+#: includes/modules/class-settings-page.php:221
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr "Verbinding verbroken. Deze site heeft geen toegang meer. Om de site ook uit je account te verwijderen, open je Gekoppelde apps in de instellingen van je Profotograaf-account."
 
-#: includes/modules/class-settings-page.php:251
+#: includes/modules/class-settings-page.php:252
 msgid "Connected to Profotograaf."
 msgstr "Verbonden met Profotograaf."
 
-#: includes/modules/class-settings-page.php:254
+#: includes/modules/class-settings-page.php:255
 msgid "The connection was declined in Profotograaf."
 msgstr "De verbinding is geweigerd in Profotograaf."
 
-#: includes/modules/class-settings-page.php:257
+#: includes/modules/class-settings-page.php:258
 msgid "The code expired. Start the connection again."
 msgstr "De code is verlopen. Start de verbinding opnieuw."
 
 #: includes/admin/class-network-page.php:98
-#: includes/modules/class-settings-page.php:281
+#: includes/modules/class-settings-page.php:282
 #: includes/modules/class-site-health.php:362
 msgid "Connection"
 msgstr "Verbinding"
 
 #: includes/admin/class-network-page.php:69
-#: includes/modules/class-settings-page.php:286
+#: includes/modules/class-settings-page.php:287
 msgid "Connected"
 msgstr "Verbonden"
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:290
+#: includes/modules/class-settings-page.php:291
 #, php-format
 msgid "since %s."
 msgstr "sinds %s."
 
-#: includes/modules/class-settings-page.php:296
+#: includes/modules/class-settings-page.php:297
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr "Deze koppeling is gemaakt voordat Profotograaf deze site galerijen kon laten aanzetten voor insluiten. Koppel opnieuw om die toestemming te geven. Je galerijen en instellingen blijven zoals ze zijn."
 
-#: includes/modules/class-settings-page.php:298
-#: includes/modules/class-settings-page.php:304
+#: includes/modules/class-settings-page.php:299
+#: includes/modules/class-settings-page.php:305
 msgid "Connect again"
 msgstr "Opnieuw koppelen"
 
-#: includes/modules/class-settings-page.php:306
+#: includes/modules/class-settings-page.php:307
 msgid "Disconnect"
 msgstr "Verbinding verbreken"
 
 #: includes/admin/class-network-page.php:75
-#: includes/modules/class-settings-page.php:309
+#: includes/modules/class-settings-page.php:310
 msgid "Not connected"
 msgstr "Niet verbonden"
 
-#: includes/modules/class-settings-page.php:314
+#: includes/modules/class-settings-page.php:315
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr "Verbind deze site met je Profotograaf-account om galerijen te plaatsen en aanvragen te ontvangen. Je keurt de verbinding goed in Profotograaf, dus je wachtwoord komt nooit op deze site."
 
-#: includes/modules/class-settings-page.php:316
+#: includes/modules/class-settings-page.php:317
 msgid "Connect to Profotograaf"
 msgstr "Verbinden met Profotograaf"
 
-#: includes/class-settings-schema.php:127
+#: includes/class-settings-schema.php:129
 msgid "Default gallery layout"
 msgstr "Standaardindeling van galerijen"
 
-#: includes/class-settings-schema.php:131
+#: includes/class-settings-schema.php:133
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Grid"
 msgstr "Raster"
 
-#: includes/class-settings-schema.php:132
+#: includes/class-settings-schema.php:134
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Masonry"
 msgstr "Metselwerk"
 
-#: includes/class-settings-schema.php:133
+#: includes/class-settings-schema.php:135
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Slideshow"
 msgstr "Diavoorstelling"
 
-#: includes/modules/class-settings-page.php:366
+#: includes/modules/class-settings-page.php:370
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bevestig deze code in Profotograaf om het verbinden af te ronden:"
 
-#: includes/modules/class-settings-page.php:369
+#: includes/modules/class-settings-page.php:373
 msgid "Open the approval page"
 msgstr "Open de goedkeuringspagina"
 
-#: includes/modules/class-settings-page.php:372
+#: includes/modules/class-settings-page.php:376
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: includes/modules/class-settings-page.php:383
+#: includes/modules/class-settings-page.php:387
 msgid "Embedding on this site"
 msgstr "Insluiten op deze site"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:388
+#: includes/modules/class-settings-page.php:392
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s mag je Profotograaf-pagina's in een frame tonen."
 
-#: includes/modules/class-settings-page.php:392
+#: includes/modules/class-settings-page.php:396
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf staat insluiten alleen toe op sites die via https worden aangeboden. Bied deze site aan via https om je pagina's in een frame in te sluiten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:397
+#: includes/modules/class-settings-page.php:401
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je %s toe onder \"Sites die mijn pagina's mogen insluiten\" in de instellingen van je Profotograaf-account."
 
-#: includes/modules/class-settings-page.php:405
+#: includes/modules/class-settings-page.php:409
 msgid "Check again"
 msgstr "Opnieuw controleren"
 
@@ -576,44 +576,44 @@ msgstr "Die pagina staat niet op het Profotograaf-platform."
 msgid "The public page could not be loaded."
 msgstr "De openbare pagina kon niet worden geladen."
 
-#: includes/class-settings-schema.php:60
+#: includes/class-settings-schema.php:61
 msgid "General"
 msgstr "Algemeen"
 
-#: includes/class-settings-schema.php:61
+#: includes/class-settings-schema.php:62
 #: includes/modules/class-privacy.php:229
 msgid "Galleries"
 msgstr "Galerijen"
 
-#: includes/class-settings-schema.php:63
+#: includes/class-settings-schema.php:65
 msgid "Advanced"
 msgstr "Geavanceerd"
 
-#: includes/class-settings-schema.php:91
+#: includes/class-settings-schema.php:93
 msgid "Gallery link text"
 msgstr "Linktekst van de galerij"
 
-#: includes/class-settings-schema.php:92
+#: includes/class-settings-schema.php:94
 msgid "Text of the link shown until a gallery loads, for galleries without a title. Leave empty to use \"View the gallery\"."
 msgstr "Tekst van de link die wordt getoond totdat een galerij is geladen, voor galerijen zonder titel. Laat leeg om \"Bekijk de galerij\" te gebruiken."
 
-#: includes/class-settings-schema.php:140
+#: includes/class-settings-schema.php:142
 msgid "Collect enquiries"
 msgstr "Aanvragen verzamelen"
 
-#: includes/class-settings-schema.php:141
+#: includes/class-settings-schema.php:143
 msgid "Listen for submissions of supported form plugins. Each form still has its own switch on the enquiry forms screen."
 msgstr "Luister naar inzendingen van ondersteunde formulierplugins. Elk formulier heeft nog een eigen schakelaar op het scherm met aanvraagformulieren."
 
-#: includes/class-settings-schema.php:183
+#: includes/class-settings-schema.php:204
 msgid "Keep my data when the plugin is deleted"
 msgstr "Mijn gegevens bewaren als de plugin wordt verwijderd"
 
-#: includes/class-settings-schema.php:184
+#: includes/class-settings-schema.php:205
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr "Laat de instellingen en de verbinding in de database staan als je de plugin verwijdert, bijvoorbeeld om hem later opnieuw te installeren."
 
-#: includes/modules/class-settings-page.php:321
+#: includes/modules/class-settings-page.php:322
 msgid "Set up the enquiry forms"
 msgstr "De aanvraagformulieren instellen"
 
@@ -688,19 +688,19 @@ msgstr "Geëxporteerde aanvragen verwijderen"
 msgid "The exported enquiries were removed."
 msgstr "De geëxporteerde aanvragen zijn verwijderd."
 
-#: includes/class-settings-schema.php:147
+#: includes/class-settings-schema.php:149
 msgid "Failure alerts go to"
 msgstr "Foutmeldingen gaan naar"
 
-#: includes/class-settings-schema.php:148
+#: includes/class-settings-schema.php:150
 msgid "Receives one email, without personal data, when an enquiry cannot be delivered or is dropped. Leave empty to use the site admin email address."
 msgstr "Ontvangt één e-mail, zonder persoonsgegevens, als een aanvraag niet kan worden bezorgd of verloren gaat. Laat leeg om het e-mailadres van de sitebeheerder te gebruiken."
 
-#: includes/class-settings-schema.php:155
+#: includes/class-settings-schema.php:157
 msgid "Mail undeliverable enquiries to"
 msgstr "Onbezorgbare aanvragen mailen naar"
 
-#: includes/class-settings-schema.php:156
+#: includes/class-settings-schema.php:158
 msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
 msgstr "Als een aanvraag niet bij Profotograaf kan worden bezorgd, stuur je die in plaats daarvan per e-mail naar dit adres. De e-mail bevat de aanvraag. Laat leeg om dit uit te zetten."
 
@@ -751,12 +751,12 @@ msgstr "Formulier: %1$s. Tijd: %2$s UTC."
 msgid "Enquiry that could not be delivered"
 msgstr "Aanvraag die niet kon worden bezorgd"
 
-#: uninstall.php:32
+#: uninstall.php:33
 msgid "Undeliverable enquiries were deleted"
 msgstr "Onbezorgbare aanvragen zijn verwijderd"
 
 #. translators: %d: number of enquiries.
-#: uninstall.php:35
+#: uninstall.php:36
 #, php-format
 msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
 msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
@@ -1103,11 +1103,11 @@ msgstr "geen"
 msgid "Open the leads screen"
 msgstr "Open het aanvragenscherm"
 
-#: includes/class-settings-schema.php:98
+#: includes/class-settings-schema.php:100
 msgid "Client portal path"
 msgstr "Pad van het klantportaal"
 
-#: includes/class-settings-schema.php:99
+#: includes/class-settings-schema.php:101
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr "Het pad van het klantportaal op je Profotograaf-adres, gebruikt door het blok \"Vind je galerij\". Een blok kan een eigen pad instellen. De standaard is /client."
 
@@ -1183,11 +1183,11 @@ msgstr "Bronlabel"
 msgid "Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name."
 msgstr "Getoond als bron van de aanvraag in je Profotograaf-inbox. Laat leeg om de formulierplugin en de formuliernaam te gebruiken."
 
-#: includes/class-settings-schema.php:165
+#: includes/class-settings-schema.php:167
 msgid "Keep undeliverable enquiries for (days)"
 msgstr "Onbezorgbare aanvragen bewaren (dagen)"
 
-#: includes/class-settings-schema.php:166
+#: includes/class-settings-schema.php:168
 msgid "Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed."
 msgstr "Aanvragen die niet konden worden bezorgd, blijven in de database totdat je ze exporteert of dit aantal dagen voorbij is, van 1 tot 90. Je krijgt een e-mail voordat ze worden verwijderd."
 
@@ -1267,23 +1267,23 @@ msgstr "Aanvragen"
 msgid "When a contact form is switched on for Profotograaf, each submission is stored on this site and then sent to profotograaf.nl: the name, email address, phone number, date, message and other fields of the form, the address of the page and the name of the form. A submission waits in the queue until it is delivered. One that cannot be delivered is kept for a limited time, so the site owner can export or retry it. The personal data tools export and erase these submissions by the email address of the sender."
 msgstr "Als een contactformulier voor Profotograaf is aangezet, wordt elke inzending op deze site opgeslagen en daarna naar profotograaf.nl gestuurd: de naam, het e-mailadres, het telefoonnummer, de datum, het bericht en de andere velden van het formulier, het adres van de pagina en de naam van het formulier. Een inzending wacht in de wachtrij totdat die is bezorgd. Een inzending die niet kan worden bezorgd, wordt een beperkte tijd bewaard, zodat de eigenaar van de site die kan exporteren of opnieuw kan versturen. De hulpmiddelen voor persoonsgegevens exporteren en wissen deze inzendingen op basis van het e-mailadres van de afzender."
 
-#: includes/modules/class-privacy.php:237
+#: includes/modules/class-privacy.php:239
 msgid "Connection and diagnostics"
 msgstr "Verbinding en diagnose"
 
-#: includes/modules/class-privacy.php:240
+#: includes/modules/class-privacy.php:242
 msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr "Het privacybeleid van Profotograaf staat op https://profotograaf.nl/privacy."
 
-#: includes/class-settings-schema.php:172
+#: includes/class-settings-schema.php:193
 msgid "Share anonymous usage data"
 msgstr "Anonieme gebruiksgegevens delen"
 
-#: includes/class-settings-schema.php:173
+#: includes/class-settings-schema.php:194
 msgid "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
 msgstr "Help Profotograaf te verbeteren door anonieme gebruiks- en foutgegevens te delen. Dit is optioneel en je kunt het op elk moment uitzetten. Er worden geen persoonsgegevens verzameld. Uitzetten stopt het versturen meteen en verwijdert gegevens die nog wachten op verzending."
 
-#: includes/class-settings-schema.php:176
+#: includes/class-settings-schema.php:197
 #: includes/modules/class-telemetry-consent.php:108
 msgid "What is shared"
 msgstr "Wat wordt gedeeld"
@@ -1301,175 +1301,175 @@ msgid "Not now"
 msgstr "Niet nu"
 
 #: includes/class-gallery-look.php:150
-#: includes/class-settings-schema.php:130
-#: includes/class-settings-schema.php:198
+#: includes/class-settings-schema.php:132
+#: includes/class-settings-schema.php:219
 msgid "Profotograaf default"
 msgstr "Standaard van Profotograaf"
 
-#: includes/class-settings-schema.php:200
+#: includes/class-settings-schema.php:221
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:3
 msgid "On"
 msgstr "Aan"
 
-#: includes/class-settings-schema.php:201
+#: includes/class-settings-schema.php:222
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:3
 msgid "Off"
 msgstr "Uit"
 
-#: includes/class-settings-schema.php:76
-#: includes/class-settings-schema.php:203
+#: includes/class-settings-schema.php:78
+#: includes/class-settings-schema.php:224
 msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
 msgstr "Een blok of shortcode kan een eigen waarde instellen. Laat leeg voor de standaard van Profotograaf."
 
-#: includes/class-settings-schema.php:212
+#: includes/class-settings-schema.php:233
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns"
 msgstr "Kolommen"
 
-#: includes/class-settings-schema.php:213
+#: includes/class-settings-schema.php:234
 msgid "Columns on wide screens, from 1 to 8."
 msgstr "Kolommen op brede schermen, van 1 tot 8."
 
-#: includes/class-settings-schema.php:221
+#: includes/class-settings-schema.php:242
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns on tablets"
 msgstr "Kolommen op tablets"
 
-#: includes/class-settings-schema.php:222
+#: includes/class-settings-schema.php:243
 msgid "Columns on medium screens, from 1 to 8."
 msgstr "Kolommen op middelgrote schermen, van 1 tot 8."
 
-#: includes/class-settings-schema.php:230
+#: includes/class-settings-schema.php:251
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Columns on phones"
 msgstr "Kolommen op telefoons"
 
-#: includes/class-settings-schema.php:231
+#: includes/class-settings-schema.php:252
 msgid "Columns on narrow screens, from 1 to 4."
 msgstr "Kolommen op smalle schermen, van 1 tot 4."
 
-#: includes/class-settings-schema.php:239
+#: includes/class-settings-schema.php:260
 msgid "Gap between photos (pixels)"
 msgstr "Ruimte tussen foto's (pixels)"
 
-#: includes/class-settings-schema.php:240
+#: includes/class-settings-schema.php:261
 msgid "Space between photos, from 0 to 96 pixels."
 msgstr "Ruimte tussen foto's, van 0 tot 96 pixels."
 
-#: includes/class-settings-schema.php:246
+#: includes/class-settings-schema.php:267
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photo shape"
 msgstr "Fotovorm"
 
-#: includes/class-settings-schema.php:249
+#: includes/class-settings-schema.php:270
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Original"
 msgstr "Origineel"
 
-#: includes/class-settings-schema.php:250
+#: includes/class-settings-schema.php:271
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Square (1:1)"
 msgstr "Vierkant (1:1)"
 
-#: includes/class-settings-schema.php:262
+#: includes/class-settings-schema.php:283
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Captions"
 msgstr "Bijschriften"
 
-#: includes/class-settings-schema.php:263
+#: includes/class-settings-schema.php:284
 msgid "Whether photo captions show and where."
 msgstr "Of fotobijschriften worden getoond en waar."
 
-#: includes/class-settings-schema.php:265
+#: includes/class-settings-schema.php:286
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Hidden"
 msgstr "Verborgen"
 
-#: includes/class-settings-schema.php:266
+#: includes/class-settings-schema.php:287
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Below the photo"
 msgstr "Onder de foto"
 
-#: includes/class-settings-schema.php:267
+#: includes/class-settings-schema.php:288
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr "Over de foto"
 
-#: includes/class-settings-schema.php:274
+#: includes/class-settings-schema.php:295
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Sort order"
 msgstr "Sorteervolgorde"
 
-#: includes/class-settings-schema.php:275
+#: includes/class-settings-schema.php:296
 msgid "The order of the photos."
 msgstr "De volgorde van de foto's."
 
-#: includes/class-settings-schema.php:277
+#: includes/class-settings-schema.php:298
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Newest first"
 msgstr "Nieuwste eerst"
 
-#: includes/class-settings-schema.php:278
+#: includes/class-settings-schema.php:299
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Oldest first"
 msgstr "Oudste eerst"
 
-#: includes/class-settings-schema.php:279
+#: includes/class-settings-schema.php:300
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "By file name"
 msgstr "Op bestandsnaam"
 
-#: includes/class-settings-schema.php:280
+#: includes/class-settings-schema.php:301
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Random"
 msgstr "Willekeurig"
 
-#: includes/class-settings-schema.php:289
+#: includes/class-settings-schema.php:310
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photos per page"
 msgstr "Foto's per pagina"
 
-#: includes/class-settings-schema.php:290
+#: includes/class-settings-schema.php:311
 msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
 msgstr "Toon eerst zoveel foto's, van 1 tot 200. Laat leeg om ze allemaal te tonen."
 
-#: includes/class-settings-schema.php:296
+#: includes/class-settings-schema.php:317
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Load more button"
 msgstr "Knop Meer laden"
 
-#: includes/class-settings-schema.php:297
+#: includes/class-settings-schema.php:318
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr "Voeg een knop toe die de volgende foto's toont als \"Foto's per pagina\" is ingesteld."
 
-#: includes/class-settings-schema.php:304
+#: includes/class-settings-schema.php:325
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Lightbox"
 msgstr "Lightbox"
 
-#: includes/class-settings-schema.php:305
+#: includes/class-settings-schema.php:326
 msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr "Open een foto in een grotere weergave als een bezoeker erop klikt."
 
@@ -1668,27 +1668,27 @@ msgctxt "block variation keyword"
 msgid "slider"
 msgstr "slider"
 
-#: includes/class-settings-schema.php:312
+#: includes/class-settings-schema.php:333
 msgid "Duotone colours"
 msgstr "Duotoonkleuren"
 
-#: includes/class-settings-schema.php:313
+#: includes/class-settings-schema.php:334
 msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
 msgstr "Kleur elke foto met twee kleuren, de schaduw en het hoogtepunt, als twee hexcodes gescheiden door een komma, bijvoorbeeld #1a1a2e,#f5c542. Een blok kan een eigen duotoon kiezen. Laat leeg voor de originele kleuren."
 
-#: includes/class-settings-schema.php:320
+#: includes/class-settings-schema.php:341
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Link photos to"
 msgstr "Foto's linken naar"
 
-#: includes/class-settings-schema.php:323
+#: includes/class-settings-schema.php:344
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Nothing"
 msgstr "Niets"
 
-#: includes/class-settings-schema.php:324
+#: includes/class-settings-schema.php:345
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
@@ -1779,29 +1779,29 @@ msgstr "Site"
 msgid "Failed enquiries"
 msgstr "Mislukte aanvragen"
 
-#: includes/class-settings-schema.php:321
+#: includes/class-settings-schema.php:342
 msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
 msgstr "Wat een klik op een foto doet. Dit geldt alleen als de lightbox uit staat, omdat een geopende lightbox de klik zelf afhandelt."
 
-#: includes/class-settings-schema.php:325
+#: includes/class-settings-schema.php:346
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Your photographer site"
 msgstr "Je fotografensite"
 
-#: includes/class-settings-schema.php:326
+#: includes/class-settings-schema.php:347
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The original photo file"
 msgstr "Het originele fotobestand"
 
-#: includes/class-settings-schema.php:333
+#: includes/class-settings-schema.php:354
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
 msgstr "Fotolinks openen in een nieuw tabblad"
 
-#: includes/class-settings-schema.php:334
+#: includes/class-settings-schema.php:355
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr "Of een fotolink in een nieuw browsertabblad opent. Dit geldt alleen als de lightbox uit staat en foto's ergens naartoe linken."
 
@@ -1825,15 +1825,15 @@ msgstr "linkt naar: %s (alleen als de lightbox uit staat)"
 msgid "same tab"
 msgstr "zelfde tabblad"
 
-#: includes/modules/class-settings-page.php:315
+#: includes/modules/class-settings-page.php:316
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
 msgstr "Bij het verbinden deelt deze site de sitenaam en het e-mailadres van de beheerder met Profotograaf, zodat die ze voor je kan invullen als je een account aanmaakt."
 
-#: includes/class-settings-schema.php:106
+#: includes/class-settings-schema.php:108
 msgid "Use Profotograaf photos in the editor"
 msgstr "Profotograaf-foto's gebruiken in de editor"
 
-#: includes/class-settings-schema.php:107
+#: includes/class-settings-schema.php:109
 msgid "Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested."
 msgstr "Laat redacteuren die bestanden mogen uploaden je Profotograaf-foto's bekijken in de blokeditor en ze toevoegen aan de mediabibliotheek. Zolang dit aan staat, vraagt de site Profotograaf om je fotolijst en downloadt de foto's die een redacteur kiest, en laden de browsers van redacteuren miniaturen van profotograaf.nl. Een foto die een redacteur gebruikt, wordt op deze site opgeslagen. Alleen galerijen waarvoor insluiten aan staat, worden aangeboden. Zolang dit uit staat, wordt er niets opgevraagd."
 
@@ -2095,11 +2095,11 @@ msgstr "Het platform was niet bereikbaar. De laatst opgeslagen lijst wordt getoo
 msgid "The photo was imported but could not be loaded. Try again."
 msgstr "De foto is geïmporteerd, maar kon niet worden geladen. Probeer het opnieuw."
 
-#: includes/modules/class-privacy.php:238
+#: includes/modules/class-privacy.php:240
 msgid "When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form."
 msgstr "Als de site-eigenaar de site verbindt, stuurt de plugin de sitetitel, het siteadres, de taal van de site, het e-mailadres van de sitebeheerder, de pluginversie en een willekeurige identificatie van deze installatie naar profotograaf.nl. Profotograaf gebruikt de sitetitel en het e-mailadres van de beheerder alleen om het aanmeldformulier voor een account vooraf in te vullen."
 
-#: includes/modules/class-privacy.php:239
+#: includes/modules/class-privacy.php:241
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
 msgstr "Alleen als de site-eigenaar instemt met anonieme gebruiksgegevens, stuurt de plugin dagelijks een gebruiksrapport en meldingen van zijn eigen fouten naar diensten van de maker van de plugin. Die bevatten de versies van de plugin, WordPress en PHP, de taal van de site, de actieve pluginmodules, aantallen mislukte verbindingen en bezorgingen van aanvragen, en foutcodes. Ze bevatten geen siteadres, bezoekersgegevens, aanvragen of tokens."
 
@@ -2132,7 +2132,7 @@ msgstr "Foto's worden mogelijk nog verwerkt, of de galerij bevat video's of best
 msgid "Original (not drawn in a grid yet)"
 msgstr "Origineel (nog niet in een raster getekend)"
 
-#: includes/class-settings-schema.php:247
+#: includes/class-settings-schema.php:268
 msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
 msgstr "Snijd elke foto in een raster of diavoorstelling bij tot één beeldverhouding, of houd elke foto zoals hij is gemaakt. Metselwerk houdt altijd de eigen vorm van elke foto."
 
@@ -2141,7 +2141,7 @@ msgstr "Snijd elke foto in een raster of diavoorstelling bij tot één beeldverh
 msgid "Masonry keeps each photo's own shape."
 msgstr "Metselwerk houdt de eigen vorm van elke foto."
 
-#: includes/class-settings-schema.php:128
+#: includes/class-settings-schema.php:130
 msgid "Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow."
 msgstr "Gebruikt als een galerijblok of shortcode geen indeling kiest. Profotograaf-standaard toont elke galerij in de dichtstbijzijnde indeling die je site kan tekenen: raster, metselwerk of diavoorstelling."
 
@@ -2236,11 +2236,11 @@ msgstr "Als de Profotograaf-plugin goed voor je werkt, helpt een korte review op
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
 msgstr "Voor het versturen van bestanden is een nieuwe toestemming nodig. Koppel deze site opnieuw via Instellingen > Profotograaf om die te geven."
 
-#: includes/modules/class-settings-page.php:182
+#: includes/modules/class-settings-page.php:183
 msgid "Sending files needs a new permission."
 msgstr "Voor het versturen van bestanden is een nieuwe toestemming nodig."
 
-#: includes/modules/class-settings-page.php:302
+#: includes/modules/class-settings-page.php:303
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr "Voor het versturen van bestanden is een nieuwe toestemming nodig. Koppel deze site opnieuw om die te geven. Je galerijen en instellingen blijven zoals ze zijn."
 
@@ -2389,11 +2389,11 @@ msgstr "Bestanden naar Profotograaf sturen staat uit in de plugininstellingen."
 msgid "This file was sent from this site, so there is nothing to re-import."
 msgstr "Dit bestand is vanaf deze site verstuurd, dus er is niets om opnieuw te importeren."
 
-#: includes/class-settings-schema.php:120
+#: includes/class-settings-schema.php:122
 msgid "Send Media Library files to Profotograaf"
 msgstr "Bestanden uit de mediabibliotheek naar Profotograaf sturen"
 
-#: includes/class-settings-schema.php:121
+#: includes/class-settings-schema.php:123
 msgid "Lets editors who can upload files send images to a Profotograaf gallery you link below. A file is sent only after a person chooses a linked gallery for it, in the attachment details, with the bulk action in the Media Library list, or automatically for a gallery where you switch that on. The original image goes to Profotograaf with its EXIF data except the GPS position, which is removed first. Later changes to the title, caption and alt text of a sent file are sent too. Files are sent in the background, never while you save."
 msgstr "Laat redacteuren die bestanden mogen uploaden afbeeldingen sturen naar een Profotograaf-galerij die je hieronder koppelt. Een bestand wordt pas verstuurd nadat iemand er een gekoppelde galerij voor kiest: in de bijlagegegevens, met de bulkactie in de lijst van de mediabibliotheek, of automatisch voor een galerij waarvoor je dat aanzet. De originele afbeelding gaat naar Profotograaf met de EXIF-gegevens, behalve de GPS-positie, die eerst wordt verwijderd. Latere wijzigingen in de titel, het bijschrift en de alt-tekst van een verstuurd bestand worden ook verstuurd. Bestanden worden op de achtergrond verstuurd, nooit tijdens het opslaan."
 
@@ -2620,7 +2620,7 @@ msgstr "Nu controleren"
 msgid "Connect this site to Profotograaf first."
 msgstr "Verbind deze site eerst met Profotograaf."
 
-#: includes/modules/class-settings-page.php:326
+#: includes/modules/class-settings-page.php:330
 msgid "Photo changes"
 msgstr "Fotowijzigingen"
 
@@ -3089,11 +3089,11 @@ msgstr "Gelijk aan de ruimte tussen foto's"
 msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
 msgstr "Foto's op Profotograaf houden staat uit in de plugininstellingen."
 
-#: includes/class-settings-schema.php:113
+#: includes/class-settings-schema.php:115
 msgid "Keep photos on Profotograaf"
 msgstr "Foto's op Profotograaf houden"
 
-#: includes/class-settings-schema.php:114
+#: includes/class-settings-schema.php:116
 msgid "Adds the choice \"Keep on Profotograaf\" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs \"Use Profotograaf photos in the editor\". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site."
 msgstr "Voegt op het scherm Importeren uit Profotograaf naast Importeren de keuze \"Op Profotograaf houden\" toe, voor redacteuren die bestanden mogen uploaden. Een foto die op Profotograaf blijft, wordt zonder download aan de mediabibliotheek toegevoegd. Deze site toont hem vanaf Profotograaf en slaat geen kopie op. Hiervoor moet \"Profotograaf-foto's gebruiken in de editor\" aan staan. Als je een galerij op Profotograaf depubliceert, laden de foto's ervan meteen niet meer vanaf Profotograaf, maar kopieën die al in edge-caches en in de browsers van bezoekers staan, kunnen tot een jaar zichtbaar blijven. Importeer de foto's die je later misschien wilt intrekken. Als je dit uitzet, worden de foto's die op Profotograaf zijn gehouden niet meer getoond op deze site."
 
@@ -3134,6 +3134,67 @@ msgid "%d photo kept on Profotograaf."
 msgid_plural "%d photos kept on Profotograaf."
 msgstr[0] "%d foto op Profotograaf gehouden."
 msgstr[1] "%d foto's op Profotograaf gehouden."
+
+#: includes/admin/class-backup-intro.php:25
+msgid "Copies your Media Library images to your Profotograaf account."
+msgstr "Kopieert de afbeeldingen uit je mediabibliotheek naar je Profotograaf-account."
+
+#: includes/admin/class-backup-intro.php:26
+msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
+msgstr "De back-up heeft hieronder een eigen schakelaar en staat uit tot je hem aanzet. Daarvoor wordt niets verstuurd. Anonieme gebruiksgegevens delen, Profotograaf-foto's gebruiken in de editor en bestanden uit de mediabibliotheek versturen zetten hem niet aan."
+
+#: includes/admin/class-backup-intro.php:27
+msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
+msgstr "Bestanden gaan naar privégalerijen in je Profotograaf-account, één per maand, genoemd naar de titel van deze site. Elk bestand wordt verstuurd zoals het is opgeslagen, met de bestandsnaam en de metadata, waarin de GPS-positie kan staan. Afbeeldingen, RAW-bestanden en video's worden gekopieerd. De kopieën tellen mee voor je opslag op Profotograaf."
+
+#: includes/admin/class-backup-intro.php:28
+msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
+msgstr "Elk bestand wordt één keer gekopieerd. Als je het hier later bewerkt of verwijdert, verandert er niets op Profotograaf. Als je de back-up uitzet of de plugin verwijdert, blijven de kopieën in je Profotograaf-account tot je ze daar verwijdert."
+
+#: includes/admin/class-backup-intro.php:29
+msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
+msgstr "Foto's van mensen zijn persoonsgegevens. Controleer of je privacybeleid en je afspraken met klanten een kopie op Profotograaf toestaan. Op een site met meerdere auteurs kopieert de back-up ook bestanden die andere gebruikers hebben geüpload."
+
+#: includes/admin/class-backup-intro.php:39
+#: includes/modules/class-privacy.php:237
+msgid "Backup to Profotograaf"
+msgstr "Back-up naar Profotograaf"
+
+#: includes/class-settings-schema.php:64
+msgid "Backup"
+msgstr "Back-up"
+
+#: includes/class-settings-schema.php:174
+msgid "Back up the Media Library to Profotograaf"
+msgstr "Back-up van de mediabibliotheek maken op Profotograaf"
+
+#: includes/class-settings-schema.php:175
+msgid "Copies your Media Library images to your Profotograaf account. Off by default. Nothing is sent before you switch it on."
+msgstr "Kopieert de afbeeldingen uit je mediabibliotheek naar je Profotograaf-account. Standaard uit. Er wordt niets verstuurd voordat je dit aanzet."
+
+#: includes/class-settings-schema.php:181
+msgid "What to back up"
+msgstr "Waarvan een back-up maken"
+
+#: includes/class-settings-schema.php:182
+msgid "Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. Images, RAW files and videos are copied. Photos imported from Profotograaf are skipped."
+msgstr "Bestanden die op de site worden gebruikt, staan in een gepubliceerd bericht of een gepubliceerde pagina, als uitgelichte afbeelding of in een afbeeldings- of galerijblok, plus de bestanden die je markeert. Afbeeldingen, RAW-bestanden en video's worden gekopieerd. Foto's die uit Profotograaf zijn geïmporteerd, worden overgeslagen."
+
+#: includes/class-settings-schema.php:184
+msgid "Files used on the site (recommended)"
+msgstr "Bestanden die op de site worden gebruikt (aanbevolen)"
+
+#: includes/class-settings-schema.php:185
+msgid "Every file in the Media Library"
+msgstr "Elk bestand in de mediabibliotheek"
+
+#: includes/class-settings-schema.php:186
+msgid "Only the files I mark"
+msgstr "Alleen de bestanden die ik markeer"
+
+#: includes/modules/class-privacy.php:238
+msgid "Only when the site owner switches on the backup: this site copies files from its Media Library to the connected Profotograaf account, in the background. It sends the image files, and RAW and video files, with their file names and the access token to https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. It first creates private galleries with https://profotograaf.nl/api/v1/embed/galleries, with the site title in the gallery name. Files are sent as stored, with their metadata, which can include the GPS position. Photos of people are personal data, so the site owner needs a basis for sending them, and Profotograaf stores the copies for the site owner. The anonymous usage data and photo library choices do not switch the backup on. Deleting a file here, switching the backup off or deleting the plugin leaves the copies in the Profotograaf account until they are deleted there. The Media Library keeps a few hidden fields per file (the backup state, the photo and gallery identifiers and a checksum) until the plugin is deleted."
+msgstr "Alleen als de site-eigenaar de back-up aanzet: deze site kopieert op de achtergrond bestanden uit de mediabibliotheek naar het gekoppelde Profotograaf-account. Hij stuurt de afbeeldingsbestanden, en RAW- en videobestanden, met hun bestandsnamen en het toegangstoken naar https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. Eerst maakt hij privégalerijen aan met https://profotograaf.nl/api/v1/embed/galleries, met de sitetitel in de naam van de galerij. Bestanden worden verstuurd zoals ze zijn opgeslagen, met hun metadata, waarin de GPS-positie kan staan. Foto's van mensen zijn persoonsgegevens, dus de site-eigenaar heeft een grondslag nodig om ze te versturen, en Profotograaf bewaart de kopieën voor de site-eigenaar. De keuzes voor anonieme gebruiksgegevens en de fotobibliotheek zetten de back-up niet aan. Een bestand hier verwijderen, de back-up uitzetten of de plugin verwijderen laat de kopieën in het Profotograaf-account staan tot ze daar worden verwijderd. De mediabibliotheek bewaart per bestand een paar verborgen velden (de back-upstatus, de foto- en galerij-ID's en een controlesom) tot de plugin wordt verwijderd."
 
 #: includes/class-virtual-attachments.php:265
 msgid "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
