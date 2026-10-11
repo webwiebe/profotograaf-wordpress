@@ -122,14 +122,16 @@ jobs:
         run: node scripts/coverage-floor.mjs --ts coverage/coverage-summary.json --php coverage/php/clover.xml
 
   i18n:
-    name: Translations (stale .pot, hardcoded strings)
+    name: Translations (stale .pot, hardcoded strings, untranslated locales)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
       # Builds the blocks, scans blocks/ and assets/ for text that skips __(),
+      # fails when a languages/*.po has an untranslated or fuzzy string,
       # regenerates the .pot with WP-CLI in Docker and compares it with the
-      # committed one. Fix a failure with `make i18n` and commit languages/.
+      # committed one. Translate new strings in every languages/*.po, then run
+      # `make i18n` and commit languages/.
       - run: make i18n-check
 
   blocks:
