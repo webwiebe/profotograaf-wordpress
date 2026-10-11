@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T07:05:30+00:00\n"
+"POT-Creation-Date: 2026-10-11T08:12:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -55,29 +55,45 @@ msgstr ""
 msgid "https://profotograaf.nl"
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:25
+#: includes/admin/class-backup-intro.php:27
 msgid "Copies your Media Library images to your Profotograaf account."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:26
+#: includes/admin/class-backup-intro.php:28
 msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:27
+#: includes/admin/class-backup-intro.php:29
 msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:28
+#: includes/admin/class-backup-intro.php:30
 msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:29
+#: includes/admin/class-backup-intro.php:31
 msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:39
+#: includes/admin/class-backup-intro.php:41
 #: includes/modules/class-privacy.php:237
 msgid "Backup to Profotograaf"
+msgstr ""
+
+#: includes/admin/class-backup-intro.php:59
+msgid "The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
+msgstr ""
+
+#: includes/admin/class-backup-intro.php:60
+msgid "The backup to Profotograaf needs a new permission."
+msgstr ""
+
+#: includes/admin/class-backup-intro.php:63
+msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
+msgstr ""
+
+#: includes/admin/class-backup-intro.php:64
+msgid "Sending files needs a new permission."
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:105
@@ -471,6 +487,7 @@ msgid "Profotograaf rejected the enquiry because it is incomplete or invalid."
 msgstr ""
 
 #: includes/class-api-errors.php:80
+#: includes/cli/class-backup-command.php:120
 msgid "This site is not connected to Profotograaf."
 msgstr ""
 
@@ -488,6 +505,12 @@ msgstr ""
 
 #: includes/class-api-errors.php:164
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
+msgstr ""
+
+#. translators: 1: site title, 2: year and month, for example 2026-10.
+#: includes/class-backup-galleries.php:80
+#, php-format
+msgid "%1$s backup %2$s"
 msgstr ""
 
 #: includes/class-change-poller.php:394
@@ -1319,6 +1342,54 @@ msgstr ""
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr ""
 
+#: includes/cli/class-backup-command.php:77
+msgid "The backup is switched off. Switch it on under Settings > Profotograaf > Backup."
+msgstr ""
+
+#. translators: %d: number of Media Library items.
+#: includes/cli/class-backup-command.php:89
+#, php-format
+msgid "Checked %d Media Library item."
+msgid_plural "Checked %d Media Library items."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of files.
+#: includes/cli/class-backup-command.php:101
+#, php-format
+msgid "Sent %d file to Profotograaf."
+msgid_plural "Sent %d files to Profotograaf."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/cli/class-backup-command.php:122
+msgid "The backup needs a new permission. Connect this site again under Settings > Profotograaf."
+msgstr ""
+
+#: includes/cli/class-backup-command.php:124
+msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then run this command with --resume."
+msgstr ""
+
+#: includes/cli/class-backup-command.php:126
+msgid "The backup is paused. Run this command with --resume to try again now."
+msgstr ""
+
+#: includes/cli/class-backup-command.php:128
+msgid "Profotograaf did not accept more files for now. The backup tries again later on its own."
+msgstr ""
+
+#: includes/cli/class-backup-command.php:130
+msgid "Another backup run is in progress."
+msgstr ""
+
+#: includes/cli/class-backup-command.php:132
+msgid "This site ran low on memory. Run the command again to send the rest."
+msgstr ""
+
+#: includes/cli/class-backup-command.php:134
+msgid "The backup stopped early. Run the command again to send the rest."
+msgstr ""
+
 #. translators: %d: number of failed leads put back in line.
 #: includes/cli/class-leads-command.php:77
 #, php-format
@@ -1447,6 +1518,10 @@ msgstr ""
 
 #: includes/modules/class-admin-notices.php:174
 msgid "Dismiss"
+msgstr ""
+
+#: includes/modules/class-backup.php:94
+msgid "Every five minutes (Profotograaf backup)"
 msgstr ""
 
 #: includes/modules/class-client-galleries.php:202
@@ -1691,10 +1766,6 @@ msgstr ""
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:183
-msgid "Sending files needs a new permission."
-msgstr ""
-
 #: includes/modules/class-settings-page.php:217
 msgid "Disconnected from Profotograaf."
 msgstr ""
@@ -1728,10 +1799,6 @@ msgstr ""
 #: includes/modules/class-settings-page.php:299
 #: includes/modules/class-settings-page.php:305
 msgid "Connect again"
-msgstr ""
-
-#: includes/modules/class-settings-page.php:303
-msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr ""
 
 #: includes/modules/class-settings-page.php:307

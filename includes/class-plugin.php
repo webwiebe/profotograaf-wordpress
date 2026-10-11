@@ -209,6 +209,15 @@ final class Plugin {
 	}
 
 	/**
+	 * The clock services share: the test override, else time().
+	 *
+	 * @return callable(): int
+	 */
+	public function clock(): callable {
+		return $this->clock ?? static fn(): int => time();
+	}
+
+	/**
 	 * Settings.
 	 */
 	public function settings(): Settings {
