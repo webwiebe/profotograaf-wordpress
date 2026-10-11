@@ -6,6 +6,9 @@
 //   node scripts/check-i18n.mjs pot <committed> <fresh>
 //                                                the committed .pot must equal
 //                                                a freshly generated one.
+//   node scripts/check-i18n.mjs po [dir]         every bundled .po in dir (default
+//                                                languages) translates every
+//                                                string, with no fuzzy entries.
 //
 // The strings scan is a heuristic over source text. It looks for JSX text, for
 // literals in user-facing props and object keys (label, title, help ...) and for
@@ -99,6 +102,84 @@ export function comparePot(committed, fresh) {
   return null;
 }
 
+const ESCAPES = { n: "\n", t: "\t", r: "\r", '"': '"', "\\": "\\" };
+
+/** Joins a keyword line and its continuation lines into the unquoted value. */
+function unquote(parts) {
+  return parts.map((p) => p.slice(1, -1).replace(/\\(.)/g, (_, c) => ESCAPES[c] ?? c)).join("");
+}
+
+/** Collects the quoted lines of each keyword in one .po entry, and whether it is fuzzy. */
+function readBlock(block) {
+  const fields = {};
+  let fuzzy = false;
+  let current = null;
+  for (const line of block.split("\n")) {
+    if (line.startsWith("#,") && /\bfuzzy\b/.test(line)) fuzzy = true;
+    const keyword = /^(msgctxt|msgid_plural|msgid|msgstr(?:\[\d+\])?)\s+(".*")$/.exec(line);
+    if (keyword) {
+      current = keyword[1];
+      fields[current] = [keyword[2]];
+    } else if (current && /^".*"$/.test(line)) {
+      fields[current].push(line);
+    } else {
+      current = null;
+    }
+  }
+  return { fields, fuzzy };
+}
+
+/**
+ * Parses a .po file into its entries, skipping the header and obsolete (#~) entries.
+ * Each entry has msgctxt, msgid, msgstr (a list, one item per plural form) and fuzzy.
+ */
+export function parsePo(text) {
+  const entries = [];
+  for (const block of text.replace(/\r\n/g, "\n").split(/\n\s*\n/)) {
+    const { fields, fuzzy } = readBlock(block.trim());
+    const msgid = fields.msgid ? unquote(fields.msgid) : "";
+    if (msgid === "") continue;
+    const msgstr = Object.keys(fields)
+      .filter((k) => k.startsWith("msgstr"))
+      .sort()
+      .map((k) => unquote(fields[k]));
+    entries.push({ msgctxt: fields.msgctxt ? unquote(fields.msgctxt) : null, msgid, msgstr, fuzzy });
+  }
+  return entries;
+}
+
+/** Lists the entries a locale would show in English: untranslated or fuzzy. */
+export function findUntranslated(text) {
+  const out = [];
+  for (const e of parsePo(text)) {
+    const empty = e.msgstr.length === 0 || e.msgstr.some((s) => s === "");
+    if (empty || e.fuzzy) out.push({ msgid: e.msgid, msgctxt: e.msgctxt, reason: e.fuzzy ? "fuzzy" : "untranslated" });
+  }
+  return out;
+}
+
+function checkPo(dir) {
+  const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".po")).sort() : [];
+  if (files.length === 0) {
+    console.error(`i18n po: no .po files in ${dir}`);
+    return 1;
+  }
+  let failed = 0;
+  for (const file of files) {
+    const hits = findUntranslated(fs.readFileSync(path.join(dir, file), "utf8"));
+    if (hits.length === 0) continue;
+    failed += 1;
+    console.error(`i18n po: ${file} has ${hits.length} untranslated or fuzzy string(s)`);
+    for (const h of hits) console.error(`  ${h.reason}: ${h.msgctxt ? `[${h.msgctxt}] ` : ""}${h.msgid}`);
+  }
+  if (failed === 0) {
+    console.log(`i18n po: ${files.length} locale(s) fully translated`);
+    return 0;
+  }
+  console.error("Translate the strings in languages/*.po, then run make i18n and commit languages/.");
+  return 1;
+}
+
 function main(argv) {
   const [mode, first, second] = argv;
   if (mode === "strings") {
@@ -120,7 +201,8 @@ function main(argv) {
     console.error(`i18n pot: ${first} is stale, run make i18n and commit languages/\n${diff}`);
     return 1;
   }
-  console.error("usage: check-i18n.mjs strings [root] | pot <committed> <fresh>");
+  if (mode === "po") return checkPo(first ?? "languages");
+  console.error("usage: check-i18n.mjs strings [root] | pot <committed> <fresh> | po [dir]");
   return 2;
 }
 

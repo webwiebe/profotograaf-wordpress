@@ -98,9 +98,11 @@ json: po
 # Regenerates every file in languages/: .pot, .po, .mo and the script .json files.
 i18n: pot po mo json
 
-# Fails on a stale .pot or on a user-facing string that skips __().
+# Fails on a stale .pot, on a user-facing string that skips __(), or on a
+# bundled locale with an untranslated or fuzzy string.
 i18n-check: build
 	$(PNPM) node scripts/check-i18n.mjs strings
+	$(PNPM) node scripts/check-i18n.mjs po languages
 	mkdir -p coverage
 	$(call MAKE_POT,coverage/profotograaf.pot)
 	$(PNPM) node scripts/check-i18n.mjs pot $(POT_FILE) coverage/profotograaf.pot
