@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T09:16:57+00:00\n"
+"POT-Creation-Date: 2026-10-11T09:56:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -157,6 +157,7 @@ msgstr ""
 #: includes/modules/class-settings-page.php:271
 #: includes/modules/class-settings-page.php:481
 #: includes/modules/class-telemetry-consent.php:126
+#: includes/modules/class-virtual-convert.php:203
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -822,9 +823,9 @@ msgstr ""
 
 #: includes/class-photo-file-route.php:196
 #: includes/class-photo-importer.php:93
-#: includes/class-photo-importer.php:149
+#: includes/class-photo-importer.php:150
 #: includes/class-photo-rest.php:393
-#: includes/class-virtual-attachments.php:156
+#: includes/class-virtual-attachments.php:157
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
@@ -837,7 +838,7 @@ msgid "The photo is not on the Profotograaf platform, so it was not served."
 msgstr ""
 
 #: includes/class-photo-file-route.php:227
-#: includes/class-photo-importer.php:333
+#: includes/class-photo-importer.php:334
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr ""
 
@@ -850,55 +851,55 @@ msgid "This photo is no longer available from Profotograaf."
 msgstr ""
 
 #: includes/class-photo-importer.php:90
-#: includes/class-virtual-attachments.php:153
+#: includes/class-virtual-attachments.php:154
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
 #: includes/class-photo-importer.php:98
-#: includes/class-virtual-attachments.php:160
+#: includes/class-virtual-attachments.php:161
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
 #: includes/class-photo-importer.php:108
-#: includes/class-photo-importer.php:176
-#: includes/class-virtual-attachments.php:170
+#: includes/class-photo-importer.php:177
+#: includes/class-virtual-attachments.php:171
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
 #: includes/class-photo-importer.php:115
-#: includes/class-photo-importer.php:181
+#: includes/class-photo-importer.php:182
 msgid "This photo is being imported by another request. Try again in a moment."
 msgstr ""
 
-#: includes/class-photo-importer.php:146
+#: includes/class-photo-importer.php:147
 msgid "You are not allowed to replace this file."
 msgstr ""
 
-#: includes/class-photo-importer.php:153
+#: includes/class-photo-importer.php:154
 msgid "This file was sent from this site, so there is nothing to re-import."
 msgstr ""
 
-#: includes/class-photo-importer.php:157
+#: includes/class-photo-importer.php:158
 msgid "This file was not imported from Profotograaf."
 msgstr ""
 
-#: includes/class-photo-importer.php:172
+#: includes/class-photo-importer.php:173
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr ""
 
-#: includes/class-photo-importer.php:231
-#: includes/class-photo-importer.php:239
-#: includes/class-photo-importer.php:372
-#: includes/class-virtual-attachments.php:195
+#: includes/class-photo-importer.php:232
+#: includes/class-photo-importer.php:240
+#: includes/class-photo-importer.php:373
+#: includes/class-virtual-attachments.php:196
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 
-#: includes/class-photo-importer.php:324
+#: includes/class-photo-importer.php:325
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
 
 #: includes/class-photo-rest.php:292
-#: includes/class-virtual-attachments.php:150
+#: includes/class-virtual-attachments.php:151
 msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
 msgstr ""
 
@@ -1360,8 +1361,12 @@ msgstr ""
 msgid "The file could not be prepared for sending."
 msgstr ""
 
-#: includes/class-virtual-attachments.php:229
+#: includes/class-virtual-attachments.php:253
 msgid "This file is not a virtual Profotograaf attachment."
+msgstr ""
+
+#: includes/class-virtual-attachments.php:265
+msgid "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
 msgstr ""
 
 #. translators: %d: number of failed leads put back in line.
@@ -1534,19 +1539,19 @@ msgstr ""
 msgid "Open on Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:235
+#: includes/modules/class-media-import-screen.php:236
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:237
+#: includes/modules/class-media-import-screen.php:238
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:244
+#: includes/modules/class-media-import-screen.php:245
 msgid "Re-import"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:249
+#: includes/modules/class-media-import-screen.php:250
 msgid "Source"
 msgstr ""
 
@@ -2108,6 +2113,79 @@ msgstr ""
 #: includes/modules/class-telemetry-consent.php:114
 msgid "Not now"
 msgstr ""
+
+#. translators: %s: attachment title.
+#: includes/modules/class-virtual-convert.php:124
+#, php-format
+msgid "Convert “%s” to local"
+msgstr ""
+
+#: includes/modules/class-virtual-convert.php:125
+#: includes/modules/class-virtual-convert.php:158
+#: includes/modules/class-virtual-convert.php:174
+#: includes/modules/class-virtual-convert.php:323
+#: includes/modules/class-virtual-convert.php:342
+msgid "Convert to local"
+msgstr ""
+
+#: includes/modules/class-virtual-convert.php:145
+#: includes/modules/class-virtual-convert.php:321
+msgid "Profotograaf no longer lists this photo, so it may stop showing on your site. Convert it to local while Profotograaf still serves it."
+msgstr ""
+
+#: includes/modules/class-virtual-convert.php:147
+msgid "Keeping photos on Profotograaf is switched off, so this photo shows no image on this site until you convert it to local."
+msgstr ""
+
+#: includes/modules/class-virtual-convert.php:149
+msgid "This site stores no copy of this photo. Convert to local downloads it into the Media Library, and posts that use it keep working."
+msgstr ""
+
+#: includes/modules/class-virtual-convert.php:152
+msgid "Local copy"
+msgstr ""
+
+#: includes/modules/class-virtual-convert.php:232
+msgid "You are not allowed to change this file."
+msgstr ""
+
+#. translators: %d: attachment id.
+#: includes/modules/class-virtual-convert.php:237
+#, php-format
+msgid "File %d"
+msgstr ""
+
+#. translators: %d: number of photos converted.
+#: includes/modules/class-virtual-convert.php:269
+#, php-format
+msgid "%d photo converted to local."
+msgid_plural "%d photos converted to local."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of photos that failed.
+#: includes/modules/class-virtual-convert.php:285
+#, php-format
+msgid "%d photo could not be converted and stays kept on Profotograaf:"
+msgid_plural "%d photos could not be converted and stay kept on Profotograaf:"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of files skipped.
+#: includes/modules/class-virtual-convert.php:298
+#, php-format
+msgid "%d file was skipped because it is not kept on Profotograaf."
+msgid_plural "%d files were skipped because they are not kept on Profotograaf."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of photos.
+#: includes/modules/class-virtual-convert.php:350
+#, php-format
+msgid "%d photo kept on Profotograaf is no longer listed there and may stop showing on your site. Convert it to local while Profotograaf still serves it."
+msgid_plural "%d photos kept on Profotograaf are no longer listed there and may stop showing on your site. Convert them to local while Profotograaf still serves them."
+msgstr[0] ""
+msgstr[1] ""
 
 #: includes/trait-api-client-feed.php:43
 msgid "Profotograaf sent an answer this plugin cannot read."

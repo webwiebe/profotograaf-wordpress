@@ -275,8 +275,9 @@ const routes = {
 		return json( res, 200, state.reviewPrompt );
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
-	// Switches the platform between 'up', 'down' (every call answers 503) and
-	// 'unpublished' (the images answer 404 and the library lists nothing).
+	// Switches the platform between 'up', 'down' (every call answers 503),
+	// 'unpublished' (the images answer 404 and the library lists nothing) and
+	// 'unlisted' (the library lists nothing while the images still answer).
 	'POST /__mode': ( { res, url } ) => {
 		state.mode = url.searchParams.get( 'mode' ) || 'up';
 		return json( res, 200, { mode: state.mode } );
@@ -447,7 +448,7 @@ function libraryPage( { req, res, url } ) {
 	} ) );
 	const limit = Math.min( Number( url.searchParams.get( 'limit' ) ) || 50, 200 );
 	const offset = Number( url.searchParams.get( 'offset' ) ) || 0;
-	if ( state.mode === 'unpublished' ) {
+	if ( state.mode === 'unpublished' || state.mode === 'unlisted' ) {
 		return json( res, 200, { photos: [], total: 0, limit, offset } );
 	}
 	return json( res, 200, { photos: photos.slice( offset, offset + limit ), total: photos.length, limit, offset } );
