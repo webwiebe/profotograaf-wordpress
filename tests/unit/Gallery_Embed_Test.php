@@ -83,6 +83,38 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 		);
 	}
 
+	public function test_the_anchor_becomes_the_id_when_the_supports_leave_it_out(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		Functions\when( 'esc_attr' )->alias( fn( $text ) => htmlspecialchars( (string) $text, ENT_QUOTES ) );
+		$this->module->register( $this->plugin );
+
+		$html = $this->module->render_block(
+			array(
+				'galleryId' => 'g-1',
+				'layout'    => 'grid',
+				'anchor'    => 'spring"x',
+			)
+		);
+
+		$this->assertStringContainsString( ' id="spring&quot;x">', $html );
+	}
+
+	public function test_the_anchor_is_not_added_twice_when_the_supports_add_it(): void {
+		Functions\when( 'add_shortcode' )->justReturn( true );
+		Functions\when( 'get_block_wrapper_attributes' )->alias( fn( $extra ) => sprintf( 'class="%1$s" id="spring" style="%2$s"', $extra['class'], $extra['style'] ) );
+		$this->module->register( $this->plugin );
+
+		$html = $this->module->render_block(
+			array(
+				'galleryId' => 'g-1',
+				'layout'    => 'grid',
+				'anchor'    => 'spring',
+			)
+		);
+
+		$this->assertSame( 1, substr_count( $html, 'id="spring"' ) );
+	}
+
 	public function test_the_block_wrapper_comes_from_the_block_supports(): void {
 		Functions\when( 'add_shortcode' )->justReturn( true );
 		Functions\when( 'get_block_wrapper_attributes' )->alias(
