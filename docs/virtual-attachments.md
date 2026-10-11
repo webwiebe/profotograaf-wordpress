@@ -35,6 +35,9 @@ All of it sat behind a hidden flag that was off by default and had no UI. Issue 
 | `includes/class-virtual-sync.php` | Issue #153: `Profotograaf\Virtual_Sync`, the sync from the change feed. |
 | `tests/unit/Virtual_Sync_Test.php` | Issue #153: unit tests of the feed sync. |
 | `tests/e2e/virtual-sync.spec.js` | Issue #153: the feed sync against WordPress and the mock platform's queued feed pages. |
+| `includes/modules/class-virtual-plugin-compat.php` | Issue #156: tells WP Offload Media, Advanced Media Offloader and Regenerate Thumbnails to skip kept photos. |
+| `tests/unit/Virtual_Plugin_Compat_Test.php` | Issue #156: unit tests of those guards. |
+| `tests/e2e/plugin-compat.spec.js` | Issue #156: browser tests with Regenerate Thumbnails 3.1.6 installed from wordpress.org. |
 | `includes/class-virtual-bulk-convert.php` | Issue #158: `Virtual_Bulk_Convert`, the batched conversion of every virtual attachment, through WP-Cron or WP-CLI. |
 | `includes/modules/class-virtual-removal.php` | Issue #158: the row on the Plugins screen with "Convert all to local", and the cron and WP-CLI registration. |
 | `includes/cli/class-virtual-command.php` | Issue #158: `wp profotograaf virtual convert`. |
@@ -100,6 +103,29 @@ WordPress cannot edit the image of a virtual attachment, because there is no fil
 - Block editor: the REST media response carries `profotograaf_virtual` (null, or an object with `convert_url`). `build/virtual-edit-editor/index.js` wraps `core/image` through `editor.BlockEdit`: while an Image block with a virtual attachment is selected, the Crop button is hidden (it has no class, so a style matches its translated label "Crop" under a body class), and the block settings show the same text with a Convert to local link, in the Content tab (WordPress 7.0 and later) and in the Settings panel.
 - The scripts load for users with `upload_files` while the setting is on or a virtual attachment exists.
 - Not covered: the "Edit Original" button of the classic editor's image details. The legacy editor guard still refuses that path.
+
+### Third-party plugins (issue #156)
+
+Plugins that work on the files of the Media Library expect a file on disk. `Virtual_Plugin_Compat` (`includes/modules/class-virtual-plugin-compat.php`) tells the ones that offer a filter for it to skip a kept photo. Like the other modules it registers while the setting is off. A hook does nothing while its plugin is inactive.
+
+For this module a kept photo is an attachment with the virtual mark or a `_wp_attached_file` under `profotograaf-virtual/`, whose file does not exist. The path check is needed because `create()` saves the attachment metadata before it sets the mark, and offload plugins act on that save. The file check lets a conversion through: Convert to local saves the metadata once more after the downloaded file is in place, and at that moment the photo counts as local.
+
+- WP Offload Media (Lite): `as3cf_pre_update_attachment_metadata` and `as3cf_pre_handle_item_upload` (for Media Library items) return `true`, which cancels the upload.
+- Advanced Media Offloader: `advmo_should_offload_attachment` returns `false`. The plugin reads this filter in its upload observer, its single offload and its bulk offload.
+- Regenerate Thumbnails: `rest_attachment_query` adds `_profotograaf_virtual NOT EXISTS` when the request has `is_regeneratable`, which is how the plugin's page builds its bulk list and its count. `POST /regenerate-thumbnails/v1/regenerate/{id}` for a kept photo gets `profotograaf_virtual_no_file` (409) with "This photo is kept on Profotograaf, so this site has no file to make thumbnails from. Profotograaf serves its sizes. Convert it to local if you need the files on this site." A user who may not edit the attachment gets the plugin's own answer. The "Regenerate Thumbnails" row action, the button in the media modal and the button on the attachment edit screen are removed for kept photos.
+
+Plugins tested, chosen as the most-installed free plugin of each kind on wordpress.org in October 2026:
+
+| Kind | Plugin | Version | Active installs |
+| --- | --- | --- | --- |
+| S3 offload | WP Offload Media Lite (`amazon-s3-and-cloudfront`) | 3.4.3 | 30,000+ |
+| Cloudflare R2 offload | Advanced Media Offloader (`advanced-media-offloader`) | 4.5.2 | 7,000+, the most-installed plugin with R2 support |
+| Image optimiser | EWWW Image Optimizer (`ewww-image-optimizer`) | 8.8.0 | 1,000,000+ (Smush, Imagify and Image Optimizer report the same band) |
+| Thumbnail regeneration | Regenerate Thumbnails (`regenerate-thumbnails`) | 3.1.6 | 1,000,000+, tested by its author up to WordPress 6.8 |
+| Backup | UpdraftPlus (`updraftplus`) | 1.26.8 | 4,000,000+ |
+| Backup and migration | All-in-One WP Migration (`all-in-one-wp-migration`) | 7.112 | 5,000,000+ |
+
+No cloud account was created and no credentials were entered. WP Offload Media ran with a placeholder bucket and "use server roles", so every upload fails on credentials. Advanced Media Offloader ran with Cloudflare R2 selected and no keys. UpdraftPlus made a local backup with no remote storage. The upload to S3 or R2 itself and a restore from remote storage are therefore untested.
 
 ### What the class does
 
@@ -168,12 +194,47 @@ Result observed in the browser and WP-CLI tests, run on WordPress 6.9.4, 7.0.4 a
 | Deleting the attachment | Works | Works | Works | No platform call. |
 | Offload stand-in at the default priority (10) | Works | Works | Works | A virtual attachment keeps the platform URL (the prototype's priority 20 runs after it). A local attachment gets the CDN host. |
 | Offload stand-in at priority 30 | Rewrites | Rewrites | Rewrites | The stand-in rewrites the platform host to its CDN host, which would 404. |
-| Real offload plugins (WP Offload Media, Cloudflare R2 plugins and similar) | Untested | Untested | Untested | Only a stand-in filter was tested. Behaviour on upload, on delete and on the media sync of a real plugin is unknown. |
+| Real offload, optimiser, thumbnail and backup plugins | See below | See below | See below | Issue #156, in the table "Third-party plugins". |
 | WordPress below 6.9 | Untested | Untested | Untested | The plugin requires 6.9. |
 | Multisite | Untested | Untested | Untested | |
 | Browsers other than Chromium | Untested | Untested | Untested | |
 | Watermarked galleries | Untested | Untested | Untested | The platform doc states `thumb` is not served for them. The prototype falls back to `web` when a row has no `thumb` URL, covered by a unit test only. |
 | Real platform (not the mock) | Untested | Untested | Untested | Every observation above comes from the mock platform in `tests/e2e/mock-platform.mjs`. |
+
+### Third-party plugins
+
+Issue #156, observed with WP-CLI and Chromium on WordPress 6.9.4, 7.0.4 and 7.1.3 against the mock platform, with the guards of `Virtual_Plugin_Compat` in place. Each plugin was active on its own, except in the first three rows. The "Before the guard" notes come from the same probes on 7.1.3 before the guards existed.
+
+| Plugin and check | 6.9 | 7.0 | 7.1 | Notes |
+| --- | --- | --- | --- | --- |
+| All six: install and activate with WP-CLI | Works | Works | Works | Installing and activating with kept photos present gives no error. |
+| All six active: Media Library list and grid, attachment edit screen, front-end page | Works | Works | Works | Pages answer 200 with no PHP error. Kept photos show platform URLs in the list view, the grid data and an Image block on a page. |
+| All six active: delete a kept photo | Works | Works | Works | Deleted with no error and nothing in the debug log. |
+| WP Offload Media: keep a photo (default sizes) | Skipped | Skipped | Skipped | The plugin stops before its cancel filter, because a kept photo lacks most registered sizes. Nothing is stored and the URL stays the platform URL. |
+| WP Offload Media: keep a photo (only the `thumbnail` size registered) | Skipped by the guard | Skipped by the guard | Skipped by the guard | The guard cancels at `as3cf_pre_update_attachment_metadata`. Before the guard the upload started and logged "Primary file .../profotograaf-virtual/p-8/web-v1.jpg for Media Library Item with id 13 does not exist". |
+| WP Offload Media: Convert to local | Works | Works | Works | The first metadata save (virtual path) is cancelled. The second one (local file) reaches the upload, which then fails on the missing credentials. |
+| WP Offload Media: URL filters | Works | Works | Works | Its `wp_get_attachment_url` and `image_downsize` filters run at priority 99, after Profotograaf's 20, and leave the platform URL alone because no offload item exists. |
+| WP Offload Media: upload to S3 | Untested | Untested | Untested | Needs an AWS account and credentials. |
+| WP Offload Media: remove local files, bulk offload, download back | Untested | Untested | Untested | Pro features, or features that need a working bucket. |
+| Advanced Media Offloader: offload a kept photo (`wp advmo offload`) | Skipped by the guard | Skipped by the guard | Skipped by the guard | The CLI reports "Failed to offload attachment ID n:" with an empty reason and writes nothing. Before the guard: "Main file does not exist" and "Size 'thumbnail' does not exist", stored as `advmo_error_log` on the attachment. |
+| Advanced Media Offloader: Convert to local | Not offloaded | Not offloaded | Not offloaded | The plugin decides on `wp_generate_attachment_metadata`, while the attachment still has its virtual path, so the guard skips it. The converted photo has no error log, so a later bulk offload picks it up. |
+| Advanced Media Offloader: "not offloaded" count | Includes kept photos | Includes kept photos | Includes kept photos | Its count query has no filter. |
+| Advanced Media Offloader: bulk offload from the settings page | Untested | Untested | Untested | Runs as a background job. From the code: each batch reads the 100 oldest attachments without an offload mark and drops the ones the filter skips, so a site whose 100 oldest such attachments are all kept photos gets empty batches. |
+| Advanced Media Offloader: upload to R2 | Untested | Untested | Untested | Needs a Cloudflare account and keys. |
+| EWWW: bulk optimise (`wp ewwwio optimize media`) | Skipped | Skipped | Skipped | Selects the kept photos, optimises only the local image and writes no row and no file for the kept ones. |
+| EWWW: optimise one kept photo | Skipped | Skipped | Skipped | `ewww_image_optimizer_resize_from_meta_data` leaves the metadata unchanged. |
+| EWWW: Media Library column | Message | Message | Message | Shows "Could not retrieve file path." for a kept photo. EWWW offers no filter for the column, so this stays as a known limitation. |
+| EWWW: keep a photo while EWWW is active | Works | Works | Works | The photo is kept and EWWW does nothing to it. |
+| Regenerate Thumbnails: bulk list and count | Excluded by the guard | Excluded by the guard | Excluded by the guard | Before the guard kept photos were in the list. Automated in `tests/e2e/plugin-compat.spec.js`. |
+| Regenerate Thumbnails: regenerate one kept photo | Refused by the guard | Refused by the guard | Refused by the guard | 409 `profotograaf_virtual_no_file`, metadata unchanged. Before the guard: 404 "The fullsize image file cannot be found in your uploads directory at `profotograaf-virtual/p-1/web-v1.jpg`", also with the metadata unchanged. |
+| Regenerate Thumbnails: row action, modal button, edit screen button | Removed by the guard | Removed by the guard | Removed by the guard | Still shown for local images. |
+| Regenerate Thumbnails: after Convert to local | Works | Works | Works | The photo is back in the list and regenerates (200). |
+| `wp media regenerate` (WP-CLI, core) | Fails per kept photo | Fails per kept photo | Fails per kept photo | "Can't find "Bride" (ID n)" for each kept photo and "Only regenerated 1 of 3 images (2 failed)", exit code 1. The metadata stays unchanged. WP-CLI has no filter to skip an attachment, so pass the ids of local images. |
+| UpdraftPlus: local backup | Works | Works | Works | The backup finishes with no error. The uploads zip holds only local files. The database dump holds the `_profotograaf_virtual` and `_profotograaf_virtual_urls` rows, so kept photos travel with the database. |
+| UpdraftPlus: restore | Untested | Untested | Untested | The restore runs through the admin screen as a queued job. The backup contents above show what a restore would bring back. |
+| UpdraftPlus: remote storage | Untested | Untested | Untested | Needs an account. |
+| All-in-One WP Migration: export | Works | Works | Works | The archive holds the virtual meta rows and only local files. |
+| All-in-One WP Migration: import | Works | Works | Works | A kept photo deleted after the export comes back on import with its mark, platform URL and `thumb` URL. |
 
 One difference between versions: WordPress 6.9 stores an attachment's `image_meta` without the `alt` key that 7.0 and 7.1 add. It had no effect on any result above.
 
@@ -206,7 +267,7 @@ Answer for the spike: unpublishing breaks the image at the origin at once, but c
 
 ## Findings that change the plan
 
-1. Core stops at the file system in several places: the REST image editor, the legacy image editor, `wp_get_original_image_path` (returns a path that does not exist), and anything that reads `get_attached_file()`. Plugins that process attachments from disk (image optimisers, regenerate-thumbnails tools, backup plugins) are expected to fail or skip. Not tested.
+1. Core stops at the file system in several places: the REST image editor, the legacy image editor, `wp_get_original_image_path` (returns a path that does not exist), and anything that reads `get_attached_file()`. Issue #156 tested one plugin of each kind that processes attachments from disk. EWWW and the backup plugins skip kept photos on their own. WP Offload Media, Advanced Media Offloader and Regenerate Thumbnails tried to process them and failed, so the plugin now tells them to skip (see "Third-party plugins"). `wp media regenerate` fails for each kept photo and offers no way to skip one.
 2. The legacy editor needs a guard. Without it a save leaves the attachment in a half-converted state.
 3. Post content stores the URL, so any URL change (new image version, conversion) needs a render-time rewrite or a content update. The prototype's rewrite covered the core Image block only. Issue #154 added Gallery block items and the editor side. Classic content with a hard-coded `<img>` is still not rewritten.
 4. The platform's `alt` is always empty today, so virtual attachments carry the photo title as alt text, as imports do.
@@ -221,7 +282,7 @@ Open these only if the recommendation is accepted.
 3. Sync on the change feed instead of the full catalogue: use `GET /api/v1/embed/changes` with the cursor, fall back to the full list on `resync`. Also listen for `available` per gallery. Done in issue #153.
 4. Editor-side URL refresh: update the `url` attribute of Image blocks and Gallery items in the editor when the attachment URL changes (JavaScript), and rewrite saved URLs in Gallery blocks. Done in issue #154.
 5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error. Done in issue #155, see "Image editing".
-6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1.
+6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1. Done in issue #156, see "Third-party plugins".
 7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving.
 8. Uninstall and deactivation behaviour: what happens to virtual attachments when the plugin is removed (the files do not exist locally, so every image would break). Offer a bulk conversion before removal. Done in issue #158, see "Deactivation and uninstall".
 9. Platform request: a webhook or a feed entry when a gallery stops being available, and an optional purge call. Both are absent from the platform documentation read.
@@ -234,3 +295,5 @@ WP_VERSION=7.1 make e2e         # existing browser suite
 ```
 
 The spec `tests/e2e/virtual-attachments.spec.js` runs with the same Docker stack as the rest of the browser tests. It records each observation in the test output as `OBSERVED label: json`, which is where the matrix values above come from. Set `E2E_COMPOSE_PROJECT` and `WP_PORT` to run it next to another stack.
+
+The spec `tests/e2e/plugin-compat.spec.js` installs Regenerate Thumbnails 3.1.6 from wordpress.org in its setup and deletes it in its teardown. When wordpress.org cannot be reached after two tries, its tests are skipped with that reason.

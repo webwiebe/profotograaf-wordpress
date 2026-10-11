@@ -114,6 +114,32 @@ if ( ! class_exists( 'WP_REST_Request' ) ) {
 		public function get_route() {
 			return $this->route;
 		}
+
+		/**
+		 * Request parameters.
+		 *
+		 * @var array<string,mixed>
+		 */
+		private $params = array();
+
+		/**
+		 * One parameter, null when missing.
+		 *
+		 * @param string $key Parameter name.
+		 */
+		public function get_param( $key ) {
+			return $this->params[ $key ] ?? null;
+		}
+
+		/**
+		 * Sets one parameter.
+		 *
+		 * @param string $key   Parameter name.
+		 * @param mixed  $value Value.
+		 */
+		public function set_param( $key, $value ) {
+			$this->params[ $key ] = $value;
+		}
 	}
 }
 

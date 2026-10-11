@@ -3963,3 +3963,7 @@ msgstr[1] "- %d foto’s werden vanaf Profotograaf getoond en laten op deze site
 #: uninstall.php:41
 msgid "Your photos on Profotograaf"
 msgstr "Je foto’s op Profotograaf"
+
+#: includes/modules/class-virtual-plugin-compat.php:190
+msgid "This photo is kept on Profotograaf, so this site has no file to make thumbnails from. Profotograaf serves its sizes. Convert it to local if you need the files on this site."
+msgstr "Deze foto wordt op Profotograaf gehouden, dus deze site heeft geen bestand om miniaturen van te maken. Profotograaf levert de formaten. Sla hem lokaal op als je de bestanden op deze site nodig hebt."

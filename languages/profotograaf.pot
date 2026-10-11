@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T16:09:21+00:00\n"
+"POT-Creation-Date: 2026-10-11T16:51:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -2703,6 +2703,10 @@ msgstr ""
 
 #: includes/modules/class-virtual-edit-guard.php:127
 msgid "Set when the photo is kept on Profotograaf and has no file on this site."
+msgstr ""
+
+#: includes/modules/class-virtual-plugin-compat.php:190
+msgid "This photo is kept on Profotograaf, so this site has no file to make thumbnails from. Profotograaf serves its sizes. Convert it to local if you need the files on this site."
 msgstr ""
 
 #. translators: 1: photos converted so far, 2: photos that could not be converted, 3: photos still waiting.
