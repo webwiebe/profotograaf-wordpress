@@ -211,6 +211,11 @@ trait Api_Client_Writes {
 			return Api_Errors::make( 'profotograaf_invalid', __( 'A gallery id is required.', 'profotograaf' ), 0, false );
 		}
 
+		if ( Backup_Galleries::contains( $gallery_id ) ) {
+			// Backup galleries stay private (docs/backup-and-pwa.md).
+			return Api_Errors::make( 'profotograaf_backup_gallery', __( 'The request to switch embedding on is not valid.', 'profotograaf' ), 0, false );
+		}
+
 		$request = array(
 			'method' => 'PUT',
 			'path'   => '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/embeddable',

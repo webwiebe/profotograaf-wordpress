@@ -8,7 +8,9 @@
 namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
+use Profotograaf\Backup_Galleries;
 use Profotograaf\Change_Poller;
+use Profotograaf\Imported_Copies;
 use Profotograaf\Logger;
 use Profotograaf\Media_Baseline;
 use Profotograaf\Modules\Change_Poll;
@@ -233,6 +235,33 @@ class Change_Poller_Test extends Gallery_Test_Case {
 		$this->assertSame( 'c-2', $this->options[ Change_Poller::OPTION_CURSOR ] );
 		$urls = array_column( $this->http->requests, 'url' );
 		$this->assertNotContains( 'https://profotograaf.nl/api/v1/embed/photos?limit=200&offset=0', $urls );
+	}
+
+	public function test_it_ignores_backup_galleries_in_the_feed(): void {
+		$this->options[ Backup_Galleries::OPTION ] = array( '2026-10' => 'bg-oct' );
+		$page                                      = array(
+			'galleries' => array(
+				'created' => array( 'bg-oct' ),
+				'updated' => array( 'bg-oct' ),
+				'deleted' => array( 'bg-oct' ),
+			),
+			'photos'    => array(
+				'created' => array( array( 'id' => 'p-b', 'gallery_id' => 'bg-oct' ) ),
+				'updated' => array( array( 'id' => 'p-b', 'gallery_id' => 'bg-oct' ) ),
+				'deleted' => array( array( 'id' => 'p-b', 'gallery_id' => 'bg-oct' ) ),
+			),
+		);
+		// A copy that sits in a backup gallery is never watched, even if it is recorded as imported.
+		$imported = array(
+			array( 'id' => 12, 'photo_id' => 'p-b', 'gallery_id' => 'bg-oct' ),
+		);
+
+		$feed = Imported_Copies::filter_feed( $page, $imported );
+
+		$this->assertFalse( $feed['relevant'] );
+		$this->assertSame( array(), $feed['photos_deleted'] );
+		$this->assertSame( array(), $feed['photos_changed'] );
+		$this->assertSame( array(), $feed['galleries_deleted'] );
 	}
 
 	public function test_it_flags_an_imported_photo_deleted_on_the_platform(): void {

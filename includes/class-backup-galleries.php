@@ -122,13 +122,14 @@ final class Backup_Galleries {
 	}
 
 	/**
-	 * Whether a gallery id is one of the backup galleries. Change feed
-	 * consumers use it to leave these galleries alone.
+	 * Whether a gallery id is one of the backup galleries. It reads the stored
+	 * ids only and makes no network call. Change feed consumers and the photo
+	 * catalogue use it to leave these galleries alone.
 	 *
 	 * @param string $gallery_id Gallery id.
 	 */
-	public function contains( string $gallery_id ): bool {
-		return '' !== $gallery_id && in_array( $gallery_id, $this->all(), true );
+	public static function contains( string $gallery_id ): bool {
+		return '' !== $gallery_id && in_array( $gallery_id, self::all(), true );
 	}
 
 	/**
@@ -136,7 +137,7 @@ final class Backup_Galleries {
 	 *
 	 * @return array<string,string>
 	 */
-	public function all(): array {
+	public static function all(): array {
 		$stored = get_option( self::OPTION, array() );
 		$all    = array();
 		foreach ( is_array( $stored ) ? $stored : array() as $month => $id ) {
