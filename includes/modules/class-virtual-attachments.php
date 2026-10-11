@@ -1,6 +1,6 @@
 <?php
 /**
- * Hidden prototype: virtual attachments (spike #104).
+ * Virtual attachments: photos kept on Profotograaf (spike #104, issue #151).
  *
  * @package Profotograaf
  */
@@ -16,13 +16,13 @@ use Profotograaf\Virtual_Attachments as Prototype;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Registers the Virtual_Attachments filters when the hidden flag is on. With
- * the flag off this module registers nothing.
+ * Registers the Virtual_Attachments filters when the setting "Keep photos on
+ * Profotograaf" is on. With the setting off this module registers nothing.
  */
 class Virtual_Attachments implements Module {
 
 	/**
-	 * Adds the hooks when the flag is on.
+	 * Adds the hooks when the setting is on.
 	 *
 	 * @param Plugin $plugin Service container.
 	 */

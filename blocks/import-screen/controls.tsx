@@ -92,6 +92,8 @@ interface ActionsProps {
 	busy: boolean;
 	canSelectPage: boolean;
 	onImport: () => void;
+	/** Set while the setting "Keep photos on Profotograaf" is on. */
+	onKeep?: ( () => void ) | undefined;
 	onSelectPage: () => void;
 	onClear: () => void;
 }
@@ -101,6 +103,7 @@ export function Actions( {
 	busy,
 	canSelectPage,
 	onImport,
+	onKeep,
 	onSelectPage,
 	onClear,
 }: ActionsProps ) {
@@ -113,6 +116,15 @@ export function Actions( {
 					count
 				) }
 			</Button>
+			{ onKeep && (
+				<Button variant="secondary" disabled={ count === 0 || busy } onClick={ onKeep }>
+					{ sprintf(
+						/* translators: %d: number of selected photos. */
+						_n( 'Keep %d photo on Profotograaf', 'Keep %d photos on Profotograaf', count, 'profotograaf' ),
+						count
+					) }
+				</Button>
+			) }
 			<Button variant="secondary" disabled={ ! canSelectPage || busy } onClick={ onSelectPage }>
 				{ __( 'Select all on this page', 'profotograaf' ) }
 			</Button>

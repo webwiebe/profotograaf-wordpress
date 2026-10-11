@@ -38,7 +38,7 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 6;
+	public const VERSION = 7;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
@@ -105,6 +105,13 @@ final class Settings_Schema {
 				'default'     => false,
 				'label'       => __( 'Use Profotograaf photos in the editor', 'profotograaf' ),
 				'description' => __( 'Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors\' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested.', 'profotograaf' ),
+			),
+			'virtual_attachments'    => array(
+				'tab'         => self::TAB_GENERAL,
+				'type'        => 'bool',
+				'default'     => false,
+				'label'       => __( 'Keep photos on Profotograaf', 'profotograaf' ),
+				'description' => __( 'Adds the choice "Keep on Profotograaf" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs "Use Profotograaf photos in the editor". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors\' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site.', 'profotograaf' ),
 			),
 			'media_upload'           => array(
 				'tab'         => self::TAB_GENERAL,

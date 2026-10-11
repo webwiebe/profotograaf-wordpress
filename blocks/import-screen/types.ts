@@ -8,7 +8,12 @@ export interface PhotoItem {
 	galleryTitle: string;
 	/** Attachment id of an earlier import. */
 	id?: number;
+	/** The attachment is kept on Profotograaf (a virtual attachment). */
+	kept?: boolean;
 }
+
+/** How the chosen photos reach the Media Library. */
+export type AddMode = 'import' | 'keep';
 
 export interface GalleryFacet {
 	id: string;

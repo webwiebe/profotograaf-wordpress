@@ -16,12 +16,11 @@ defined( 'ABSPATH' ) || exit;
  * dimensions come from post meta that was written from the photo catalogue
  * (spike #104, see docs/virtual-attachments.md).
  *
- * This is a prototype behind a hidden flag. It has no UI and ships off:
- *
- * - the constant `PROFOTOGRAAF_VIRTUAL_ATTACHMENTS`, or
- * - the filter `profotograaf_virtual_attachments` returning true.
- *
- * With the flag off nothing here registers a hook or touches an attachment.
+ * It is switched on by the setting "Keep photos on Profotograaf"
+ * (`virtual_attachments`, off by default). The filter
+ * `profotograaf_virtual_attachments` can override the setting. With it off
+ * nothing here registers a hook or touches an attachment, and the Import from
+ * Profotograaf screen shows no "Keep on Profotograaf" choice (issue #151).
  *
  * Rules the filters follow:
  *
@@ -38,8 +37,6 @@ defined( 'ABSPATH' ) || exit;
 final class Virtual_Attachments {
 
 	use Virtual_Attachment_Filters;
-
-	public const CONSTANT = 'PROFOTOGRAAF_VIRTUAL_ATTACHMENTS';
 
 	public const FILTER = 'profotograaf_virtual_attachments';
 
@@ -102,15 +99,16 @@ final class Virtual_Attachments {
 	}
 
 	/**
-	 * Whether the hidden flag is on.
+	 * Whether the setting "Keep photos on Profotograaf" is on.
 	 */
 	public static function enabled(): bool {
-		$value = defined( self::CONSTANT ) && true === constant( self::CONSTANT );
+		$value = ( new Settings() )->virtual_attachments_enabled();
 
 		/**
-		 * Switches the virtual attachment prototype on. Hidden, off by default.
+		 * Overrides the setting "Keep photos on Profotograaf". Only the boolean
+		 * true switches virtual attachments on.
 		 *
-		 * @param bool $enabled Whether the prototype is on.
+		 * @param bool $enabled Whether the setting is on.
 		 */
 		return true === apply_filters( 'profotograaf_virtual_attachments', $value );
 	}
@@ -149,7 +147,7 @@ final class Virtual_Attachments {
 	 */
 	public function create( array $photo ) {
 		if ( ! self::enabled() ) {
-			return Api_Errors::make( 'profotograaf_virtual_off', __( 'Virtual attachments are switched off.', 'profotograaf' ), 403, false );
+			return Api_Errors::make( 'profotograaf_virtual_off', __( 'Keeping photos on Profotograaf is switched off in the plugin settings.', 'profotograaf' ), 403, false );
 		}
 		if ( ! current_user_can( 'upload_files' ) ) {
 			return Api_Errors::make( 'profotograaf_import_forbidden', __( 'You are not allowed to add files to the Media Library.', 'profotograaf' ), 403, false );
@@ -320,7 +318,7 @@ final class Virtual_Attachments {
 	}
 
 	/**
-	 * Schedules the sync twice a day while the flag is on.
+	 * Schedules the sync twice a day while the setting is on.
 	 */
 	public function schedule_sync(): void {
 		if ( ! wp_next_scheduled( self::SYNC_HOOK ) ) {

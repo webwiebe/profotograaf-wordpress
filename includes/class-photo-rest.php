@@ -24,6 +24,11 @@ defined( 'ABSPATH' ) || exit;
  * POST /profotograaf/v1/photos/reimport { attachment_id } replaces the file of
  * an imported attachment with the photo's current web variant. It needs
  * edit_post on the attachment and upload_files.
+ *
+ * POST /profotograaf/v1/photos/keep { ids } adds up to MAX_IMPORT photos to
+ * the Media Library as virtual attachments, without a download. The route
+ * exists only while the setting "Keep photos on Profotograaf" is on, and it
+ * needs upload_files.
  */
 class Photo_Rest {
 
@@ -55,16 +60,25 @@ class Photo_Rest {
 	private Settings $settings;
 
 	/**
+	 * Virtual attachments, null while the setting "Keep photos on Profotograaf" is off.
+	 *
+	 * @var Virtual_Attachments|null
+	 */
+	private ?Virtual_Attachments $virtual;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Photo_Catalogue $catalogue Photo catalogue.
-	 * @param Photo_Importer  $importer  Photo importer.
-	 * @param Settings        $settings  Settings.
+	 * @param Photo_Catalogue          $catalogue Photo catalogue.
+	 * @param Photo_Importer           $importer  Photo importer.
+	 * @param Settings                 $settings  Settings.
+	 * @param Virtual_Attachments|null $virtual   Virtual attachments, when the setting is on.
 	 */
-	public function __construct( Photo_Catalogue $catalogue, Photo_Importer $importer, Settings $settings ) {
+	public function __construct( Photo_Catalogue $catalogue, Photo_Importer $importer, Settings $settings, ?Virtual_Attachments $virtual = null ) {
 		$this->catalogue = $catalogue;
 		$this->importer  = $importer;
 		$this->settings  = $settings;
+		$this->virtual   = $virtual;
 	}
 
 	/**
@@ -142,6 +156,25 @@ class Photo_Rest {
 				),
 			)
 		);
+		if ( null === $this->virtual ) {
+			return;
+		}
+		register_rest_route(
+			Gallery_Rest::NAMESPACE,
+			'/photos/keep',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'keep_photos' ),
+				'permission_callback' => array( $this, 'can_keep' ),
+				'args'                => array(
+					'ids' => array(
+						'type'     => 'array',
+						'required' => true,
+						'items'    => array( 'type' => 'string' ),
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -149,6 +182,14 @@ class Photo_Rest {
 	 */
 	public function can_upload(): bool {
 		return current_user_can( 'upload_files' );
+	}
+
+	/**
+	 * Permission check for keeping photos on Profotograaf: upload_files, and
+	 * the setting "Keep photos on Profotograaf" still on.
+	 */
+	public function can_keep(): bool {
+		return null !== $this->virtual && Virtual_Attachments::enabled() && current_user_can( 'upload_files' );
 	}
 
 	/**
@@ -209,11 +250,20 @@ class Photo_Rest {
 		$ids      = array_map( static fn( array $photo ): string => (string) $photo['id'], $slice['items'] );
 		$imported = $this->importer->find_many( $ids );
 
+		$items = array_map(
+			static fn( array $photo ): array => self::item( $photo, $imported[ (string) $photo['id'] ] ?? 0 ),
+			$slice['items']
+		);
+		if ( null !== $this->virtual ) {
+			foreach ( $items as $index => $item ) {
+				if ( isset( $item['id'] ) && $this->virtual->is_virtual( (int) $item['id'] ) ) {
+					$items[ $index ]['kept'] = true;
+				}
+			}
+		}
+
 		return array(
-			'items'      => array_map(
-				static fn( array $photo ): array => self::item( $photo, $imported[ (string) $photo['id'] ] ?? 0 ),
-				$slice['items']
-			),
+			'items'      => $items,
 			'totalItems' => $slice['total'],
 			'totalPages' => $slice['total_pages'],
 			'galleries'  => $facets,
@@ -228,6 +278,30 @@ class Photo_Rest {
 	 * @return array<string,mixed>|\WP_Error|\WP_REST_Response
 	 */
 	public function import_photos( $request ) {
+		return $this->add_photos( $request, array( $this->importer, 'import' ) );
+	}
+
+	/**
+	 * POST /photos/keep: adds the photos as virtual attachments, without a download.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return array<string,mixed>|\WP_Error|\WP_REST_Response
+	 */
+	public function keep_photos( $request ) {
+		if ( null === $this->virtual ) {
+			return Api_Errors::make( 'profotograaf_virtual_off', __( 'Keeping photos on Profotograaf is switched off in the plugin settings.', 'profotograaf' ), 403, false );
+		}
+		return $this->add_photos( $request, array( $this->virtual, 'create' ) );
+	}
+
+	/**
+	 * Adds the requested catalogue photos to the Media Library, one result per photo.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @param callable         $add     Takes a catalogue row, returns an attachment id or a WP_Error.
+	 * @return array<string,mixed>|\WP_Error|\WP_REST_Response
+	 */
+	private function add_photos( $request, callable $add ) {
 		if ( ! $this->settings->media_source_enabled() ) {
 			return self::source_off();
 		}
@@ -274,7 +348,7 @@ class Photo_Rest {
 				);
 				continue;
 			}
-			$attachment = $this->importer->import( $by_id[ $id ] );
+			$attachment = $add( $by_id[ $id ] );
 			$results[]  = is_wp_error( $attachment )
 				? array(
 					'id'    => $id,
