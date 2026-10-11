@@ -12,6 +12,7 @@ use Profotograaf\Cron_Health;
 use Profotograaf\Module;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Plugin;
+use Profotograaf\Virtual_Sync;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -95,12 +96,14 @@ class Change_Poll implements Module {
 	}
 
 	/**
-	 * Removes the events and the cursor, so a later connection to another
-	 * account starts from a fresh feed.
+	 * Removes the events and the cursors (imported copies and virtual
+	 * attachments), so a later connection to another account starts from a
+	 * fresh feed.
 	 */
 	public function on_disconnected(): void {
 		$this->unschedule();
 		Change_Poller::forget();
+		Virtual_Sync::forget();
 	}
 
 	/**

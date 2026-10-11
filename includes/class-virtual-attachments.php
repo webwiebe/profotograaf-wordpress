@@ -33,7 +33,11 @@ defined( 'ABSPATH' ) || exit;
  * Stored per virtual attachment: META_PHOTO_ID, META_GALLERY_ID and
  * META_VERSION (shared with Photo_Importer), META_VIRTUAL, META_URLS (the
  * `thumb` and `web` URLs) and `_wp_attachment_metadata` (width, height, file,
- * sizes). Writes happen in create() and sync(), both off the front end.
+ * sizes). Writes happen in create(), sync() and Virtual_Sync, all off the
+ * front end.
+ *
+ * The scheduled sync reads the change feed through Virtual_Sync (issue #153)
+ * and falls back to the full photo list when the feed answers resync.
  */
 final class Virtual_Attachments {
 
@@ -47,7 +51,7 @@ final class Virtual_Attachments {
 	/** The `thumb` and `web` URLs of the photo. */
 	public const META_URLS = '_profotograaf_virtual_urls';
 
-	/** Unix time at which sync() first found the photo missing from a fresh catalogue. */
+	/** Unix time at which a sync first found that the platform no longer serves the photo. */
 	public const META_GONE = '_profotograaf_virtual_gone';
 
 	/** Cron hook that runs sync(). */
@@ -80,11 +84,18 @@ final class Virtual_Attachments {
 	private Photo_Importer $importer;
 
 	/**
-	 * Catalogue that sync() reads on a schedule.
+	 * Catalogue that the scheduled sync reads on a resync.
 	 *
 	 * @var Photo_Catalogue|null
 	 */
 	private ?Photo_Catalogue $catalogue;
+
+	/**
+	 * API client that the scheduled sync reads the change feed with.
+	 *
+	 * @var Api_Client|null
+	 */
+	private ?Api_Client $api;
 
 	/**
 	 * Constructor.
@@ -92,11 +103,13 @@ final class Virtual_Attachments {
 	 * @param Settings             $settings  Plugin settings.
 	 * @param Photo_Importer       $importer  Importer, built with a catalogue so that reimport() works.
 	 * @param Photo_Catalogue|null $catalogue Catalogue for the scheduled sync.
+	 * @param Api_Client|null      $api       API client for the scheduled sync.
 	 */
-	public function __construct( Settings $settings, Photo_Importer $importer, ?Photo_Catalogue $catalogue = null ) {
+	public function __construct( Settings $settings, Photo_Importer $importer, ?Photo_Catalogue $catalogue = null, ?Api_Client $api = null ) {
 		$this->settings  = $settings;
 		$this->importer  = $importer;
 		$this->catalogue = $catalogue;
+		$this->api       = $api;
 	}
 
 	/**
@@ -284,10 +297,12 @@ final class Virtual_Attachments {
 	 * Refreshes the stored data of every virtual attachment from a catalogue.
 	 *
 	 * Photos still listed get their URLs, version and size updated. A photo that
-	 * is missing from a fresh catalogue gets META_GONE once. A stale catalogue
-	 * (the platform failed) changes nothing, so an outage never marks photos gone.
+	 * is missing from a fresh, complete catalogue gets META_GONE once. A stale
+	 * catalogue (the platform failed) changes nothing, so an outage never marks
+	 * photos gone. A catalogue that hit its size limit (`dropped`) marks nothing
+	 * gone, because a missing photo may only have been left out.
 	 *
-	 * @param array{photos:array<int,array<string,mixed>>,stale:bool} $catalogue Result of Photo_Catalogue::get().
+	 * @param array{photos:array<int,array<string,mixed>>,stale:bool,dropped?:int} $catalogue Result of Photo_Catalogue::get().
 	 * @return array{updated:int,gone:int,skipped:bool}
 	 */
 	public function sync( array $catalogue ): array {
@@ -300,63 +315,65 @@ final class Virtual_Attachments {
 			$result['skipped'] = true;
 			return $result;
 		}
-		$by_id = array();
-		foreach ( $catalogue['photos'] as $row ) {
-			if ( isset( $row['id'] ) && is_scalar( $row['id'] ) ) {
-				$by_id[ (string) $row['id'] ] = $row;
-			}
-		}
+		$by_id    = Virtual_Sync::by_id( $catalogue['photos'] );
+		$complete = (int) ( $catalogue['dropped'] ?? 0 ) <= 0;
 		foreach ( $this->virtual_ids() as $attachment_id ) {
 			$photo_id = (string) get_post_meta( $attachment_id, Photo_Importer::META_PHOTO_ID, true );
 			if ( isset( $by_id[ $photo_id ] ) ) {
-				$photo = $by_id[ $photo_id ];
-				$web   = $this->text( $photo, 'web_url' );
-				$thumb = $this->text( $photo, 'thumb_url' );
-				if ( ! $this->importer->is_platform_url( $web ) ) {
-					continue;
-				}
-				$file = (string) get_post_meta( $attachment_id, '_wp_attached_file', true );
-				$this->store( $attachment_id, $photo, $web, $this->importer->is_platform_url( $thumb ) ? $thumb : $web, $file );
-				update_post_meta( $attachment_id, Photo_Importer::META_VERSION, $this->text( $photo, 'version' ) );
-				delete_post_meta( $attachment_id, self::META_GONE );
-				++$result['updated'];
+				$result['updated'] += $this->refresh_from( $attachment_id, $by_id[ $photo_id ] ) ? 1 : 0;
 				continue;
 			}
-			if ( '' === (string) get_post_meta( $attachment_id, self::META_GONE, true ) ) {
-				update_post_meta( $attachment_id, self::META_GONE, time() );
-
-				/**
-				 * Fires once when a virtual attachment's photo left the catalogue, which
-				 * means the platform no longer serves it.
-				 *
-				 * @param int $attachment_id Attachment id.
-				 */
-				do_action( 'profotograaf_virtual_attachment_gone', $attachment_id );
+			if ( $complete && Virtual_Sync::mark_gone( $attachment_id ) ) {
 				++$result['gone'];
 			}
-		}//end foreach
+		}
 		return $result;
 	}
 
 	/**
-	 * Cron callback: syncs from the catalogue. Never runs on a front end request.
+	 * Writes fresh URLs, version, size and gallery of a listed photo to its
+	 * virtual attachment and clears a gone mark. A row whose `web` URL is not on
+	 * the platform host changes nothing.
+	 *
+	 * @param int                 $attachment_id Virtual attachment.
+	 * @param array<string,mixed> $photo         Catalogue row.
+	 * @return bool Whether it wrote.
 	 */
-	public function run_sync(): void {
-		if ( null === $this->catalogue ) {
-			return;
+	public function refresh_from( int $attachment_id, array $photo ): bool {
+		$web   = $this->text( $photo, 'web_url' );
+		$thumb = $this->text( $photo, 'thumb_url' );
+		if ( ! $this->importer->is_platform_url( $web ) ) {
+			return false;
 		}
-		$catalogue = $this->catalogue->refresh();
-		if ( ! is_wp_error( $catalogue ) ) {
-			$this->sync( $catalogue );
+		$file = (string) get_post_meta( $attachment_id, '_wp_attached_file', true );
+		$this->store( $attachment_id, $photo, $web, $this->importer->is_platform_url( $thumb ) ? $thumb : $web, $file );
+		update_post_meta( $attachment_id, Photo_Importer::META_VERSION, $this->text( $photo, 'version' ) );
+		$gallery = $this->text( $photo, 'gallery_id' );
+		if ( '' !== $gallery ) {
+			update_post_meta( $attachment_id, Photo_Importer::META_GALLERY_ID, $gallery );
 		}
+		delete_post_meta( $attachment_id, self::META_GONE );
+		return true;
 	}
 
 	/**
-	 * Schedules the sync twice a day while the setting is on.
+	 * Cron callback: syncs from the change feed (Virtual_Sync), with the full
+	 * photo list on a resync. Never runs on a front end request.
+	 */
+	public function run_sync(): void {
+		if ( null === $this->catalogue || null === $this->api ) {
+			return;
+		}
+		( new Virtual_Sync( $this->api, $this->catalogue, $this ) )->run();
+	}
+
+	/**
+	 * Schedules the sync every hour while the setting is on, the interval of
+	 * the change feed poll for imported copies.
 	 */
 	public function schedule_sync(): void {
 		if ( ! wp_next_scheduled( self::SYNC_HOOK ) ) {
-			wp_schedule_event( time() + HOUR_IN_SECONDS, 'twicedaily', self::SYNC_HOOK );
+			wp_schedule_event( time() + HOUR_IN_SECONDS, 'hourly', self::SYNC_HOOK );
 		}
 	}
 
@@ -447,7 +464,7 @@ final class Virtual_Attachments {
 	 *
 	 * @return array<int,int>
 	 */
-	private function virtual_ids(): array {
+	public function virtual_ids(): array {
 		$ids = get_posts(
 			array(
 				'post_type'              => 'attachment',

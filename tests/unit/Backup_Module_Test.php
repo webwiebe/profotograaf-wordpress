@@ -12,6 +12,7 @@ use Profotograaf\Api_Client;
 use Profotograaf\Backup_Backfill;
 use Profotograaf\Backup_Galleries;
 use Profotograaf\Backup_State;
+use Profotograaf\Backup_Status;
 use Profotograaf\Backup_Usage;
 use Profotograaf\Backup_Worker;
 use Profotograaf\Cli\Backup_Command;
@@ -22,6 +23,15 @@ use Profotograaf\Plugin;
 use Profotograaf\Settings;
 
 require_once dirname( __DIR__ ) . '/wp-cli-stubs.php';
+
+class Recording_Backup extends Backup {
+
+	public int $finished = 0;
+
+	protected function finish(): void {
+		++$this->finished;
+	}
+}
 
 class Backup_Module_Test extends Wp_Test_Case {
 
@@ -369,6 +379,7 @@ class Backup_Module_Test extends Wp_Test_Case {
 		$this->uploaded( 'p-11' );
 		$this->module->run_worker();
 		$this->assertSame( 'done', $this->state_of( 11 ) );
+		$this->assertSame( $this->now, $this->options[ Backup_Status::RUN_OPTION ]['last_sent'] );
 
 		$this->attachment( 12 );
 		$this->module->run_backfill();
@@ -670,5 +681,94 @@ class Backup_Module_Test extends Wp_Test_Case {
 		$this->assertSame( 'p-11', $state->find_copy( 12, 'abc' )['photo_id'] ?? null );
 		$this->assertNull( $state->find_copy( 12, 'def' ) );
 		$this->assertNull( $state->find_copy( 12, '' ) );
+	}
+
+	// Back up now and Retry failed.
+
+	private function recording(): Recording_Backup {
+		$connection = new Connection();
+		$module     = new Recording_Backup();
+		$module->register( new Plugin( $connection, new Api_Client( $connection, $this->http, $this->clock() ), $this->clock() ) );
+		Functions\when( 'current_user_can' )->justReturn( true );
+		Functions\when( 'check_admin_referer' )->justReturn( 1 );
+		Functions\when( 'get_current_user_id' )->justReturn( 7 );
+		return $module;
+	}
+
+	public function test_back_up_now_lifts_the_pause_and_moves_the_run_to_now_without_sending(): void {
+		$this->queued( 11 );
+		$this->options[ Backup_Worker::PAUSE ]    = array(
+			'reason' => 'storage_full',
+			'until'  => $this->now + 3600,
+		);
+		$this->options[ Backup_Backfill::OPTION ] = array(
+			'cursor'   => 5,
+			'complete' => false,
+		);
+		$this->events[ Backup_Worker::HOOK ]      = array( array( $this->now + 200, array(), Backup_Worker::SCHEDULE ) );
+
+		$this->assertTrue( $this->module->back_up_now() );
+
+		$this->assertArrayNotHasKey( Backup_Worker::PAUSE, $this->options );
+		$this->assertSame( array( array( $this->now, array(), Backup_Worker::SCHEDULE ) ), $this->events[ Backup_Worker::HOOK ] );
+		$this->assertSame( $this->now, $this->events[ Backup_Backfill::HOOK ][0][0] );
+		$this->assertSame( 'queued', $this->state_of( 11 ) );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
+	public function test_back_up_now_does_nothing_while_off_or_disconnected(): void {
+		$this->backup( 'all', false );
+		$this->assertFalse( $this->module->back_up_now() );
+		$this->assertSame( array(), $this->events );
+	}
+
+	public function test_retry_failed_queues_failed_and_unconfirmed_files_again(): void {
+		foreach ( array( 11 => 'failed', 12 => 'needs_check', 13 => 'done', 14 => 'skipped' ) as $id => $state ) {
+			$this->attachment( $id );
+			$this->meta[ $id ][ Backup_State::META_STATE ]    = $state;
+			$this->meta[ $id ][ Backup_State::META_REASON ]   = 'http_500';
+			$this->meta[ $id ][ Backup_State::META_FAILURES ] = 2;
+		}
+
+		$this->assertSame( 2, $this->module->retry_failed() );
+
+		$this->assertSame( 'queued', $this->state_of( 11 ) );
+		$this->assertSame( 'queued', $this->state_of( 12 ) );
+		$this->assertSame( 'done', $this->state_of( 13 ) );
+		$this->assertSame( 'skipped', $this->state_of( 14 ) );
+		$this->assertArrayNotHasKey( Backup_State::META_REASON, $this->meta[11] );
+		$this->assertSame( 2, $this->meta[11][ Backup_State::META_FAILURES ] );
+		$this->assertArrayHasKey( Backup_Worker::HOOK, $this->events );
+	}
+
+	public function test_the_handlers_leave_a_notice_and_go_back_to_the_backup_tab(): void {
+		$this->attachment( 11 );
+		$this->meta[11][ Backup_State::META_STATE ] = 'failed';
+		$module                                     = $this->recording();
+
+		$module->handle_retry();
+		$this->assertSame( '1 file will be sent again in the background.', $this->transients['profotograaf_notice_7']['message'] );
+
+		$module->handle_now();
+		$this->assertSame( 'The backup starts within a minute, in the background. You can leave this page.', $this->transients['profotograaf_notice_7']['message'] );
+
+		$this->backup( 'all', false );
+		$module->handle_now();
+		$this->assertStringContainsString( 'cannot start', $this->transients['profotograaf_notice_7']['message'] );
+		$this->assertSame( 3, $module->finished );
+		$this->assertNotFalse( has_action( 'admin_post_' . Backup::NOW, array( $module, 'handle_now' ) ) );
+	}
+
+	public function test_the_handlers_refuse_users_without_manage_options(): void {
+		$module = $this->recording();
+		Functions\when( 'current_user_can' )->justReturn( false );
+		Functions\when( 'wp_die' )->alias(
+			function () {
+				throw new \RuntimeException( 'wp_die' );
+			}
+		);
+
+		$this->expectException( \RuntimeException::class );
+		$module->handle_retry();
 	}
 }

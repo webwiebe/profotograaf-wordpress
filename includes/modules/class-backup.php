@@ -7,10 +7,12 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Admin\Backup_Panel;
 use Profotograaf\Backup_Backfill;
 use Profotograaf\Backup_Eligibility;
 use Profotograaf\Backup_Galleries;
 use Profotograaf\Backup_State;
+use Profotograaf\Backup_Status;
 use Profotograaf\Backup_Usage;
 use Profotograaf\Backup_Worker;
 use Profotograaf\Cli\Backup_Command;
@@ -31,7 +33,13 @@ defined( 'ABSPATH' ) || exit;
  * - Publishing or updating published content schedules a background check
  *   of the files it uses when the scope is `used`. The check runs in WP-Cron,
  *   so saving a post never walks the site.
- * - Backup_Worker sends the queue every five minutes.
+ * - Backup_Worker sends the queue every five minutes. Each run records a
+ *   heartbeat in Backup_Status.
+ *
+ * The Backup tab offers "Back up now" and "Retry failed" (admin-post
+ * actions NOW and RETRY). Both only change state and move the next upload
+ * run forward; the upload itself happens in WP-Cron, never in the page
+ * request.
  *
  * While the backup is off, or the site is not connected, no event is
  * scheduled and nothing is queued or sent. Switching it off keeps the state
@@ -45,6 +53,15 @@ class Backup implements Module {
 	/** Seconds before the first upload run after the backup is switched on. */
 	public const FIRST_RUN = 60;
 
+	/** The admin-post action of "Back up now". */
+	public const NOW = 'profotograaf_backup_now';
+
+	/** The admin-post action of "Retry failed". */
+	public const RETRY = 'profotograaf_backup_retry';
+
+	/** Files "Retry failed" puts back in the queue per click at most. */
+	public const RETRY_MAX = 1000;
+
 	/**
 	 * Plugin container.
 	 *
@@ -55,7 +72,7 @@ class Backup implements Module {
 	/**
 	 * Built services.
 	 *
-	 * @var array{eligibility:Backup_Eligibility,backfill:Backup_Backfill,worker:Backup_Worker}|null
+	 * @var array{state:Backup_State,eligibility:Backup_Eligibility,backfill:Backup_Backfill,worker:Backup_Worker}|null
 	 */
 	private ?array $services = null;
 
@@ -76,6 +93,8 @@ class Backup implements Module {
 		add_action( 'profotograaf_disconnected', array( $this, 'unschedule' ) );
 		add_action( 'add_attachment', array( $this, 'on_new_attachment' ) );
 		add_action( 'save_post', array( $this, 'on_save_post' ), 20, 2 );
+		add_action( 'admin_post_' . self::NOW, array( $this, 'handle_now' ) );
+		add_action( 'admin_post_' . self::RETRY, array( $this, 'handle_retry' ) );
 		if ( defined( 'WP_CLI' ) && constant( 'WP_CLI' ) ) {
 			\WP_CLI::add_command( 'profotograaf backup', new Backup_Command( $plugin->settings(), $this->backfill(), $this->worker() ) );
 		}
@@ -100,7 +119,112 @@ class Backup implements Module {
 	 * Cron: one upload run.
 	 */
 	public function run_worker(): void {
-		$this->worker()->run();
+		Backup_Status::record_run( $this->worker()->run(), $this->now() );
+	}
+
+	/**
+	 * "Back up now": lifts a pause, goes on with an unfinished walk of the
+	 * Media Library and moves the next upload run to now. WP-Cron starts it
+	 * on the next request, so this request sends nothing.
+	 *
+	 * @return bool False when the backup is off or the site is not connected.
+	 */
+	public function back_up_now(): bool {
+		if ( ! $this->active() ) {
+			return false;
+		}
+		$this->worker()->resume();
+		$this->backfill()->resume();
+		wp_clear_scheduled_hook( Backup_Worker::HOOK );
+		wp_schedule_event( $this->now(), Backup_Worker::SCHEDULE, Backup_Worker::HOOK );
+		return true;
+	}
+
+	/**
+	 * "Retry failed": puts the failed files and the ones that may be on
+	 * Profotograaf back in the queue, then backs up now.
+	 *
+	 * @return int How many files went back in the queue.
+	 */
+	public function retry_failed(): int {
+		$state = $this->services()['state'];
+		$count = 0;
+		foreach ( array( Backup_State::FAILED, Backup_State::NEEDS_CHECK ) as $from ) {
+			do {
+				$ids = $count < self::RETRY_MAX ? $state->in_state( $from, min( 100, self::RETRY_MAX - $count ) ) : array();
+				foreach ( $ids as $id ) {
+					$state->queue( $id );
+					++$count;
+				}
+			} while ( array() !== $ids );
+		}
+		$this->back_up_now();
+		return $count;
+	}
+
+	/**
+	 * Handles "Back up now".
+	 */
+	public function handle_now(): void {
+		$this->authorize( self::NOW );
+		$this->notice(
+			$this->back_up_now()
+				? __( 'The backup starts within a minute, in the background. You can leave this page.', 'profotograaf' )
+				: __( 'The backup cannot start: switch it on and connect this site to Profotograaf first.', 'profotograaf' )
+		);
+		$this->finish();
+	}
+
+	/**
+	 * Handles "Retry failed".
+	 */
+	public function handle_retry(): void {
+		$this->authorize( self::RETRY );
+		$count = $this->retry_failed();
+		$this->notice(
+			sprintf(
+				/* translators: %d: number of files. */
+				_n( '%d file will be sent again in the background.', '%d files will be sent again in the background.', $count, 'profotograaf' ),
+				$count
+			)
+		);
+		$this->finish();
+	}
+
+	/**
+	 * Requires manage_options and a valid nonce, or stops the request.
+	 *
+	 * @param string $action Nonce action.
+	 */
+	private function authorize( string $action ): void {
+		if ( ! current_user_can( Settings_Page::CAPABILITY ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'profotograaf' ), '', array( 'response' => 403 ) );
+		}
+		check_admin_referer( $action );
+	}
+
+	/**
+	 * Leaves a message for the settings page, like Settings_Page does.
+	 *
+	 * @param string $message Text.
+	 */
+	private function notice( string $message ): void {
+		set_transient(
+			'profotograaf_notice_' . get_current_user_id(),
+			array(
+				'type'    => 'success',
+				'message' => $message,
+			),
+			MINUTE_IN_SECONDS
+		);
+	}
+
+	/**
+	 * Sends the browser back to the Backup tab.
+	 */
+	protected function finish(): void {
+		wp_safe_redirect( Backup_Panel::url() );
+		exit;
 	}
 
 	/**
@@ -241,7 +365,7 @@ class Backup implements Module {
 	/**
 	 * Builds the services once.
 	 *
-	 * @return array{eligibility:Backup_Eligibility,backfill:Backup_Backfill,worker:Backup_Worker}
+	 * @return array{state:Backup_State,eligibility:Backup_Eligibility,backfill:Backup_Backfill,worker:Backup_Worker}
 	 */
 	private function services(): array {
 		if ( null === $this->services ) {
@@ -250,6 +374,7 @@ class Backup implements Module {
 			$state          = new Backup_State( $clock );
 			$eligibility    = new Backup_Eligibility( $plugin->settings(), $state );
 			$this->services = array(
+				'state'       => $state,
 				'eligibility' => $eligibility,
 				'backfill'    => new Backup_Backfill( $eligibility, $clock ),
 				'worker'      => new Backup_Worker( $plugin->settings(), $plugin->connection(), $plugin->api(), $eligibility, $state, new Backup_Galleries( $plugin->api() ), $clock ),
