@@ -3237,6 +3237,9 @@ msgstr "“%s” lokaal opslaan"
 #: includes/modules/class-virtual-convert.php:174
 #: includes/modules/class-virtual-convert.php:323
 #: includes/modules/class-virtual-convert.php:342
+#: includes/modules/class-virtual-edit-guard.php:189
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
 msgid "Convert to local"
 msgstr "Lokaal opslaan"
 
@@ -3857,6 +3860,20 @@ msgstr "delen"
 msgctxt "block variation keyword"
 msgid "delivered"
 msgstr "opgeleverd"
+
+#: includes/modules/class-virtual-edit-guard.php:79
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local to crop, rotate or scale it."
+msgstr "Deze foto wordt op Profotograaf gehouden, dus deze site heeft geen bestand om te bewerken. Sla hem lokaal op om hem bij te snijden, te draaien of te schalen."
+
+#: includes/modules/class-virtual-edit-guard.php:106
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local in the Media Library first, then edit it."
+msgstr "Deze foto wordt op Profotograaf gehouden, dus deze site heeft geen bestand om te bewerken. Sla hem eerst lokaal op in de mediabibliotheek en bewerk hem daarna."
+
+#: includes/modules/class-virtual-edit-guard.php:127
+msgid "Set when the photo is kept on Profotograaf and has no file on this site."
+msgstr "Gezet als de foto op Profotograaf wordt gehouden en geen bestand op deze site heeft."
 
 #. translators: %d: number of photos.
 #: includes/cli/class-virtual-command.php:63
