@@ -219,6 +219,41 @@ class Backup_Module_Test extends Wp_Test_Case {
 		$this->assertArrayHasKey( Backup_Worker::HOOK, $this->events );
 	}
 
+	public function test_switching_the_backup_on_through_add_option_starts_the_walk(): void {
+		// update_option() calls add_option() while the stored settings equal the
+		// registered defaults, so this is the path a first switch-on takes.
+		$this->assertNotFalse( has_action( 'add_option_' . Settings::OPTION, array( $this->module, 'settings_added' ) ) );
+		$this->options[ Backup_Backfill::OPTION ] = array(
+			'cursor'   => 90,
+			'complete' => true,
+		);
+
+		$this->module->settings_added( Settings::OPTION, array( 'backup' => true ) );
+
+		$this->assertSame(
+			array(
+				'cursor'   => 0,
+				'complete' => false,
+			),
+			$this->options[ Backup_Backfill::OPTION ]
+		);
+		$this->assertSame( $this->now, $this->events[ Backup_Backfill::HOOK ][0][0] );
+		$this->assertArrayHasKey( Backup_Worker::HOOK, $this->events );
+	}
+
+	public function test_adding_settings_with_the_backup_off_starts_nothing(): void {
+		$this->backup( 'all', false );
+		$this->options[ Backup_Backfill::OPTION ] = array(
+			'cursor'   => 90,
+			'complete' => true,
+		);
+
+		$this->module->settings_added( Settings::OPTION, array( 'backup' => false ) );
+
+		$this->assertSame( 90, $this->options[ Backup_Backfill::OPTION ]['cursor'] );
+		$this->assertSame( array(), $this->events );
+	}
+
 	public function test_a_new_scope_starts_the_walk_again_and_other_changes_do_not(): void {
 		$done = array(
 			'cursor'   => 90,

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T12:05:09+00:00\n"
+"POT-Creation-Date: 2026-10-11T13:06:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -312,7 +312,7 @@ msgstr ""
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:245
-#: includes/modules/class-backup.php:201
+#: includes/modules/class-backup.php:202
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -1943,20 +1943,20 @@ msgid_plural "%d files are marked for the backup. They are copied to Profotograa
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-backup.php:113
+#: includes/modules/class-backup.php:114
 msgid "Every five minutes (Profotograaf backup)"
 msgstr ""
 
-#: includes/modules/class-backup.php:172
+#: includes/modules/class-backup.php:173
 msgid "The backup starts within a minute, in the background. You can leave this page."
 msgstr ""
 
-#: includes/modules/class-backup.php:173
+#: includes/modules/class-backup.php:174
 msgid "The backup cannot start: switch it on and connect this site to Profotograaf first."
 msgstr ""
 
 #. translators: %d: number of files.
-#: includes/modules/class-backup.php:187
+#: includes/modules/class-backup.php:188
 #, php-format
 msgid "%d file will be sent again in the background."
 msgid_plural "%d files will be sent again in the background."
