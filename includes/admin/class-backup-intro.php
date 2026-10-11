@@ -7,6 +7,9 @@
 
 namespace Profotograaf\Admin;
 
+use Profotograaf\Settings;
+use Profotograaf\Settings_Schema;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -31,9 +34,14 @@ final class Backup_Intro {
 	}
 
 	/**
-	 * Prints the heading and the paragraphs.
+	 * Prints the heading and the paragraphs on the Backup tab.
+	 *
+	 * @param string $tab The current settings tab.
 	 */
-	public static function render(): void {
+	public static function render( string $tab ): void {
+		if ( Settings_Schema::TAB_BACKUP !== $tab ) {
+			return;
+		}
 		$paragraphs = self::paragraphs();
 		?>
 		<h2><?php esc_html_e( 'Backup to Profotograaf', 'profotograaf' ); ?></h2>
@@ -42,5 +50,23 @@ final class Backup_Intro {
 			<p><?php echo esc_html( $paragraph ); ?></p>
 		<?php endforeach; ?>
 		<?php
+	}
+
+	/**
+	 * Why a connection without galleries:write must connect again. The backup
+	 * gets its own words when it is the only feature that needs it.
+	 *
+	 * @param Settings $settings Settings.
+	 * @param bool     $long     Whether to add how to fix it, for the settings page.
+	 */
+	public static function reconnect_text( Settings $settings, bool $long ): string {
+		if ( $settings->backup_enabled() && ! $settings->media_upload_enabled() ) {
+			return $long
+				? __( 'The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are.', 'profotograaf' )
+				: __( 'The backup to Profotograaf needs a new permission.', 'profotograaf' );
+		}
+		return $long
+			? __( 'Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are.', 'profotograaf' )
+			: __( 'Sending files needs a new permission.', 'profotograaf' );
 	}
 }

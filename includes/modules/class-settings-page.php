@@ -8,6 +8,7 @@
 namespace Profotograaf\Modules;
 
 use Profotograaf\Admin\Backup_Intro;
+use Profotograaf\Admin\Client_Links_Panel;
 use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Admin\Settings_Fields;
 use Profotograaf\Admin\Upload_Panel;
@@ -130,6 +131,7 @@ class Settings_Page implements Module {
 				'nonce'   => wp_create_nonce( 'profotograaf_poll' ),
 			)
 		);
+		( new Client_Links_Panel( $this->plugin() ) )->enqueue( $this->current_tab() );
 	}
 
 	/**
@@ -170,7 +172,7 @@ class Settings_Page implements Module {
 			return;
 		}
 		$embed = $this->plugin()->connection()->needs_reconnect();
-		$write = $this->plugin()->connection()->needs_write_reconnect( $this->plugin()->settings()->media_upload_enabled() );
+		$write = $this->plugin()->connection()->needs_write_reconnect( $this->plugin()->settings()->writes_to_platform() );
 		if ( ! $embed && ! $write ) {
 			return;
 		}
@@ -180,7 +182,7 @@ class Settings_Page implements Module {
 		}
 		printf(
 			'<div class="notice notice-warning"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
-			$embed ? esc_html__( 'Profotograaf needs a new permission to switch galleries on for embedding.', 'profotograaf' ) : esc_html__( 'Sending files needs a new permission.', 'profotograaf' ),
+			esc_html( $embed ? __( 'Profotograaf needs a new permission to switch galleries on for embedding.', 'profotograaf' ) : Backup_Intro::reconnect_text( $this->plugin()->settings(), false ) ),
 			esc_url( self::url() ),
 			esc_html__( 'Connect this site again', 'profotograaf' )
 		);
@@ -298,9 +300,9 @@ class Settings_Page implements Module {
 					</div>
 					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary' ); ?>
 				<?php endif; ?>
-				<?php if ( ! $connection->needs_reconnect() && $connection->needs_write_reconnect( $this->plugin()->settings()->media_upload_enabled() ) ) : ?>
+				<?php if ( ! $connection->needs_reconnect() && $connection->needs_write_reconnect( $this->plugin()->settings()->writes_to_platform() ) ) : ?>
 					<div class="notice notice-warning inline">
-						<p><?php esc_html_e( 'Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are.', 'profotograaf' ); ?></p>
+						<p><?php echo esc_html( Backup_Intro::reconnect_text( $this->plugin()->settings(), true ) ); ?></p>
 					</div>
 					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary' ); ?>
 				<?php endif; ?>
@@ -321,10 +323,10 @@ class Settings_Page implements Module {
 			<?php if ( Settings_Schema::TAB_ENQUIRY === $tab ) : ?>
 				<p><a href="<?php echo esc_url( Leads_Settings::url() ); ?>"><?php esc_html_e( 'Set up the enquiry forms', 'profotograaf' ); ?></a></p>
 			<?php endif; ?>
-			<?php if ( Settings_Schema::TAB_BACKUP === $tab ) : ?>
-				<?php Backup_Intro::render(); ?>
-			<?php endif; ?>
+			<?php Backup_Intro::render( $tab ); ?>
 			<?php ( new Settings_Fields( $this->plugin()->settings() ) )->render_form( $tab ); ?>
+			<?php ( new Client_Links_Panel( $this->plugin() ) )->render( $tab ); ?>
+			<?php ( new \Profotograaf\Admin\Backup_Panel( $this->plugin() ) )->render( $tab ); ?>
 
 			<?php if ( Settings_Schema::TAB_GENERAL === $tab && 'connected' === $status['state'] ) : ?>
 				<h2><?php esc_html_e( 'Photo changes', 'profotograaf' ); ?></h2>

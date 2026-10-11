@@ -741,6 +741,47 @@ class Api_Client_Test extends Wp_Test_Case {
 		);
 	}
 
+	public function test_changes_reads_the_serving_state_of_each_gallery(): void {
+		$this->connect();
+		$this->http->reply(
+			200,
+			array(
+				'cursor'    => 'c-2',
+				'galleries' => array(
+					'unavailable' => array(
+						array(
+							'id'     => 'g2',
+							'reason' => 'password',
+						),
+						array( 'id' => 'g3' ),
+						array( 'reason' => 'expired' ),
+						'junk',
+					),
+					'available'   => array( 'g1', '' ),
+				),
+			)
+		);
+
+		$feed = $this->api->changes( 'c-1' );
+
+		$this->assertSame(
+			array(
+				array(
+					'id'     => 'g2',
+					'reason' => 'password',
+				),
+				array(
+					'id'     => 'g3',
+					'reason' => '',
+				),
+			),
+			$feed['galleries']['unavailable']
+		);
+		$this->assertSame( array( 'g1' ), $feed['galleries']['available'] );
+		$this->assertSame( array(), $feed['galleries']['deleted'] );
+		$this->assertSame( array(), $feed['photos']['deleted'] );
+	}
+
 	public function test_changes_without_a_cursor_leaves_since_out_and_rejects_an_answer_without_a_cursor(): void {
 		$this->connect();
 		$this->http->reply( 200, array( 'resync' => true ) );

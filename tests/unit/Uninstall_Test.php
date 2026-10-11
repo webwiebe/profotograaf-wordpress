@@ -102,6 +102,13 @@ class Uninstall_Test extends Wp_Test_Case {
 	private array $virtual = array();
 
 	/**
+	 * Backup copies per site id.
+	 *
+	 * @var array<int,int>
+	 */
+	private array $copies = array();
+
+	/**
 	 * Mails sent, as [ to, subject, body ].
 	 *
 	 * @var array<int,array<int,string>>
@@ -109,13 +116,16 @@ class Uninstall_Test extends Wp_Test_Case {
 	private array $mails = array();
 
 	/**
-	 * Answers a COUNT query: the virtual attachments of the current site, 0 for anything else.
+	 * Answers a COUNT query: the virtual attachments or backup copies of the current site, 0 for anything else.
 	 *
 	 * @param string $query Prepared query.
 	 */
 	public function count_rows( string $query ): int {
 		if ( str_contains( $query, 'FROM wp_postmeta WHERE meta_key = %s AND meta_value = %s|_profotograaf_virtual|1' ) ) {
 			return $this->virtual[ $this->current ] ?? 0;
+		}
+		if ( str_contains( $query, 'FROM wp_postmeta WHERE meta_key = %s AND meta_value <> %s|_profotograaf_copy_photo_id|' ) ) {
+			return $this->copies[ $this->current ] ?? 0;
 		}
 		return 0;
 	}
@@ -200,9 +210,10 @@ class Uninstall_Test extends Wp_Test_Case {
 	/**
 	 * Runs uninstall.php on one site with three photos kept on Profotograaf.
 	 *
-	 * @param bool $keep Whether the data is kept on uninstall.
+	 * @param bool $keep   Whether the data is kept on uninstall.
+	 * @param int  $copies Backup copies on the site.
 	 */
-	private function uninstall_with_virtual_attachments( bool $keep ): void {
+	private function uninstall_with_virtual_attachments( bool $keep, int $copies = 0 ): void {
 		define( 'WP_UNINSTALL_PLUGIN', 'profotograaf/profotograaf.php' );
 		$this->stub_database();
 		$this->sites   = array(
@@ -213,6 +224,7 @@ class Uninstall_Test extends Wp_Test_Case {
 			),
 		);
 		$this->virtual = array( 1 => 3 );
+		$this->copies  = array( 1 => $copies );
 		$this->meta    = array( 1 => array( '_profotograaf_virtual', '_profotograaf_virtual_urls', '_profotograaf_photo_id', '_profotograaf_backup_state' ) );
 		Functions\when( 'is_multisite' )->justReturn( false );
 		Functions\when( 'get_option' )->alias( fn( $name, $fallback = false ) => $this->sites[ $this->current ][ $name ] ?? $fallback );
@@ -250,9 +262,11 @@ class Uninstall_Test extends Wp_Test_Case {
 
 		$this->assertCount( 1, $this->mails );
 		$this->assertSame( 'owner@example.com', $this->mails[0][0] );
-		$this->assertSame( '[Example Photography] Photos kept on Profotograaf no longer show', $this->mails[0][1] );
-		$this->assertStringContainsString( '3 photos in the Media Library were kept on Profotograaf and have no copy on this site', $this->mails[0][2] );
-		$this->assertStringContainsString( 'install and connect the Profotograaf plugin again and use Convert to local', $this->mails[0][2] );
+		$this->assertSame( '[Example Photography] Your photos on Profotograaf', $this->mails[0][1] );
+		$this->assertStringContainsString( 'Some of your photos are still in your Profotograaf account', $this->mails[0][2] );
+		$this->assertStringContainsString( '3 photos were shown from Profotograaf and show no image on this site now', $this->mails[0][2] );
+		$this->assertStringContainsString( 'install and connect the plugin and use Convert to local', $this->mails[0][2] );
+		$this->assertStringNotContainsString( 'backed up', $this->mails[0][2] );
 		$this->assertSame( array( '_profotograaf_virtual', '_profotograaf_virtual_urls', '_profotograaf_photo_id' ), $this->meta[1], 'The virtual marks stay, so a reinstall can convert them.' );
 		$this->assertSame( array( 'admin_email' ), array_keys( $this->sites[1] ), 'The bulk job state goes with the other options.' );
 		$this->assertContains( '1:profotograaf_virtual_bulk_convert', $this->cleared );
@@ -268,5 +282,17 @@ class Uninstall_Test extends Wp_Test_Case {
 		$this->assertCount( 1, $this->mails );
 		$this->assertCount( 4, $this->meta[1] );
 		$this->assertArrayHasKey( 'profotograaf_virtual_bulk', $this->sites[1] );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_one_mail_names_both_the_backup_copies_and_the_kept_photos(): void {
+		$this->uninstall_with_virtual_attachments( false, 1 );
+
+		$this->assertCount( 1, $this->mails );
+		$this->assertStringContainsString( '1 file from the Media Library is backed up there. It stays until you delete it on Profotograaf.', $this->mails[0][2] );
+		$this->assertStringContainsString( '3 photos were shown from Profotograaf', $this->mails[0][2] );
 	}
 }

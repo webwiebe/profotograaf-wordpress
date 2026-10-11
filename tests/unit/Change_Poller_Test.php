@@ -15,6 +15,7 @@ use Profotograaf\Modules\Change_Poll;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Reconcile;
 use Profotograaf\Settings;
+use Profotograaf\Virtual_Sync;
 
 class Change_Poller_Test extends Gallery_Test_Case {
 
@@ -550,6 +551,7 @@ class Change_Poller_Test extends Gallery_Test_Case {
 		);
 		$this->options[ Change_Poller::OPTION_CURSOR ]  = 'c-1';
 		$this->options[ Change_Poller::OPTION_LAST_OK ] = 5;
+		$this->options[ Virtual_Sync::OPTION_CURSOR ]   = 'v-1';
 		$module = new Change_Poll();
 		$module->register( $this->plugin );
 
@@ -558,6 +560,7 @@ class Change_Poller_Test extends Gallery_Test_Case {
 		$this->assertSame( array( Change_Poll::HOOK, Change_Poller::BATCH_HOOK ), $cleared );
 		$this->assertArrayNotHasKey( Change_Poller::OPTION_CURSOR, $this->options );
 		$this->assertArrayNotHasKey( Change_Poller::OPTION_LAST_OK, $this->options );
+		$this->assertArrayNotHasKey( Virtual_Sync::OPTION_CURSOR, $this->options, 'The virtual attachment cursor goes too.' );
 	}
 
 	public function test_the_poll_event_records_the_cron_heartbeat_before_it_runs(): void {

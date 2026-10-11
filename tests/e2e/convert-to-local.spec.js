@@ -58,7 +58,7 @@ function settings( keep ) {
 function cleanUp() {
 	wp(
 		'eval',
-		"foreach ( get_posts( array( 'post_type' => 'attachment', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_profotograaf_photo_id', 'fields' => 'ids' ) ) as $id ) { wp_delete_attachment( $id, true ); } delete_option( 'profotograaf_photo_catalogue' );"
+		"foreach ( get_posts( array( 'post_type' => 'attachment', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_profotograaf_photo_id', 'fields' => 'ids' ) ) as $id ) { wp_delete_attachment( $id, true ); } delete_option( 'profotograaf_photo_catalogue' ); delete_option( 'profotograaf_virtual_changes_cursor' );"
 	);
 }
 
@@ -182,7 +182,8 @@ test.describe( 'Convert to local', () => {
 		// The library stops listing every photo while the images still answer.
 		await mock( '/__mode?mode=unlisted' );
 		try {
-			wp( 'eval', "do_action( 'profotograaf_virtual_sync' );" );
+			// Without a cursor the change feed answers resync, so the sync reads the full list.
+			wp( 'eval', "delete_option( 'profotograaf_virtual_changes_cursor' ); do_action( 'profotograaf_virtual_sync' );" );
 			expect( stateOf( id ).gone ).not.toBe( '' );
 
 			await login( page );

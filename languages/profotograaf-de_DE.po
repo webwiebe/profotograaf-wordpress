@@ -20,6 +20,7 @@ msgstr ""
 #: includes/admin/class-network-page.php:53
 #: includes/admin/class-network-page.php:54
 #: includes/admin/class-network-page.php:92
+#: includes/class-backup-health.php:178
 #: includes/class-cron-health.php:209
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
@@ -29,9 +30,9 @@ msgstr ""
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
-#: includes/modules/class-settings-page.php:77
 #: includes/modules/class-settings-page.php:78
-#: includes/modules/class-settings-page.php:277
+#: includes/modules/class-settings-page.php:79
+#: includes/modules/class-settings-page.php:279
 #: includes/modules/class-site-health.php:357
 #: includes/modules/class-site-health.php:428
 #: assets/admin/media-source.js:29
@@ -71,12 +72,13 @@ msgstr "Anfrageformulare"
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-admin-notices.php:245
+#: includes/modules/class-backup.php:201
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
-#: includes/modules/class-settings-page.php:242
-#: includes/modules/class-settings-page.php:269
-#: includes/modules/class-settings-page.php:478
+#: includes/modules/class-settings-page.php:244
+#: includes/modules/class-settings-page.php:271
+#: includes/modules/class-settings-page.php:480
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
 #: includes/modules/class-virtual-removal.php:83
@@ -91,6 +93,7 @@ msgstr "Sende die Anfragen deiner Kontaktformulare an deinen Profotograaf-Postei
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr "Diese Website ist nicht mit Profotograaf verbunden, deshalb warten Anfragen in einer Warteschlange."
 
+#: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:220
 msgid "Connect this site"
 msgstr "Diese Website verbinden"
@@ -206,6 +209,7 @@ msgid "Enquiries that could not be sent are kept on this site until you export a
 msgstr "Anfragen, die nicht gesendet werden konnten, bleiben auf dieser Website gespeichert, bis du sie exportierst und entfernst oder die Aufbewahrungsfrist in den Einstellungen abgelaufen ist."
 
 #: includes/admin/class-leads-settings.php:368
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #: build/import-screen/index.js:7
@@ -301,6 +305,7 @@ msgid "Profotograaf rejected the enquiry because it is incomplete or invalid."
 msgstr "Profotograaf hat die Anfrage abgelehnt, weil sie unvollständig oder ungültig ist."
 
 #: includes/class-api-errors.php:80
+#: includes/cli/class-backup-command.php:120
 msgid "This site is not connected to Profotograaf."
 msgstr "Diese Website ist nicht mit Profotograaf verbunden."
 
@@ -336,10 +341,12 @@ msgstr "WP-Cron ist deaktiviert und Leads können nicht zugestellt werden"
 msgid "WP-Cron has stopped running and leads cannot be delivered"
 msgstr "WP-Cron läuft nicht mehr und Leads können nicht zugestellt werden"
 
+#: includes/class-backup-health.php:113
 #: includes/class-cron-health.php:228
 msgid "Run WordPress cron from the server. Add this line to the crontab of the site:"
 msgstr "Führe den WordPress-Cron vom Server aus. Füge diese Zeile zur Crontab der Website hinzu:"
 
+#: includes/admin/class-backup-panel.php:176
 #: includes/class-cron-health.php:288
 msgid "Run WordPress cron from the server with this crontab line:"
 msgstr "Führe den WordPress-Cron mit dieser Crontab-Zeile vom Server aus:"
@@ -768,58 +775,59 @@ msgstr "Die Version des Embed-Skripts konnte nicht gelesen werden. Galerien verw
 msgid "The embed script is at version %s."
 msgstr "Das Embed-Skript hat die Version %s."
 
-#: includes/modules/class-admin-notices.php:120
+#: includes/modules/class-admin-notices.php:134
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr "Profotograaf ist nicht mehr verbunden. Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/modules/class-admin-notices.php:122
-#: includes/modules/class-settings-page.php:185
+#: includes/admin/class-backup-panel.php:93
+#: includes/modules/class-admin-notices.php:136
+#: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Diese Website erneut verbinden"
 
-#: includes/modules/class-admin-notices.php:130
+#: includes/modules/class-admin-notices.php:144
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr "Profotograaf konnte die Verbindung nicht erneuern. Galerien und Anfragen funktionieren nicht mehr, wenn sie abläuft."
 
-#: includes/modules/class-admin-notices.php:132
+#: includes/modules/class-admin-notices.php:146
 msgid "Check the connection"
 msgstr "Verbindung prüfen"
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:157
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] "%d Anfrage konnte nicht an Profotograaf zugestellt werden."
 msgstr[1] "%d Anfragen konnten nicht an Profotograaf zugestellt werden."
 
-#: includes/modules/class-admin-notices.php:147
+#: includes/modules/class-admin-notices.php:161
 msgid "Retry or export the enquiries"
 msgstr "Anfragen erneut versuchen oder exportieren"
 
-#: includes/modules/class-admin-notices.php:174
+#: includes/modules/class-admin-notices.php:234
 msgid "Dismiss"
 msgstr "Schließen"
 
-#: includes/modules/class-client-galleries.php:202
+#: includes/modules/class-client-galleries.php:255
 #: patterns/client-portal-cta.php:21
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Find your gallery"
 msgstr "Finde deine Galerie"
 
-#: includes/modules/class-client-galleries.php:203
+#: includes/modules/class-client-galleries.php:256
 #: patterns/client-portal-cta.php:22
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Sign in to the client portal to see your photos."
 msgstr "Melde dich im Kundenportal an, um deine Fotos zu sehen."
 
-#: includes/modules/class-client-galleries.php:204
+#: includes/modules/class-client-galleries.php:257
 #: patterns/client-portal-cta.php:23
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Open my gallery"
 msgstr "Meine Galerie öffnen"
 
-#: includes/modules/class-client-galleries.php:258
+#: includes/modules/class-client-galleries.php:249
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Nur Redakteure sehen diesen Hinweis. Der Block \"Finde deine Galerie\" hat noch keine Profotograaf-Adresse. Gib sie in den Blockeinstellungen ein. Bis dahin sehen Besucher diesen Block nicht."
 
@@ -880,118 +888,118 @@ msgid "The Profotograaf privacy policy is at https://profotograaf.nl/privacy."
 msgstr "Die Datenschutzerklärung von Profotograaf findest du unter https://profotograaf.nl/privacy."
 
 #: includes/admin/class-network-page.php:109
-#: includes/modules/class-settings-page.php:108
+#: includes/modules/class-settings-page.php:109
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: includes/modules/class-settings-page.php:183
+#: includes/modules/class-settings-page.php:185
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr "Profotograaf braucht eine neue Berechtigung, um Galerien für die Einbettung einzuschalten."
 
-#: includes/modules/class-settings-page.php:217
+#: includes/modules/class-settings-page.php:219
 msgid "Disconnected from Profotograaf."
 msgstr "Von Profotograaf getrennt."
 
-#: includes/modules/class-settings-page.php:221
+#: includes/modules/class-settings-page.php:223
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr "Getrennt. Diese Website hat keinen Zugriff mehr. Um sie auch aus deinem Konto zu entfernen, öffne Verbundene Apps in den Kontoeinstellungen von Profotograaf."
 
-#: includes/modules/class-settings-page.php:252
+#: includes/modules/class-settings-page.php:254
 msgid "Connected to Profotograaf."
 msgstr "Mit Profotograaf verbunden."
 
-#: includes/modules/class-settings-page.php:255
+#: includes/modules/class-settings-page.php:257
 msgid "The connection was declined in Profotograaf."
 msgstr "Die Verbindung wurde in Profotograaf abgelehnt."
 
-#: includes/modules/class-settings-page.php:258
+#: includes/modules/class-settings-page.php:260
 msgid "The code expired. Start the connection again."
 msgstr "Der Code ist abgelaufen. Starte die Verbindung neu."
 
 #: includes/admin/class-network-page.php:98
-#: includes/modules/class-settings-page.php:282
+#: includes/modules/class-settings-page.php:284
 #: includes/modules/class-site-health.php:362
 msgid "Connection"
 msgstr "Verbindung"
 
 #: includes/admin/class-network-page.php:69
-#: includes/modules/class-settings-page.php:287
+#: includes/modules/class-settings-page.php:289
 msgid "Connected"
 msgstr "Verbunden"
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:291
+#: includes/modules/class-settings-page.php:293
 #, php-format
 msgid "since %s."
 msgstr "seit %s."
 
-#: includes/modules/class-settings-page.php:297
+#: includes/modules/class-settings-page.php:299
 msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
 msgstr "Diese Verbindung wurde hergestellt, bevor Profotograaf dieser Website erlauben konnte, Galerien für die Einbettung einzuschalten. Verbinde erneut, um diese Berechtigung zu erteilen. Deine Galerien und Einstellungen bleiben unverändert."
 
-#: includes/modules/class-settings-page.php:299
-#: includes/modules/class-settings-page.php:305
+#: includes/modules/class-settings-page.php:301
+#: includes/modules/class-settings-page.php:307
 msgid "Connect again"
 msgstr "Erneut verbinden"
 
-#: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:309
 msgid "Disconnect"
 msgstr "Trennen"
 
 #: includes/admin/class-network-page.php:75
-#: includes/modules/class-settings-page.php:310
+#: includes/modules/class-settings-page.php:312
 msgid "Not connected"
 msgstr "Nicht verbunden"
 
-#: includes/modules/class-settings-page.php:315
+#: includes/modules/class-settings-page.php:317
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr "Verbinde diese Website mit deinem Profotograaf-Konto, um Galerien einzubinden und Anfragen zu empfangen. Du genehmigst die Verbindung in Profotograaf, daher erreicht dein Passwort diese Website nie."
 
-#: includes/modules/class-settings-page.php:317
+#: includes/modules/class-settings-page.php:319
 msgid "Connect to Profotograaf"
 msgstr "Mit Profotograaf verbinden"
 
-#: includes/modules/class-settings-page.php:322
+#: includes/modules/class-settings-page.php:324
 msgid "Set up the enquiry forms"
 msgstr "Die Anfrageformulare einrichten"
 
-#: includes/modules/class-settings-page.php:370
+#: includes/modules/class-settings-page.php:372
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bestätige diesen Code in Profotograaf, um die Verbindung abzuschließen:"
 
-#: includes/modules/class-settings-page.php:373
+#: includes/modules/class-settings-page.php:375
 msgid "Open the approval page"
 msgstr "Genehmigungsseite öffnen"
 
-#: includes/modules/class-settings-page.php:375
+#: includes/modules/class-settings-page.php:377
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Warten darauf, dass du die Verbindung in Profotograaf genehmigst."
 
-#: includes/modules/class-settings-page.php:376
+#: includes/modules/class-settings-page.php:378
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: includes/modules/class-settings-page.php:387
+#: includes/modules/class-settings-page.php:389
 msgid "Embedding on this site"
 msgstr "Einbettung auf dieser Website"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:392
+#: includes/modules/class-settings-page.php:394
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s darf deine Profotograaf-Seiten in einem Frame anzeigen."
 
-#: includes/modules/class-settings-page.php:396
+#: includes/modules/class-settings-page.php:398
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf erlaubt die Einbettung nur auf Websites, die über https ausgeliefert werden. Liefere diese Website über https aus, um deine Seiten in einem Frame einzubetten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:401
+#: includes/modules/class-settings-page.php:403
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Um deine Profotograaf-Seiten in einem Frame auf dieser Website anzuzeigen, füge %s unter \"Websites, die meine Seiten einbetten dürfen\" in den Kontoeinstellungen von Profotograaf hinzu."
 
-#: includes/modules/class-settings-page.php:409
+#: includes/modules/class-settings-page.php:411
 msgid "Check again"
 msgstr "Erneut prüfen"
 
@@ -1015,6 +1023,7 @@ msgstr "Fehlgeschlagene Profotograaf-Leads"
 msgid "Profotograaf gallery script"
 msgstr "Profotograaf-Galerieskript"
 
+#: includes/class-backup-health.php:191
 #: includes/modules/class-site-health.php:196
 msgid "Open the Profotograaf settings"
 msgstr "Die Profotograaf-Einstellungen öffnen"
@@ -1229,12 +1238,12 @@ msgstr "Telemetrie aktivieren"
 msgid "Not now"
 msgstr "Jetzt nicht"
 
-#: uninstall.php:50
+#: uninstall.php:57
 msgid "Undeliverable enquiries were deleted"
 msgstr "Nicht zustellbare Anfragen wurden gelöscht"
 
 #. translators: %d: number of enquiries.
-#: uninstall.php:53
+#: uninstall.php:60
 #, php-format
 msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
 msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
@@ -1245,77 +1254,78 @@ msgstr[1] "%d Anfragen, die nicht an Profotograaf zugestellt werden konnten, wur
 msgid "Could not check the connection. Reload this page to try again."
 msgstr "Die Verbindung konnte nicht geprüft werden. Lade diese Seite neu, um es erneut zu versuchen."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Client portal"
 msgstr "Kundenportal"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Portal address"
 msgstr "Portaladresse"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
 msgstr "Deine Profotograaf-Adresse (zum Beispiel studio), deine Subdomain oder deine eigene Domain."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Portal path"
 msgstr "Portalpfad"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it."
 msgstr "Wo sich das Portal unter dieser Adresse befindet. Leer lassen, um die Website-Einstellung zu verwenden, die /client ist, sofern du sie nicht geändert hast."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Open in a new tab"
 msgstr "In einem neuen Tab öffnen"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
 msgid "Text"
 msgstr "Text"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
 msgid "Heading"
 msgstr "Überschrift"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading level"
 msgstr "Überschriftenebene"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 2"
 msgstr "Überschrift 2"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 3"
 msgstr "Überschrift 3"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 4"
 msgstr "Überschrift 4"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 5"
 msgstr "Überschrift 5"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 6"
 msgstr "Überschrift 6"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Paragraph"
 msgstr "Absatz"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Button label"
 msgstr "Beschriftung der Schaltfläche"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr "Nur Redakteure sehen diesen Hinweis. Gib deine Profotograaf-Adresse in den Blockeinstellungen ein. Bis dahin sehen Besucher diesen Block nicht."
 
 #. translators: %d: number of photos in a gallery.
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #, js-format
@@ -1331,22 +1341,26 @@ msgstr[1] "%d Fotos"
 msgid "Site default"
 msgstr "Website-Standard"
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr "Verbinde diese Website unter Einstellungen > Profotograaf mit Profotograaf, um eine Galerie auszuwählen."
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
 msgstr "Verbinde diese Website unter Einstellungen > Profotograaf erneut mit Profotograaf. Die Verbindung braucht eine neue Berechtigung."
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Profotograaf is receiving too many requests. Try again in a moment."
 msgstr "Profotograaf erhält zu viele Anfragen. Versuche es gleich noch einmal."
 
 #. translators: %d: number of seconds to wait.
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 #, js-format
@@ -1355,11 +1369,13 @@ msgid_plural "Profotograaf is receiving too many requests. Try again in %d secon
 msgstr[0] "Profotograaf erhält zu viele Anfragen. Versuche es in %d Sekunde erneut."
 msgstr[1] "Profotograaf erhält zu viele Anfragen. Versuche es in %d Sekunden erneut."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "Profotograaf could not be reached. Check your connection and try again."
 msgstr "Profotograaf konnte nicht erreicht werden. Prüfe deine Verbindung und versuche es erneut."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "Profotograaf reported a problem. Try again later."
@@ -1370,6 +1386,7 @@ msgstr "Profotograaf hat ein Problem gemeldet. Versuche es später erneut."
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Diese Galerie kann derzeit nicht auf anderen Websites angezeigt werden. Ein Passwort, ein Ablaufdatum, der Korrekturmodus oder eine Einstellung nur für Kunden verhindert die Einbettung."
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 msgid "There are no galleries in your Profotograaf account yet."
@@ -1422,8 +1439,10 @@ msgstr "Profotograaf-Galerie"
 msgid "layout: %s"
 msgstr "Layout: %s"
 
+#: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 #: build/import-screen/index.js:2
@@ -1436,6 +1455,7 @@ msgstr "Galerie"
 msgid "Layout"
 msgstr "Layout"
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 msgid "Choose another gallery"
@@ -1826,7 +1846,7 @@ msgstr "verlinkt auf: %s (nur bei ausgeschalteter Lightbox)"
 msgid "same tab"
 msgstr "gleicher Tab"
 
-#: includes/modules/class-settings-page.php:316
+#: includes/modules/class-settings-page.php:318
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
 msgstr "Beim Verbinden werden der Name dieser Website und die E-Mail-Adresse des Administrators an Profotograaf übermittelt, damit sie für dich ausgefüllt werden können, wenn du ein Konto erstellst."
 
@@ -1847,7 +1867,7 @@ msgid "Only when the site owner turns on the media source: editors who can uploa
 msgstr "Nur wenn der Website-Betreiber die Medienquelle einschaltet: Redakteure, die Dateien hochladen dürfen, können die Fotos des verbundenen Profotograaf-Kontos im Block-Editor durchsuchen. Die Website fragt bei profotograaf.nl die Fotoliste ab und ruft die Fotos ab, die ein Redakteur auswählt. Der Browser des Redakteurs lädt die Vorschaubilder von profotograaf.nl, das dabei die IP-Adresse und die Browserdaten dieses Redakteurs erhält. Ein Foto, das ein Redakteur verwendet, wird in der Mediathek dieser Website gespeichert und bleibt dort, bis es gelöscht wird. Es sind keine Besucherdaten betroffen."
 
 #: includes/class-photo-importer.php:90
-#: includes/class-virtual-attachments.php:154
+#: includes/class-virtual-attachments.php:167
 msgid "You are not allowed to add files to the Media Library."
 msgstr "Du darfst keine Dateien zur Mediathek hinzufügen."
 
@@ -1855,18 +1875,18 @@ msgstr "Du darfst keine Dateien zur Mediathek hinzufügen."
 #: includes/class-photo-importer.php:93
 #: includes/class-photo-importer.php:150
 #: includes/class-photo-rest.php:393
-#: includes/class-virtual-attachments.php:157
+#: includes/class-virtual-attachments.php:170
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr "Die Verwendung von Profotograaf-Fotos im Editor ist in den Plugin-Einstellungen ausgeschaltet."
 
 #: includes/class-photo-importer.php:98
-#: includes/class-virtual-attachments.php:161
+#: includes/class-virtual-attachments.php:174
 msgid "This photo cannot be imported because it has no identifier."
 msgstr "Dieses Foto kann nicht importiert werden, weil es keine Kennung hat."
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:177
-#: includes/class-virtual-attachments.php:171
+#: includes/class-virtual-attachments.php:184
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr "Das Foto befindet sich nicht auf der Profotograaf-Plattform und wurde daher nicht importiert."
 
@@ -1878,7 +1898,7 @@ msgstr "Das Foto konnte nicht von Profotograaf heruntergeladen werden. Versuche 
 #: includes/class-photo-importer.php:232
 #: includes/class-photo-importer.php:240
 #: includes/class-photo-importer.php:373
-#: includes/class-virtual-attachments.php:196
+#: includes/class-virtual-attachments.php:209
 msgid "The photo could not be added to the Media Library."
 msgstr "Das Foto konnte nicht zur Mediathek hinzugefügt werden."
 
@@ -2104,7 +2124,7 @@ msgstr "Wenn der Website-Betreiber die Website verbindet, sendet das Plugin den 
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
 msgstr "Nur wenn der Website-Betreiber anonymen Nutzungsdaten zustimmt, sendet das Plugin einen täglichen Nutzungsbericht und Berichte über seine eigenen Fehler an Dienste, die vom Plugin-Autor betrieben werden. Sie enthalten die Versionen von Plugin, WordPress und PHP, die Sprache der Website, die aktiven Plugin-Module, die Anzahl fehlgeschlagener Verbindungen und Anfragezustellungen sowie Fehlercodes. Sie enthalten keine Website-Adresse, keine Besucherdaten, keine Anfragen und keine Tokens."
 
-#: includes/class-virtual-attachments.php:253
+#: includes/class-virtual-attachments.php:266
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr "Diese Datei ist kein virtueller Profotograaf-Anhang."
 
@@ -2118,6 +2138,7 @@ msgstr "Diese Galerie hat keine Fotos, die auf deiner Website angezeigt werden k
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet. Visitors do not see this note."
 msgstr "Die Fotos werden möglicherweise noch verarbeitet, oder die Galerie enthält Videos oder Dateitypen, die das Website-Embed noch nicht anzeigen kann. Besucher sehen diesen Hinweis nicht."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "0 visible"
@@ -2237,11 +2258,11 @@ msgstr "Wenn das Profotograaf-Plugin für dich gut funktioniert, hilft eine kurz
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
 msgstr "Das Senden von Dateien braucht eine neue Berechtigung. Verbinde diese Website unter Einstellungen > Profotograaf erneut, um sie zu erteilen."
 
-#: includes/modules/class-settings-page.php:183
+#: includes/admin/class-backup-intro.php:70
 msgid "Sending files needs a new permission."
 msgstr "Das Senden von Dateien braucht eine neue Berechtigung."
 
-#: includes/modules/class-settings-page.php:303
+#: includes/admin/class-backup-intro.php:69
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr "Das Senden von Dateien braucht eine neue Berechtigung. Verbinde diese Website erneut, um sie zu erteilen. Deine Galerien und Einstellungen bleiben unverändert."
 
@@ -2568,10 +2589,11 @@ msgid "Only when the site owner turns on sending Media Library files: a person w
 msgstr "Nur wenn der Website-Betreiber das Senden von Dateien aus der Mediathek einschaltet: Eine Person, die Dateien hochladen darf, wählt für ein Bild eine verknüpfte Profotograaf-Galerie, und diese Website sendet das Bild dann im Hintergrund an profotograaf.nl. Die Galerie kann eine Kundengalerie sein. Bevor ein Bild gesendet wird, entfernt das Plugin die GPS-Position daraus. Die übrigen Metadaten bleiben in der Datei, etwa Kamera, Objektiv und Datum. Spätere Änderungen an Titel, Bildunterschrift und Alternativtext eines gesendeten Bildes werden ebenfalls gesendet. HEIC-, Video- und RAW-Dateien werden nicht gesendet. Fotos von Personen sind personenbezogene Daten, daher braucht der Website-Betreiber eine Rechtsgrundlage, um sie zu senden. Wenn hier eine Datei gelöscht wird, wird auf Profotograaf nichts gelöscht. Die Mediathek speichert pro gesendeter Datei einige versteckte Felder (die Kennungen von Foto und Galerie, den Versandstatus und die Uhrzeit), bis die Datei gelöscht wird."
 
 #: includes/class-change-poller.php:394
+#: includes/class-virtual-sync.php:276
 msgid "The photo list could not be refreshed."
 msgstr "Die Fotoliste konnte nicht aktualisiert werden."
 
-#: includes/trait-api-client-feed.php:43
+#: includes/trait-api-client-feed.php:46
 msgid "Profotograaf sent an answer this plugin cannot read."
 msgstr "Profotograaf hat eine Antwort gesendet, die dieses Plugin nicht lesen kann."
 
@@ -2621,7 +2643,7 @@ msgstr "Jetzt prüfen"
 msgid "Connect this site to Profotograaf first."
 msgstr "Verbinde diese Website zuerst mit Profotograaf."
 
-#: includes/modules/class-settings-page.php:330
+#: includes/modules/class-settings-page.php:332
 msgid "Photo changes"
 msgstr "Fotoänderungen"
 
@@ -3051,6 +3073,7 @@ msgstr "Vorlage"
 msgid "The pattern of sections repeats until every photo is shown."
 msgstr "Das Muster der Abschnitte wiederholt sich, bis jedes Foto angezeigt ist."
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 msgid "No gallery chosen yet."
 msgstr "Noch keine Galerie ausgewählt."
@@ -3086,7 +3109,7 @@ msgid "Same as the gap between photos"
 msgstr "Wie der Abstand zwischen Fotos"
 
 #: includes/class-photo-rest.php:292
-#: includes/class-virtual-attachments.php:151
+#: includes/class-virtual-attachments.php:164
 msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
 msgstr "Fotos auf Profotograaf behalten ist in den Plugin-Einstellungen ausgeschaltet."
 
@@ -3136,32 +3159,34 @@ msgid_plural "%d photos kept on Profotograaf."
 msgstr[0] "%d Foto auf Profotograaf behalten."
 msgstr[1] "%d Fotos auf Profotograaf behalten."
 
-#: includes/admin/class-backup-intro.php:25
+#: includes/admin/class-backup-intro.php:28
 msgid "Copies your Media Library images to your Profotograaf account."
 msgstr "Kopiert die Bilder deiner Mediathek in dein Profotograaf-Konto."
 
-#: includes/admin/class-backup-intro.php:26
+#: includes/admin/class-backup-intro.php:29
 msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
 msgstr "Die Sicherung hat unten einen eigenen Schalter und ist aus, bis du sie einschaltest. Vorher wird nichts gesendet. Anonyme Nutzungsdaten teilen, Profotograaf-Fotos im Editor verwenden und Dateien aus der Mediathek senden schalten sie nicht ein."
 
-#: includes/admin/class-backup-intro.php:27
+#: includes/admin/class-backup-intro.php:30
 msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
 msgstr "Dateien gehen in private Galerien in deinem Profotograaf-Konto, eine pro Monat, benannt nach dem Titel dieser Website. Jede Datei wird so gesendet, wie sie gespeichert ist, mit ihrem Dateinamen und ihren Metadaten, die die GPS-Position enthalten können. Bilder, RAW-Dateien und Videos werden kopiert. Die Kopien zählen zu deinem Speicherplatz auf Profotograaf."
 
-#: includes/admin/class-backup-intro.php:28
+#: includes/admin/class-backup-intro.php:31
 msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
 msgstr "Jede Datei wird einmal kopiert. Wenn du sie hier später bearbeitest oder löschst, ändert sich auf Profotograaf nichts. Wenn du die Sicherung ausschaltest oder das Plugin löschst, bleiben die Kopien in deinem Profotograaf-Konto, bis du sie dort löschst."
 
-#: includes/admin/class-backup-intro.php:29
+#: includes/admin/class-backup-intro.php:32
 msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
 msgstr "Fotos von Personen sind personenbezogene Daten. Prüfe, ob deine Datenschutzerklärung und deine Vereinbarungen mit Kunden eine Kopie auf Profotograaf erlauben. Auf einer Website mit mehreren Autoren kopiert die Sicherung auch Dateien, die andere Benutzer hochgeladen haben."
 
-#: includes/admin/class-backup-intro.php:39
+#: includes/admin/class-backup-intro.php:47
 #: includes/modules/class-privacy.php:237
 msgid "Backup to Profotograaf"
 msgstr "Sicherung auf Profotograaf"
 
 #: includes/class-settings-schema.php:64
+#: includes/modules/class-backup-admin.php:79
+#: includes/modules/class-backup-admin.php:129
 msgid "Backup"
 msgstr "Sicherung"
 
@@ -3197,7 +3222,7 @@ msgstr "Nur die Dateien, die ich markiere"
 msgid "Only when the site owner switches on the backup: this site copies files from its Media Library to the connected Profotograaf account, in the background. It sends the image files, and RAW and video files, with their file names and the access token to https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. It first creates private galleries with https://profotograaf.nl/api/v1/embed/galleries, with the site title in the gallery name. Files are sent as stored, with their metadata, which can include the GPS position. Photos of people are personal data, so the site owner needs a basis for sending them, and Profotograaf stores the copies for the site owner. The anonymous usage data and photo library choices do not switch the backup on. Deleting a file here, switching the backup off or deleting the plugin leaves the copies in the Profotograaf account until they are deleted there. The Media Library keeps a few hidden fields per file (the backup state, the photo and gallery identifiers and a checksum) until the plugin is deleted."
 msgstr "Nur wenn der Website-Betreiber die Sicherung einschaltet: Diese Website kopiert im Hintergrund Dateien aus ihrer Mediathek in das verbundene Profotograaf-Konto. Sie sendet die Bilddateien sowie RAW- und Videodateien mit ihren Dateinamen und dem Zugriffstoken an https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. Zuerst legt sie mit https://profotograaf.nl/api/v1/embed/galleries private Galerien an, mit dem Website-Titel im Namen der Galerie. Dateien werden so gesendet, wie sie gespeichert sind, mit ihren Metadaten, die die GPS-Position enthalten können. Fotos von Personen sind personenbezogene Daten, daher braucht der Website-Betreiber eine Rechtsgrundlage für das Senden, und Profotograaf speichert die Kopien für den Website-Betreiber. Die Einstellungen für anonyme Nutzungsdaten und die Fotobibliothek schalten die Sicherung nicht ein. Eine Datei hier löschen, die Sicherung ausschalten oder das Plugin löschen lässt die Kopien im Profotograaf-Konto, bis sie dort gelöscht werden. Die Mediathek behält pro Datei einige versteckte Felder (den Sicherungsstatus, die Foto- und Galerie-IDs und eine Prüfsumme), bis das Plugin gelöscht wird."
 
-#: includes/class-virtual-attachments.php:265
+#: includes/class-virtual-attachments.php:278
 msgid "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
 msgstr "Profotograaf liefert dieses Foto nicht mehr, deshalb konnte keine lokale Kopie erstellt werden. Es bleibt auf Profotograaf behalten."
 
@@ -3276,6 +3301,563 @@ msgid_plural "%d photos kept on Profotograaf are no longer listed there and may 
 msgstr[0] "%d auf Profotograaf behaltenes Foto wird dort nicht mehr geführt und kann von deiner Website verschwinden. Speichere es lokal, solange Profotograaf es noch liefert."
 msgstr[1] "%d auf Profotograaf behaltene Fotos werden dort nicht mehr geführt und können von deiner Website verschwinden. Speichere sie lokal, solange Profotograaf sie noch liefert."
 
+#: includes/admin/class-client-links-panel.php:83
+msgid "Client galleries"
+msgstr "Kundengalerien"
+
+#: includes/admin/class-client-links-panel.php:84
+msgid "Send a client the share link of their gallery, or let them scan the QR code with a phone."
+msgstr "Sende einem Kunden den Freigabelink seiner Galerie oder lass ihn den QR-Code mit dem Smartphone scannen."
+
+#: includes/admin/class-client-links-panel.php:85
+msgid "On a phone, the share page offers to install the gallery as an app when the gallery is delivered and has no password. This list does not show which galleries meet both conditions."
+msgstr "Auf dem Smartphone bietet die Freigabeseite an, die Galerie als App zu installieren, wenn die Galerie ausgeliefert ist und kein Passwort hat. Diese Liste zeigt nicht, welche Galerien beide Bedingungen erfüllen."
+
+#: includes/admin/class-client-links-panel.php:87
+msgid "No galleries are stored on this site yet. The list fills in after you choose a gallery in a Profotograaf block in the editor."
+msgstr "Auf dieser Website sind noch keine Galerien gespeichert. Die Liste füllt sich, nachdem du im Editor in einem Profotograaf-Block eine Galerie ausgewählt hast."
+
+#: includes/admin/class-client-links-panel.php:89
+msgid "The list shows your galleries as this site last stored them."
+msgstr "Die Liste zeigt deine Galerien so, wie diese Website sie zuletzt gespeichert hat."
+
+#: includes/admin/class-client-links-panel.php:94
+msgid "Share link"
+msgstr "Freigabelink"
+
+#: includes/admin/class-client-links-panel.php:95
+msgid "QR code"
+msgstr "QR-Code"
+
+#. translators: %s: gallery title.
+#: includes/admin/class-client-links-panel.php:110
+#, php-format
+msgid "Share link of %s"
+msgstr "Freigabelink von %s"
+
+#: includes/admin/class-client-links-panel.php:115
+msgid "Copy link"
+msgstr "Link kopieren"
+
+#. translators: %s: gallery title.
+#: includes/admin/class-client-links-panel.php:122
+#, php-format
+msgid "QR code with the share link of %s"
+msgstr "QR-Code mit dem Freigabelink von %s"
+
+#: build/client-links/index.js:1
+msgid "Link copied."
+msgstr "Link kopiert."
+
+#: build/client-links/index.js:1
+msgid "This browser does not allow copying here. The link is selected, so press Ctrl+C or Cmd+C to copy it."
+msgstr "Dieser Browser erlaubt hier kein Kopieren. Der Link ist markiert, drücke also Strg+C oder Cmd+C, um ihn zu kopieren."
+
+#: includes/admin/class-backup-intro.php:65
+msgid "The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
+msgstr "Die Sicherung braucht eine neue Berechtigung, um ihre Galerien anzulegen und Dateien zu kopieren. Es wird nichts kopiert, bis du diese Website erneut verbindest, um sie zu erteilen. Deine Galerien und Einstellungen bleiben, wie sie sind."
+
+#: includes/admin/class-backup-intro.php:66
+msgid "The backup to Profotograaf needs a new permission."
+msgstr "Die Sicherung auf Profotograaf braucht eine neue Berechtigung."
+
+#. translators: 1: site title, 2: year and month, for example 2026-10.
+#: includes/class-backup-galleries.php:80
+#, php-format
+msgid "%1$s backup %2$s"
+msgstr "%1$s Sicherung %2$s"
+
+#: includes/cli/class-backup-command.php:77
+msgid "The backup is switched off. Switch it on under Settings > Profotograaf > Backup."
+msgstr "Die Sicherung ist ausgeschaltet. Schalte sie unter Einstellungen > Profotograaf > Sicherung ein."
+
+#. translators: %d: number of Media Library items.
+#: includes/cli/class-backup-command.php:89
+#, php-format
+msgid "Checked %d Media Library item."
+msgid_plural "Checked %d Media Library items."
+msgstr[0] "%d Element der Mediathek geprüft."
+msgstr[1] "%d Elemente der Mediathek geprüft."
+
+#. translators: %d: number of files.
+#: includes/cli/class-backup-command.php:101
+#, php-format
+msgid "Sent %d file to Profotograaf."
+msgid_plural "Sent %d files to Profotograaf."
+msgstr[0] "%d Datei an Profotograaf gesendet."
+msgstr[1] "%d Dateien an Profotograaf gesendet."
+
+#: includes/cli/class-backup-command.php:122
+msgid "The backup needs a new permission. Connect this site again under Settings > Profotograaf."
+msgstr "Die Sicherung braucht eine neue Berechtigung. Verbinde diese Website unter Einstellungen > Profotograaf erneut."
+
+#: includes/cli/class-backup-command.php:124
+msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then run this command with --resume."
+msgstr "Dein Profotograaf-Speicher ist voll, deshalb ist die Sicherung pausiert. Gib Speicherplatz frei oder wechsle zu einem größeren Tarif und führe diesen Befehl dann mit --resume aus."
+
+#: includes/cli/class-backup-command.php:126
+msgid "The backup is paused. Run this command with --resume to try again now."
+msgstr "Die Sicherung ist pausiert. Führe diesen Befehl mit --resume aus, um es jetzt erneut zu versuchen."
+
+#: includes/cli/class-backup-command.php:128
+msgid "Profotograaf did not accept more files for now. The backup tries again later on its own."
+msgstr "Profotograaf nimmt vorerst keine weiteren Dateien an. Die Sicherung versucht es später von selbst erneut."
+
+#: includes/cli/class-backup-command.php:130
+msgid "Another backup run is in progress."
+msgstr "Es läuft bereits eine andere Sicherung."
+
+#: includes/cli/class-backup-command.php:132
+msgid "This site ran low on memory. Run the command again to send the rest."
+msgstr "Dieser Website ging der Arbeitsspeicher aus. Führe den Befehl erneut aus, um den Rest zu senden."
+
+#: includes/cli/class-backup-command.php:134
+msgid "The backup stopped early. Run the command again to send the rest."
+msgstr "Die Sicherung wurde vorzeitig beendet. Führe den Befehl erneut aus, um den Rest zu senden."
+
+#: includes/modules/class-backup.php:113
+msgid "Every five minutes (Profotograaf backup)"
+msgstr "Alle fünf Minuten (Profotograaf-Sicherung)"
+
+#: includes/admin/class-backup-panel.php:78
+msgid "Backup status"
+msgstr "Status der Sicherung"
+
+#: includes/admin/class-backup-panel.php:82
+msgid "Nothing is copied while this site is not connected to Profotograaf."
+msgstr "Es wird nichts kopiert, solange diese Website nicht mit Profotograaf verbunden ist."
+
+#: includes/admin/class-backup-panel.php:102
+msgid "Back up now"
+msgstr "Jetzt sichern"
+
+#: includes/admin/class-backup-panel.php:104
+msgid "Retry failed"
+msgstr "Fehlgeschlagene erneut versuchen"
+
+#: includes/admin/class-backup-panel.php:122
+msgid "Still looking through the Media Library for files to back up."
+msgstr "Die Mediathek wird noch nach Dateien für die Sicherung durchsucht."
+
+#. translators: 1: number of files backed up, 2: number of files in the backup.
+#: includes/admin/class-backup-panel.php:126
+#, php-format
+msgid "%1$s of %2$s file backed up."
+msgid_plural "%1$s of %2$s files backed up."
+msgstr[0] "%1$s von %2$s Datei gesichert."
+msgstr[1] "%1$s von %2$s Dateien gesichert."
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:133
+#, php-format
+msgid "%s file waits to be sent."
+msgid_plural "%s files wait to be sent."
+msgstr[0] "%s Datei wartet auf den Versand."
+msgstr[1] "%s Dateien warten auf den Versand."
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:138
+#, php-format
+msgid "%s file waits for you, see the list below."
+msgid_plural "%s files wait for you, see the list below."
+msgstr[0] "%s Datei wartet auf dich, siehe die Liste unten."
+msgstr[1] "%s Dateien warten auf dich, siehe die Liste unten."
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:143
+#, php-format
+msgid "%s file is not backed up. The Backup column in the Media Library list says why."
+msgid_plural "%s files are not backed up. The Backup column in the Media Library list says why."
+msgstr[0] "%s Datei ist nicht gesichert. Die Spalte Sicherung in der Listenansicht der Mediathek nennt den Grund."
+msgstr[1] "%s Dateien sind nicht gesichert. Die Spalte Sicherung in der Listenansicht der Mediathek nennt den Grund."
+
+#. translators: %s: time since the last run, for example "4 minutes".
+#: includes/admin/class-backup-panel.php:148
+#, php-format
+msgid "Last run %s ago."
+msgstr "Zuletzt ausgeführt vor %s."
+
+#: includes/admin/class-backup-panel.php:149
+msgid "The first run starts within a few minutes."
+msgstr "Der erste Durchlauf startet in wenigen Minuten."
+
+#. translators: %s: date and time.
+#: includes/admin/class-backup-panel.php:165
+#, php-format
+msgid "Your Profotograaf storage is full, so the backup is paused until %s. Free up space or upgrade your plan, then press Back up now."
+msgstr "Dein Profotograaf-Speicher ist voll, deshalb ist die Sicherung bis %s pausiert. Gib Speicherplatz frei oder wechsle zu einem größeren Tarif und klicke dann auf Jetzt sichern."
+
+#. translators: %s: date and time.
+#: includes/admin/class-backup-panel.php:168
+#, php-format
+msgid "Profotograaf asked the backup to wait. It tries again on its own at %s."
+msgstr "Profotograaf hat die Sicherung gebeten zu warten. Um %s versucht sie es von selbst erneut."
+
+#: includes/admin/class-backup-panel.php:174
+#: includes/class-backup-health.php:111
+msgid "This site sets DISABLE_WP_CRON and no run of the backup has been seen, so nothing is sent."
+msgstr "Diese Website setzt DISABLE_WP_CRON und es wurde noch kein Durchlauf der Sicherung gesehen, daher wird nichts gesendet."
+
+#: includes/admin/class-backup-panel.php:175
+#: includes/class-backup-health.php:112
+msgid "The backup has not run for more than an hour, so WP-Cron does not seem to run on this site."
+msgstr "Die Sicherung wurde seit mehr als einer Stunde nicht ausgeführt, WP-Cron scheint auf dieser Website also nicht zu laufen."
+
+#: includes/admin/class-backup-panel.php:179
+msgid "No file was sent for more than six hours while files wait. Press Back up now to try again, and check Tools > Site Health."
+msgstr "Seit mehr als sechs Stunden wurde keine Datei gesendet, obwohl Dateien warten. Klicke auf Jetzt sichern, um es erneut zu versuchen, und prüfe Werkzeuge > Website-Zustand."
+
+#. translators: %s: size, for example "1.2 GB".
+#: includes/admin/class-backup-panel.php:196
+#, php-format
+msgid "More than %s waits to be sent. The copies count towards your Profotograaf storage."
+msgstr "Mehr als %s wartet auf den Versand. Die Kopien zählen zu deinem Speicherplatz auf Profotograaf."
+
+#. translators: %s: size, for example "1.2 GB".
+#: includes/admin/class-backup-panel.php:198
+#, php-format
+msgid "%s waits to be sent. The copies count towards your Profotograaf storage."
+msgstr "%s wartet auf den Versand. Die Kopien zählen zu deinem Speicherplatz auf Profotograaf."
+
+#: includes/admin/class-backup-panel.php:210
+msgid "Files that wait for you"
+msgstr "Dateien, die auf dich warten"
+
+#: includes/admin/class-backup-panel.php:211
+msgid "Retry failed sends these files again. A file whose backup is not confirmed may then be on Profotograaf twice."
+msgstr "Fehlgeschlagene erneut versuchen sendet diese Dateien noch einmal. Eine Datei, deren Sicherung nicht bestätigt ist, kann danach zweimal auf Profotograaf liegen."
+
+#: includes/admin/class-backup-panel.php:213
+msgid "File"
+msgstr "Datei"
+
+#: includes/admin/class-backup-panel.php:213
+msgid "State"
+msgstr "Status"
+
+#: includes/admin/class-backup-panel.php:213
+msgid "Reason"
+msgstr "Grund"
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:232
+#, php-format
+msgid "And %s more file."
+msgid_plural "And %s more files."
+msgstr[0] "Und %s weitere Datei."
+msgstr[1] "Und %s weitere Dateien."
+
+#: includes/class-backup-health.php:67
+msgid "Profotograaf backup permission"
+msgstr "Berechtigung für die Profotograaf-Sicherung"
+
+#: includes/class-backup-health.php:71
+msgid "Profotograaf backup schedule"
+msgstr "Zeitplan der Profotograaf-Sicherung"
+
+#: includes/class-backup-health.php:75
+msgid "Profotograaf backup queue"
+msgstr "Warteschlange der Profotograaf-Sicherung"
+
+#: includes/class-backup-health.php:88
+msgid "The Profotograaf backup waits for a connection"
+msgstr "Die Profotograaf-Sicherung wartet auf eine Verbindung"
+
+#: includes/class-backup-health.php:88
+msgid "The backup is switched on, but this site is not connected to Profotograaf, so nothing is copied."
+msgstr "Die Sicherung ist eingeschaltet, aber diese Website ist nicht mit Profotograaf verbunden, daher wird nichts kopiert."
+
+#: includes/class-backup-health.php:91
+msgid "The Profotograaf backup needs a new permission"
+msgstr "Die Profotograaf-Sicherung braucht eine neue Berechtigung"
+
+#: includes/class-backup-health.php:93
+msgid "The Profotograaf backup has the permission it needs"
+msgstr "Die Profotograaf-Sicherung hat die nötige Berechtigung"
+
+#: includes/class-backup-health.php:93
+msgid "The connection may create the backup galleries and send files."
+msgstr "Die Verbindung darf die Sicherungsgalerien anlegen und Dateien senden."
+
+#: includes/class-backup-health.php:104
+msgid "WP-Cron runs the Profotograaf backup"
+msgstr "WP-Cron führt die Profotograaf-Sicherung aus"
+
+#: includes/class-backup-health.php:104
+msgid "The backup ran recently, or nothing needs to run yet."
+msgstr "Die Sicherung wurde kürzlich ausgeführt, oder es muss noch nichts laufen."
+
+#: includes/class-backup-health.php:109
+msgid "WP-Cron does not run the Profotograaf backup"
+msgstr "WP-Cron führt die Profotograaf-Sicherung nicht aus"
+
+#: includes/class-backup-health.php:113
+msgid "Or send the files now with WP-CLI: wp profotograaf backup run"
+msgstr "Oder sende die Dateien jetzt mit WP-CLI: wp profotograaf backup run"
+
+#: includes/class-backup-health.php:125
+msgid "Your Profotograaf storage is full"
+msgstr "Dein Profotograaf-Speicher ist voll"
+
+#: includes/class-backup-health.php:125
+msgid "The backup is paused because Profotograaf has no room for more files."
+msgstr "Die Sicherung ist pausiert, weil Profotograaf keinen Platz für weitere Dateien hat."
+
+#: includes/class-backup-health.php:125
+msgid "Free up space or upgrade your plan on Profotograaf, then press Back up now on the Backup tab."
+msgstr "Gib Speicherplatz frei oder wechsle auf Profotograaf zu einem größeren Tarif und klicke dann im Tab Sicherung auf Jetzt sichern."
+
+#: includes/class-backup-health.php:132
+msgid "The Profotograaf backup queue is stuck"
+msgstr "Die Warteschlange der Profotograaf-Sicherung hängt"
+
+#. translators: %d: number of files.
+#: includes/class-backup-health.php:135
+#, php-format
+msgid "%d file waits and no file was sent for more than six hours."
+msgid_plural "%d files wait and no file was sent for more than six hours."
+msgstr[0] "%d Datei wartet und seit mehr als sechs Stunden wurde keine Datei gesendet."
+msgstr[1] "%d Dateien warten und seit mehr als sechs Stunden wurde keine Datei gesendet."
+
+#: includes/class-backup-health.php:138
+msgid "Press Back up now on the Backup tab. When nothing changes, read the recent errors under Info, Profotograaf on this screen."
+msgstr "Klicke im Tab Sicherung auf Jetzt sichern. Ändert sich nichts, lies die letzten Fehler unter Info, Profotograaf auf dieser Seite."
+
+#: includes/class-backup-health.php:146
+msgid "Some files could not be backed up to Profotograaf"
+msgstr "Einige Dateien konnten nicht auf Profotograaf gesichert werden"
+
+#. translators: %d: number of files.
+#: includes/class-backup-health.php:149
+#, php-format
+msgid "%d file could not be backed up and waits for you."
+msgid_plural "%d files could not be backed up and wait for you."
+msgstr[0] "%d Datei konnte nicht gesichert werden und wartet auf dich."
+msgstr[1] "%d Dateien konnten nicht gesichert werden und warten auf dich."
+
+#: includes/class-backup-health.php:152
+msgid "The Backup tab lists each file with the reason. Press Retry failed to send them again."
+msgstr "Der Tab Sicherung listet jede Datei mit dem Grund auf. Klicke auf Fehlgeschlagene erneut versuchen, um sie erneut zu senden."
+
+#: includes/class-backup-health.php:155
+msgid "The Profotograaf backup queue moves"
+msgstr "Die Warteschlange der Profotograaf-Sicherung läuft"
+
+#: includes/class-backup-health.php:155
+msgid "Files are sent as planned, or nothing waits."
+msgstr "Dateien werden wie geplant gesendet, oder es wartet nichts."
+
+#: includes/class-backup-health.php:198
+#: includes/modules/class-admin-notices.php:185
+msgid "Open the backup settings"
+msgstr "Sicherungseinstellungen öffnen"
+
+#: includes/class-backup-labels.php:29
+msgid "Waiting to be backed up"
+msgstr "Wartet auf Sicherung"
+
+#: includes/class-backup-labels.php:31
+msgid "Being backed up"
+msgstr "Wird gesichert"
+
+#: includes/class-backup-labels.php:33
+msgid "Backed up"
+msgstr "Gesichert"
+
+#: includes/class-backup-labels.php:35
+msgid "Not backed up"
+msgstr "Nicht gesichert"
+
+#: includes/class-backup-labels.php:37
+msgid "Backup failed"
+msgstr "Sicherung fehlgeschlagen"
+
+#: includes/class-backup-labels.php:39
+msgid "Backup not confirmed"
+msgstr "Sicherung nicht bestätigt"
+
+#: includes/class-backup-labels.php:41
+msgid "Marked for the backup"
+msgstr "Für die Sicherung markiert"
+
+#: includes/class-backup-labels.php:51
+msgid "It came from Profotograaf, so it is there already."
+msgstr "Sie kam von Profotograaf und liegt dort also schon."
+
+#: includes/class-backup-labels.php:52
+msgid "The file is missing on this server."
+msgstr "Die Datei fehlt auf diesem Server."
+
+#: includes/class-backup-labels.php:53
+msgid "The file is larger than 100 MB, the most Profotograaf accepts."
+msgstr "Die Datei ist größer als 100 MB, das Maximum, das Profotograaf annimmt."
+
+#: includes/class-backup-labels.php:54
+msgid "A filter on this site leaves it out."
+msgstr "Ein Filter auf dieser Website lässt sie aus."
+
+#: includes/class-backup-labels.php:55
+msgid "Profotograaf did not accept the file."
+msgstr "Profotograaf hat die Datei nicht angenommen."
+
+#: includes/class-backup-labels.php:56
+msgid "The file was sent but Profotograaf did not answer. It may be there already."
+msgstr "Die Datei wurde gesendet, aber Profotograaf hat nicht geantwortet. Sie liegt dort vielleicht schon."
+
+#: includes/class-backup-labels.php:57
+msgid "The upload was interrupted. The file may be on Profotograaf already."
+msgstr "Der Upload wurde unterbrochen. Die Datei liegt vielleicht schon auf Profotograaf."
+
+#: includes/class-backup-labels.php:58
+msgid "The file is too large for the memory of this site."
+msgstr "Die Datei ist zu groß für den Arbeitsspeicher dieser Website."
+
+#. translators: %d: HTTP status code, for example 500.
+#: includes/class-backup-labels.php:65
+#, php-format
+msgid "Profotograaf answered with error %d."
+msgstr "Profotograaf hat mit Fehler %d geantwortet."
+
+#. translators: %s: error code.
+#: includes/class-backup-labels.php:71
+#, php-format
+msgid "The upload failed (%s)."
+msgstr "Der Upload ist fehlgeschlagen (%s)."
+
+#: includes/modules/class-admin-notices.php:183
+msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then press Back up now."
+msgstr "Dein Profotograaf-Speicher ist voll, deshalb ist die Sicherung pausiert. Gib Speicherplatz frei oder wechsle zu einem größeren Tarif und klicke dann auf Jetzt sichern."
+
+#. translators: %d: number of files.
+#: includes/modules/class-admin-notices.php:195
+#, php-format
+msgid "%d file could not be backed up to Profotograaf."
+msgid_plural "%d files could not be backed up to Profotograaf."
+msgstr[0] "%d Datei konnte nicht auf Profotograaf gesichert werden."
+msgstr[1] "%d Dateien konnten nicht auf Profotograaf gesichert werden."
+
+#: includes/modules/class-admin-notices.php:199
+msgid "See why and retry"
+msgstr "Grund ansehen und erneut versuchen"
+
+#: includes/modules/class-backup-admin.php:115
+msgid "Not in the backup"
+msgstr "Nicht in der Sicherung"
+
+#. translators: %s: date the file was copied.
+#: includes/modules/class-backup-admin.php:119
+#, php-format
+msgid "Backed up to Profotograaf on %s."
+msgstr "Am %s auf Profotograaf gesichert."
+
+#: includes/modules/class-backup-admin.php:126
+msgid "Retry it on the Backup tab"
+msgstr "Im Tab Sicherung erneut versuchen"
+
+#: includes/modules/class-backup-admin.php:145
+msgid "Back up to Profotograaf"
+msgstr "Auf Profotograaf sichern"
+
+#: includes/modules/class-backup-admin.php:146
+msgid "Do not back up"
+msgstr "Nicht sichern"
+
+#. translators: %d: number of files.
+#: includes/modules/class-backup-admin.php:192
+#, php-format
+msgid "%d file is no longer marked for the backup. A file that is backed up already stays on Profotograaf."
+msgid_plural "%d files are no longer marked for the backup. Files that are backed up already stay on Profotograaf."
+msgstr[0] "%d Datei ist nicht mehr für die Sicherung markiert. Eine Datei, die schon gesichert ist, bleibt auf Profotograaf."
+msgstr[1] "%d Dateien sind nicht mehr für die Sicherung markiert. Dateien, die schon gesichert sind, bleiben auf Profotograaf."
+
+#. translators: %d: number of files.
+#: includes/modules/class-backup-admin.php:198
+#, php-format
+msgid "%d file is marked for the backup. It is copied to Profotograaf in the background."
+msgid_plural "%d files are marked for the backup. They are copied to Profotograaf in the background."
+msgstr[0] "%d Datei ist für die Sicherung markiert. Sie wird im Hintergrund auf Profotograaf kopiert."
+msgstr[1] "%d Dateien sind für die Sicherung markiert. Sie werden im Hintergrund auf Profotograaf kopiert."
+
+#: includes/modules/class-backup.php:172
+msgid "The backup starts within a minute, in the background. You can leave this page."
+msgstr "Die Sicherung startet innerhalb einer Minute im Hintergrund. Du kannst diese Seite verlassen."
+
+#: includes/modules/class-backup.php:173
+msgid "The backup cannot start: switch it on and connect this site to Profotograaf first."
+msgstr "Die Sicherung kann nicht starten: Schalte sie zuerst ein und verbinde diese Website mit Profotograaf."
+
+#. translators: %d: number of files.
+#: includes/modules/class-backup.php:187
+#, php-format
+msgid "%d file will be sent again in the background."
+msgid_plural "%d files will be sent again in the background."
+msgstr[0] "%d Datei wird im Hintergrund erneut gesendet."
+msgstr[1] "%d Dateien werden im Hintergrund erneut gesendet."
+
+#: includes/modules/class-client-galleries.php:232
+#: build/client-galleries/index.js:3
+msgid "Your photos"
+msgstr "Deine Fotos"
+
+#: includes/modules/class-client-galleries.php:233
+#: build/client-galleries/index.js:3
+msgid "See the photos in your gallery."
+msgstr "Sieh dir die Fotos in deiner Galerie an."
+
+#: includes/modules/class-client-galleries.php:234
+#: build/client-galleries/index.js:3
+msgid "Open your gallery"
+msgstr "Deine Galerie öffnen"
+
+#: includes/modules/class-client-galleries.php:241
+#: build/client-galleries/index.js:3
+msgid "Only editors see this note. Choose a gallery in the block settings. Until then visitors do not see this block."
+msgstr "Nur Redakteure sehen diesen Hinweis. Wähle in den Blockeinstellungen eine Galerie. Bis dahin sehen Besucher diesen Block nicht."
+
+#: build/client-galleries/index.js:3
+msgid "This gallery has no share link yet. Choose another gallery."
+msgstr "Diese Galerie hat noch keinen Freigabelink. Wähle eine andere Galerie."
+
+#: build/client-galleries/index.js:3
+msgid "No gallery chosen. The block links to the client portal."
+msgstr "Keine Galerie ausgewählt. Der Block verlinkt auf das Kundenportal."
+
+#: build/client-galleries/index.js:3
+msgid "Choose a gallery"
+msgstr "Galerie wählen"
+
+#: build/client-galleries/index.js:3
+msgid "Remove gallery"
+msgstr "Galerie entfernen"
+
+#: build/client-galleries/index.js:3
+msgid "Open a delivered gallery"
+msgstr "Ausgelieferte Galerie öffnen"
+
+#: build/client-galleries/index.js:3
+msgid "Choose the gallery this button opens. Visitors go to its share link in the same tab."
+msgstr "Wähle die Galerie, die diese Schaltfläche öffnet. Besucher gelangen im selben Tab zu ihrem Freigabelink."
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation title"
+msgid "Open a delivered gallery"
+msgstr "Ausgelieferte Galerie öffnen"
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation description"
+msgid "A button that opens one delivered gallery through its share link."
+msgstr "Eine Schaltfläche, die eine ausgelieferte Galerie über ihren Freigabelink öffnet."
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation keyword"
+msgid "share"
+msgstr "teilen"
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation keyword"
+msgid "delivered"
+msgstr "ausgeliefert"
+
 #. translators: %d: number of photos.
 #: includes/cli/class-virtual-command.php:63
 #, php-format
@@ -3341,13 +3923,25 @@ msgstr[0] "%d Foto konnte beim letzten Durchlauf nicht lokal gespeichert werden:
 msgstr[1] "%d Fotos konnten beim letzten Durchlauf nicht lokal gespeichert werden:"
 
 #: uninstall.php:30
-msgid "Photos kept on Profotograaf no longer show"
-msgstr "Auf Profotograaf behaltene Fotos werden nicht mehr angezeigt"
+msgid "The Profotograaf plugin was deleted from this site. Some of your photos are still in your Profotograaf account:"
+msgstr "Das Profotograaf-Plugin wurde von dieser Website gelöscht. Einige deiner Fotos sind noch in deinem Profotograaf-Konto:"
 
-#. translators: %d: number of photos.
+#. translators: %d: number of files.
 #: uninstall.php:33
 #, php-format
-msgid "%d photo in the Media Library was kept on Profotograaf and has no copy on this site, so it shows no image now that the plugin is deleted. To get it back, install and connect the Profotograaf plugin again and use Convert to local in the Media Library."
-msgid_plural "%d photos in the Media Library were kept on Profotograaf and have no copy on this site, so they show no image now that the plugin is deleted. To get them back, install and connect the Profotograaf plugin again and use Convert to local in the Media Library."
-msgstr[0] "%d Foto in der Mediathek wurde auf Profotograaf behalten und hat keine Kopie auf dieser Website, deshalb zeigt es kein Bild, seit das Plugin gelöscht ist. Um es zurückzubekommen, installiere und verbinde das Profotograaf-Plugin erneut und nutze Lokal speichern in der Mediathek."
-msgstr[1] "%d Fotos in der Mediathek wurden auf Profotograaf behalten und haben keine Kopie auf dieser Website, deshalb zeigen sie kein Bild, seit das Plugin gelöscht ist. Um sie zurückzubekommen, installiere und verbinde das Profotograaf-Plugin erneut und nutze Lokal speichern in der Mediathek."
+msgid "- %d file from the Media Library is backed up there. It stays until you delete it on Profotograaf."
+msgid_plural "- %d files from the Media Library are backed up there. They stay until you delete them on Profotograaf."
+msgstr[0] "- %d Datei aus der Mediathek ist dort gesichert. Sie bleibt, bis du sie auf Profotograaf löschst."
+msgstr[1] "- %d Dateien aus der Mediathek sind dort gesichert. Sie bleiben, bis du sie auf Profotograaf löschst."
+
+#. translators: %d: number of photos.
+#: uninstall.php:37
+#, php-format
+msgid "- %d photo was shown from Profotograaf and shows no image on this site now. To show it again, install and connect the plugin and use Convert to local."
+msgid_plural "- %d photos were shown from Profotograaf and show no image on this site now. To show them again, install and connect the plugin and use Convert to local."
+msgstr[0] "- %d Foto wurde von Profotograaf angezeigt und zeigt auf dieser Website jetzt kein Bild mehr. Um es wieder anzuzeigen, installiere und verbinde das Plugin erneut und nutze „Lokal speichern“."
+msgstr[1] "- %d Fotos wurden von Profotograaf angezeigt und zeigen auf dieser Website jetzt kein Bild mehr. Um sie wieder anzuzeigen, installiere und verbinde das Plugin erneut und nutze „Lokal speichern“."
+
+#: uninstall.php:41
+msgid "Your photos on Profotograaf"
+msgstr "Deine Fotos auf Profotograaf"
