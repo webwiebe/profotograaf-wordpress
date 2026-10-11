@@ -168,6 +168,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: includes/admin/class-leads-settings.php:368
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #: build/import-screen/index.js:7
@@ -245,25 +246,25 @@ msgstr "De verbinding kon niet worden gecontroleerd. Nieuwe poging."
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf keurde de verbinding goed maar stuurde geen tokens. Begin opnieuw."
 
-#: includes/modules/class-client-galleries.php:202
+#: includes/modules/class-client-galleries.php:255
 #: patterns/client-portal-cta.php:21
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Find your gallery"
 msgstr "Vind je galerij"
 
-#: includes/modules/class-client-galleries.php:203
+#: includes/modules/class-client-galleries.php:256
 #: patterns/client-portal-cta.php:22
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Sign in to the client portal to see your photos."
 msgstr "Log in op het klantportaal om je foto's te bekijken."
 
-#: includes/modules/class-client-galleries.php:204
+#: includes/modules/class-client-galleries.php:257
 #: patterns/client-portal-cta.php:23
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Open my gallery"
 msgstr "Open mijn galerij"
 
-#: includes/modules/class-client-galleries.php:258
+#: includes/modules/class-client-galleries.php:249
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Het blok \"Vind je galerij\" heeft nog geen Profotograaf-adres. Vul het in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
@@ -413,41 +414,42 @@ msgstr "Om je Profotograaf-pagina's in een frame op deze site te tonen, voeg je 
 msgid "Check again"
 msgstr "Opnieuw controleren"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Client portal"
 msgstr "Klantportaal"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Portal address"
 msgstr "Portaaladres"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
 msgstr "Je Profotograaf-adres (bijvoorbeeld studio), je subdomein of je eigen domein."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Open in a new tab"
 msgstr "Openen in een nieuw tabblad"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
 msgid "Text"
 msgstr "Tekst"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
 msgid "Heading"
 msgstr "Kop"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Button label"
 msgstr "Knoptekst"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr "Alleen redacteuren zien deze notitie. Vul je Profotograaf-adres in bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
 
 #. translators: %d: number of photos in a gallery.
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #, js-format
@@ -463,11 +465,13 @@ msgstr[1] "%d foto's"
 msgid "Site default"
 msgstr "Standaard van de site"
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr "Verbind deze site met Profotograaf onder Instellingen > Profotograaf om een galerij te kiezen."
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 msgid "There are no galleries in your Profotograaf account yet."
@@ -481,6 +485,7 @@ msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord,
 #: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 #: build/import-screen/index.js:2
@@ -493,6 +498,7 @@ msgstr "Galerij"
 msgid "Layout"
 msgstr "Indeling"
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 msgid "Choose another gallery"
@@ -649,17 +655,20 @@ msgstr "Profotograaf heeft de aanvraag geweigerd omdat die onvolledig of ongeldi
 msgid "The platform reported an error (HTTP %d). Try again later."
 msgstr "Het platform meldde een fout (HTTP %d). Probeer het later opnieuw."
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
 msgstr "Koppel deze site opnieuw met Profotograaf via Instellingen > Profotograaf. De verbinding heeft een nieuwe toestemming nodig."
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Profotograaf is receiving too many requests. Try again in a moment."
 msgstr "Profotograaf krijgt te veel verzoeken. Probeer het zo opnieuw."
 
 #. translators: %d: number of seconds to wait.
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 #, js-format
@@ -668,11 +677,13 @@ msgid_plural "Profotograaf is receiving too many requests. Try again in %d secon
 msgstr[0] "Profotograaf krijgt te veel verzoeken. Probeer het over %d seconde opnieuw."
 msgstr[1] "Profotograaf krijgt te veel verzoeken. Probeer het over %d seconden opnieuw."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "Profotograaf could not be reached. Check your connection and try again."
 msgstr "Profotograaf is niet bereikbaar. Controleer je verbinding en probeer het opnieuw."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "Profotograaf reported a problem. Try again later."
@@ -1120,39 +1131,39 @@ msgstr "Pad van het klantportaal"
 msgid "The path of the client portal on your Profotograaf address, used by the \"Find your gallery\" block. A block can set its own. The default is /client."
 msgstr "Het pad van het klantportaal op je Profotograaf-adres, gebruikt door het blok \"Vind je galerij\". Een blok kan een eigen pad instellen. De standaard is /client."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Portal path"
 msgstr "Portaalpad"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it."
 msgstr "Waar het portaal op dat adres staat. Laat leeg om de site-instelling te gebruiken, die /client is tenzij je die hebt gewijzigd."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading level"
 msgstr "Kopniveau"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 2"
 msgstr "Kop 2"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 3"
 msgstr "Kop 3"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 4"
 msgstr "Kop 4"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 5"
 msgstr "Kop 5"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 6"
 msgstr "Kop 6"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Paragraph"
 msgstr "Paragraaf"
 
@@ -2126,6 +2137,7 @@ msgstr "Deze galerij heeft geen foto's die op je site kunnen worden getoond."
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet. Visitors do not see this note."
 msgstr "Foto's worden mogelijk nog verwerkt, of de galerij bevat video's of bestandstypen die de insluiting op de site nog niet kan tonen. Bezoekers zien deze notitie niet."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "0 visible"
@@ -3060,6 +3072,7 @@ msgstr "Voorinstelling"
 msgid "The pattern of sections repeats until every photo is shown."
 msgstr "Het patroon van secties herhaalt zich tot elke foto is getoond."
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 msgid "No gallery chosen yet."
 msgstr "Nog geen galerij gekozen."
@@ -3777,3 +3790,67 @@ msgid "%d file will be sent again in the background."
 msgid_plural "%d files will be sent again in the background."
 msgstr[0] "%d bestand wordt op de achtergrond opnieuw verstuurd."
 msgstr[1] "%d bestanden worden op de achtergrond opnieuw verstuurd."
+
+#: includes/modules/class-client-galleries.php:232
+#: build/client-galleries/index.js:3
+msgid "Your photos"
+msgstr "Je foto's"
+
+#: includes/modules/class-client-galleries.php:233
+#: build/client-galleries/index.js:3
+msgid "See the photos in your gallery."
+msgstr "Bekijk de foto's in je galerij."
+
+#: includes/modules/class-client-galleries.php:234
+#: build/client-galleries/index.js:3
+msgid "Open your gallery"
+msgstr "Open je galerij"
+
+#: includes/modules/class-client-galleries.php:241
+#: build/client-galleries/index.js:3
+msgid "Only editors see this note. Choose a gallery in the block settings. Until then visitors do not see this block."
+msgstr "Alleen redacteuren zien deze notitie. Kies een galerij bij de blokinstellingen. Tot die tijd zien bezoekers dit blok niet."
+
+#: build/client-galleries/index.js:3
+msgid "This gallery has no share link yet. Choose another gallery."
+msgstr "Deze galerij heeft nog geen deellink. Kies een andere galerij."
+
+#: build/client-galleries/index.js:3
+msgid "No gallery chosen. The block links to the client portal."
+msgstr "Geen galerij gekozen. Het blok linkt naar het klantportaal."
+
+#: build/client-galleries/index.js:3
+msgid "Choose a gallery"
+msgstr "Kies een galerij"
+
+#: build/client-galleries/index.js:3
+msgid "Remove gallery"
+msgstr "Galerij verwijderen"
+
+#: build/client-galleries/index.js:3
+msgid "Open a delivered gallery"
+msgstr "Open een opgeleverde galerij"
+
+#: build/client-galleries/index.js:3
+msgid "Choose the gallery this button opens. Visitors go to its share link in the same tab."
+msgstr "Kies de galerij die deze knop opent. Bezoekers gaan in hetzelfde tabblad naar de deellink van de galerij."
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation title"
+msgid "Open a delivered gallery"
+msgstr "Open een opgeleverde galerij"
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation description"
+msgid "A button that opens one delivered gallery through its share link."
+msgstr "Een knop die een opgeleverde galerij opent via de deellink."
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation keyword"
+msgid "share"
+msgstr "delen"
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation keyword"
+msgid "delivered"
+msgstr "opgeleverd"
