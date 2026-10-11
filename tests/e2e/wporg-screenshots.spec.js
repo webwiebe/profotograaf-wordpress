@@ -1,5 +1,5 @@
 // @ts-check
-// Takes screenshots 5 to 7 of the wordpress.org plugin page (assets/wporg/).
+// Takes screenshots 5 to 9 of the wordpress.org plugin page (assets/wporg/).
 //
 // This spec is not part of the normal E2E run: playwright.config.js skips it
 // unless WPORG_SCREENSHOTS is set. Run it with `make wporg-screenshots`, which
@@ -51,14 +51,40 @@ function mediaSource( on ) {
 	wp( 'option', 'update', 'profotograaf_settings', JSON.stringify( { media_source: on } ), '--format=json' );
 }
 
-/** Removes the imported photos and the stored catalogue, so the capture can run again. */
+/** Removes the imported photos, the stored lists and the copy state, so the capture can run again. */
 function cleanUp() {
 	const ids = wp( 'post', 'list', '--post_type=attachment', '--post_status=any', '--field=ID' );
 	if ( ids !== '' ) {
 		wp( 'post', 'delete', ...ids.split( /\s+/ ), '--force' );
 	}
-	wp( 'eval', "delete_option( 'profotograaf_photo_catalogue' );" );
+	wp(
+		'eval',
+		"foreach ( array( 'profotograaf_photo_catalogue', 'profotograaf_gallery_index', 'profotograaf_backup_last_run', 'profotograaf_backup_pause', 'profotograaf_backup_cursor' ) as $o ) { delete_option( $o ); } wp_clear_scheduled_hook( 'profotograaf_backup_upload' ); wp_clear_scheduled_hook( 'profotograaf_backup_backfill' );"
+	);
 }
+
+// Files on the Copy to Profotograaf tab: nine copied, two waiting, one failed.
+const COPY_FILES = [
+	[ 'harbour-sunrise', 'done' ],
+	[ 'lighthouse-portrait', 'done' ],
+	[ 'spring-wedding-01', 'done' ],
+	[ 'spring-wedding-02', 'done' ],
+	[ 'spring-wedding-03', 'done' ],
+	[ 'family-on-the-pier', 'done' ],
+	[ 'boats-at-dusk', 'done' ],
+	[ 'studio-headshot', 'done' ],
+	[ 'misty-lake', 'done' ],
+	[ 'autumn-family-01', 'queued' ],
+	[ 'autumn-family-02', 'queued' ],
+	[ 'harbour-at-night', 'failed' ],
+];
+
+// Galleries on the Galleries tab, as the editor's gallery picker stores them.
+const CLIENT_GALLERIES = {
+	'g-wedding': { title: 'Spring wedding, Anna and Tom', url: 'https://profotograaf.nl/share/g/spring-wedding-anna-tom', layout: '', embed_layout: '' },
+	'g-family': { title: 'Autumn family shoot', url: 'https://profotograaf.nl/share/g/autumn-family-shoot', layout: '', embed_layout: '' },
+	'g-headshots': { title: 'Team headshots', url: 'https://profotograaf.nl/share/g/team-headshots', layout: '', embed_layout: '' },
+};
 
 /**
  * Waits until every image inside the locator has loaded.
@@ -122,7 +148,7 @@ async function settled( locator ) {
 test.describe.configure( { mode: 'serial' } );
 test.use( { viewport: { width: 1280, height: 800 } } );
 
-test.describe( 'wordpress.org screenshots of the media source', () => {
+test.describe( 'wordpress.org screenshots', () => {
 	test.beforeAll( async ( { browser } ) => {
 		await mock( '/__reset' );
 		await mock( '/__scenic' );
@@ -230,5 +256,51 @@ test.describe( 'wordpress.org screenshots of the media source', () => {
 		await page.mouse.move( 1250, 780 );
 
 		await page.screenshot( { path: path.join( OUTPUT, 'screenshot-7.png' ) } );
+	} );
+
+	test( 'screenshot 8: the Copy to Profotograaf tab with its status', async ( { page } ) => {
+		const seed = COPY_FILES.map( ( [ name, state ] ) => `array( '${ name }', '${ state }' )` ).join( ', ' );
+		wp(
+			'eval',
+			[
+				"update_option( 'profotograaf_settings', array( 'backup' => true, 'backup_scope' => 'used' ) );",
+				// The mock grants the scopes of an older connection; copying needs galleries:write.
+				"$c = get_option( 'profotograaf_connection' ); $c['scopes'] = array_values( array_unique( array_merge( (array) ( $c['scopes'] ?? array() ), array( 'galleries:write' ) ) ) ); update_option( 'profotograaf_connection', $c, false );",
+				"update_option( 'profotograaf_backup_cursor', array( 'cursor' => PHP_INT_MAX, 'complete' => true ) );",
+				"update_option( 'profotograaf_backup_last_run', array( 'at' => time() - 180, 'sent' => 3, 'stop' => 'empty', 'last_sent' => time() - 180, 'idle_since' => 0 ) );",
+				'$dir = wp_upload_dir();',
+				`foreach ( array( ${ seed } ) as $row ) {`,
+				"  $file = $dir['path'] . '/' . $row[0] . '.png'; file_put_contents( $file, str_repeat( 'x', 2400000 ) );",
+				"  $id = wp_insert_attachment( array( 'post_title' => $row[0], 'post_mime_type' => 'image/png', 'post_status' => 'inherit' ), $file );",
+				"  update_post_meta( $id, '_profotograaf_backup_state', $row[1] );",
+				"  if ( 'done' === $row[1] ) { update_post_meta( $id, '_profotograaf_backup_at', time() - 3600 ); }",
+				"  if ( 'failed' === $row[1] ) { update_post_meta( $id, '_profotograaf_backup_reason', 'http_500' ); }",
+				'}',
+				"wp_clear_scheduled_hook( 'profotograaf_backup_upload' ); wp_clear_scheduled_hook( 'profotograaf_backup_backfill' );",
+			].join( ' ' )
+		);
+		await login( page );
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=backup' );
+		await expect( page.getByRole( 'heading', { name: 'Copy status' } ) ).toBeVisible();
+		await expect( page.getByRole( 'button', { name: 'Copy now' } ) ).toBeVisible();
+		await expect( page.getByText( 'needs a new permission' ) ).toHaveCount( 0 );
+		await page.getByRole( 'heading', { name: 'Copy status' } ).evaluate( ( heading ) => heading.scrollIntoView( { block: 'start' } ) );
+		await page.mouse.move( 1250, 780 );
+
+		await page.screenshot( { path: path.join( OUTPUT, 'screenshot-8.png' ) } );
+	} );
+
+	test( 'screenshot 9: share links and QR codes on the Galleries tab', async ( { page } ) => {
+		wp( 'option', 'update', 'profotograaf_gallery_index', JSON.stringify( CLIENT_GALLERIES ), '--format=json' );
+		await login( page );
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=galleries' );
+		const list = page.locator( '.profotograaf-client-links' );
+		await expect( list.getByRole( 'rowheader' ) ).toHaveCount( 3 );
+		await expect( list.getByRole( 'img', { name: /QR code with the share link of/ } ) ).toHaveCount( 3 );
+		await page.getByRole( 'heading', { name: 'Client galleries' } ).evaluate( ( heading ) => heading.scrollIntoView( { block: 'start' } ) );
+		await settled( list );
+		await page.mouse.move( 1250, 780 );
+
+		await page.screenshot( { path: path.join( OUTPUT, 'screenshot-9.png' ) } );
 	} );
 } );

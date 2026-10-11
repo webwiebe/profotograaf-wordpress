@@ -63,7 +63,7 @@ e2e-down:
 e2e: e2e-up
 	$(PNPM) pnpm exec playwright test; status=$$?; $(MAKE) e2e-down; exit $$status
 
-# Retakes screenshots 5 to 7 of the wordpress.org plugin page (assets/wporg/):
+# Retakes screenshots 5 to 9 of the wordpress.org plugin page (assets/wporg/):
 # starts the E2E stack, captures them, optimises the PNGs and stops the stack.
 wporg-screenshots: build e2e-up
 	$(PNPM) WPORG_SCREENSHOTS=1 pnpm exec playwright test; status=$$?; \

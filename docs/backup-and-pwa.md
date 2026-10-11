@@ -2,6 +2,8 @@
 
 Design note for issue #47 (discovery, part of epic #48). No code ships with this note. It answers the three questions in the issue, lists the child issues to open and the questions that need an owner decision.
 
+Name in the product: the owner decided on #162 that the feature is called "Copy to Profotograaf" until a restore path exists. The plugin UI uses that name since #240 (tab, setting, Media Library column and bulk actions, Site Health, WP-CLI messages). This note and the code keep "backup" for the internal names: the `backup` setting and tab slug, the `_profotograaf_backup_*` meta, the `Backup_*` classes and `wp profotograaf backup run`.
+
 The media lifecycle (what happens to imported copies when a photo disappears from Profotograaf) belongs to #46 and its note, `docs/media-lifecycle.md`. This note covers the other direction, WordPress to Profotograaf, and the client PWA link. Where the two meet, this note says so and leaves the decision to #46.
 
 ## Recommendation

@@ -61,6 +61,24 @@ Privacy:
 - Per file the plugin keeps hidden fields: `_profotograaf_photo_id`, `_profotograaf_gallery_id`, `_profotograaf_origin` and the `_profotograaf_upload_*` fields. Deleting the plugin removes the settings, the linked galleries and the scheduled events and leaves these fields. See [docs/media-lifecycle.md](docs/media-lifecycle.md).
 - Deleting a file in WordPress deletes nothing on Profotograaf. See the External services section of `readme.txt` for every request.
 
+## Copy to Profotograaf
+
+Optional. Settings > Profotograaf > Copy to Profotograaf > "Copy the Media Library to Profotograaf" is off by default (setting `backup`). While it is off the plugin copies nothing. It needs a connected site with the `galleries:write` permission.
+
+- "What to copy": files used on the site (default), every file in the Media Library, or only the files you mark with the bulk actions "Copy to Profotograaf" and "Do not copy". Images, RAW files and videos are copied as stored. Photos imported from Profotograaf are skipped.
+- WP-Cron sends one file per request into a private gallery per month, named after the site (for example "Example Studio copy 2026-10"). The plugin never makes these galleries embeddable, and keeps them out of the photo library, the gallery pickers and the change check. `wp profotograaf backup run` sends the queue in the foreground.
+- Each file is copied once. Later edits and deletions in WordPress stay in WordPress, and the plugin has no way to restore files from the copies. That is why the feature is called a copy.
+- The tab shows the status, with "Copy now" and "Retry failed". The Media Library list has a Copy column, and Site Health checks the permission, the schedule and the queue. A full storage pauses copying for a day.
+- Uninstall removes the settings and the `_profotograaf_backup_*` fields and keeps the `_profotograaf_copy_*` record of each copy, so a reinstall does not copy a file twice. The copies stay on Profotograaf until you delete them there.
+
+Design and status: [docs/backup-and-pwa.md](docs/backup-and-pwa.md). See the External services section of `readme.txt` for every request.
+
+## Client galleries
+
+- The "Find your gallery" block links to the client portal on your Profotograaf address or your own domain. It works on a site that is not connected.
+- Its variation "Open a delivered gallery" links to the share link of one chosen gallery, in the same tab.
+- The Galleries tab of the settings lists the galleries the site stored, with their share link, a Copy link button and a QR code drawn in the browser. It makes no platform request. The share page offers to install a gallery as an app on a phone when the gallery is delivered and has no password; the list does not show which galleries meet both conditions.
+
 ## License
 
 GPL-2.0-or-later. See [LICENSE](LICENSE).
