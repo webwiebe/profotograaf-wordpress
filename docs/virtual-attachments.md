@@ -198,8 +198,8 @@ Result observed in the browser and WP-CLI tests, run on WordPress 6.9.4, 7.0.4 a
 | WordPress below 6.9 | Untested | Untested | Untested | The plugin requires 6.9. |
 | Multisite | Untested | Untested | Untested | |
 | Browsers other than Chromium | Untested | Untested | Untested | |
-| Watermarked galleries | Untested | Untested | Untested | The platform doc states `thumb` is not served for them. The prototype falls back to `web` when a row has no `thumb` URL, covered by a unit test only. |
-| Real platform (not the mock) | Untested | Untested | Untested | Every observation above comes from the mock platform in `tests/e2e/mock-platform.mjs`. |
+| Watermarked galleries | Untested | Untested | Untested | No watermarked gallery could be made or found for issue #157, see "Real platform run". The platform doc states `thumb` is not served for them. The prototype falls back to `web` when a row has no `thumb` URL, covered by a unit test only. |
+| Real platform (not the mock) | Not run | Works | Not run | Run on WordPress 7.1 against profotograaf.nl for issue #157, see "Real platform run". The other rows above still come from the mock platform in `tests/e2e/mock-platform.mjs`. |
 
 ### Third-party plugins
 
@@ -273,6 +273,40 @@ Answer for the spike: unpublishing breaks the image at the origin at once, but c
 4. The platform's `alt` is always empty today, so virtual attachments carry the photo title as alt text, as imports do.
 5. No variant above 1600 px exists on the platform, so a virtual attachment cannot serve a larger original, and neither can an import.
 
+## Real platform run (issue #157)
+
+Run on 2026-10-11 on a local WordPress 7.1.2 site (PHP 8.3) connected to profotograaf.nl, with the plugin from this repository. One gallery was created for it, "Test 157 – Plain" (3 photos, "Test 157 photo 1" to "Test 157 photo 3", embeddable). Its photos were kept with the "Keep on Profotograaf" route, used on a test page with an Image block, a Gallery block, the `[gallery]` shortcode and a featured image. The gallery was unpublished (embeddable switched off through `PUT /api/v1/embed/galleries/{id}/embeddable`) and republished after the measurement. Only WordPress 7.1 was run. A browser was not used: the front end was read as HTML and the image URLs were requested one by one.
+
+| Cell | Observed on the real platform |
+| --- | --- |
+| Keep on Profotograaf | Works. Three attachments were created with no download. Stored URLs are `https://profotograaf.nl/share/img/{id}/web-{version}.jpg` and `thumb-{version}.jpg`. |
+| URL, sizes and srcset | `full`, `large` and `medium` give `web` at 1600 x 1067, `thumbnail` gives the 400 x 400 `thumb`. `srcset` is false and the tag has no `srcset`. The `web` file is 1600 x 1066 pixels and the `thumb` file 400 x 400. |
+| Front end | The Image block, Gallery block, featured image and `[gallery]` (400 px `thumb`) all print platform URLs and no upload URL. All six distinct URLs answer 200 `image/jpeg`. |
+| Editor and REST | `GET /wp/v2/media/{id}` returns the `web` URL as `source_url` and the `thumb` as `thumbnail`. The media modal model has `profotograafVirtual: true` with the same URLs. |
+| Response headers | `cache-control: public, max-age=31536000, immutable`, `cf-cache-status` MISS on a first request and HIT after, `age` counting up. |
+| Origin after unpublish | 404 with `cache-control: no-store` and `cf-cache-status: BYPASS`, seen at once through a URL with an extra query string (a separate cache key). |
+| Cached copy after unpublish | Kept answering 200 for at least 2 hours, see below. |
+| Gone marking | The change feed run 7 seconds after the unpublish marked all 3 attachments gone. The admin notice on the Media Library ("3 photos kept on Profotograaf are no longer listed there and may stop showing on your site. Convert them to local while Profotograaf still serves them.") and the warning on each attachment screen appeared. Front-end HTML still printed the platform URLs. |
+| Mark cleared on republish | After the republish a feed run cleared the gone mark on the remaining kept attachments. |
+| Convert to local | Worked while the gallery was unpublished, because the `web` image was still in the edge cache and the download got that copy (129034 bytes, the same as the cached file). It also worked on a published gallery. Both runs gave an upload file with the usual sizes, the virtual mark removed and the front end reading the local URL. A conversion of a photo whose `web` URL is not in the edge cache while unpublished was not run on the real platform (the mock covers that failure). |
+| REST image edit | Not run again on the real platform. |
+| Watermarked gallery | Not tested, see below. |
+| Watermark visible on kept images, and kept after Convert to local | Not tested. |
+
+### Edge cache after unpublish
+
+The image measured is the `web` variant of "Test 157 photo 1". It was requested before the unpublish, so it was in the Cloudflare cache (`cf-cache-status: HIT`, `age` 84). The gallery was unpublished at 2026-10-11T13:53:32Z. A single GET went out every 150 seconds from 13:54:00Z, 48 requests in all, in one loop under `timeout 7200`.
+
+- Every request answered 200 with `cf-cache-status: HIT` and `cache-control: public, max-age=31536000, immutable`. The last one, at 15:51:39Z, was 2 hours 0 minutes after the unpublish, with `age: 7171`. The loop ended on its 2 hour limit and never saw a non-200.
+- At 15:55Z the `thumb` of the same photo (`age: 7397`) and the `web` image of another photo from the gallery (`age: 7351`) were still served from the edge as well.
+- So the cached copy outlasts at least 2 hours. The headers say a year (31536000 seconds), and the platform documentation says there is no purge. The upper bound was not measured. A copy that was not in the edge cache at the time answered 404 at once.
+- The gallery was republished at 15:56:51Z.
+
+### What could not be done
+
+- Watermarked gallery. The watermark is the `watermark_enabled` field of `PUT /api/v1/galleries/{id}`. That route needs a logged-in session. With the plugin's device token it answers 403 "this app is not allowed to use this endpoint". The embed routes can read, create, upload to and switch embeddable on a gallery, and nothing in them sets a watermark. No existing gallery on the account listed `web` only, which is how the embed list shows a watermark. Testing it needs a person to switch the watermark on for a test gallery in the Profotograaf app (and a studio watermark has to be set for the account).
+- The platform now lists a `large` variant next to `thumb` and `web` for galleries that are not watermarked. The plugin ignores it, so a kept photo still serves at most the `web` size.
+
 ## Proposed child issues (not created)
 
 Open these only if the recommendation is accepted.
@@ -282,8 +316,8 @@ Open these only if the recommendation is accepted.
 3. Sync on the change feed instead of the full catalogue: use `GET /api/v1/embed/changes` with the cursor, fall back to the full list on `resync`. Also listen for `available` per gallery. Done in issue #153.
 4. Editor-side URL refresh: update the `url` attribute of Image blocks and Gallery items in the editor when the attachment URL changes (JavaScript), and rewrite saved URLs in Gallery blocks. Done in issue #154.
 5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error. Done in issue #155, see "Image editing".
+7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving. Done for the unpublish and the cache (see "Real platform run"). The watermarked gallery is still open.
 6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1. Done in issue #156, see "Third-party plugins".
-7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving.
 8. Uninstall and deactivation behaviour: what happens to virtual attachments when the plugin is removed (the files do not exist locally, so every image would break). Offer a bulk conversion before removal. Done in issue #158, see "Deactivation and uninstall".
 9. Platform request: a webhook or a feed entry when a gallery stops being available, and an optional purge call. Both are absent from the platform documentation read.
 
