@@ -17,7 +17,7 @@ Ship the import path from `docs/media-source.md` first. Offer virtual attachment
 
 ## What was built
 
-All of it sat behind a hidden flag that was off by default and had no UI. Issue #151 replaced the flag with a setting (see "Switching it on"). With the setting off, nothing is hooked and no behaviour changes.
+All of it sat behind a hidden flag that was off by default and had no UI. Issue #151 replaced the flag with a setting (see "Switching it on"). With the setting off, nothing is hooked and no behaviour changes, apart from the Convert to local hooks of issue #152, which act only on attachments that carry the virtual mark.
 
 | File | Role |
 | --- | --- |
@@ -27,19 +27,35 @@ All of it sat behind a hidden flag that was off by default and had no UI. Issue 
 | `includes/class-photo-importer.php` | `is_platform_url()` changed from private to public. No other change. |
 | `tests/unit/Virtual_Attachments_Test.php` | 30 unit tests. |
 | `tests/e2e/virtual-attachments.spec.js` | 9 browser tests against a real WordPress and the mock platform. |
-| `tests/e2e/mock-platform.mjs` | Modes `up`, `down` and `unpublished`, and a record of API calls. |
+| `tests/e2e/mock-platform.mjs` | Modes `up`, `down`, `unpublished` and `unlisted` (issue #152: the library lists nothing while the images still answer), and a record of API calls. |
+| `includes/modules/class-virtual-convert.php` | Issue #152: the "Convert to local" row action, bulk action, details field and notices. |
+| `tests/e2e/convert-to-local.spec.js` | Issue #152: browser tests of the conversion, its failure, the gone notice and the setting-off case. |
 
 ### Switching it on
 
 Since issue #151 the switch is the setting "Keep photos on Profotograaf" (`virtual_attachments` in `profotograaf_settings`, General tab, off by default). The spike's constant `PROFOTOGRAAF_VIRTUAL_ATTACHMENTS` is gone. The filter stays as an override: virtual attachments are on only when `apply_filters( 'profotograaf_virtual_attachments', $setting )` returns the boolean `true`. A truthy string does not count.
 
-With the setting on, Media > Import from Profotograaf shows a "Keep on Profotograaf" button next to Import, with a notice that explains the unpublish behaviour below. It posts the selected photo ids to `POST /profotograaf/v1/photos/keep`, which calls `create()` for each catalogue row. The route is registered only while the setting is on, and its permission check needs `upload_files` and the setting. `GET /profotograaf/v1/photos` marks a kept photo with `kept: true`, and the attachment details say "Kept on Profotograaf" and offer no Re-import. "Convert to local" has no UI yet (child issue 2).
+With the setting on, Media > Import from Profotograaf shows a "Keep on Profotograaf" button next to Import, with a notice that explains the unpublish behaviour below. It posts the selected photo ids to `POST /profotograaf/v1/photos/keep`, which calls `create()` for each catalogue row. The route is registered only while the setting is on, and its permission check needs `upload_files` and the setting. `GET /profotograaf/v1/photos` marks a kept photo with `kept: true`, and the attachment details say "Kept on Profotograaf" and offer no Re-import. "Convert to local" is described below (issue #152).
+
+### Convert to local
+
+Issue #152 added the UI for `convert_to_local()`, in the module `includes/modules/class-virtual-convert.php` (`Virtual_Convert`):
+
+- A row action "Convert to local" on each virtual attachment in the Media Library list view, and a "Local copy" field with a "Convert to local" button in the attachment details (media modal and attachment edit screen). Both are links to `admin-post.php?action=profotograaf_convert_local` with a nonce per attachment (`profotograaf_convert_local_{id}`).
+- A bulk action "Convert to local" in the list view. WordPress checks the `bulk-media` nonce before the plugin sees the selection. Files without the virtual mark are skipped and counted.
+- Every conversion needs `upload_files` and `edit_post` on the attachment, the same pattern as "Upload again" in `class-media-upload.php`. `Photo_Importer::reimport()` checks both again.
+- The result goes into a transient per user (`profotograaf_convert_result_{user}`, five minutes) and shows once as an admin notice after the redirect: how many converted, a list of the ones that failed with the reason, and how many were skipped.
+- Conversion runs `Photo_Importer::reimport()`, the download path of Import and Re-import: the `web` variant on the platform host, no redirects, `wp_handle_sideload()` and `wp_generate_attachment_metadata()`, so the attachment gets the usual sizes. The id stays and `_profotograaf_virtual`, `_profotograaf_virtual_urls` and `_profotograaf_virtual_gone` are removed. Any failure leaves the attachment virtual and unchanged.
+- A photo the catalogue no longer lists is downloaded from its stored `web` URL (`reimport()` takes that row as a fallback). That works as long as Profotograaf still serves the image, for example when a gallery stops being embeddable. When the download fails for an attachment marked gone, the message is "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
+- Attachments marked gone get a warning with a "Convert to local" button: on their edit screen, and in the Media Library as a list of up to 20 of them. The details field says the same.
+
+Decision for the setting-off case: conversion stays available for every attachment that carries `_profotograaf_virtual`, whatever the setting. Once the setting is off the filters are gone, so such an attachment points at `profotograaf-virtual/...` under uploads, a file that does not exist, and shows no image. Convert to local is the way back, so `Virtual_Convert` registers its hooks unconditionally and checks the mark per attachment (`Virtual_Attachments::is_marked()`, which reads meta only and ignores the setting). The bulk action appears while the setting is on, or while at least one marked attachment exists (one query for one id). With the setting off and no marked attachment, nothing of it shows. The details field then explains that the photo shows no image until it is converted, and the Re-import button stays hidden for marked attachments, because a re-import would leave the virtual marks in place. The keep route, the filters and the sync stay off with the setting, as before. One gap: with the setting off the `render_block_data` rewrite is not hooked, so an Image block saved with the platform URL keeps that URL after a conversion until the setting is on again or the block is edited.
 
 ### What the class does
 
 - `create( array $photo )` makes an attachment from a catalogue row (the same row `Photo_Catalogue` stores). It needs the flag, the `upload_files` capability, the media source setting and a `web` URL on the platform host. It returns the existing attachment when the photo id is already imported. It stores the platform photo id (the same meta the importer uses), the gallery id, the image version, the alt text, `_wp_attachment_metadata` (width and height of the `web` variant scaled to at most 1600 px, plus a 400 px `thumbnail` size when a `thumb` URL exists), the two URLs in `_profotograaf_virtual_urls` and the marker `_profotograaf_virtual`. `_wp_attached_file` holds a path that does not exist on disk (`profotograaf-virtual/{photo id}/web-{version}.jpg`).
 - Filters, all at priority 20 and all reading post meta only: `wp_get_attachment_url` (the `web` URL), `image_downsize` (the `thumb` URL for `thumbnail` and for arrays up to 400 px, otherwise `web` with the stored size), `wp_calculate_image_srcset` (one candidate, the `web` variant), `wp_prepare_attachment_for_js` (adds `profotograafVirtual`), `load_image_to_edit_path` (refuses the legacy image editor) and `render_block_data` (rewrites the saved `src` of a core Image block that points at a platform URL to the attachment's current URL).
-- `convert_to_local( $id )` calls `Photo_Importer::reimport()`. The attachment id stays, the file lands in `uploads`, and the virtual marks are removed. On failure (platform down, photo gone) the attachment stays virtual.
+- `convert_to_local( $id )` calls `Photo_Importer::reimport()`, with the stored `web` URL as a fallback for a photo the catalogue no longer lists. The attachment id stays, the file lands in `uploads`, and the virtual marks are removed. On failure (platform down, photo no longer served) the attachment stays virtual. It acts on any attachment with the virtual mark, also while the setting is off (see "Convert to local").
 - `sync( array $catalogue )` and a twice-daily cron event `profotograaf_virtual_sync`. For each virtual attachment: a photo listed in the catalogue gets fresh URLs and version and loses a gone mark; a photo missing from a fresh catalogue gets the gone mark once and fires `profotograaf_virtual_attachment_gone`. A stale catalogue (the last refresh failed) changes nothing.
 - Filter `profotograaf_virtual_attachments_block_editing` (default `true`) turns the legacy editor guard off. Only the compatibility test uses it, to record the unguarded behaviour.
 
