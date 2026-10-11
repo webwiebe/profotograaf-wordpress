@@ -367,7 +367,7 @@ class Virtual_Convert implements Module {
 	 * @param bool $gone  Only those marked gone.
 	 * @return array<int,int>
 	 */
-	private function marked_ids( int $limit, bool $gone ): array {
+	public function marked_ids( int $limit, bool $gone ): array {
 		$meta_query = array(
 			array(
 				'key'   => Virtual_Attachments::META_VIRTUAL,

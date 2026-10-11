@@ -69,5 +69,14 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 		public static function warning( $message ): void {
 			self::$output[] = array( 'warning', $message );
 		}
+
+		/**
+		 * Prints an error. The real one exits, the stub records and returns.
+		 *
+		 * @param string $message Message.
+		 */
+		public static function error( $message ): void {
+			self::$output[] = array( 'error', $message );
+		}
 	}
 }
