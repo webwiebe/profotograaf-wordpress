@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * An entry has these keys:
  *
- * - tab: General, Galleries, Enquiry forms or Advanced (see tabs()).
+ * - tab: General, Galleries, Enquiry forms, Backup or Advanced (see tabs()).
  * - type: `enum` (needs `choices`), `bool`, `int` (needs `min` and `max`),
  *   `int_or_empty` (like `int`, and an empty string stays empty to mean "use the
  *   platform default") or `text`.
@@ -38,11 +38,12 @@ final class Settings_Schema {
 	 * Bump when an entry is added, renamed or changes meaning, so the stored
 	 * values are normalised once (see Settings::migrate()).
 	 */
-	public const VERSION = 7;
+	public const VERSION = 8;
 
 	public const TAB_GENERAL   = 'general';
 	public const TAB_GALLERIES = 'galleries';
 	public const TAB_ENQUIRY   = 'enquiry-forms';
+	public const TAB_BACKUP    = 'backup';
 	public const TAB_ADVANCED  = 'advanced';
 
 	/**
@@ -60,6 +61,7 @@ final class Settings_Schema {
 			self::TAB_GENERAL   => __( 'General', 'profotograaf' ),
 			self::TAB_GALLERIES => __( 'Galleries', 'profotograaf' ),
 			self::TAB_ENQUIRY   => __( 'Enquiry forms', 'profotograaf' ),
+			self::TAB_BACKUP    => __( 'Backup', 'profotograaf' ),
 			self::TAB_ADVANCED  => __( 'Advanced', 'profotograaf' ),
 		);
 	}
@@ -164,6 +166,25 @@ final class Settings_Schema {
 				'max'         => 90,
 				'label'       => __( 'Keep undeliverable enquiries for (days)', 'profotograaf' ),
 				'description' => __( 'Enquiries that could not be delivered stay in the database until you export them or this many days have passed, from 1 to 90. You get an email before they are removed.', 'profotograaf' ),
+			),
+			'backup'                 => array(
+				'tab'         => self::TAB_BACKUP,
+				'type'        => 'bool',
+				'default'     => false,
+				'label'       => __( 'Back up the Media Library to Profotograaf', 'profotograaf' ),
+				'description' => __( 'Copies your Media Library images to your Profotograaf account. Off by default. Nothing is sent before you switch it on.', 'profotograaf' ),
+			),
+			'backup_scope'           => array(
+				'tab'         => self::TAB_BACKUP,
+				'type'        => 'enum',
+				'default'     => Settings::BACKUP_SCOPE_DEFAULT,
+				'label'       => __( 'What to back up', 'profotograaf' ),
+				'description' => __( 'Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. Images, RAW files and videos are copied. Photos imported from Profotograaf are skipped.', 'profotograaf' ),
+				'choices'     => array(
+					'used'   => __( 'Files used on the site (recommended)', 'profotograaf' ),
+					'all'    => __( 'Every file in the Media Library', 'profotograaf' ),
+					'marked' => __( 'Only the files I mark', 'profotograaf' ),
+				),
 			),
 			'telemetry_enabled'      => array(
 				'tab'         => self::TAB_ADVANCED,
