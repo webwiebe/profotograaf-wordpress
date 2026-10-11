@@ -7,7 +7,9 @@
 		"rows": { "default": 2, "min": 1, "max": 6 },
 		"count": { "default": 2, "min": 1, "max": 24 },
 		"ratio": { "default": "3-2", "enum": [ "original", "1-1", "4-3", "3-2", "16-9", "2-3", "3-4" ] },
-		"gap": { "default": 8, "min": 0, "max": 64 },
+		"gap": { "default": 8, "min": 0, "max": 96 },
+		"gapRow": { "default": "", "min": 0, "max": 96 },
+		"gapColumn": { "default": "", "min": 0, "max": 96 },
 		"captions": { "default": "off", "enum": [ "off", "below", "overlay" ] },
 		"height": { "default": 85, "min": 30, "max": 100 },
 		"rowHeight": { "default": 360, "min": 120, "max": 800 },
@@ -16,38 +18,66 @@
 		"title": { "default": "" },
 		"heading": { "default": "" },
 		"text": { "default": "" },
-		"align": { "default": "center", "enum": [ "left", "center", "right" ] }
+		"align": { "default": "center", "enum": [ "left", "center", "right" ] },
+		"radius": { "default": "none", "enum": [ "none", "subtle", "rounded", "full" ] },
+		"hover": { "default": "zoom", "enum": [ "zoom", "grow", "none" ] },
+		"hoverStrength": { "default": "subtle", "enum": [ "subtle", "strong" ] },
+		"frameColor": { "default": "#ffffff", "pattern": "^#(?:[0-9a-f]{3}|[0-9a-f]{6})$" },
+		"frameWidth": { "default": 0, "min": 0, "max": 24 },
+		"shadow": { "default": "none", "enum": [ "none", "soft", "strong" ] }
 	},
 	"types": {
 		"grid": {
 			"take": "columns*rows",
-			"fields": { "columns": 3, "rows": 2, "ratio": "3-2", "gap": 8, "captions": "off" },
+			"fields": {
+				"columns": 3, "rows": 2, "ratio": "3-2", "gap": 8, "gapRow": "", "gapColumn": "", "captions": "off",
+				"radius": "none", "hover": "zoom", "hoverStrength": "subtle", "frameColor": "#ffffff", "frameWidth": 0, "shadow": "none"
+			},
 			"phone": { "columns": 2 }
 		},
 		"masonry": {
 			"take": "count",
-			"fields": { "columns": 3, "count": 9, "gap": 8, "captions": "off" },
+			"fields": {
+				"columns": 3, "count": 9, "gap": 8, "gapRow": "", "gapColumn": "", "captions": "off",
+				"radius": "none", "hover": "zoom", "hoverStrength": "subtle", "frameColor": "#ffffff", "frameWidth": 0, "shadow": "none"
+			},
+			"limits": { "radius": { "enum": [ "none", "subtle", "rounded" ] } },
 			"phone": { "columns": 2 }
 		},
 		"feature": {
 			"take": "count",
-			"fields": { "count": 2, "gap": 8, "captions": "off" },
-			"limits": { "count": { "min": 2, "max": 3 } },
+			"fields": {
+				"count": 2, "gap": 8, "gapRow": "", "gapColumn": "", "captions": "off",
+				"radius": "none", "hover": "zoom", "hoverStrength": "subtle", "frameColor": "#ffffff", "frameWidth": 0, "shadow": "none"
+			},
+			"limits": { "count": { "min": 2, "max": 3 }, "radius": { "enum": [ "none", "subtle", "rounded" ] } },
 			"phone": { "columns": 1 }
 		},
 		"hero": {
 			"take": 1,
-			"fields": { "height": 85, "captions": "off", "title": "" },
+			"fields": {
+				"height": 85, "captions": "off", "title": "",
+				"radius": "none", "hover": "zoom", "hoverStrength": "subtle", "frameColor": "#ffffff", "frameWidth": 0, "shadow": "none"
+			},
+			"limits": { "radius": { "enum": [ "none", "subtle", "rounded" ] }, "hover": { "enum": [ "zoom", "none" ] } },
 			"phone": { "height": 70 }
 		},
 		"pair": {
 			"take": 3,
-			"fields": { "side": "left", "mirror": true, "gap": 8, "captions": "off" },
+			"fields": {
+				"side": "left", "mirror": true, "gap": 8, "gapRow": "", "gapColumn": "", "captions": "off",
+				"radius": "none", "hover": "zoom", "hoverStrength": "subtle", "frameColor": "#ffffff", "frameWidth": 0, "shadow": "none"
+			},
+			"limits": { "radius": { "enum": [ "none", "subtle", "rounded" ] } },
 			"phone": { "columns": 2 }
 		},
 		"filmstrip": {
 			"take": "count",
-			"fields": { "count": 8, "rowHeight": 360, "gap": 8, "captions": "off" },
+			"fields": {
+				"count": 8, "rowHeight": 360, "gap": 8, "captions": "off",
+				"radius": "none", "hover": "zoom", "hoverStrength": "subtle", "frameColor": "#ffffff", "frameWidth": 0
+			},
+			"limits": { "radius": { "enum": [ "none", "subtle", "rounded" ] }, "hover": { "enum": [ "zoom", "none" ] } },
 			"phone": { "rowHeight": 240 }
 		},
 		"text": {

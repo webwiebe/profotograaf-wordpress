@@ -17,8 +17,9 @@ defined( 'ABSPATH' ) || exit;
  * every surface.
  *
  * A block stores an empty value for every field the photographer left alone.
- * normalise() fills it from the file, so a site-wide setting can later slot in
- * between the block value and the file default without a migration.
+ * normalise() resolves every field through Option_Resolver: the section value,
+ * then the plugin setting `sections_<type>_<field>` (the field in snake case)
+ * when the settings schema has one, then the default in the file.
  */
 final class Sections_Schema {
 
@@ -31,6 +32,20 @@ final class Sections_Schema {
 	 * @var array{version:int,defaultPreset:string,phoneBreakpoint:int,fields:array<string,array<string,mixed>>,types:array<string,array<string,mixed>>,presets:array<string,array<int,array<string,mixed>>>}|null
 	 */
 	private static ?array $table = null;
+
+	/**
+	 * The plugin setting keys that start with `sections_`, read once.
+	 *
+	 * @var array<string,true>|null
+	 */
+	private static ?array $settings = null;
+
+	/**
+	 * Resolves the fields that have a plugin setting.
+	 *
+	 * @var Option_Resolver|null
+	 */
+	private static ?Option_Resolver $resolver = null;
 
 	/**
 	 * The section type ids, in file order.
@@ -136,7 +151,7 @@ final class Sections_Schema {
 		}
 		$out = array( 'type' => $type );
 		foreach ( self::defaults( $type ) as $field => $default ) {
-			$out[ $field ] = self::value( $type, $field, $section[ $field ] ?? null, $default );
+			$out[ $field ] = self::resolve( $type, $field, $section[ $field ] ?? null, $default );
 		}
 		$out['photoIds'] = self::ids( $section['photoIds'] ?? array() );
 		return $out;
@@ -160,8 +175,25 @@ final class Sections_Schema {
 	}
 
 	/**
-	 * One field value: the stored value when it is valid for the field, the
-	 * type default otherwise. An empty string counts as unset.
+	 * The plugin setting of one field of a type, `sections_<type>_<field>`
+	 * with the field in snake case (gapRow becomes gap_row).
+	 *
+	 * @param string $type  Section type id.
+	 * @param string $field Field name.
+	 * @return string|null The key, or null when the settings schema has no such setting.
+	 */
+	public static function setting_key( string $type, string $field ): ?string {
+		if ( null === self::$settings ) {
+			$keys           = preg_grep( '/^sections_/', array_keys( Settings_Schema::entries() ) );
+			self::$settings = array_fill_keys( false === $keys ? array() : $keys, true );
+		}
+		$key = 'sections_' . $type . '_' . strtolower( (string) preg_replace( '/(?<!^)[A-Z]/', '_$0', $field ) );
+		return isset( self::$settings[ $key ] ) ? $key : null;
+	}
+
+	/**
+	 * One field value: the stored value when it is valid for the field, then
+	 * the plugin setting of the field, then the type default.
 	 *
 	 * @param string $type     Section type id.
 	 * @param string $field    Field name.
@@ -169,27 +201,50 @@ final class Sections_Schema {
 	 * @param mixed  $fallback Type default.
 	 * @return mixed
 	 */
-	private static function value( string $type, string $field, $value, $fallback ) {
+	private static function resolve( string $type, string $field, $value, $fallback ) {
+		$parse   = static fn( $raw ) => self::clean( $type, $field, $raw, $fallback );
+		$setting = self::setting_key( $type, $field );
+		if ( null === $setting ) {
+			return $parse( $value ) ?? $fallback;
+		}
+		self::$resolver = self::$resolver ?? new Option_Resolver( new Settings() );
+		return self::$resolver->resolve( $setting, array( $value ), $fallback, $parse );
+	}
+
+	/**
+	 * One stored value, cleaned for its field.
+	 *
+	 * @param string $type     Section type id.
+	 * @param string $field    Field name.
+	 * @param mixed  $value    Stored value.
+	 * @param mixed  $fallback Type default, which sets the kind of value.
+	 * @return mixed Null when the value is empty or not valid for the field.
+	 */
+	private static function clean( string $type, string $field, $value, $fallback ) {
 		if ( null === $value || '' === $value ) {
-			return $fallback;
+			return null;
 		}
 		$rule = array_merge( self::table()['fields'][ $field ] ?? array(), self::table()['types'][ $type ]['limits'][ $field ] ?? array() );
 		if ( is_bool( $fallback ) ) {
 			return is_bool( $value ) ? $value : in_array( $value, array( 1, '1', 'true', 'on' ), true );
 		}
-		if ( is_int( $fallback ) ) {
+		if ( is_int( $fallback ) || isset( $rule['min'] ) ) {
 			if ( ! is_numeric( $value ) ) {
-				return $fallback;
+				return null;
 			}
 			$number = (int) $value;
 			return max( (int) ( $rule['min'] ?? $number ), min( (int) ( $rule['max'] ?? $number ), $number ) );
 		}
 		if ( ! is_scalar( $value ) ) {
-			return $fallback;
+			return null;
 		}
 		$text = (string) $value;
 		if ( isset( $rule['enum'] ) ) {
-			return in_array( $text, $rule['enum'], true ) ? $text : $fallback;
+			return in_array( $text, $rule['enum'], true ) ? $text : null;
+		}
+		if ( isset( $rule['pattern'] ) ) {
+			$text = strtolower( trim( $text ) );
+			return 1 === preg_match( '/' . $rule['pattern'] . '/', $text ) ? $text : null;
 		}
 		return sanitize_text_field( $text );
 	}

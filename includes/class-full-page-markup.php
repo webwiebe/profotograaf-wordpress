@@ -116,8 +116,8 @@ final class Full_Page_Markup {
 		$attrs    = array(
 			'class'     => 'pf-fp-s pf-fp-' . $type,
 			'data-type' => $type,
-			'style'     => $this->style( $section ),
-		);
+			'style'     => rtrim( $this->style( $section ) . ';' . Full_Page_Look::style( $section ), ';' ),
+		) + Full_Page_Look::data( $section );
 		if ( 'off' !== $captions ) {
 			$attrs['data-captions'] = $captions;
 		}

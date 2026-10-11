@@ -47,7 +47,9 @@ export function fieldLabel( field: FieldName ): string {
 		rows: __( 'Rows', 'profotograaf' ),
 		count: __( 'Number of photos', 'profotograaf' ),
 		ratio: __( 'Photo shape', 'profotograaf' ),
-		gap: __( 'Space between photos (px)', 'profotograaf' ),
+		gap: __( 'Gap between photos', 'profotograaf' ),
+		gapRow: __( 'Space between rows (pixels)', 'profotograaf' ),
+		gapColumn: __( 'Space between columns (pixels)', 'profotograaf' ),
 		captions: __( 'Captions', 'profotograaf' ),
 		height: __( 'Height (% of the screen height)', 'profotograaf' ),
 		rowHeight: __( 'Row height (px)', 'profotograaf' ),
@@ -57,6 +59,12 @@ export function fieldLabel( field: FieldName ): string {
 		heading: __( 'Heading', 'profotograaf' ),
 		text: __( 'Text', 'profotograaf' ),
 		align: __( 'Alignment', 'profotograaf' ),
+		radius: __( 'Corners', 'profotograaf' ),
+		hover: __( 'Hover effect', 'profotograaf' ),
+		hoverStrength: __( 'Hover strength', 'profotograaf' ),
+		frameColor: __( 'Frame colour', 'profotograaf' ),
+		frameWidth: __( 'Frame width (pixels)', 'profotograaf' ),
+		shadow: __( 'Shadow', 'profotograaf' ),
 	};
 	return labels[ field ];
 }
