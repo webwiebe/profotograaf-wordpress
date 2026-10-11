@@ -73,7 +73,7 @@ msgstr "Formulaires de demande"
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:245
-#: includes/modules/class-backup.php:201
+#: includes/modules/class-backup.php:202
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -3416,7 +3416,7 @@ msgstr "Ce site a manqué de mémoire. Relancez la commande pour envoyer le rest
 msgid "The backup stopped early. Run the command again to send the rest."
 msgstr "La sauvegarde s'est arrêtée plus tôt que prévu. Relancez la commande pour envoyer le reste."
 
-#: includes/modules/class-backup.php:113
+#: includes/modules/class-backup.php:114
 msgid "Every five minutes (Profotograaf backup)"
 msgstr "Toutes les cinq minutes (sauvegarde Profotograaf)"
 
@@ -3779,16 +3779,16 @@ msgid_plural "%d files are marked for the backup. They are copied to Profotograa
 msgstr[0] "%d fichier est marqué pour la sauvegarde. Il est copié sur Profotograaf en arrière-plan."
 msgstr[1] "%d fichiers sont marqués pour la sauvegarde. Ils sont copiés sur Profotograaf en arrière-plan."
 
-#: includes/modules/class-backup.php:172
+#: includes/modules/class-backup.php:173
 msgid "The backup starts within a minute, in the background. You can leave this page."
 msgstr "La sauvegarde démarre dans la minute, en arrière-plan. Vous pouvez quitter cette page."
 
-#: includes/modules/class-backup.php:173
+#: includes/modules/class-backup.php:174
 msgid "The backup cannot start: switch it on and connect this site to Profotograaf first."
 msgstr "La sauvegarde ne peut pas démarrer : activez-la d'abord et connectez ce site à Profotograaf."
 
 #. translators: %d: number of files.
-#: includes/modules/class-backup.php:187
+#: includes/modules/class-backup.php:188
 #, php-format
 msgid "%d file will be sent again in the background."
 msgid_plural "%d files will be sent again in the background."
