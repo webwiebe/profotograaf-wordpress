@@ -231,8 +231,9 @@ class Media_Import_Screen implements Module {
 				: esc_html__( 'Profotograaf', 'profotograaf' ) . ', ' . $link;
 		}//end if
 
-		if ( Virtual_Attachments::enabled() && '1' === (string) get_post_meta( $id, Virtual_Attachments::META_VIRTUAL, true ) ) {
-			$html .= '<p class="description">' . esc_html__( 'Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy.', 'profotograaf' ) . '</p>';
+		if ( Virtual_Attachments::is_marked( $id ) ) {
+			// No Re-import: it would leave the virtual marks. Virtual_Convert adds Convert to local, also while the setting is off.
+			$html .= Virtual_Attachments::enabled() ? '<p class="description">' . esc_html__( 'Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy.', 'profotograaf' ) . '</p>' : '';
 		} elseif ( Media_Baseline::is_upload( $id ) ) {
 			$html .= '<p class="description">' . esc_html__( 'Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too.', 'profotograaf' ) . '</p>';
 		} elseif ( $this->active() && current_user_can( 'edit_post', $id ) ) {

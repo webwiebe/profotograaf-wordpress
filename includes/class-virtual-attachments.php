@@ -19,7 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * It is switched on by the setting "Keep photos on Profotograaf"
  * (`virtual_attachments`, off by default). The filter
  * `profotograaf_virtual_attachments` can override the setting. With it off
- * nothing here registers a hook or touches an attachment, and the Import from
+ * nothing here registers a hook, only convert_to_local() still acts on an
+ * attachment that carries the mark (issue #152), and the Import from
  * Profotograaf screen shows no "Keep on Profotograaf" choice (issue #151).
  *
  * Rules the filters follow:
@@ -133,7 +134,7 @@ final class Virtual_Attachments {
 	 * @param int $attachment_id Attachment id.
 	 */
 	public function is_virtual( int $attachment_id ): bool {
-		return $attachment_id > 0 && self::enabled() && '1' === (string) get_post_meta( $attachment_id, self::META_VIRTUAL, true );
+		return self::enabled() && self::is_marked( $attachment_id );
 	}
 
 	/**
@@ -215,21 +216,54 @@ final class Virtual_Attachments {
 	}
 
 	/**
-	 * Turns a virtual attachment into a normal import, in place. The attachment
-	 * id stays, so posts that use it keep working. The file is downloaded by
-	 * Photo_Importer::reimport(), which needs the photo in the stored catalogue.
+	 * Whether an attachment carries the virtual mark, whatever the setting.
+	 * Convert to local uses it, so attachments kept while the setting was on
+	 * can still be converted after it was switched off.
 	 *
-	 * On failure the attachment stays virtual and unchanged.
+	 * @param int $attachment_id Attachment id.
+	 */
+	public static function is_marked( int $attachment_id ): bool {
+		return $attachment_id > 0 && '1' === (string) get_post_meta( $attachment_id, self::META_VIRTUAL, true );
+	}
+
+	/**
+	 * Whether a marked attachment's photo left the catalogue (META_GONE).
+	 *
+	 * @param int $attachment_id Attachment id.
+	 */
+	public static function is_gone( int $attachment_id ): bool {
+		return self::is_marked( $attachment_id ) && '' !== (string) get_post_meta( $attachment_id, self::META_GONE, true );
+	}
+
+	/**
+	 * Turns a virtual attachment into a normal import, in place. The attachment
+	 * id stays, so posts that use it keep working. Photo_Importer::reimport()
+	 * downloads the file the way Import does and generates the sizes. A photo
+	 * that left the catalogue is downloaded from its stored `web` URL, which
+	 * works while Profotograaf still serves it.
+	 *
+	 * It works on any attachment with the virtual mark, also after the setting
+	 * was switched off. On failure the attachment stays virtual and unchanged.
 	 *
 	 * @param int $attachment_id Virtual attachment.
 	 * @return int|WP_Error The attachment id.
 	 */
 	public function convert_to_local( int $attachment_id ) {
-		if ( ! $this->is_virtual( $attachment_id ) ) {
+		if ( ! self::is_marked( $attachment_id ) ) {
 			return Api_Errors::make( 'profotograaf_not_virtual', __( 'This file is not a virtual Profotograaf attachment.', 'profotograaf' ), 400, false );
 		}
-		$result = $this->importer->reimport( $attachment_id );
+		$urls     = get_post_meta( $attachment_id, self::META_URLS, true );
+		$fallback = array(
+			'id'         => (string) get_post_meta( $attachment_id, Photo_Importer::META_PHOTO_ID, true ),
+			'gallery_id' => (string) get_post_meta( $attachment_id, Photo_Importer::META_GALLERY_ID, true ),
+			'version'    => (string) get_post_meta( $attachment_id, Photo_Importer::META_VERSION, true ),
+			'web_url'    => is_array( $urls ) && isset( $urls['web'] ) && is_string( $urls['web'] ) ? $urls['web'] : '',
+		);
+		$result   = $this->importer->reimport( $attachment_id, $fallback );
 		if ( is_wp_error( $result ) ) {
+			if ( self::is_gone( $attachment_id ) && 'profotograaf_import_download' === $result->get_error_code() ) {
+				return Api_Errors::make( 'profotograaf_photo_gone', __( 'Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf.', 'profotograaf' ), 404, false );
+			}
 			return $result;
 		}
 		delete_post_meta( $attachment_id, self::META_VIRTUAL );

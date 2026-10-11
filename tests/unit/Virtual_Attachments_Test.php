@@ -14,6 +14,7 @@ use Profotograaf\Logger;
 use Profotograaf\Modules\Media_Import_Screen;
 use Profotograaf\Modules\Media_Source_Rest;
 use Profotograaf\Modules\Virtual_Attachments as Virtual_Module;
+use Profotograaf\Modules\Virtual_Convert;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
 use Profotograaf\Photo_Rest;
@@ -111,8 +112,16 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 				$ids = array();
 				foreach ( $this->meta as $id => $meta ) {
 					if ( isset( $args['meta_query'] ) ) {
-						$clause = $args['meta_query'][0];
-						if ( isset( $meta[ $clause['key'] ] ) && in_array( (string) $meta[ $clause['key'] ], $clause['value'], true ) ) {
+						$match = true;
+						foreach ( $args['meta_query'] as $clause ) {
+							$has    = isset( $meta[ $clause['key'] ] );
+							$match  = $match && $has;
+							$values = isset( $clause['value'] ) ? (array) $clause['value'] : array();
+							if ( $has && 'EXISTS' !== ( $clause['compare'] ?? '' ) ) {
+								$match = $match && in_array( (string) $meta[ $clause['key'] ], $values, true );
+							}
+						}
+						if ( $match ) {
 							$ids[] = $id;
 						}
 						continue;
@@ -469,13 +478,21 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 		$this->enable();
 		$id = $this->create_one();
 		$this->store_catalogue( array() );
+		$this->meta[ $id ][ Virtual_Attachments::META_GONE ] = 1700000000;
+		Functions\when( 'download_url' )->alias(
+			function ( $url ) {
+				$this->downloads[] = $url;
+				return new \WP_Error( 'http_404', 'Not Found' );
+			}
+		);
 		Actions\expectDone( 'profotograaf_virtual_attachment_converted' )->never();
 
 		$result = $this->virtual->convert_to_local( $id );
 
 		$this->assertSame( 'profotograaf_photo_gone', $result->get_error_code() );
 		$this->assertTrue( $this->virtual->is_virtual( $id ) );
-		$this->assertSame( array(), $this->downloads );
+		$this->assertSame( array( 'https://profotograaf.nl/share/img/a1/web-aaaaaaaaaaaa.jpg' ), $this->downloads, 'It tried the stored URL once.' );
+		$this->assertSame( array( 'metadata' ), $this->writes, 'Only create() wrote; the failed conversion changed nothing.' );
 	}
 
 	public function test_convert_to_local_refuses_an_attachment_that_is_not_virtual(): void {
@@ -856,5 +873,369 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 
 		$this->assertStringContainsString( 'Kept on Profotograaf.', $html );
 		$this->assertStringNotContainsString( 'Re-import', $html );
+	}
+
+	// Issue #152: Convert to local.
+
+	private const WEB_A = 'https://profotograaf.nl/share/img/a1/web-aaaaaaaaaaaa.jpg';
+
+	/**
+	 * Stores a virtual attachment directly, as create() leaves it, so a test
+	 * can run with the setting off.
+	 *
+	 * @param int    $id    Attachment id.
+	 * @param bool   $gone  Whether the sync marked it gone.
+	 * @param string $title Attachment title.
+	 */
+	private function marked( int $id, bool $gone = false, string $title = 'Bride' ): void {
+		$this->meta[ $id ] = array(
+			Photo_Importer::META_PHOTO_ID     => 'p-1',
+			Photo_Importer::META_GALLERY_ID   => 'g-1',
+			Photo_Importer::META_VERSION      => 'aaaaaaaaaaaa',
+			Virtual_Attachments::META_VIRTUAL => '1',
+			Virtual_Attachments::META_URLS    => array(
+				'thumb' => 'https://profotograaf.nl/share/img/a1/thumb-aaaaaaaaaaaa.jpg',
+				'web'   => self::WEB_A,
+			),
+			'_wp_attached_file'               => 'profotograaf-virtual/p-1/web-aaaaaaaaaaaa.jpg',
+			'_title'                          => $title,
+		);
+		if ( $gone ) {
+			$this->meta[ $id ][ Virtual_Attachments::META_GONE ] = 1700000000;
+		}
+	}
+
+	/**
+	 * The convert module with the stubs its links and notices need.
+	 */
+	private function convert_module(): Recording_Virtual_Convert {
+		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://site.test/wp-admin/' . $path );
+		Functions\when( 'add_query_arg' )->alias(
+			function ( ...$args ) {
+				if ( is_array( $args[0] ) ) {
+					return $args[1] . '?' . http_build_query( $args[0] );
+				}
+				return $args[2] . ( str_contains( (string) $args[2], '?' ) ? '&' : '?' ) . $args[0] . '=' . $args[1];
+			}
+		);
+		Functions\when( 'wp_nonce_url' )->alias( fn( $url, $action ) => $url . '&_wpnonce=' . $action );
+		Functions\when( 'get_the_title' )->alias( fn( $id ) => (string) ( $this->meta[ $id ]['_title'] ?? '' ) );
+		Functions\when( 'get_edit_post_link' )->alias( fn( $id ) => 'https://site.test/wp-admin/post.php?post=' . $id . '&action=edit' );
+		Functions\when( 'get_current_user_id' )->justReturn( 7 );
+		Functions\when( 'absint' )->alias( fn( $value ) => abs( (int) $value ) );
+		Functions\when( 'wp_unslash' )->returnArg();
+		$module = new Recording_Virtual_Convert();
+		$module->register( $this->plugin );
+		return $module;
+	}
+
+	/**
+	 * What a callback printed.
+	 *
+	 * @param callable $callback Callback.
+	 */
+	private function printed( callable $callback ): string {
+		ob_start();
+		$callback();
+		return (string) ob_get_clean();
+	}
+
+	public function test_convert_to_local_works_after_the_setting_was_switched_off(): void {
+		$this->marked( 30 );
+		$this->store_catalogue( array( $this->photo() ) );
+		$settings  = new Settings();
+		$catalogue = new Photo_Catalogue( $this->api, $settings, $this->clock() );
+		$virtual   = new Virtual_Attachments( $settings, new Photo_Importer( $settings, null, $catalogue ), $catalogue );
+		$this->assertFalse( Virtual_Attachments::enabled() );
+
+		$this->assertSame( 30, $virtual->convert_to_local( 30 ) );
+
+		$this->assertSame( array( self::WEB_A ), $this->downloads );
+		$this->assertArrayNotHasKey( Virtual_Attachments::META_VIRTUAL, $this->meta[30] );
+		$this->assertArrayNotHasKey( Virtual_Attachments::META_URLS, $this->meta[30] );
+		$this->assertSame( array( 'file', 'metadata' ), $this->writes, 'The file is stored and the sizes are generated.' );
+	}
+
+	public function test_a_gone_photo_converts_from_its_stored_url_while_profotograaf_still_serves_it(): void {
+		$this->enable();
+		$this->marked( 31, true );
+		$this->store_catalogue( array() );
+
+		$this->assertSame( 31, $this->virtual->convert_to_local( 31 ) );
+
+		$this->assertSame( array( self::WEB_A ), $this->downloads );
+		$this->assertArrayNotHasKey( Virtual_Attachments::META_VIRTUAL, $this->meta[31] );
+		$this->assertArrayNotHasKey( Virtual_Attachments::META_GONE, $this->meta[31] );
+		$this->assertSame( 'g-1', $this->meta[31][ Photo_Importer::META_GALLERY_ID ] );
+		$this->assertSame( 'aaaaaaaaaaaa', $this->meta[31][ Photo_Importer::META_VERSION ] );
+	}
+
+	public function test_a_gone_photo_that_no_longer_downloads_stays_virtual_with_a_clear_message(): void {
+		$this->enable();
+		$this->marked( 32, true );
+		$this->store_catalogue( array() );
+		Functions\when( 'download_url' )->justReturn( new \WP_Error( 'http_404', 'Not Found' ) );
+
+		$error = $this->virtual->convert_to_local( 32 );
+
+		$this->assertSame( 'profotograaf_photo_gone', $error->get_error_code() );
+		$this->assertStringContainsString( 'no longer serves this photo', $error->get_error_message() );
+		$this->assertSame( '1', $this->meta[32][ Virtual_Attachments::META_VIRTUAL ] );
+		$this->assertSame( array(), $this->writes );
+	}
+
+	public function test_a_failed_download_of_a_listed_photo_keeps_the_importer_message(): void {
+		$this->enable();
+		$this->marked( 33 );
+		$this->store_catalogue( array( $this->photo() ) );
+		Functions\when( 'download_url' )->justReturn( new \WP_Error( 'http_503', 'Down' ) );
+
+		$this->assertSame( 'profotograaf_import_download', $this->virtual->convert_to_local( 33 )->get_error_code() );
+		$this->assertSame( '1', $this->meta[33][ Virtual_Attachments::META_VIRTUAL ] );
+	}
+
+	public function test_the_convert_module_registers_while_the_setting_is_off(): void {
+		$module = $this->convert_module();
+
+		$this->assertNotFalse( has_filter( 'media_row_actions', array( $module, 'row_actions' ) ) );
+		$this->assertNotFalse( has_filter( 'bulk_actions-upload', array( $module, 'bulk_actions' ) ) );
+		$this->assertNotFalse( has_filter( 'handle_bulk_actions-upload', array( $module, 'handle_bulk' ) ) );
+		$this->assertNotFalse( has_filter( 'attachment_fields_to_edit', array( $module, 'convert_field' ) ) );
+		$this->assertNotFalse( has_action( 'admin_post_profotograaf_convert_local', array( $module, 'handle_single' ) ) );
+		$this->assertContains( 'profotograaf_converted', $module->removable_args( array() ) );
+	}
+
+	public function test_the_row_action_is_offered_for_virtual_attachments_to_users_who_may_edit_them(): void {
+		$module = $this->convert_module();
+		$this->marked( 34 );
+		$this->meta[35] = array( Photo_Importer::META_PHOTO_ID => 'p-2' );
+
+		$actions = $module->row_actions( array( 'edit' => 'Edit' ), (object) array( 'ID' => 34 ) );
+
+		$this->assertStringContainsString( 'admin-post.php?action=profotograaf_convert_local&amp;attachment=34&amp;_wpnonce=profotograaf_convert_local_34', $actions['profotograaf_convert'] );
+		$this->assertStringContainsString( '>Convert to local</a>', $actions['profotograaf_convert'] );
+		$this->assertStringContainsString( 'aria-label="Convert “Bride” to local"', $actions['profotograaf_convert'] );
+		$this->assertSame( array( 'edit' => 'Edit' ), $module->row_actions( array( 'edit' => 'Edit' ), (object) array( 'ID' => 35 ) ), 'An import gets no action.' );
+		$this->caps = array( 'upload_files' );
+		$this->assertArrayNotHasKey( 'profotograaf_convert', $module->row_actions( array(), (object) array( 'ID' => 34 ) ) );
+		$this->caps = array( 'edit_post' );
+		$this->assertArrayNotHasKey( 'profotograaf_convert', $module->row_actions( array(), (object) array( 'ID' => 34 ) ) );
+	}
+
+	public function test_the_details_field_explains_the_state_and_links_the_conversion(): void {
+		$module = $this->convert_module();
+		$this->marked( 36 );
+		$this->marked( 37, true );
+
+		$off = $module->convert_field( array(), (object) array( 'ID' => 36 ) )['profotograaf_convert'];
+		$this->assertSame( 'Local copy', $off['label'] );
+		$this->assertStringContainsString( 'Keeping photos on Profotograaf is switched off, so this photo shows no image on this site until you convert it to local.', $off['html'] );
+		$this->assertStringContainsString( 'profotograaf_convert_local_36', $off['html'] );
+
+		$gone = $module->convert_field( array(), (object) array( 'ID' => 37 ) )['profotograaf_convert']['html'];
+		$this->assertStringContainsString( 'Profotograaf no longer lists this photo', $gone );
+
+		$this->flag_on();
+		$on = $module->convert_field( array(), (object) array( 'ID' => 36 ) )['profotograaf_convert']['html'];
+		$this->assertStringContainsString( 'This site stores no copy of this photo.', $on );
+
+		$this->assertSame( array(), $module->convert_field( array(), (object) array( 'ID' => 99 ) ) );
+	}
+
+	public function test_the_bulk_action_shows_while_the_setting_is_on_or_a_marked_attachment_exists(): void {
+		$module = $this->convert_module();
+
+		$this->assertSame( array(), $module->bulk_actions( array() ), 'Setting off and nothing marked.' );
+
+		$this->marked( 38 );
+		$this->assertSame( array( 'profotograaf_convert_local' => 'Convert to local' ), $module->bulk_actions( array() ) );
+
+		$this->caps = array( 'edit_post' );
+		$this->assertSame( array(), $module->bulk_actions( array() ), 'Without upload_files there is no action.' );
+
+		$this->caps = array( 'upload_files', 'edit_post' );
+		$this->meta = array();
+		$this->flag_on();
+		$this->assertArrayHasKey( 'profotograaf_convert_local', $module->bulk_actions( array() ) );
+	}
+
+	public function test_the_bulk_action_converts_the_selection_and_reports_what_failed(): void {
+		$module = $this->convert_module();
+		$this->store_catalogue( array( $this->photo() ) );
+		$this->marked( 40, false, 'Bride' );
+		$this->marked( 41, true, 'Rings' );
+		$this->meta[42] = array( Photo_Importer::META_PHOTO_ID => 'p-9' );
+		Functions\when( 'download_url' )->alias(
+			function ( $url ) {
+				$this->downloads[] = $url;
+				return 2 === count( $this->downloads ) ? new \WP_Error( 'http_404', 'Not Found' ) : $this->tmp;
+			}
+		);
+
+		$redirect = $module->handle_bulk( 'https://site.test/wp-admin/upload.php?mode=list', 'profotograaf_convert_local', array( '40', '41', '42' ) );
+
+		$this->assertSame( 'https://site.test/wp-admin/upload.php?mode=list&profotograaf_converted=1', $redirect );
+		$this->assertArrayNotHasKey( Virtual_Attachments::META_VIRTUAL, $this->meta[40] );
+		$this->assertSame( '1', $this->meta[41][ Virtual_Attachments::META_VIRTUAL ], 'A failure leaves the attachment virtual.' );
+		$stored = $this->transients['profotograaf_convert_result_7'];
+		$this->assertSame( 1, $stored['converted'] );
+		$this->assertSame( 1, $stored['skipped'] );
+		$this->assertSame( 'Rings', $stored['failed'][0]['title'] );
+
+		$_GET['profotograaf_converted'] = '1';
+		$html                           = $this->printed( array( $module, 'result_notice' ) );
+		unset( $_GET['profotograaf_converted'] );
+
+		$this->assertStringContainsString( '1 photo converted to local.', $html );
+		$this->assertStringContainsString( '1 photo could not be converted and stays kept on Profotograaf:', $html );
+		$this->assertStringContainsString( '<li><strong>Rings</strong>: Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf.</li>', $html );
+		$this->assertStringContainsString( '1 file was skipped because it is not kept on Profotograaf.', $html );
+		$this->assertArrayNotHasKey( 'profotograaf_convert_result_7', $this->transients, 'The notice shows once.' );
+	}
+
+	public function test_the_bulk_action_leaves_other_actions_and_users_without_upload_files_alone(): void {
+		$module = $this->convert_module();
+		$this->marked( 43 );
+
+		$this->assertSame( 'back', $module->handle_bulk( 'back', 'delete', array( 43 ) ) );
+		$this->caps = array( 'edit_post' );
+		$this->assertSame( 'back', $module->handle_bulk( 'back', 'profotograaf_convert_local', array( 43 ) ) );
+		$this->assertSame( array(), $this->downloads );
+	}
+
+	public function test_the_bulk_action_reports_an_attachment_the_user_may_not_edit(): void {
+		$module = $this->convert_module();
+		$this->marked( 44 );
+		Functions\when( 'current_user_can' )->alias( fn( $cap, $id = 0 ) => 'upload_files' === $cap );
+
+		$result = $module->convert_many( array( 44 ) );
+
+		$this->assertSame( 0, $result['converted'] );
+		$this->assertSame( 'You are not allowed to change this file.', $result['failed'][0]['message'] );
+		$this->assertSame( array(), $this->downloads );
+	}
+
+	public function test_the_single_action_checks_the_nonce_converts_and_goes_back(): void {
+		$module = $this->convert_module();
+		$this->store_catalogue( array( $this->photo() ) );
+		$this->marked( 45 );
+		Functions\expect( 'check_admin_referer' )->once()->with( 'profotograaf_convert_local_45' )->andReturn( 1 );
+		Functions\when( 'wp_get_referer' )->justReturn( 'https://site.test/wp-admin/post.php?post=45&action=edit' );
+		$_GET['attachment'] = '45';
+
+		$module->handle_single();
+		unset( $_GET['attachment'] );
+
+		$this->assertArrayNotHasKey( Virtual_Attachments::META_VIRTUAL, $this->meta[45] );
+		$this->assertSame( array( 'https://site.test/wp-admin/post.php?post=45&action=edit&profotograaf_converted=1' ), $module->redirects );
+		$this->assertSame( 1, $this->transients['profotograaf_convert_result_7']['converted'] );
+	}
+
+	public function test_the_single_action_refuses_users_who_may_not_edit(): void {
+		$module = $this->convert_module();
+		$this->marked( 46 );
+		Functions\expect( 'check_admin_referer' )->never();
+		$dies = array();
+		Functions\when( 'wp_die' )->alias(
+			function ( $message, $title, $args ) use ( &$dies ) {
+				$dies[] = $args['response'];
+			}
+		);
+		$_GET['attachment'] = '46';
+
+		$this->caps = array( 'upload_files' );
+		$module->handle_single();
+		unset( $_GET['attachment'] );
+
+		$this->assertSame( array( 403 ), $dies );
+		$this->assertSame( array(), $module->redirects );
+		$this->assertSame( '1', $this->meta[46][ Virtual_Attachments::META_VIRTUAL ] );
+	}
+
+	public function test_a_failed_single_conversion_shows_the_reason(): void {
+		$module = $this->convert_module();
+		$this->marked( 47 );
+		$this->options[ Settings::OPTION ] = array( 'media_source' => false );
+		Functions\when( 'check_admin_referer' )->justReturn( 1 );
+		Functions\when( 'wp_get_referer' )->justReturn( false );
+		$_GET['attachment'] = '47';
+
+		$module->handle_single();
+		$_GET['profotograaf_converted'] = '1';
+		$html                           = $this->printed( array( $module, 'result_notice' ) );
+		unset( $_GET['attachment'], $_GET['profotograaf_converted'] );
+
+		$this->assertSame( array( 'https://site.test/wp-admin/upload.php?profotograaf_converted=1' ), $module->redirects );
+		$this->assertStringContainsString( 'notice-error', $html );
+		$this->assertStringContainsString( 'Using Profotograaf photos in the editor is switched off in the plugin settings.', $html );
+		$this->assertStringNotContainsString( 'converted to local.', $html );
+		$this->assertSame( '1', $this->meta[47][ Virtual_Attachments::META_VIRTUAL ] );
+	}
+
+	public function test_the_result_notice_needs_the_flag_and_a_stored_result(): void {
+		$module = $this->convert_module();
+
+		$this->assertSame( '', $this->printed( array( $module, 'result_notice' ) ) );
+		$_GET['profotograaf_converted'] = '1';
+		$this->assertSame( '', $this->printed( array( $module, 'result_notice' ) ) );
+		unset( $_GET['profotograaf_converted'] );
+	}
+
+	public function test_the_gone_notice_offers_conversion_on_the_attachment_screen_and_in_the_media_library(): void {
+		$module = $this->convert_module();
+		$this->marked( 50, true, 'Rings' );
+		$this->marked( 51 );
+		$screen = (object) array( 'id' => 'attachment' );
+		Functions\when( 'get_current_screen' )->alias( fn() => $screen );
+
+		$_GET['post'] = '50';
+		$html         = $this->printed( array( $module, 'gone_notice' ) );
+		$_GET['post'] = '51';
+		$none         = $this->printed( array( $module, 'gone_notice' ) );
+		unset( $_GET['post'] );
+
+		$this->assertStringContainsString( 'Profotograaf no longer lists this photo, so it may stop showing on your site. Convert it to local while Profotograaf still serves it.', $html );
+		$this->assertStringContainsString( 'profotograaf_convert_local_50', $html );
+		$this->assertSame( '', $none );
+
+		$screen->id = 'upload';
+		$list       = $this->printed( array( $module, 'gone_notice' ) );
+		$this->assertStringContainsString( '1 photo kept on Profotograaf is no longer listed there', $list );
+		$this->assertStringContainsString( 'post.php?post=50&amp;action=edit">Rings</a>', $list );
+		$this->assertStringNotContainsString( 'profotograaf_convert_local_51', $list );
+
+		$screen->id = 'dashboard';
+		$this->assertSame( '', $this->printed( array( $module, 'gone_notice' ) ) );
+		$screen->id = 'upload';
+		$this->caps = array( 'edit_post' );
+		$this->assertSame( '', $this->printed( array( $module, 'gone_notice' ) ) );
+	}
+
+	public function test_with_the_setting_off_a_kept_photo_offers_no_reimport(): void {
+		$this->marked( 60 );
+		$screen = new Media_Import_Screen();
+		$screen->register( $this->plugin );
+
+		$html = $screen->source_field( array(), (object) array( 'ID' => 60 ) )['profotograaf_source']['html'];
+
+		$this->assertStringNotContainsString( 'Re-import', $html );
+		$this->assertStringNotContainsString( 'Kept on Profotograaf.', $html );
+	}
+}
+
+/**
+ * Records the redirect instead of exiting.
+ */
+class Recording_Virtual_Convert extends Virtual_Convert {
+
+	/**
+	 * Where the module redirected to.
+	 *
+	 * @var array<int,string>
+	 */
+	public array $redirects = array();
+
+	protected function finish( string $url ): void {
+		$this->redirects[] = $url;
 	}
 }

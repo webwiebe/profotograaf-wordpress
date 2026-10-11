@@ -1,0 +1,240 @@
+// @ts-check
+//
+// Issue #152: "Convert to local" for photos kept on Profotograaf (virtual
+// attachments). A row action, a bulk action in the Media Library list view, a
+// button in the attachment details and a notice on photos that left the
+// catalogue. A conversion keeps the attachment id, stores the file in uploads
+// with generated sizes and removes the virtual marks. A failure leaves the
+// attachment virtual and says why. Attachments kept while the setting was on
+// stay convertible after it was switched off.
+//
+// The mock runs in scenic mode, so the downloads are real 1280 px photos and
+// WordPress generates the usual sizes from them.
+const { execFileSync } = require( 'node:child_process' );
+const path = require( 'node:path' );
+const { test, expect } = require( '@playwright/test' );
+const { login, mock } = require( './helpers' );
+
+const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
+const PROJECT = process.env.E2E_COMPOSE_PROJECT ? [ '-p', process.env.E2E_COMPOSE_PROJECT ] : [];
+
+/**
+ * Runs wp-cli in the WordPress stack started by up.sh.
+ *
+ * @param {string[]} args
+ */
+function wp( ...args ) {
+	return execFileSync( 'docker', [ 'compose', ...PROJECT, '-f', COMPOSE, 'run', '--rm', '-T', 'cli', 'wp', ...args ], {
+		encoding: 'utf8',
+		timeout: 180_000,
+	} ).trim();
+}
+
+/**
+ * Runs PHP inside WordPress and returns the JSON it echoes after "JSON:".
+ *
+ * @param {string} code
+ * @return {any}
+ */
+function php( code ) {
+	const text = wp( 'eval', `$out = function ( $data ) { echo "\\nJSON:" . wp_json_encode( $data ) . "\\n"; }; ${ code }` );
+	const line = text.split( '\n' ).reverse().find( ( l ) => l.startsWith( 'JSON:' ) );
+	if ( ! line ) {
+		throw new Error( `No JSON line in: ${ text }` );
+	}
+	return JSON.parse( line.slice( 5 ) );
+}
+
+/**
+ * Saves the plugin settings with the media source on.
+ *
+ * @param {boolean} keep Whether "Keep photos on Profotograaf" is on.
+ */
+function settings( keep ) {
+	wp( 'option', 'update', 'profotograaf_settings', JSON.stringify( { media_source: true, virtual_attachments: keep } ), '--format=json' );
+}
+
+/** Removes the photos added to the Media Library and the stored catalogue. */
+function cleanUp() {
+	wp(
+		'eval',
+		"foreach ( get_posts( array( 'post_type' => 'attachment', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_profotograaf_photo_id', 'fields' => 'ids' ) ) as $id ) { wp_delete_attachment( $id, true ); } delete_option( 'profotograaf_photo_catalogue' );"
+	);
+}
+
+/**
+ * Keeps photos on Profotograaf as the admin, through the REST route the
+ * Import screen uses, from a fresh catalogue. Returns the attachment id by
+ * photo id.
+ *
+ * @param {string[]} ids Photo ids.
+ * @return {Record<string, number>}
+ */
+function keep( ids ) {
+	return php(
+		"delete_option( 'profotograaf_photo_catalogue' ); wp_set_current_user( get_user_by( 'login', 'admin' )->ID );" +
+			` $r = new WP_REST_Request( 'POST', '/profotograaf/v1/photos/keep' ); $r->set_body_params( array( 'ids' => ${ JSON.stringify( ids ).replace( /^\[/, 'array( ' ).replace( /\]$/, ' )' ) } ) );` +
+			" $made = array(); foreach ( rest_do_request( $r )->get_data()['results'] as $row ) { $made[ $row['id'] ] = $row['attachment_id']; } $out( $made );"
+	);
+}
+
+/**
+ * The stored state of an attachment.
+ *
+ * @param {number} id Attachment id.
+ */
+function stateOf( id ) {
+	return php(
+		`$id = ${ id }; $meta = wp_get_attachment_metadata( $id );` +
+			" $out( array( 'exists' => (bool) get_post( $id ), 'virtual' => get_post_meta( $id, '_profotograaf_virtual', true ), 'urls' => get_post_meta( $id, '_profotograaf_virtual_urls', true ), 'gone' => get_post_meta( $id, '_profotograaf_virtual_gone', true ), 'photo' => get_post_meta( $id, '_profotograaf_photo_id', true ), 'on_disk' => file_exists( (string) get_attached_file( $id ) ), 'url' => wp_get_attachment_url( $id ), 'sizes' => is_array( $meta ) && isset( $meta['sizes'] ) ? array_keys( $meta['sizes'] ) : array() ) );"
+	);
+}
+
+test.describe.configure( { mode: 'serial' } );
+
+test.describe( 'Convert to local', () => {
+	test.beforeAll( async ( { browser } ) => {
+		await mock( '/__reset' );
+		await mock( '/__scenic' );
+		const page = await browser.newPage();
+		await login( page );
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
+		await page.getByRole( 'button', { name: 'Connect to Profotograaf' } ).click();
+		await expect( page.locator( '.profotograaf-code' ) ).toBeVisible();
+		await mock( '/__approve' );
+		await expect( page.getByText( 'Connected to Profotograaf.' ) ).toBeVisible( { timeout: 20_000 } );
+		await page.close();
+
+		// The mock listens on a port and a private address the safe HTTP functions refuse by default.
+		wp(
+			'eval',
+			"wp_mkdir_p( WPMU_PLUGIN_DIR ); file_put_contents( WPMU_PLUGIN_DIR . '/e2e-http.php', '<?php add_filter( \"http_request_host_is_external\", \"__return_true\" ); add_filter( \"http_allowed_safe_ports\", function ( $p ) { $p[] = 8090; return $p; } );' );"
+		);
+		cleanUp();
+	} );
+
+	test.afterAll( async ( { browser } ) => {
+		await mock( '/__mode?mode=up' );
+		wp( 'option', 'update', 'profotograaf_settings', JSON.stringify( { media_source: false, virtual_attachments: false } ), '--format=json' );
+		cleanUp();
+		await mock( '/__reset' );
+		const page = await browser.newPage();
+		await login( page );
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
+		await page.getByRole( 'button', { name: 'Disconnect' } ).click();
+		await page.close();
+	} );
+
+	test( 'with the setting off and nothing kept the Media Library has no convert action', async ( { page } ) => {
+		settings( false );
+		await login( page );
+		await page.goto( '/wp-admin/upload.php?mode=list' );
+		await expect( page.locator( '#bulk-action-selector-top option[value="profotograaf_convert_local"]' ) ).toHaveCount( 0 );
+	} );
+
+	test( 'the row action converts a kept photo in place', async ( { page } ) => {
+		settings( true );
+		const made = keep( [ 'p-1' ] );
+		const id = made[ 'p-1' ];
+		expect( stateOf( id ) ).toMatchObject( { virtual: '1', on_disk: false } );
+
+		await login( page );
+		await page.goto( '/wp-admin/upload.php?mode=list' );
+		await expect( page.locator( '#bulk-action-selector-top option[value="profotograaf_convert_local"]' ) ).toHaveText( 'Convert to local' );
+		const row = page.locator( `#post-${ id }` );
+		await row.hover();
+		await row.getByRole( 'link', { name: 'Convert “Golden hour” to local' } ).click();
+
+		await expect( page.locator( '.profotograaf-convert-notice p' ) ).toHaveText( '1 photo converted to local.' );
+		expect( page.url() ).not.toContain( 'profotograaf_converted' );
+		const after = stateOf( id );
+		expect( after ).toMatchObject( { exists: true, virtual: '', urls: '', gone: '', photo: 'p-1', on_disk: true } );
+		expect( after.url ).toContain( '/wp-content/uploads/' );
+		expect( after.sizes ).toEqual( expect.arrayContaining( [ 'thumbnail', 'medium' ] ) );
+		await expect( page.locator( `#post-${ id }` ).getByRole( 'link', { name: /to local/ } ) ).toHaveCount( 0 );
+	} );
+
+	test( 'a failed conversion keeps the photo on Profotograaf and says why', async ( { page } ) => {
+		settings( true );
+		const id = keep( [ 'p-2' ] )[ 'p-2' ];
+		await login( page );
+		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+		await expect( page.getByText( 'This site stores no copy of this photo.', { exact: false } ) ).toBeVisible();
+
+		await mock( '/__mode?mode=down' );
+		try {
+			await page.locator( '.profotograaf-convert__button' ).click();
+			await expect( page.locator( '.profotograaf-convert-notice.notice-error' ) ).toContainText( '1 photo could not be converted and stays kept on Profotograaf:' );
+			await expect( page.locator( '.profotograaf-convert-notice.notice-error' ) ).toContainText( 'Misty lake: The photo could not be downloaded from Profotograaf. Try again later.' );
+		} finally {
+			await mock( '/__mode?mode=up' );
+		}
+		expect( stateOf( id ) ).toMatchObject( { virtual: '1', on_disk: false } );
+		expect( stateOf( id ).url ).toMatch( /\/img\/p-2\/web\.jpg$/ );
+	} );
+
+	test( 'a photo that left the catalogue gets a notice that offers conversion', async ( { page } ) => {
+		settings( true );
+		const id = keep( [ 'p-3' ] )[ 'p-3' ];
+
+		// The library stops listing every photo while the images still answer.
+		await mock( '/__mode?mode=unlisted' );
+		try {
+			wp( 'eval', "do_action( 'profotograaf_virtual_sync' );" );
+			expect( stateOf( id ).gone ).not.toBe( '' );
+
+			await login( page );
+			await page.goto( '/wp-admin/upload.php?mode=list' );
+			const list = page.locator( '.profotograaf-gone-notice' );
+			await expect( list ).toContainText( 'kept on Profotograaf' );
+			await expect( list ).toContainText( 'no longer listed there and may stop showing on your site' );
+			await expect( list.getByRole( 'link', { name: 'Falling leaves' } ) ).toBeVisible();
+
+			await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+			const notice = page.locator( '.profotograaf-gone-notice' );
+			await expect( notice ).toContainText( 'Profotograaf no longer lists this photo, so it may stop showing on your site. Convert it to local while Profotograaf still serves it.' );
+			await notice.getByRole( 'link', { name: 'Convert to local' } ).click();
+
+			await expect( page.locator( '.profotograaf-convert-notice p' ) ).toHaveText( '1 photo converted to local.' );
+			await expect( page.locator( '.profotograaf-gone-notice' ) ).toHaveCount( 0 );
+		} finally {
+			await mock( '/__mode?mode=up' );
+		}
+		expect( stateOf( id ) ).toMatchObject( { virtual: '', gone: '', on_disk: true } );
+	} );
+
+	test( 'with the setting switched off the bulk action converts a selection and reports failures', async ( { page } ) => {
+		settings( true );
+		const made = keep( [ 'p-4', 'p-5', 'p-6' ] );
+		const local = php( "$ids = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'any', 'meta_key' => '_profotograaf_photo_id', 'meta_value' => 'p-1', 'fields' => 'ids' ) ); $out( (int) $ids[0] );" );
+		// p-6 points at a photo Profotograaf no longer serves, so its conversion fails.
+		php(
+			`$id = ${ made[ 'p-6' ] }; $urls = get_post_meta( $id, '_profotograaf_virtual_urls', true ); $urls['web'] = str_replace( '/p-6/', '/p-99/', $urls['web'] );` +
+				" update_post_meta( $id, '_profotograaf_virtual_urls', $urls ); update_post_meta( $id, '_profotograaf_photo_id', 'p-99' ); update_post_meta( $id, '_profotograaf_virtual_gone', time() ); $out( true );"
+		);
+		settings( false );
+
+		await login( page );
+		await page.goto( '/wp-admin/upload.php?mode=list' );
+		for ( const id of [ made[ 'p-4' ], made[ 'p-5' ], made[ 'p-6' ], local ] ) {
+			await page.locator( `#cb-select-${ id }` ).check();
+		}
+		await page.locator( '#bulk-action-selector-top' ).selectOption( 'profotograaf_convert_local' );
+		await page.locator( '#doaction' ).click();
+
+		const notices = page.locator( '.profotograaf-convert-notice p' );
+		await expect( notices.filter( { hasText: 'converted to local' } ) ).toHaveText( '2 photos converted to local.' );
+		await expect( page.locator( '.profotograaf-convert-notice', { hasText: 'could not be converted' } ) ).toContainText(
+			'Forest path: Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf.'
+		);
+		await expect( notices.filter( { hasText: 'skipped' } ) ).toHaveText( '1 file was skipped because it is not kept on Profotograaf.' );
+
+		expect( stateOf( made[ 'p-4' ] ) ).toMatchObject( { virtual: '', on_disk: true } );
+		expect( stateOf( made[ 'p-5' ] ) ).toMatchObject( { virtual: '', on_disk: true } );
+		expect( stateOf( made[ 'p-6' ] ) ).toMatchObject( { virtual: '1', on_disk: false } );
+
+		// The one left is still marked, so the action stays available.
+		await page.goto( '/wp-admin/upload.php?mode=list' );
+		await expect( page.locator( '#bulk-action-selector-top option[value="profotograaf_convert_local"]' ) ).toHaveCount( 1 );
+	} );
+} );

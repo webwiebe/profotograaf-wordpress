@@ -138,10 +138,11 @@ final class Photo_Importer {
 	 * variant. The attachment id, title, caption and alt text stay. Sizes are
 	 * regenerated and the old files are deleted once the new ones exist.
 	 *
-	 * @param int $attachment_id Attachment of an earlier import.
+	 * @param int                      $attachment_id Attachment of an earlier import.
+	 * @param array<string,mixed>|null $fallback      Row used when the catalogue no longer lists the photo.
 	 * @return int|WP_Error The attachment id.
 	 */
-	public function reimport( int $attachment_id ) {
+	public function reimport( int $attachment_id, ?array $fallback = null ) {
 		if ( $attachment_id <= 0 || ! current_user_can( 'edit_post', $attachment_id ) || ! current_user_can( 'upload_files' ) ) {
 			return Api_Errors::make( 'profotograaf_reimport_forbidden', __( 'You are not allowed to replace this file.', 'profotograaf' ), 403, false );
 		}
@@ -161,7 +162,7 @@ final class Photo_Importer {
 		if ( is_wp_error( $catalogue ) ) {
 			return $catalogue;
 		}
-		$photo = null;
+		$photo = $fallback;
 		foreach ( $catalogue['photos'] as $row ) {
 			if ( (string) $row['id'] === $photo_id ) {
 				$photo = $row;

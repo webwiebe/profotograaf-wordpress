@@ -78,6 +78,7 @@ msgstr "Anfrageformulare"
 #: includes/modules/class-settings-page.php:268
 #: includes/modules/class-settings-page.php:474
 #: includes/modules/class-telemetry-consent.php:126
+#: includes/modules/class-virtual-convert.php:203
 msgid "You do not have permission to do this."
 msgstr "Du hast keine Berechtigung dafür."
 
@@ -1845,47 +1846,47 @@ msgid "Only when the site owner turns on the media source: editors who can uploa
 msgstr "Nur wenn der Website-Betreiber die Medienquelle einschaltet: Redakteure, die Dateien hochladen dürfen, können die Fotos des verbundenen Profotograaf-Kontos im Block-Editor durchsuchen. Die Website fragt bei profotograaf.nl die Fotoliste ab und ruft die Fotos ab, die ein Redakteur auswählt. Der Browser des Redakteurs lädt die Vorschaubilder von profotograaf.nl, das dabei die IP-Adresse und die Browserdaten dieses Redakteurs erhält. Ein Foto, das ein Redakteur verwendet, wird in der Mediathek dieser Website gespeichert und bleibt dort, bis es gelöscht wird. Es sind keine Besucherdaten betroffen."
 
 #: includes/class-photo-importer.php:90
-#: includes/class-virtual-attachments.php:153
+#: includes/class-virtual-attachments.php:154
 msgid "You are not allowed to add files to the Media Library."
 msgstr "Du darfst keine Dateien zur Mediathek hinzufügen."
 
 #: includes/class-photo-file-route.php:196
 #: includes/class-photo-importer.php:93
-#: includes/class-photo-importer.php:149
+#: includes/class-photo-importer.php:150
 #: includes/class-photo-rest.php:393
-#: includes/class-virtual-attachments.php:156
+#: includes/class-virtual-attachments.php:157
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr "Die Verwendung von Profotograaf-Fotos im Editor ist in den Plugin-Einstellungen ausgeschaltet."
 
 #: includes/class-photo-importer.php:98
-#: includes/class-virtual-attachments.php:160
+#: includes/class-virtual-attachments.php:161
 msgid "This photo cannot be imported because it has no identifier."
 msgstr "Dieses Foto kann nicht importiert werden, weil es keine Kennung hat."
 
 #: includes/class-photo-importer.php:108
-#: includes/class-photo-importer.php:176
-#: includes/class-virtual-attachments.php:170
+#: includes/class-photo-importer.php:177
+#: includes/class-virtual-attachments.php:171
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr "Das Foto befindet sich nicht auf der Profotograaf-Plattform und wurde daher nicht importiert."
 
 #: includes/class-photo-file-route.php:227
-#: includes/class-photo-importer.php:333
+#: includes/class-photo-importer.php:334
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr "Das Foto konnte nicht von Profotograaf heruntergeladen werden. Versuche es später erneut."
 
-#: includes/class-photo-importer.php:231
-#: includes/class-photo-importer.php:239
-#: includes/class-photo-importer.php:372
-#: includes/class-virtual-attachments.php:195
+#: includes/class-photo-importer.php:232
+#: includes/class-photo-importer.php:240
+#: includes/class-photo-importer.php:373
+#: includes/class-virtual-attachments.php:196
 msgid "The photo could not be added to the Media Library."
 msgstr "Das Foto konnte nicht zur Mediathek hinzugefügt werden."
 
 #: includes/class-photo-importer.php:115
-#: includes/class-photo-importer.php:181
+#: includes/class-photo-importer.php:182
 msgid "This photo is being imported by another request. Try again in a moment."
 msgstr "Dieses Foto wird gerade von einer anderen Anfrage importiert. Versuche es gleich noch einmal."
 
-#: includes/class-photo-importer.php:324
+#: includes/class-photo-importer.php:325
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr "Profotograaf hat den Download des Fotos umgeleitet, daher wurde es nicht importiert."
 
@@ -1909,7 +1910,7 @@ msgstr "Dieses Foto ist nicht mehr in deiner Profotograaf-Bibliothek. Aktualisie
 msgid "Import from Profotograaf"
 msgstr "Aus Profotograaf importieren"
 
-#: includes/modules/class-media-import-screen.php:249
+#: includes/modules/class-media-import-screen.php:250
 msgid "Source"
 msgstr "Quelle"
 
@@ -2036,15 +2037,15 @@ msgstr "Dieses Foto ist bei Profotograaf nicht mehr verfügbar."
 msgid "Search Profotograaf photos"
 msgstr "Profotograaf-Fotos durchsuchen"
 
-#: includes/class-photo-importer.php:146
+#: includes/class-photo-importer.php:147
 msgid "You are not allowed to replace this file."
 msgstr "Du darfst diese Datei nicht ersetzen."
 
-#: includes/class-photo-importer.php:157
+#: includes/class-photo-importer.php:158
 msgid "This file was not imported from Profotograaf."
 msgstr "Diese Datei wurde nicht aus Profotograaf importiert."
 
-#: includes/class-photo-importer.php:172
+#: includes/class-photo-importer.php:173
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr "Dieses Foto ist auf Profotograaf nicht mehr verfügbar. Die Kopie in deiner Mediathek bleibt unverändert."
 
@@ -2052,7 +2053,7 @@ msgstr "Dieses Foto ist auf Profotograaf nicht mehr verfügbar. Die Kopie in dei
 msgid "Open on Profotograaf"
 msgstr "Auf Profotograaf öffnen"
 
-#: includes/modules/class-media-import-screen.php:244
+#: includes/modules/class-media-import-screen.php:245
 msgid "Re-import"
 msgstr "Erneut importieren"
 
@@ -2102,7 +2103,7 @@ msgstr "Wenn der Website-Betreiber die Website verbindet, sendet das Plugin den 
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
 msgstr "Nur wenn der Website-Betreiber anonymen Nutzungsdaten zustimmt, sendet das Plugin einen täglichen Nutzungsbericht und Berichte über seine eigenen Fehler an Dienste, die vom Plugin-Autor betrieben werden. Sie enthalten die Versionen von Plugin, WordPress und PHP, die Sprache der Website, die aktiven Plugin-Module, die Anzahl fehlgeschlagener Verbindungen und Anfragezustellungen sowie Fehlercodes. Sie enthalten keine Website-Adresse, keine Besucherdaten, keine Anfragen und keine Tokens."
 
-#: includes/class-virtual-attachments.php:229
+#: includes/class-virtual-attachments.php:253
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr "Diese Datei ist kein virtueller Profotograaf-Anhang."
 
@@ -2407,7 +2408,7 @@ msgstr "Diese Galerie verknüpfen"
 msgid "Sending files to Profotograaf is switched off in the plugin settings."
 msgstr "Das Senden von Dateien an Profotograaf ist in den Plugin-Einstellungen ausgeschaltet."
 
-#: includes/class-photo-importer.php:153
+#: includes/class-photo-importer.php:154
 msgid "This file was sent from this site, so there is nothing to re-import."
 msgstr "Diese Datei wurde von dieser Website gesendet, daher gibt es nichts erneut zu importieren."
 
@@ -2456,7 +2457,7 @@ msgstr "Profotograaf kennt die Galerie nicht, für die diese Datei bestimmt war.
 msgid "Profotograaf does not accept this kind of file."
 msgstr "Profotograaf akzeptiert diese Art von Datei nicht."
 
-#: includes/modules/class-media-import-screen.php:237
+#: includes/modules/class-media-import-screen.php:238
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr "Von dieser Website gesendet. Änderungen an Titel, Bildunterschrift und Alternativtext werden ebenfalls an Profotograaf gesendet."
 
@@ -3084,7 +3085,7 @@ msgid "Same as the gap between photos"
 msgstr "Wie der Abstand zwischen Fotos"
 
 #: includes/class-photo-rest.php:292
-#: includes/class-virtual-attachments.php:150
+#: includes/class-virtual-attachments.php:151
 msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
 msgstr "Fotos auf Profotograaf behalten ist in den Plugin-Einstellungen ausgeschaltet."
 
@@ -3096,7 +3097,7 @@ msgstr "Fotos auf Profotograaf behalten"
 msgid "Adds the choice \"Keep on Profotograaf\" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs \"Use Profotograaf photos in the editor\". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site."
 msgstr "Fügt auf der Seite „Aus Profotograaf importieren“ neben „Importieren“ die Auswahl „Auf Profotograaf behalten“ hinzu, für Redakteure, die Dateien hochladen dürfen. Ein auf Profotograaf behaltenes Foto wird ohne Download zur Mediathek hinzugefügt. Diese Website zeigt es von Profotograaf an und speichert keine Kopie. Dafür muss „Profotograaf-Fotos im Editor verwenden“ eingeschaltet sein. Wenn du eine Galerie auf Profotograaf zurückziehst, laden ihre Fotos sofort nicht mehr von Profotograaf, aber Kopien, die bereits in Edge-Caches und in den Browsern der Besucher liegen, können bis zu einem Jahr sichtbar bleiben. Importiere die Fotos, die du später vielleicht zurückziehen möchtest. Wenn du dies ausschaltest, werden die auf Profotograaf behaltenen Fotos auf dieser Website nicht mehr angezeigt."
 
-#: includes/modules/class-media-import-screen.php:235
+#: includes/modules/class-media-import-screen.php:236
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr "Auf Profotograaf behalten. Diese Website zeigt das Foto von Profotograaf an und speichert keine Kopie."
 
@@ -3133,3 +3134,80 @@ msgid "%d photo kept on Profotograaf."
 msgid_plural "%d photos kept on Profotograaf."
 msgstr[0] "%d Foto auf Profotograaf behalten."
 msgstr[1] "%d Fotos auf Profotograaf behalten."
+
+#: includes/class-virtual-attachments.php:265
+msgid "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
+msgstr "Profotograaf liefert dieses Foto nicht mehr, deshalb konnte keine lokale Kopie erstellt werden. Es bleibt auf Profotograaf behalten."
+
+#. translators: %s: attachment title.
+#: includes/modules/class-virtual-convert.php:124
+#, php-format
+msgid "Convert “%s” to local"
+msgstr "„%s“ lokal speichern"
+
+#: includes/modules/class-virtual-convert.php:125
+#: includes/modules/class-virtual-convert.php:158
+#: includes/modules/class-virtual-convert.php:174
+#: includes/modules/class-virtual-convert.php:323
+#: includes/modules/class-virtual-convert.php:342
+msgid "Convert to local"
+msgstr "Lokal speichern"
+
+#: includes/modules/class-virtual-convert.php:145
+#: includes/modules/class-virtual-convert.php:321
+msgid "Profotograaf no longer lists this photo, so it may stop showing on your site. Convert it to local while Profotograaf still serves it."
+msgstr "Profotograaf führt dieses Foto nicht mehr, deshalb kann es von deiner Website verschwinden. Speichere es lokal, solange Profotograaf es noch liefert."
+
+#: includes/modules/class-virtual-convert.php:147
+msgid "Keeping photos on Profotograaf is switched off, so this photo shows no image on this site until you convert it to local."
+msgstr "Fotos auf Profotograaf behalten ist ausgeschaltet, deshalb zeigt dieses Foto auf dieser Website kein Bild, bis du es lokal speicherst."
+
+#: includes/modules/class-virtual-convert.php:149
+msgid "This site stores no copy of this photo. Convert to local downloads it into the Media Library, and posts that use it keep working."
+msgstr "Diese Website speichert keine Kopie dieses Fotos. Lokal speichern lädt es in die Mediathek herunter, und Beiträge, die es verwenden, funktionieren weiter."
+
+#: includes/modules/class-virtual-convert.php:152
+msgid "Local copy"
+msgstr "Lokale Kopie"
+
+#: includes/modules/class-virtual-convert.php:232
+msgid "You are not allowed to change this file."
+msgstr "Du darfst diese Datei nicht ändern."
+
+#. translators: %d: attachment id.
+#: includes/modules/class-virtual-convert.php:237
+#, php-format
+msgid "File %d"
+msgstr "Datei %d"
+
+#. translators: %d: number of photos converted.
+#: includes/modules/class-virtual-convert.php:269
+#, php-format
+msgid "%d photo converted to local."
+msgid_plural "%d photos converted to local."
+msgstr[0] "%d Foto lokal gespeichert."
+msgstr[1] "%d Fotos lokal gespeichert."
+
+#. translators: %d: number of photos that failed.
+#: includes/modules/class-virtual-convert.php:285
+#, php-format
+msgid "%d photo could not be converted and stays kept on Profotograaf:"
+msgid_plural "%d photos could not be converted and stay kept on Profotograaf:"
+msgstr[0] "%d Foto konnte nicht lokal gespeichert werden und bleibt auf Profotograaf behalten:"
+msgstr[1] "%d Fotos konnten nicht lokal gespeichert werden und bleiben auf Profotograaf behalten:"
+
+#. translators: %d: number of files skipped.
+#: includes/modules/class-virtual-convert.php:298
+#, php-format
+msgid "%d file was skipped because it is not kept on Profotograaf."
+msgid_plural "%d files were skipped because they are not kept on Profotograaf."
+msgstr[0] "%d Datei wurde übersprungen, weil sie nicht auf Profotograaf behalten wird."
+msgstr[1] "%d Dateien wurden übersprungen, weil sie nicht auf Profotograaf behalten werden."
+
+#. translators: %d: number of photos.
+#: includes/modules/class-virtual-convert.php:350
+#, php-format
+msgid "%d photo kept on Profotograaf is no longer listed there and may stop showing on your site. Convert it to local while Profotograaf still serves it."
+msgid_plural "%d photos kept on Profotograaf are no longer listed there and may stop showing on your site. Convert them to local while Profotograaf still serves them."
+msgstr[0] "%d auf Profotograaf behaltenes Foto wird dort nicht mehr geführt und kann von deiner Website verschwinden. Speichere es lokal, solange Profotograaf es noch liefert."
+msgstr[1] "%d auf Profotograaf behaltene Fotos werden dort nicht mehr geführt und können von deiner Website verschwinden. Speichere sie lokal, solange Profotograaf sie noch liefert."
