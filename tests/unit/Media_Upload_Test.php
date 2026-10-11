@@ -15,6 +15,20 @@ use Profotograaf\Plugin;
 use Profotograaf\Settings;
 use Profotograaf\Upload_Queue;
 
+class Recording_Media_Upload extends Media_Upload {
+
+	/**
+	 * Where the module redirected to.
+	 *
+	 * @var string[]
+	 */
+	public array $redirects = array();
+
+	protected function finish( string $url ): void {
+		$this->redirects[] = $url;
+	}
+}
+
 class Media_Upload_Test extends Wp_Test_Case {
 
 	private Media_Upload $module;
@@ -88,6 +102,7 @@ class Media_Upload_Test extends Wp_Test_Case {
 		$this->assertNotFalse( has_filter( 'handle_bulk_actions-upload', array( $this->module, 'handle_bulk' ) ) );
 		$this->assertNotFalse( has_filter( 'manage_media_columns', array( $this->module, 'add_column' ) ) );
 		$this->assertNotFalse( has_action( 'admin_post_profotograaf_upload_create' ) );
+		$this->assertNotFalse( has_action( 'admin_post_profotograaf_upload_again', array( $this->module, 'handle_again' ) ) );
 	}
 
 	public function test_the_field_offers_the_linked_galleries_and_escapes_their_titles(): void {
@@ -286,5 +301,85 @@ class Media_Upload_Test extends Wp_Test_Case {
 		$this->module->resume_queue();
 		$this->module->note_edit( 40 );
 		$this->assertCount( 0, $this->http->requests );
+	}
+
+	/**
+	 * Marks attachment 40 as failed after a lost answer that could not be checked.
+	 */
+	private function maybe_sent(): void {
+		$this->meta[40]['_profotograaf_upload_state']      = 'failed';
+		$this->meta[40]['_profotograaf_upload_gallery']    = 'g-1';
+		$this->meta[40]['_profotograaf_upload_error']      = 'The file may already exist on Profotograaf.';
+		$this->meta[40]['_profotograaf_upload_maybe_sent'] = '1';
+		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://photos.example.com/wp-admin/' . $path );
+		Functions\when( 'wp_nonce_url' )->alias( fn( $url, $action ) => $url . '&_wpnonce=' . $action );
+		Functions\when( 'esc_url' )->returnArg();
+	}
+
+	public function test_a_file_that_may_be_sent_offers_upload_again(): void {
+		$this->maybe_sent();
+
+		$html = $this->module->send_field( array(), $this->post( 40 ) )['profotograaf_send_to']['html'];
+		$this->assertStringContainsString( 'may already exist', $html );
+		$this->assertStringContainsString( '>Upload again</a>', $html );
+		$this->assertStringContainsString( 'admin-post.php?action=profotograaf_upload_again&attachment=40&_wpnonce=profotograaf_upload_again_40', $html );
+
+		ob_start();
+		$this->module->render_column( 'profotograaf', 40 );
+		$this->assertStringStartsWith( 'Not sent<br /><a', (string) ob_get_clean() );
+
+		$this->caps = array( 'upload_files' );
+		$this->assertStringNotContainsString( 'Upload again', (string) ( $this->module->send_field( array(), $this->post( 40 ) )['profotograaf_send_to']['html'] ?? '' ) );
+	}
+
+	public function test_other_failures_offer_no_upload_again(): void {
+		$this->maybe_sent();
+		unset( $this->meta[40]['_profotograaf_upload_maybe_sent'] );
+
+		$this->assertStringNotContainsString( 'Upload again', $this->module->send_field( array(), $this->post( 40 ) )['profotograaf_send_to']['html'] );
+		ob_start();
+		$this->module->render_column( 'profotograaf', 40 );
+		$this->assertSame( 'Not sent', (string) ob_get_clean() );
+	}
+
+	public function test_upload_again_queues_the_file_for_its_gallery_and_goes_back(): void {
+		$this->maybe_sent();
+		$module = new Recording_Media_Upload();
+		$module->register( $this->plugin );
+		Functions\expect( 'check_admin_referer' )->once()->with( 'profotograaf_upload_again_40' )->andReturn( 1 );
+		Functions\when( 'wp_get_referer' )->justReturn( 'https://photos.example.com/wp-admin/upload.php?mode=list' );
+		$_GET['attachment'] = '40';
+
+		$module->handle_again();
+		unset( $_GET['attachment'] );
+
+		$this->assertSame( 'queued', $this->meta[40]['_profotograaf_upload_state'] );
+		$this->assertSame( 'g-1', $this->meta[40]['_profotograaf_upload_gallery'] );
+		$this->assertSame( array( 'https://photos.example.com/wp-admin/upload.php?mode=list?profotograaf_queued=1' ), $module->redirects );
+	}
+
+	public function test_upload_again_refuses_users_who_may_not_edit_and_files_that_did_not_fail(): void {
+		$this->maybe_sent();
+		$module = new Recording_Media_Upload();
+		$module->register( $this->plugin );
+		Functions\when( 'check_admin_referer' )->justReturn( 1 );
+		Functions\when( 'wp_get_referer' )->justReturn( false );
+		$dies = array();
+		Functions\when( 'wp_die' )->alias(
+			function ( $message, $title, $args ) use ( &$dies ) {
+				$dies[] = $args['response'];
+			}
+		);
+		$_GET['attachment'] = '40';
+
+		$this->caps = array( 'upload_files' );
+		$module->handle_again();
+		$this->caps                                   = array( 'upload_files', 'edit_post' );
+		$this->meta[40]['_profotograaf_upload_state'] = 'uploaded';
+		$module->handle_again();
+		unset( $_GET['attachment'] );
+
+		$this->assertSame( array( 403, 400 ), $dies );
+		$this->assertSame( array(), $module->redirects );
 	}
 }

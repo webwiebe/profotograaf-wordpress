@@ -362,7 +362,28 @@ class Upload_Queue_Test extends Wp_Test_Case {
 
 		$this->assertSame( 'failed', $this->queue->state( 40 ) );
 		$this->assertStringContainsString( 'may already exist', $this->queue->error( 40 ) );
+		$this->assertTrue( $this->queue->maybe_sent( 40 ) );
 		$this->assertCount( 2, $this->http->requests, 'No second upload.' );
+
+		// The photographer chose Upload again: the file is posted without a new lookup.
+		$this->assertTrue( $this->queue->upload_again( 40 ) );
+		$this->assertFalse( $this->queue->maybe_sent( 40 ) );
+		$this->advance( 60 );
+		$this->http->reply( 201, array( 'id' => 'p-9' ) );
+		$this->http->reply( 200, array( 'id' => 'p-9' ) );
+		$this->queue->run();
+		$this->assertSame( 'uploaded', $this->queue->state( 40 ), $this->queue->error( 40 ) );
+		$this->assertSame( 'POST', $this->http->requests[2]['method'] );
+	}
+
+	public function test_upload_again_only_takes_a_failed_file(): void {
+		$this->queued();
+
+		$again = $this->queue->upload_again( 40 );
+
+		$this->assertInstanceOf( \WP_Error::class, $again );
+		$this->assertSame( 'queued', $this->queue->state( 40 ) );
+		$this->assertInstanceOf( \WP_Error::class, $this->queue->upload_again( 41 ) );
 	}
 
 	public function test_the_queue_gives_up_after_the_last_attempt(): void {
@@ -374,6 +395,7 @@ class Upload_Queue_Test extends Wp_Test_Case {
 
 		$this->assertSame( 'failed', $this->queue->state( 40 ) );
 		$this->assertStringContainsString( 'may exist', $this->queue->error( 40 ) );
+		$this->assertTrue( $this->queue->maybe_sent( 40 ) );
 	}
 
 	public function test_a_file_left_in_uploading_is_checked_after_the_stale_period(): void {
