@@ -48,6 +48,8 @@ The plugin sets no cookies and does not track your visitors. See "External servi
 
 **Uninstall.** Deleting the plugin removes the stored connection, settings, queued enquiries and the backup fields on Media Library items, unless you chose to keep the data on uninstall in the settings. The copies the backup made stay in your Profotograaf account until you delete them there.
 
+**Photos kept on Profotograaf when you deactivate or delete the plugin.** A photo kept on Profotograaf has no file on your site, and only the plugin shows it. While the plugin is deactivated these photos show no image, and activating it again brings them back. Deleting the plugin leaves them in the Media Library without an image, also when you chose to delete the data, and sends the site's admin email address a message with their number. Before you deactivate or delete the plugin, use "Convert all to local" in the plugin's row on the Plugins screen, or run `wp profotograaf virtual convert --user=<admin>` for a large library. See the question below.
+
 == External services ==
 
 This plugin connects to Profotograaf (https://profotograaf.nl), the photography platform you sign in to. The plugin needs it to work. Profotograaf is operated by the plugin author.
@@ -215,6 +217,12 @@ The hourly check runs from WP-Cron. Some hosts switch WP-Cron off (`DISABLE_WP_C
 
 `*/5 * * * * curl -fsS "https://example.com/wp-cron.php?doing_wp_cron" > /dev/null 2>&1`
 
+= What happens to photos kept on Profotograaf when I deactivate or delete the plugin? =
+
+They have no file on your site, so they show no image while the plugin is deactivated or after you delete it. Posts keep the image block, but the image is empty. Activating the plugin again brings them back. After a delete, install and connect the plugin again and use Convert to local in the Media Library.
+
+To keep them, convert them to local first. While any exist, the plugin's row on the Plugins screen says how many there are and offers "Convert all to local". The conversion runs in the background through WP-Cron, 10 photos at a time, and the row shows how far it is when you reload the page. A photo that cannot be converted, for example because Profotograaf no longer serves it, stays kept on Profotograaf and is listed with the reason. For a large library, or on a host without WP-Cron, run `wp profotograaf virtual convert --user=<admin>` (add `--batch-size=<number>` to change the batch, `--dry-run` to only count). On a multisite network, run it for each site with `--url=<site address>`.
+
 = Does it work on a WordPress multisite network? =
 
 Yes. Every site in the network connects to Profotograaf on its own, because each site pairs with its own account and keeps its own settings. Network activation leaves each site disconnected. Network Admin, Settings, Profotograaf lists every site with its connection state and its failed enquiries, and links to each site's settings page.
@@ -235,6 +243,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * New: Backup tab in the settings, with "Back up the Media Library to Profotograaf" (off by default) and the scope: files used on the site, every file, or only the files you mark. The tab, readme.txt and the suggested privacy policy text say what is sent and where, and that the copies stay on Profotograaf after uninstall. Uninstall removes the backup fields on Media Library items.
 * New: "Keep photos on Profotograaf" setting, off by default. With it on, Media > Import from Profotograaf offers "Keep on Profotograaf" next to Import: the photo is added to the Media Library without a download and shown from Profotograaf. The screen and the setting explain that a photo you unpublish can keep showing from edge and browser caches. Only users who can upload files can use it.
 * New: "Convert to local" for photos kept on Profotograaf, as a row action and a bulk action in the Media Library list view and as a button in the attachment details. It downloads the photo into the Media Library like Import, with the usual sizes, and keeps the attachment, so posts that use it keep working. A photo Profotograaf no longer lists gets a notice that offers the conversion while Profotograaf still serves it. Photos kept while the setting was on stay convertible after you switch it off.
+* New: before you deactivate or delete the plugin, the Plugins screen offers "Convert all to local" for photos kept on Profotograaf, which have no file on your site and lose their image without the plugin. It runs in the background through WP-Cron, 10 at a time, and shows its progress in the plugin's row. `wp profotograaf virtual convert` does the same from the command line. Deleting the plugin leaves those photos in the Media Library and emails the site admin how many lost their image.
 * New: "Check now" for photo changes on the settings page and the Import screen, a "last checked" line, and one background check from the Media Library, the Import screen and the settings page when the last check is more than six hours old. Site Health and the settings page notice name a photo change check that has not run for three hours and show the crontab line, for hosts without WP-Cron.
 * New: the plugin checks Profotograaf for changes to imported photos once an hour in the background, with the cursor stored on your site, and hands them to the reconcile step. When the change list asks for a full check, copies are reconciled 50 at a time. The check follows the connection, so it keeps running when "Use Profotograaf photos in the editor" is off. It only records states and never deletes anything.
 * Fix: the reconcile step no longer reads every imported original on each run. A file is hashed only when Profotograaf lists another version or other text than the copy holds.

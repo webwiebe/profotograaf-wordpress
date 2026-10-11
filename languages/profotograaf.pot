@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T08:46:58+00:00\n"
+"POT-Creation-Date: 2026-10-11T10:08:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -104,6 +104,7 @@ msgstr ""
 #: includes/modules/class-settings-page.php:478
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
+#: includes/modules/class-virtual-removal.php:83
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -1346,6 +1347,40 @@ msgstr ""
 msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
 msgstr ""
 
+#. translators: %d: number of photos.
+#: includes/cli/class-virtual-command.php:63
+#, php-format
+msgid "%d photo is kept on Profotograaf."
+msgid_plural "%d photos are kept on Profotograaf."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/cli/class-virtual-command.php:68
+msgid "Run this command as a user who may upload files, for example with --user=admin."
+msgstr ""
+
+#. translators: 1: photos converted so far, 2: photos that failed so far.
+#: includes/cli/class-virtual-command.php:83
+#, php-format
+msgid "Converted %1$d, failed %2$d."
+msgstr ""
+
+#. translators: %d: number of photos.
+#. translators: %d: number of photos converted.
+#: includes/cli/class-virtual-command.php:89
+#: includes/modules/class-virtual-convert.php:269
+#, php-format
+msgid "%d photo converted to local."
+msgid_plural "%d photos converted to local."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: photos converted, 2: photos that stay kept on Profotograaf.
+#: includes/cli/class-virtual-command.php:93
+#, php-format
+msgid "%1$d converted, %2$d could not be converted and stay kept on Profotograaf."
+msgstr ""
+
 #: includes/leads/class-lead-alerts.php:61
 msgid "An enquiry could not be delivered"
 msgstr ""
@@ -2110,14 +2145,6 @@ msgstr ""
 msgid "File %d"
 msgstr ""
 
-#. translators: %d: number of photos converted.
-#: includes/modules/class-virtual-convert.php:269
-#, php-format
-msgid "%d photo converted to local."
-msgid_plural "%d photos converted to local."
-msgstr[0] ""
-msgstr[1] ""
-
 #. translators: %d: number of photos that failed.
 #: includes/modules/class-virtual-convert.php:285
 #, php-format
@@ -2139,6 +2166,46 @@ msgstr[1] ""
 #, php-format
 msgid "%d photo kept on Profotograaf is no longer listed there and may stop showing on your site. Convert it to local while Profotograaf still serves it."
 msgid_plural "%d photos kept on Profotograaf are no longer listed there and may stop showing on your site. Convert them to local while Profotograaf still serves them."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: photos converted so far, 2: photos that could not be converted, 3: photos still waiting.
+#: includes/modules/class-virtual-removal.php:104
+#, php-format
+msgid "Converting photos kept on Profotograaf to local in the background: %1$d converted, %2$d could not be converted, %3$d left. Reload this page to see the progress."
+msgstr ""
+
+#: includes/modules/class-virtual-removal.php:115
+msgid "Every photo kept on Profotograaf is converted to local. You can deactivate or delete this plugin and your images stay in place."
+msgstr ""
+
+#. translators: %d: number of photos.
+#: includes/modules/class-virtual-removal.php:122
+#, php-format
+msgid "%d photo is kept on Profotograaf and has no copy on this site. It shows no image while this plugin is deactivated or after you delete it. Convert it to local first."
+msgid_plural "%d photos are kept on Profotograaf and have no copy on this site. They show no image while this plugin is deactivated or after you delete it. Convert them to local first."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/modules/class-virtual-removal.php:136
+msgid "Convert all to local"
+msgstr ""
+
+#. translators: 1: batch size, 2: WP-CLI command.
+#: includes/modules/class-virtual-removal.php:141
+#, php-format
+msgid "The conversion runs in the background, %1$d photos at a time. For a large library, or when WP-Cron does not run on this site, run %2$s instead."
+msgstr ""
+
+#: includes/modules/class-virtual-removal.php:156
+msgid "The last conversion stopped because the user who started it may no longer upload files."
+msgstr ""
+
+#. translators: %d: number of photos.
+#: includes/modules/class-virtual-removal.php:169
+#, php-format
+msgid "%d photo could not be converted in the last run:"
+msgid_plural "%d photos could not be converted in the last run:"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2305,12 +2372,24 @@ msgstr ""
 msgid "A selection of recent sessions. Choose a gallery in the block settings."
 msgstr ""
 
+#: uninstall.php:30
+msgid "Photos kept on Profotograaf no longer show"
+msgstr ""
+
+#. translators: %d: number of photos.
 #: uninstall.php:33
+#, php-format
+msgid "%d photo in the Media Library was kept on Profotograaf and has no copy on this site, so it shows no image now that the plugin is deleted. To get it back, install and connect the Profotograaf plugin again and use Convert to local in the Media Library."
+msgid_plural "%d photos in the Media Library were kept on Profotograaf and have no copy on this site, so they show no image now that the plugin is deleted. To get them back, install and connect the Profotograaf plugin again and use Convert to local in the Media Library."
+msgstr[0] ""
+msgstr[1] ""
+
+#: uninstall.php:50
 msgid "Undeliverable enquiries were deleted"
 msgstr ""
 
 #. translators: %d: number of enquiries.
-#: uninstall.php:36
+#: uninstall.php:53
 #, php-format
 msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
 msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
