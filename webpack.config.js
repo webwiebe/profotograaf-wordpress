@@ -10,6 +10,9 @@
  * - The media modal tab is a script for admin screens that load the media
  *   views: blocks/media-modal/index.ts builds to build/media-modal/index.js
  *   with an index.asset.php and style-index.css (Media_Modal_Tab loads them).
+ * - The client galleries list on the settings page: blocks/client-links/index.ts
+ *   builds to build/client-links/index.js with an index.asset.php
+ *   (Admin\Client_Links_Panel loads it on the Galleries tab).
  */
 const fs = require( 'node:fs' );
 const path = require( 'node:path' );
@@ -20,6 +23,7 @@ const SCREENS = [ 'import-screen' ];
 const extraEntries = {
 	'inserter-category/index': path.resolve( __dirname, 'blocks/inserter-category/index.ts' ),
 	'media-modal/index': path.resolve( __dirname, 'blocks/media-modal/index.ts' ),
+	'client-links/index': path.resolve( __dirname, 'blocks/client-links/index.ts' ),
 };
 
 module.exports = {

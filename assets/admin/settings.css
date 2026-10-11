@@ -14,3 +14,18 @@
 	display: inline-block;
 	margin: 0;
 }
+
+.profotograaf-client-links th[scope="row"] {
+	font-weight: 600;
+}
+
+.profotograaf-client-link__status {
+	margin-inline-start: 0.5em;
+}
+
+/* Black on white with the quiet zone drawn in the SVG, so a phone can read it. */
+.profotograaf-client-link__qr svg {
+	display: block;
+	width: 128px;
+	height: 128px;
+}
