@@ -183,6 +183,30 @@ test.describe( 'interaction on the real platform', () => {
 		await expectPhotos( matte );
 	} );
 
+	test( 'overlay captions sit on the tile on desktop and below it on a phone (#182)', async ( { page } ) => {
+		await openSample( page, 'sample-combinations' );
+		const host = gallery( page, 'combo-captions' );
+		for ( const [ width, below ] of [ [ WIDTHS.desktop, false ], [ WIDTHS.mobile, true ] ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await expectPhotos( host );
+			await host.scrollIntoViewIfNeeded();
+			// embed.js draws each photo as a figure with the tile link and its caption.
+			const item = host.locator( 'figure.item' ).first();
+			const image = await item.locator( '.tile img' ).boundingBox();
+			const caption = await item.locator( 'figcaption.cap' ).boundingBox();
+			expect( image && caption, `image and caption at ${ width }px` ).toBeTruthy();
+			if ( ! image || ! caption ) {
+				return;
+			}
+			if ( below ) {
+				expect( caption.y, `caption below the photo at ${ width }px` ).toBeGreaterThanOrEqual( image.y + image.height - 1 );
+			} else {
+				expect( caption.y + caption.height, `caption on the photo at ${ width }px` ).toBeLessThanOrEqual( image.y + image.height + 1 );
+				expect( caption.y, `caption on the photo at ${ width }px` ).toBeGreaterThan( image.y );
+			}
+		}
+	} );
+
 	test( 'a gallery of PNG photos draws them (professionals#2330)', async ( { page } ) => {
 		await openSample( page, 'sample-combinations' );
 		await expectPhotos( gallery( page, 'combo-png' ) );
