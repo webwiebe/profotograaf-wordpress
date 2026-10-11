@@ -32,6 +32,7 @@ class Media_Upload implements Module {
 	public const FIELD       = 'profotograaf_send_to';
 	public const BULK_PREFIX = 'profotograaf_send:';
 	public const NOTICE_ARG  = 'profotograaf_queued';
+	public const AGAIN       = 'profotograaf_upload_again';
 
 	/**
 	 * Plugin container.
@@ -59,6 +60,7 @@ class Media_Upload implements Module {
 		add_filter( 'manage_media_columns', array( $this, 'add_column' ) );
 		add_action( 'manage_media_custom_column', array( $this, 'render_column' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'bulk_notice' ) );
+		add_action( 'admin_post_' . self::AGAIN, array( $this, 'handle_again' ) );
 	}
 
 	/**
@@ -140,7 +142,7 @@ class Media_Upload implements Module {
 				break;
 			default:
 				if ( Upload_Queue::STATE_FAILED === $state ) {
-					$html = '<span class="profotograaf-upload__error" role="status">' . esc_html( $queue->error( $id ) ) . '</span><br />';
+					$html = '<span class="profotograaf-upload__error" role="status">' . esc_html( $queue->error( $id ) ) . '</span><br />' . $this->again_link( $id );
 				}
 				$html .= $this->select_html( $id );
 		}//end switch
@@ -310,6 +312,79 @@ class Media_Upload implements Module {
 			Upload_Queue::STATE_FAILED    => __( 'Not sent', 'profotograaf' ),
 		);
 		echo esc_html( $labels[ $state ] ?? '' );
+		$again = $this->again_link( $id );
+		if ( '' !== $again ) {
+			echo '<br />' . $again; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in again_link().
+		}
+	}
+
+	/**
+	 * The "Upload again" link of a failed file that may be on Profotograaf
+	 * already, followed by a line break. Empty for any other file.
+	 *
+	 * @param int $id Attachment id.
+	 */
+	private function again_link( int $id ): string {
+		if ( ! $this->plugin()->upload_queue()->maybe_sent( $id ) || ! current_user_can( 'edit_post', $id ) ) {
+			return '';
+		}
+		$url = wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'     => self::AGAIN,
+					'attachment' => $id,
+				),
+				admin_url( 'admin-post.php' )
+			),
+			self::AGAIN . '_' . $id
+		);
+		return sprintf( '<a class="button button-small profotograaf-upload__again" href="%1$s">%2$s</a><br />', esc_url( $url ), esc_html__( 'Upload again', 'profotograaf' ) );
+	}
+
+	/**
+	 * Handles the "Upload again" link: queues the file for its gallery and
+	 * goes back to the page the link was on.
+	 */
+	public function handle_again(): void {
+		$id = isset( $_GET['attachment'] ) ? absint( wp_unslash( $_GET['attachment'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked below with the id in the action.
+		if ( $id <= 0 || ! $this->active() || ! current_user_can( 'edit_post', $id ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'profotograaf' ), '', array( 'response' => 403 ) );
+		} else {
+			check_admin_referer( self::AGAIN . '_' . $id );
+			$this->queue_again( $id );
+		}
+	}
+
+	/**
+	 * Queues the file again and goes back, or stops with the reason it cannot.
+	 *
+	 * @param int $id Attachment id.
+	 */
+	private function queue_again( int $id ): void {
+		$result = $this->plugin()->upload_queue()->upload_again( $id );
+		if ( is_wp_error( $result ) ) {
+			wp_die(
+				esc_html( $result->get_error_message() ),
+				'',
+				array(
+					'response'  => 400,
+					'back_link' => true,
+				)
+			);
+		} else {
+			$back = wp_get_referer();
+			$this->finish( add_query_arg( array( self::NOTICE_ARG => 1 ), is_string( $back ) && '' !== $back ? $back : admin_url( 'upload.php' ) ) );
+		}
+	}
+
+	/**
+	 * Sends the browser to the given admin URL.
+	 *
+	 * @param string $url Where to go.
+	 */
+	protected function finish( string $url ): void {
+		wp_safe_redirect( $url );
+		exit;
 	}
 
 	/**
