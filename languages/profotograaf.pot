@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T11:22:52+00:00\n"
+"POT-Creation-Date: 2026-10-11T11:40:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -56,44 +56,44 @@ msgstr ""
 msgid "https://profotograaf.nl"
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:27
+#: includes/admin/class-backup-intro.php:28
 msgid "Copies your Media Library images to your Profotograaf account."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:28
+#: includes/admin/class-backup-intro.php:29
 msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:29
+#: includes/admin/class-backup-intro.php:30
 msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:30
+#: includes/admin/class-backup-intro.php:31
 msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:31
+#: includes/admin/class-backup-intro.php:32
 msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:41
+#: includes/admin/class-backup-intro.php:47
 #: includes/modules/class-privacy.php:237
 msgid "Backup to Profotograaf"
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:59
+#: includes/admin/class-backup-intro.php:65
 msgid "The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:60
+#: includes/admin/class-backup-intro.php:66
 msgid "The backup to Profotograaf needs a new permission."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:63
+#: includes/admin/class-backup-intro.php:69
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr ""
 
-#: includes/admin/class-backup-intro.php:64
+#: includes/admin/class-backup-intro.php:70
 msgid "Sending files needs a new permission."
 msgstr ""
 
@@ -317,7 +317,7 @@ msgstr ""
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
 #: includes/modules/class-settings-page.php:271
-#: includes/modules/class-settings-page.php:482
+#: includes/modules/class-settings-page.php:480
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
 msgid "You do not have permission to do this."
@@ -2259,47 +2259,47 @@ msgstr ""
 msgid "Set up the enquiry forms"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:334
+#: includes/modules/class-settings-page.php:332
 msgid "Photo changes"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:374
+#: includes/modules/class-settings-page.php:372
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:377
+#: includes/modules/class-settings-page.php:375
 msgid "Open the approval page"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:379
+#: includes/modules/class-settings-page.php:377
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:380
+#: includes/modules/class-settings-page.php:378
 msgid "Cancel"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:391
+#: includes/modules/class-settings-page.php:389
 msgid "Embedding on this site"
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:396
+#: includes/modules/class-settings-page.php:394
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:400
+#: includes/modules/class-settings-page.php:398
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:405
+#: includes/modules/class-settings-page.php:403
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:413
+#: includes/modules/class-settings-page.php:411
 msgid "Check again"
 msgstr ""
 

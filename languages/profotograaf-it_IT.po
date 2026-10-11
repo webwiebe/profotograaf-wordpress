@@ -78,7 +78,7 @@ msgstr "Moduli di richiesta"
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
 #: includes/modules/class-settings-page.php:271
-#: includes/modules/class-settings-page.php:482
+#: includes/modules/class-settings-page.php:480
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
 msgid "You do not have permission to do this."
@@ -961,43 +961,43 @@ msgstr "Collega a Profotograaf"
 msgid "Set up the enquiry forms"
 msgstr "Configura i moduli di richiesta"
 
-#: includes/modules/class-settings-page.php:374
+#: includes/modules/class-settings-page.php:372
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Conferma questo codice in Profotograaf per completare la connessione:"
 
-#: includes/modules/class-settings-page.php:377
+#: includes/modules/class-settings-page.php:375
 msgid "Open the approval page"
 msgstr "Apri la pagina di approvazione"
 
-#: includes/modules/class-settings-page.php:379
+#: includes/modules/class-settings-page.php:377
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "In attesa che tu approvi la connessione in Profotograaf."
 
-#: includes/modules/class-settings-page.php:380
+#: includes/modules/class-settings-page.php:378
 msgid "Cancel"
 msgstr "Annulla"
 
-#: includes/modules/class-settings-page.php:391
+#: includes/modules/class-settings-page.php:389
 msgid "Embedding on this site"
 msgstr "Incorporamento su questo sito"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:396
+#: includes/modules/class-settings-page.php:394
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s può mostrare le tue pagine Profotograaf in un frame."
 
-#: includes/modules/class-settings-page.php:400
+#: includes/modules/class-settings-page.php:398
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf consente l'incorporamento solo su siti serviti tramite https. Servi questo sito tramite https per incorporare le tue pagine in un frame."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:405
+#: includes/modules/class-settings-page.php:403
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Per mostrare le tue pagine Profotograaf in un frame su questo sito, aggiungi %s in \"Siti autorizzati a incorporare le mie pagine\" nelle impostazioni del tuo account Profotograaf."
 
-#: includes/modules/class-settings-page.php:413
+#: includes/modules/class-settings-page.php:411
 msgid "Check again"
 msgstr "Controlla di nuovo"
 
@@ -2245,11 +2245,11 @@ msgstr "Se il plugin Profotograaf funziona bene per te, una breve recensione su 
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
 msgstr "L'invio di file richiede una nuova autorizzazione. Ricollega questo sito in Impostazioni > Profotograaf per concederla."
 
-#: includes/admin/class-backup-intro.php:64
+#: includes/admin/class-backup-intro.php:70
 msgid "Sending files needs a new permission."
 msgstr "L'invio di file richiede una nuova autorizzazione."
 
-#: includes/admin/class-backup-intro.php:63
+#: includes/admin/class-backup-intro.php:69
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr "L'invio di file richiede una nuova autorizzazione. Ricollega questo sito per concederla. Le tue gallerie e impostazioni restano come sono."
 
@@ -2629,7 +2629,7 @@ msgstr "Controlla ora"
 msgid "Connect this site to Profotograaf first."
 msgstr "Collega prima questo sito a Profotograaf."
 
-#: includes/modules/class-settings-page.php:334
+#: includes/modules/class-settings-page.php:332
 msgid "Photo changes"
 msgstr "Modifiche alle foto"
 
@@ -3144,27 +3144,27 @@ msgid_plural "%d photos kept on Profotograaf."
 msgstr[0] "%d foto mantenuta su Profotograaf."
 msgstr[1] "%d foto mantenute su Profotograaf."
 
-#: includes/admin/class-backup-intro.php:27
+#: includes/admin/class-backup-intro.php:28
 msgid "Copies your Media Library images to your Profotograaf account."
 msgstr "Copia le immagini della tua Libreria media nel tuo account Profotograaf."
 
-#: includes/admin/class-backup-intro.php:28
+#: includes/admin/class-backup-intro.php:29
 msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
 msgstr "Il backup ha un suo interruttore qui sotto ed è disattivato finché non lo attivi. Prima non viene inviato nulla. Condividere dati di utilizzo anonimi, usare le foto di Profotograaf nell'editor e inviare i file della Libreria media non lo attivano."
 
-#: includes/admin/class-backup-intro.php:29
+#: includes/admin/class-backup-intro.php:30
 msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
 msgstr "I file vanno in gallerie private del tuo account Profotograaf, una al mese, con il nome del titolo di questo sito. Ogni file viene inviato così come è salvato, con il suo nome file e i suoi metadati, che possono contenere la posizione GPS. Vengono copiati immagini, file RAW e video. Le copie contano nel tuo spazio di archiviazione su Profotograaf."
 
-#: includes/admin/class-backup-intro.php:30
+#: includes/admin/class-backup-intro.php:31
 msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
 msgstr "Ogni file viene copiato una volta. Modificarlo o eliminarlo qui in seguito non cambia nulla su Profotograaf. Quando disattivi il backup o elimini il plugin, le copie restano nel tuo account Profotograaf finché non le elimini lì."
 
-#: includes/admin/class-backup-intro.php:31
+#: includes/admin/class-backup-intro.php:32
 msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
 msgstr "Le foto di persone sono dati personali. Verifica che la tua informativa sulla privacy e i tuoi accordi con i clienti consentano una copia su Profotograaf. Su un sito con più autori, il backup copia anche i file caricati da altri utenti."
 
-#: includes/admin/class-backup-intro.php:41
+#: includes/admin/class-backup-intro.php:47
 #: includes/modules/class-privacy.php:237
 msgid "Backup to Profotograaf"
 msgstr "Backup su Profotograaf"
@@ -3336,11 +3336,11 @@ msgstr "Link copiato."
 msgid "This browser does not allow copying here. The link is selected, so press Ctrl+C or Cmd+C to copy it."
 msgstr "Questo browser non consente di copiare qui. Il link è selezionato, quindi premi Ctrl+C o Cmd+C per copiarlo."
 
-#: includes/admin/class-backup-intro.php:59
+#: includes/admin/class-backup-intro.php:65
 msgid "The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr "Il backup richiede una nuova autorizzazione per creare le sue gallerie e copiare i file. Non viene copiato nulla finché non ricolleghi questo sito per concederla. Le tue gallerie e impostazioni restano come sono."
 
-#: includes/admin/class-backup-intro.php:60
+#: includes/admin/class-backup-intro.php:66
 msgid "The backup to Profotograaf needs a new permission."
 msgstr "Il backup su Profotograaf richiede una nuova autorizzazione."
 
