@@ -129,42 +129,4 @@ trait Virtual_Attachment_Filters {
 		 */
 		return true === apply_filters( 'profotograaf_virtual_attachments_block_editing', true ) ? false : $path;
 	}
-
-	/**
-	 * `render_block_data`: a saved Image block holds the image URL as text. For a
-	 * photo that has an attachment (virtual, or converted to local), the block
-	 * gets the attachment's current URL before it renders, so the lightbox sees
-	 * it too. A sync that finds a new version, or a conversion, then reaches
-	 * posts that were saved earlier. Reads post meta only.
-	 *
-	 * @param mixed $parsed_block Parsed block.
-	 * @return mixed
-	 */
-	public function filter_block_data( $parsed_block ) {
-		if ( ! is_array( $parsed_block ) || 'core/image' !== ( $parsed_block['blockName'] ?? '' ) || ! isset( $parsed_block['attrs']['id'] ) ) {
-			return $parsed_block;
-		}
-		$attachment_id = (int) $parsed_block['attrs']['id'];
-		$html          = $parsed_block['innerHTML'] ?? '';
-		if ( $attachment_id <= 0 || ! is_string( $html ) || ! self::enabled() || '' === (string) get_post_meta( $attachment_id, Photo_Importer::META_PHOTO_ID, true ) ) {
-			return $parsed_block;
-		}
-		if ( 1 !== preg_match( '~<img[^>]*\ssrc="([^"]+)"~', $html, $match ) ) {
-			return $parsed_block;
-		}
-		$saved   = $match[1];
-		$current = wp_get_attachment_url( $attachment_id );
-		if ( ! is_string( $current ) || '' === $current || $current === $saved || ! $this->importer->is_platform_url( html_entity_decode( $saved ) ) ) {
-			return $parsed_block;
-		}
-		$parsed_block['innerHTML'] = str_replace( $saved, esc_url( $current ), $html );
-		if ( isset( $parsed_block['innerContent'] ) && is_array( $parsed_block['innerContent'] ) ) {
-			foreach ( $parsed_block['innerContent'] as $index => $chunk ) {
-				if ( is_string( $chunk ) ) {
-					$parsed_block['innerContent'][ $index ] = str_replace( $saved, esc_url( $current ), $chunk );
-				}
-			}
-		}
-		return $parsed_block;
-	}
 }

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T11:14:22+00:00\n"
+"POT-Creation-Date: 2026-10-11T12:07:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -849,7 +849,7 @@ msgstr ""
 #: includes/class-photo-importer.php:93
 #: includes/class-photo-importer.php:150
 #: includes/class-photo-rest.php:393
-#: includes/class-virtual-attachments.php:170
+#: includes/class-virtual-attachments.php:169
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr ""
 
@@ -875,18 +875,18 @@ msgid "This photo is no longer available from Profotograaf."
 msgstr ""
 
 #: includes/class-photo-importer.php:90
-#: includes/class-virtual-attachments.php:167
+#: includes/class-virtual-attachments.php:166
 msgid "You are not allowed to add files to the Media Library."
 msgstr ""
 
 #: includes/class-photo-importer.php:98
-#: includes/class-virtual-attachments.php:174
+#: includes/class-virtual-attachments.php:173
 msgid "This photo cannot be imported because it has no identifier."
 msgstr ""
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:177
-#: includes/class-virtual-attachments.php:184
+#: includes/class-virtual-attachments.php:183
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr ""
 
@@ -914,7 +914,7 @@ msgstr ""
 #: includes/class-photo-importer.php:232
 #: includes/class-photo-importer.php:240
 #: includes/class-photo-importer.php:373
-#: includes/class-virtual-attachments.php:209
+#: includes/class-virtual-attachments.php:208
 msgid "The photo could not be added to the Media Library."
 msgstr ""
 
@@ -923,7 +923,7 @@ msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr ""
 
 #: includes/class-photo-rest.php:292
-#: includes/class-virtual-attachments.php:164
+#: includes/class-virtual-attachments.php:163
 msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
 msgstr ""
 
@@ -1385,11 +1385,11 @@ msgstr ""
 msgid "The file could not be prepared for sending."
 msgstr ""
 
-#: includes/class-virtual-attachments.php:266
+#: includes/class-virtual-attachments.php:265
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr ""
 
-#: includes/class-virtual-attachments.php:278
+#: includes/class-virtual-attachments.php:277
 msgid "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
 msgstr ""
 

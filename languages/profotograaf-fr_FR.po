@@ -1848,7 +1848,7 @@ msgid "Only when the site owner turns on the media source: editors who can uploa
 msgstr "Uniquement lorsque le propriétaire du site active la source de médias : les éditeurs qui peuvent téléverser des fichiers peuvent parcourir les photos du compte Profotograaf connecté dans l'éditeur de blocs. Le site demande la liste des photos à profotograaf.nl et récupère les photos choisies par un éditeur. Le navigateur de l'éditeur charge les miniatures depuis profotograaf.nl, qui reçoit l'adresse IP et les informations de navigateur de cet éditeur. Une photo utilisée par un éditeur est stockée dans la Médiathèque de ce site et y reste jusqu'à sa suppression. Aucune donnée de visiteur n'est concernée."
 
 #: includes/class-photo-importer.php:90
-#: includes/class-virtual-attachments.php:167
+#: includes/class-virtual-attachments.php:166
 msgid "You are not allowed to add files to the Media Library."
 msgstr "Vous n'avez pas l'autorisation d'ajouter des fichiers à la Médiathèque."
 
@@ -1856,18 +1856,18 @@ msgstr "Vous n'avez pas l'autorisation d'ajouter des fichiers à la Médiathèqu
 #: includes/class-photo-importer.php:93
 #: includes/class-photo-importer.php:150
 #: includes/class-photo-rest.php:393
-#: includes/class-virtual-attachments.php:170
+#: includes/class-virtual-attachments.php:169
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr "L'utilisation des photos Profotograaf dans l'éditeur est désactivée dans les réglages de l'extension."
 
 #: includes/class-photo-importer.php:98
-#: includes/class-virtual-attachments.php:174
+#: includes/class-virtual-attachments.php:173
 msgid "This photo cannot be imported because it has no identifier."
 msgstr "Cette photo ne peut pas être importée car elle n'a pas d'identifiant."
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:177
-#: includes/class-virtual-attachments.php:184
+#: includes/class-virtual-attachments.php:183
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr "La photo n'est pas sur la plateforme Profotograaf, elle n'a donc pas été importée."
 
@@ -1879,7 +1879,7 @@ msgstr "La photo n'a pas pu être téléchargée depuis Profotograaf. Réessayez
 #: includes/class-photo-importer.php:232
 #: includes/class-photo-importer.php:240
 #: includes/class-photo-importer.php:373
-#: includes/class-virtual-attachments.php:209
+#: includes/class-virtual-attachments.php:208
 msgid "The photo could not be added to the Media Library."
 msgstr "La photo n'a pas pu être ajoutée à la Médiathèque."
 
@@ -2105,7 +2105,7 @@ msgstr "Lorsque le propriétaire du site connecte le site, l'extension envoie à
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
 msgstr "Uniquement lorsque le propriétaire du site accepte de partager des données d'utilisation anonymes, l'extension envoie un rapport d'utilisation quotidien et des rapports sur ses propres erreurs à des services exploités par l'auteur de l'extension. Ils contiennent les versions de l'extension, de WordPress et de PHP, la langue du site, les modules actifs de l'extension, le nombre de connexions et de livraisons de demandes en échec, ainsi que des codes d'erreur. Ils ne contiennent ni adresse du site, ni données de visiteurs, ni demandes, ni jetons."
 
-#: includes/class-virtual-attachments.php:266
+#: includes/class-virtual-attachments.php:265
 msgid "This file is not a virtual Profotograaf attachment."
 msgstr "Ce fichier n'est pas un fichier joint virtuel Profotograaf."
 
@@ -3088,7 +3088,7 @@ msgid "Same as the gap between photos"
 msgstr "Identique à l'espace entre les photos"
 
 #: includes/class-photo-rest.php:292
-#: includes/class-virtual-attachments.php:164
+#: includes/class-virtual-attachments.php:163
 msgid "Keeping photos on Profotograaf is switched off in the plugin settings."
 msgstr "La conservation des photos sur Profotograaf est désactivée dans les réglages de l'extension."
 
@@ -3199,7 +3199,7 @@ msgstr "Uniquement les fichiers que je marque"
 msgid "Only when the site owner switches on the backup: this site copies files from its Media Library to the connected Profotograaf account, in the background. It sends the image files, and RAW and video files, with their file names and the access token to https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. It first creates private galleries with https://profotograaf.nl/api/v1/embed/galleries, with the site title in the gallery name. Files are sent as stored, with their metadata, which can include the GPS position. Photos of people are personal data, so the site owner needs a basis for sending them, and Profotograaf stores the copies for the site owner. The anonymous usage data and photo library choices do not switch the backup on. Deleting a file here, switching the backup off or deleting the plugin leaves the copies in the Profotograaf account until they are deleted there. The Media Library keeps a few hidden fields per file (the backup state, the photo and gallery identifiers and a checksum) until the plugin is deleted."
 msgstr "Uniquement lorsque le propriétaire du site active la sauvegarde : ce site copie en arrière-plan des fichiers de sa Médiathèque vers le compte Profotograaf connecté. Il envoie les fichiers image, ainsi que les fichiers RAW et vidéo, avec leurs noms de fichier et le jeton d'accès à https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. Il crée d'abord des galeries privées avec https://profotograaf.nl/api/v1/embed/galleries, avec le titre du site dans le nom de la galerie. Les fichiers sont envoyés tels qu'ils sont stockés, avec leurs métadonnées, qui peuvent contenir la position GPS. Les photos de personnes sont des données personnelles, le propriétaire du site a donc besoin d'une base légale pour les envoyer, et Profotograaf conserve les copies pour le propriétaire du site. Les choix relatifs aux données d'utilisation anonymes et à la photothèque n'activent pas la sauvegarde. Supprimer un fichier ici, désactiver la sauvegarde ou supprimer l'extension laisse les copies dans le compte Profotograaf jusqu'à ce qu'elles y soient supprimées. La Médiathèque conserve quelques champs masqués par fichier (l'état de la sauvegarde, les identifiants de photo et de galerie et une somme de contrôle) jusqu'à la suppression de l'extension."
 
-#: includes/class-virtual-attachments.php:278
+#: includes/class-virtual-attachments.php:277
 msgid "Profotograaf no longer serves this photo, so no local copy could be made. It stays kept on Profotograaf."
 msgstr "Profotograaf ne fournit plus cette photo, aucune copie locale n'a donc pu être créée. Elle reste conservée sur Profotograaf."
 

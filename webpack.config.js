@@ -13,6 +13,9 @@
  * - The client galleries list on the settings page: blocks/client-links/index.ts
  *   builds to build/client-links/index.js with an index.asset.php
  *   (Admin\Client_Links_Panel loads it on the Galleries tab).
+ * - The URL refresh for Profotograaf photos is an editor script:
+ *   blocks/virtual-urls/index.ts builds to build/virtual-urls/index.js with an
+ *   index.asset.php (the Virtual_Block_Urls module loads it).
  */
 const fs = require( 'node:fs' );
 const path = require( 'node:path' );
@@ -24,6 +27,7 @@ const extraEntries = {
 	'inserter-category/index': path.resolve( __dirname, 'blocks/inserter-category/index.ts' ),
 	'media-modal/index': path.resolve( __dirname, 'blocks/media-modal/index.ts' ),
 	'client-links/index': path.resolve( __dirname, 'blocks/client-links/index.ts' ),
+	'virtual-urls/index': path.resolve( __dirname, 'blocks/virtual-urls/index.ts' ),
 };
 
 module.exports = {
