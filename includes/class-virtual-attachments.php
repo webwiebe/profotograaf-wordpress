@@ -136,7 +136,6 @@ final class Virtual_Attachments {
 		add_filter( 'wp_calculate_image_srcset', array( $this, 'filter_srcset' ), 20, 5 );
 		add_filter( 'wp_prepare_attachment_for_js', array( $this, 'filter_js' ), 20, 2 );
 		add_filter( 'load_image_to_edit_path', array( $this, 'filter_edit_path' ), 20, 2 );
-		add_filter( 'render_block_data', array( $this, 'filter_block_data' ), 20, 1 );
 		add_action( self::SYNC_HOOK, array( $this, 'run_sync' ) );
 		add_action( 'init', array( $this, 'schedule_sync' ) );
 	}

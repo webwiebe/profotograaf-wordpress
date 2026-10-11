@@ -588,61 +588,6 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 	}
 
 	/**
-	 * A saved core/image block.
-	 *
-	 * @param int    $id  Attachment id.
-	 * @param string $src Saved src.
-	 * @return array<string,mixed>
-	 */
-	private function image_block( int $id, string $src ): array {
-		$html = '<figure class="wp-block-image"><img src="' . $src . '" alt="" class="wp-image-' . $id . '"/></figure>';
-		return array(
-			'blockName'    => 'core/image',
-			'attrs'        => array( 'id' => $id ),
-			'innerHTML'    => $html,
-			'innerContent' => array( $html ),
-		);
-	}
-
-	public function test_a_saved_image_block_gets_the_current_attachment_url(): void {
-		$this->enable();
-		$id = $this->create_one();
-		Functions\when( 'wp_get_attachment_url' )->justReturn( 'https://profotograaf.nl/share/img/a1/web-bbbbbbbbbbbb.jpg' );
-		Functions\when( 'esc_url' )->returnArg();
-
-		$block = $this->virtual->filter_block_data( $this->image_block( $id, 'https://profotograaf.nl/share/img/a1/web-aaaaaaaaaaaa.jpg' ) );
-
-		$this->assertStringContainsString( 'web-bbbbbbbbbbbb.jpg', $block['innerHTML'] );
-		$this->assertStringNotContainsString( 'web-aaaaaaaaaaaa.jpg', $block['innerContent'][0] );
-	}
-
-	public function test_block_data_of_other_blocks_foreign_hosts_and_plain_attachments_is_untouched(): void {
-		$this->enable();
-		$id = $this->create_one();
-		Functions\when( 'wp_get_attachment_url' )->justReturn( 'https://profotograaf.nl/share/img/a1/web-bbbbbbbbbbbb.jpg' );
-		Functions\when( 'esc_url' )->returnArg();
-
-		$foreign = $this->image_block( $id, 'https://example.com/a.jpg' );
-		$plain   = $this->image_block( 5, 'https://profotograaf.nl/share/img/a1/web-aaaaaaaaaaaa.jpg' );
-		$other   = array(
-			'blockName' => 'core/paragraph',
-			'attrs'     => array(),
-		);
-
-		$this->assertSame( $foreign, $this->virtual->filter_block_data( $foreign ) );
-		$this->assertSame( $plain, $this->virtual->filter_block_data( $plain ) );
-		$this->assertSame( $other, $this->virtual->filter_block_data( $other ) );
-	}
-
-	public function test_with_the_flag_off_block_data_is_untouched(): void {
-		$virtual                                        = new Virtual_Attachments( new Settings(), new Photo_Importer( new Settings() ), null );
-		$this->meta[9][ Photo_Importer::META_PHOTO_ID ] = 'p-1';
-		$block = $this->image_block( 9, 'https://profotograaf.nl/share/img/a1/web-aaaaaaaaaaaa.jpg' );
-
-		$this->assertSame( $block, $virtual->filter_block_data( $block ) );
-	}
-
-	/**
 	 * Switches the setting "Keep photos on Profotograaf" on, next to the media source.
 	 */
 	private function setting_on(): void {
