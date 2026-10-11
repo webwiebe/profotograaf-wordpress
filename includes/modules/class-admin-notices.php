@@ -1,13 +1,16 @@
 <?php
 /**
- * Admin notices for a revoked connection, a failing token refresh and failed leads.
+ * Admin notices for a revoked connection, a failing token refresh, failed
+ * leads and a backup that needs the photographer.
  *
  * @package Profotograaf
  */
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Admin\Backup_Panel;
 use Profotograaf\Admin\Leads_Settings;
+use Profotograaf\Backup_Status;
 use Profotograaf\Connection;
 use Profotograaf\Leads\Option_Job_Store;
 use Profotograaf\Leads\Queue;
@@ -23,6 +26,14 @@ defined( 'ABSPATH' ) || exit;
  * - Revoked: the platform ended the connection.
  * - Refresh: the background token refresh keeps failing.
  * - Leads: enquiries failed for good and wait on this site.
+ * - Backup storage: the backup is paused because the storage on Profotograaf
+ *   is full.
+ * - Backup failures: files could not be backed up and wait for the
+ *   photographer to retry them.
+ *
+ * Other backup states (waiting, a short backoff, no cron) need no action
+ * here or show on the Backup tab and in Site Health only. A missing
+ * permission has the reconnect notice of Settings_Page.
  *
  * Each notice has one link to the screen that fixes it, and is left out on
  * that screen. A user dismisses a notice for themselves (user meta). The
@@ -35,6 +46,9 @@ class Admin_Notices implements Module {
 	public const REVOKED = 'revoked';
 	public const REFRESH = 'refresh';
 	public const LEADS   = 'leads';
+
+	public const BACKUP_STORAGE = 'backup_storage';
+	public const BACKUP_FAILED  = 'backup_failed';
 
 	public const EPISODES_OPTION = 'profotograaf_notice_episodes';
 	public const DISMISS_META    = 'profotograaf_dismissed_notices';
@@ -148,7 +162,53 @@ class Admin_Notices implements Module {
 				'screen'    => 'settings_page_' . Leads_Settings::SLUG,
 			);
 		}
+		return array_merge( $notices, $this->backup_notices() );
+	}
+
+	/**
+	 * The backup notices that are active now, by kind.
+	 *
+	 * @return array<string,array{signature:string,message:string,link:string,label:string,screen:string}>
+	 */
+	private function backup_notices(): array {
+		$status = $this->backup_status();
+		if ( ! $status->active() ) {
+			return array();
+		}
+		$notices = array();
+		$pause   = $status->pause();
+		if ( 'storage_full' === $pause['reason'] ) {
+			$notices[ self::BACKUP_STORAGE ] = array(
+				'signature' => 'backup_storage:' . $pause['until'],
+				'message'   => __( 'Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then press Back up now.', 'profotograaf' ),
+				'link'      => Backup_Panel::url(),
+				'label'     => __( 'Open the backup settings', 'profotograaf' ),
+				'screen'    => 'settings_page_' . Settings_Page::SLUG,
+			);
+		}
+		$waiting = $status->waiting_for_you();
+		if ( $waiting > 0 ) {
+			$notices[ self::BACKUP_FAILED ] = array(
+				'signature' => 'backup_failed:' . $waiting,
+				'message'   => sprintf(
+					/* translators: %d: number of files. */
+					_n( '%d file could not be backed up to Profotograaf.', '%d files could not be backed up to Profotograaf.', $waiting, 'profotograaf' ),
+					$waiting
+				),
+				'link'      => Backup_Panel::url(),
+				'label'     => __( 'See why and retry', 'profotograaf' ),
+				'screen'    => 'settings_page_' . Settings_Page::SLUG,
+			);
+		}
 		return $notices;
+	}
+
+	/**
+	 * Where the backup stands.
+	 */
+	protected function backup_status(): Backup_Status {
+		$plugin = $this->plugin ?? Plugin::instance();
+		return new Backup_Status( $plugin->settings(), $plugin->connection(), null, $plugin->clock() );
 	}
 
 	/**
@@ -188,7 +248,7 @@ class Admin_Notices implements Module {
 
 		$kind      = isset( $_GET['kind'] ) ? sanitize_key( wp_unslash( $_GET['kind'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked above.
 		$signature = isset( $_GET['signature'] ) ? sanitize_text_field( wp_unslash( $_GET['signature'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked above.
-		if ( in_array( $kind, array( self::REVOKED, self::REFRESH, self::LEADS ), true ) && '' !== $signature ) {
+		if ( in_array( $kind, array( self::REVOKED, self::REFRESH, self::LEADS, self::BACKUP_STORAGE, self::BACKUP_FAILED ), true ) && '' !== $signature ) {
 			$this->dismiss( $kind, $signature );
 		}
 		$this->finish();

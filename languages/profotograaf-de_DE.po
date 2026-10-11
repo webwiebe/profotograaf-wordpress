@@ -20,6 +20,7 @@ msgstr ""
 #: includes/admin/class-network-page.php:53
 #: includes/admin/class-network-page.php:54
 #: includes/admin/class-network-page.php:92
+#: includes/class-backup-health.php:178
 #: includes/class-cron-health.php:209
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
@@ -71,12 +72,13 @@ msgstr "Anfrageformulare"
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-admin-notices.php:245
+#: includes/modules/class-backup.php:201
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
 #: includes/modules/class-settings-page.php:271
-#: includes/modules/class-settings-page.php:481
+#: includes/modules/class-settings-page.php:482
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
 msgid "You do not have permission to do this."
@@ -90,6 +92,7 @@ msgstr "Sende die Anfragen deiner Kontaktformulare an deinen Profotograaf-Postei
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr "Diese Website ist nicht mit Profotograaf verbunden, deshalb warten Anfragen in einer Warteschlange."
 
+#: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:220
 msgid "Connect this site"
 msgstr "Diese Website verbinden"
@@ -336,10 +339,12 @@ msgstr "WP-Cron ist deaktiviert und Leads können nicht zugestellt werden"
 msgid "WP-Cron has stopped running and leads cannot be delivered"
 msgstr "WP-Cron läuft nicht mehr und Leads können nicht zugestellt werden"
 
+#: includes/class-backup-health.php:113
 #: includes/class-cron-health.php:228
 msgid "Run WordPress cron from the server. Add this line to the crontab of the site:"
 msgstr "Führe den WordPress-Cron vom Server aus. Füge diese Zeile zur Crontab der Website hinzu:"
 
+#: includes/admin/class-backup-panel.php:176
 #: includes/class-cron-health.php:288
 msgid "Run WordPress cron from the server with this crontab line:"
 msgstr "Führe den WordPress-Cron mit dieser Crontab-Zeile vom Server aus:"
@@ -768,36 +773,37 @@ msgstr "Die Version des Embed-Skripts konnte nicht gelesen werden. Galerien verw
 msgid "The embed script is at version %s."
 msgstr "Das Embed-Skript hat die Version %s."
 
-#: includes/modules/class-admin-notices.php:120
+#: includes/modules/class-admin-notices.php:134
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr "Profotograaf ist nicht mehr verbunden. Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/modules/class-admin-notices.php:122
+#: includes/admin/class-backup-panel.php:93
+#: includes/modules/class-admin-notices.php:136
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Diese Website erneut verbinden"
 
-#: includes/modules/class-admin-notices.php:130
+#: includes/modules/class-admin-notices.php:144
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr "Profotograaf konnte die Verbindung nicht erneuern. Galerien und Anfragen funktionieren nicht mehr, wenn sie abläuft."
 
-#: includes/modules/class-admin-notices.php:132
+#: includes/modules/class-admin-notices.php:146
 msgid "Check the connection"
 msgstr "Verbindung prüfen"
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:157
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] "%d Anfrage konnte nicht an Profotograaf zugestellt werden."
 msgstr[1] "%d Anfragen konnten nicht an Profotograaf zugestellt werden."
 
-#: includes/modules/class-admin-notices.php:147
+#: includes/modules/class-admin-notices.php:161
 msgid "Retry or export the enquiries"
 msgstr "Anfragen erneut versuchen oder exportieren"
 
-#: includes/modules/class-admin-notices.php:174
+#: includes/modules/class-admin-notices.php:234
 msgid "Dismiss"
 msgstr "Schließen"
 
@@ -955,43 +961,43 @@ msgstr "Mit Profotograaf verbinden"
 msgid "Set up the enquiry forms"
 msgstr "Die Anfrageformulare einrichten"
 
-#: includes/modules/class-settings-page.php:373
+#: includes/modules/class-settings-page.php:374
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr "Bestätige diesen Code in Profotograaf, um die Verbindung abzuschließen:"
 
-#: includes/modules/class-settings-page.php:376
+#: includes/modules/class-settings-page.php:377
 msgid "Open the approval page"
 msgstr "Genehmigungsseite öffnen"
 
-#: includes/modules/class-settings-page.php:378
+#: includes/modules/class-settings-page.php:379
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr "Warten darauf, dass du die Verbindung in Profotograaf genehmigst."
 
-#: includes/modules/class-settings-page.php:379
+#: includes/modules/class-settings-page.php:380
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: includes/modules/class-settings-page.php:390
+#: includes/modules/class-settings-page.php:391
 msgid "Embedding on this site"
 msgstr "Einbettung auf dieser Website"
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:395
+#: includes/modules/class-settings-page.php:396
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr "%s darf deine Profotograaf-Seiten in einem Frame anzeigen."
 
-#: includes/modules/class-settings-page.php:399
+#: includes/modules/class-settings-page.php:400
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr "Profotograaf erlaubt die Einbettung nur auf Websites, die über https ausgeliefert werden. Liefere diese Website über https aus, um deine Seiten in einem Frame einzubetten."
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:404
+#: includes/modules/class-settings-page.php:405
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr "Um deine Profotograaf-Seiten in einem Frame auf dieser Website anzuzeigen, füge %s unter \"Websites, die meine Seiten einbetten dürfen\" in den Kontoeinstellungen von Profotograaf hinzu."
 
-#: includes/modules/class-settings-page.php:412
+#: includes/modules/class-settings-page.php:413
 msgid "Check again"
 msgstr "Erneut prüfen"
 
@@ -1015,6 +1021,7 @@ msgstr "Fehlgeschlagene Profotograaf-Leads"
 msgid "Profotograaf gallery script"
 msgstr "Profotograaf-Galerieskript"
 
+#: includes/class-backup-health.php:191
 #: includes/modules/class-site-health.php:196
 msgid "Open the Profotograaf settings"
 msgstr "Die Profotograaf-Einstellungen öffnen"
@@ -2622,7 +2629,7 @@ msgstr "Jetzt prüfen"
 msgid "Connect this site to Profotograaf first."
 msgstr "Verbinde diese Website zuerst mit Profotograaf."
 
-#: includes/modules/class-settings-page.php:333
+#: includes/modules/class-settings-page.php:334
 msgid "Photo changes"
 msgstr "Fotoänderungen"
 
@@ -3163,6 +3170,8 @@ msgid "Backup to Profotograaf"
 msgstr "Sicherung auf Profotograaf"
 
 #: includes/class-settings-schema.php:64
+#: includes/modules/class-backup-admin.php:79
+#: includes/modules/class-backup-admin.php:129
 msgid "Backup"
 msgstr "Sicherung"
 
@@ -3389,6 +3398,381 @@ msgstr "Dieser Website ging der Arbeitsspeicher aus. Führe den Befehl erneut au
 msgid "The backup stopped early. Run the command again to send the rest."
 msgstr "Die Sicherung wurde vorzeitig beendet. Führe den Befehl erneut aus, um den Rest zu senden."
 
-#: includes/modules/class-backup.php:94
+#: includes/modules/class-backup.php:113
 msgid "Every five minutes (Profotograaf backup)"
 msgstr "Alle fünf Minuten (Profotograaf-Sicherung)"
+
+#: includes/admin/class-backup-panel.php:78
+msgid "Backup status"
+msgstr "Status der Sicherung"
+
+#: includes/admin/class-backup-panel.php:82
+msgid "Nothing is copied while this site is not connected to Profotograaf."
+msgstr "Es wird nichts kopiert, solange diese Website nicht mit Profotograaf verbunden ist."
+
+#: includes/admin/class-backup-panel.php:102
+msgid "Back up now"
+msgstr "Jetzt sichern"
+
+#: includes/admin/class-backup-panel.php:104
+msgid "Retry failed"
+msgstr "Fehlgeschlagene erneut versuchen"
+
+#: includes/admin/class-backup-panel.php:122
+msgid "Still looking through the Media Library for files to back up."
+msgstr "Die Mediathek wird noch nach Dateien für die Sicherung durchsucht."
+
+#. translators: 1: number of files backed up, 2: number of files in the backup.
+#: includes/admin/class-backup-panel.php:126
+#, php-format
+msgid "%1$s of %2$s file backed up."
+msgid_plural "%1$s of %2$s files backed up."
+msgstr[0] "%1$s von %2$s Datei gesichert."
+msgstr[1] "%1$s von %2$s Dateien gesichert."
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:133
+#, php-format
+msgid "%s file waits to be sent."
+msgid_plural "%s files wait to be sent."
+msgstr[0] "%s Datei wartet auf den Versand."
+msgstr[1] "%s Dateien warten auf den Versand."
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:138
+#, php-format
+msgid "%s file waits for you, see the list below."
+msgid_plural "%s files wait for you, see the list below."
+msgstr[0] "%s Datei wartet auf dich, siehe die Liste unten."
+msgstr[1] "%s Dateien warten auf dich, siehe die Liste unten."
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:143
+#, php-format
+msgid "%s file is not backed up. The Backup column in the Media Library list says why."
+msgid_plural "%s files are not backed up. The Backup column in the Media Library list says why."
+msgstr[0] "%s Datei ist nicht gesichert. Die Spalte Sicherung in der Listenansicht der Mediathek nennt den Grund."
+msgstr[1] "%s Dateien sind nicht gesichert. Die Spalte Sicherung in der Listenansicht der Mediathek nennt den Grund."
+
+#. translators: %s: time since the last run, for example "4 minutes".
+#: includes/admin/class-backup-panel.php:148
+#, php-format
+msgid "Last run %s ago."
+msgstr "Zuletzt ausgeführt vor %s."
+
+#: includes/admin/class-backup-panel.php:149
+msgid "The first run starts within a few minutes."
+msgstr "Der erste Durchlauf startet in wenigen Minuten."
+
+#. translators: %s: date and time.
+#: includes/admin/class-backup-panel.php:165
+#, php-format
+msgid "Your Profotograaf storage is full, so the backup is paused until %s. Free up space or upgrade your plan, then press Back up now."
+msgstr "Dein Profotograaf-Speicher ist voll, deshalb ist die Sicherung bis %s pausiert. Gib Speicherplatz frei oder wechsle zu einem größeren Tarif und klicke dann auf Jetzt sichern."
+
+#. translators: %s: date and time.
+#: includes/admin/class-backup-panel.php:168
+#, php-format
+msgid "Profotograaf asked the backup to wait. It tries again on its own at %s."
+msgstr "Profotograaf hat die Sicherung gebeten zu warten. Um %s versucht sie es von selbst erneut."
+
+#: includes/admin/class-backup-panel.php:174
+#: includes/class-backup-health.php:111
+msgid "This site sets DISABLE_WP_CRON and no run of the backup has been seen, so nothing is sent."
+msgstr "Diese Website setzt DISABLE_WP_CRON und es wurde noch kein Durchlauf der Sicherung gesehen, daher wird nichts gesendet."
+
+#: includes/admin/class-backup-panel.php:175
+#: includes/class-backup-health.php:112
+msgid "The backup has not run for more than an hour, so WP-Cron does not seem to run on this site."
+msgstr "Die Sicherung wurde seit mehr als einer Stunde nicht ausgeführt, WP-Cron scheint auf dieser Website also nicht zu laufen."
+
+#: includes/admin/class-backup-panel.php:179
+msgid "No file was sent for more than six hours while files wait. Press Back up now to try again, and check Tools > Site Health."
+msgstr "Seit mehr als sechs Stunden wurde keine Datei gesendet, obwohl Dateien warten. Klicke auf Jetzt sichern, um es erneut zu versuchen, und prüfe Werkzeuge > Website-Zustand."
+
+#. translators: %s: size, for example "1.2 GB".
+#: includes/admin/class-backup-panel.php:196
+#, php-format
+msgid "More than %s waits to be sent. The copies count towards your Profotograaf storage."
+msgstr "Mehr als %s wartet auf den Versand. Die Kopien zählen zu deinem Speicherplatz auf Profotograaf."
+
+#. translators: %s: size, for example "1.2 GB".
+#: includes/admin/class-backup-panel.php:198
+#, php-format
+msgid "%s waits to be sent. The copies count towards your Profotograaf storage."
+msgstr "%s wartet auf den Versand. Die Kopien zählen zu deinem Speicherplatz auf Profotograaf."
+
+#: includes/admin/class-backup-panel.php:210
+msgid "Files that wait for you"
+msgstr "Dateien, die auf dich warten"
+
+#: includes/admin/class-backup-panel.php:211
+msgid "Retry failed sends these files again. A file whose backup is not confirmed may then be on Profotograaf twice."
+msgstr "Fehlgeschlagene erneut versuchen sendet diese Dateien noch einmal. Eine Datei, deren Sicherung nicht bestätigt ist, kann danach zweimal auf Profotograaf liegen."
+
+#: includes/admin/class-backup-panel.php:213
+msgid "File"
+msgstr "Datei"
+
+#: includes/admin/class-backup-panel.php:213
+msgid "State"
+msgstr "Status"
+
+#: includes/admin/class-backup-panel.php:213
+msgid "Reason"
+msgstr "Grund"
+
+#. translators: %s: number of files.
+#: includes/admin/class-backup-panel.php:232
+#, php-format
+msgid "And %s more file."
+msgid_plural "And %s more files."
+msgstr[0] "Und %s weitere Datei."
+msgstr[1] "Und %s weitere Dateien."
+
+#: includes/class-backup-health.php:67
+msgid "Profotograaf backup permission"
+msgstr "Berechtigung für die Profotograaf-Sicherung"
+
+#: includes/class-backup-health.php:71
+msgid "Profotograaf backup schedule"
+msgstr "Zeitplan der Profotograaf-Sicherung"
+
+#: includes/class-backup-health.php:75
+msgid "Profotograaf backup queue"
+msgstr "Warteschlange der Profotograaf-Sicherung"
+
+#: includes/class-backup-health.php:88
+msgid "The Profotograaf backup waits for a connection"
+msgstr "Die Profotograaf-Sicherung wartet auf eine Verbindung"
+
+#: includes/class-backup-health.php:88
+msgid "The backup is switched on, but this site is not connected to Profotograaf, so nothing is copied."
+msgstr "Die Sicherung ist eingeschaltet, aber diese Website ist nicht mit Profotograaf verbunden, daher wird nichts kopiert."
+
+#: includes/class-backup-health.php:91
+msgid "The Profotograaf backup needs a new permission"
+msgstr "Die Profotograaf-Sicherung braucht eine neue Berechtigung"
+
+#: includes/class-backup-health.php:93
+msgid "The Profotograaf backup has the permission it needs"
+msgstr "Die Profotograaf-Sicherung hat die nötige Berechtigung"
+
+#: includes/class-backup-health.php:93
+msgid "The connection may create the backup galleries and send files."
+msgstr "Die Verbindung darf die Sicherungsgalerien anlegen und Dateien senden."
+
+#: includes/class-backup-health.php:104
+msgid "WP-Cron runs the Profotograaf backup"
+msgstr "WP-Cron führt die Profotograaf-Sicherung aus"
+
+#: includes/class-backup-health.php:104
+msgid "The backup ran recently, or nothing needs to run yet."
+msgstr "Die Sicherung wurde kürzlich ausgeführt, oder es muss noch nichts laufen."
+
+#: includes/class-backup-health.php:109
+msgid "WP-Cron does not run the Profotograaf backup"
+msgstr "WP-Cron führt die Profotograaf-Sicherung nicht aus"
+
+#: includes/class-backup-health.php:113
+msgid "Or send the files now with WP-CLI: wp profotograaf backup run"
+msgstr "Oder sende die Dateien jetzt mit WP-CLI: wp profotograaf backup run"
+
+#: includes/class-backup-health.php:125
+msgid "Your Profotograaf storage is full"
+msgstr "Dein Profotograaf-Speicher ist voll"
+
+#: includes/class-backup-health.php:125
+msgid "The backup is paused because Profotograaf has no room for more files."
+msgstr "Die Sicherung ist pausiert, weil Profotograaf keinen Platz für weitere Dateien hat."
+
+#: includes/class-backup-health.php:125
+msgid "Free up space or upgrade your plan on Profotograaf, then press Back up now on the Backup tab."
+msgstr "Gib Speicherplatz frei oder wechsle auf Profotograaf zu einem größeren Tarif und klicke dann im Tab Sicherung auf Jetzt sichern."
+
+#: includes/class-backup-health.php:132
+msgid "The Profotograaf backup queue is stuck"
+msgstr "Die Warteschlange der Profotograaf-Sicherung hängt"
+
+#. translators: %d: number of files.
+#: includes/class-backup-health.php:135
+#, php-format
+msgid "%d file waits and no file was sent for more than six hours."
+msgid_plural "%d files wait and no file was sent for more than six hours."
+msgstr[0] "%d Datei wartet und seit mehr als sechs Stunden wurde keine Datei gesendet."
+msgstr[1] "%d Dateien warten und seit mehr als sechs Stunden wurde keine Datei gesendet."
+
+#: includes/class-backup-health.php:138
+msgid "Press Back up now on the Backup tab. When nothing changes, read the recent errors under Info, Profotograaf on this screen."
+msgstr "Klicke im Tab Sicherung auf Jetzt sichern. Ändert sich nichts, lies die letzten Fehler unter Info, Profotograaf auf dieser Seite."
+
+#: includes/class-backup-health.php:146
+msgid "Some files could not be backed up to Profotograaf"
+msgstr "Einige Dateien konnten nicht auf Profotograaf gesichert werden"
+
+#. translators: %d: number of files.
+#: includes/class-backup-health.php:149
+#, php-format
+msgid "%d file could not be backed up and waits for you."
+msgid_plural "%d files could not be backed up and wait for you."
+msgstr[0] "%d Datei konnte nicht gesichert werden und wartet auf dich."
+msgstr[1] "%d Dateien konnten nicht gesichert werden und warten auf dich."
+
+#: includes/class-backup-health.php:152
+msgid "The Backup tab lists each file with the reason. Press Retry failed to send them again."
+msgstr "Der Tab Sicherung listet jede Datei mit dem Grund auf. Klicke auf Fehlgeschlagene erneut versuchen, um sie erneut zu senden."
+
+#: includes/class-backup-health.php:155
+msgid "The Profotograaf backup queue moves"
+msgstr "Die Warteschlange der Profotograaf-Sicherung läuft"
+
+#: includes/class-backup-health.php:155
+msgid "Files are sent as planned, or nothing waits."
+msgstr "Dateien werden wie geplant gesendet, oder es wartet nichts."
+
+#: includes/class-backup-health.php:198
+#: includes/modules/class-admin-notices.php:185
+msgid "Open the backup settings"
+msgstr "Sicherungseinstellungen öffnen"
+
+#: includes/class-backup-labels.php:29
+msgid "Waiting to be backed up"
+msgstr "Wartet auf Sicherung"
+
+#: includes/class-backup-labels.php:31
+msgid "Being backed up"
+msgstr "Wird gesichert"
+
+#: includes/class-backup-labels.php:33
+msgid "Backed up"
+msgstr "Gesichert"
+
+#: includes/class-backup-labels.php:35
+msgid "Not backed up"
+msgstr "Nicht gesichert"
+
+#: includes/class-backup-labels.php:37
+msgid "Backup failed"
+msgstr "Sicherung fehlgeschlagen"
+
+#: includes/class-backup-labels.php:39
+msgid "Backup not confirmed"
+msgstr "Sicherung nicht bestätigt"
+
+#: includes/class-backup-labels.php:41
+msgid "Marked for the backup"
+msgstr "Für die Sicherung markiert"
+
+#: includes/class-backup-labels.php:51
+msgid "It came from Profotograaf, so it is there already."
+msgstr "Sie kam von Profotograaf und liegt dort also schon."
+
+#: includes/class-backup-labels.php:52
+msgid "The file is missing on this server."
+msgstr "Die Datei fehlt auf diesem Server."
+
+#: includes/class-backup-labels.php:53
+msgid "The file is larger than 100 MB, the most Profotograaf accepts."
+msgstr "Die Datei ist größer als 100 MB, das Maximum, das Profotograaf annimmt."
+
+#: includes/class-backup-labels.php:54
+msgid "A filter on this site leaves it out."
+msgstr "Ein Filter auf dieser Website lässt sie aus."
+
+#: includes/class-backup-labels.php:55
+msgid "Profotograaf did not accept the file."
+msgstr "Profotograaf hat die Datei nicht angenommen."
+
+#: includes/class-backup-labels.php:56
+msgid "The file was sent but Profotograaf did not answer. It may be there already."
+msgstr "Die Datei wurde gesendet, aber Profotograaf hat nicht geantwortet. Sie liegt dort vielleicht schon."
+
+#: includes/class-backup-labels.php:57
+msgid "The upload was interrupted. The file may be on Profotograaf already."
+msgstr "Der Upload wurde unterbrochen. Die Datei liegt vielleicht schon auf Profotograaf."
+
+#: includes/class-backup-labels.php:58
+msgid "The file is too large for the memory of this site."
+msgstr "Die Datei ist zu groß für den Arbeitsspeicher dieser Website."
+
+#. translators: %d: HTTP status code, for example 500.
+#: includes/class-backup-labels.php:65
+#, php-format
+msgid "Profotograaf answered with error %d."
+msgstr "Profotograaf hat mit Fehler %d geantwortet."
+
+#. translators: %s: error code.
+#: includes/class-backup-labels.php:71
+#, php-format
+msgid "The upload failed (%s)."
+msgstr "Der Upload ist fehlgeschlagen (%s)."
+
+#: includes/modules/class-admin-notices.php:183
+msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then press Back up now."
+msgstr "Dein Profotograaf-Speicher ist voll, deshalb ist die Sicherung pausiert. Gib Speicherplatz frei oder wechsle zu einem größeren Tarif und klicke dann auf Jetzt sichern."
+
+#. translators: %d: number of files.
+#: includes/modules/class-admin-notices.php:195
+#, php-format
+msgid "%d file could not be backed up to Profotograaf."
+msgid_plural "%d files could not be backed up to Profotograaf."
+msgstr[0] "%d Datei konnte nicht auf Profotograaf gesichert werden."
+msgstr[1] "%d Dateien konnten nicht auf Profotograaf gesichert werden."
+
+#: includes/modules/class-admin-notices.php:199
+msgid "See why and retry"
+msgstr "Grund ansehen und erneut versuchen"
+
+#: includes/modules/class-backup-admin.php:115
+msgid "Not in the backup"
+msgstr "Nicht in der Sicherung"
+
+#. translators: %s: date the file was copied.
+#: includes/modules/class-backup-admin.php:119
+#, php-format
+msgid "Backed up to Profotograaf on %s."
+msgstr "Am %s auf Profotograaf gesichert."
+
+#: includes/modules/class-backup-admin.php:126
+msgid "Retry it on the Backup tab"
+msgstr "Im Tab Sicherung erneut versuchen"
+
+#: includes/modules/class-backup-admin.php:145
+msgid "Back up to Profotograaf"
+msgstr "Auf Profotograaf sichern"
+
+#: includes/modules/class-backup-admin.php:146
+msgid "Do not back up"
+msgstr "Nicht sichern"
+
+#. translators: %d: number of files.
+#: includes/modules/class-backup-admin.php:192
+#, php-format
+msgid "%d file is no longer marked for the backup. A file that is backed up already stays on Profotograaf."
+msgid_plural "%d files are no longer marked for the backup. Files that are backed up already stay on Profotograaf."
+msgstr[0] "%d Datei ist nicht mehr für die Sicherung markiert. Eine Datei, die schon gesichert ist, bleibt auf Profotograaf."
+msgstr[1] "%d Dateien sind nicht mehr für die Sicherung markiert. Dateien, die schon gesichert sind, bleiben auf Profotograaf."
+
+#. translators: %d: number of files.
+#: includes/modules/class-backup-admin.php:198
+#, php-format
+msgid "%d file is marked for the backup. It is copied to Profotograaf in the background."
+msgid_plural "%d files are marked for the backup. They are copied to Profotograaf in the background."
+msgstr[0] "%d Datei ist für die Sicherung markiert. Sie wird im Hintergrund auf Profotograaf kopiert."
+msgstr[1] "%d Dateien sind für die Sicherung markiert. Sie werden im Hintergrund auf Profotograaf kopiert."
+
+#: includes/modules/class-backup.php:172
+msgid "The backup starts within a minute, in the background. You can leave this page."
+msgstr "Die Sicherung startet innerhalb einer Minute im Hintergrund. Du kannst diese Seite verlassen."
+
+#: includes/modules/class-backup.php:173
+msgid "The backup cannot start: switch it on and connect this site to Profotograaf first."
+msgstr "Die Sicherung kann nicht starten: Schalte sie zuerst ein und verbinde diese Website mit Profotograaf."
+
+#. translators: %d: number of files.
+#: includes/modules/class-backup.php:187
+#, php-format
+msgid "%d file will be sent again in the background."
+msgid_plural "%d files will be sent again in the background."
+msgstr[0] "%d Datei wird im Hintergrund erneut gesendet."
+msgstr[1] "%d Dateien werden im Hintergrund erneut gesendet."

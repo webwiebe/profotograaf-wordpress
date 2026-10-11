@@ -8,6 +8,7 @@
 namespace Profotograaf\Admin;
 
 use Profotograaf\Settings;
+use Profotograaf\Settings_Schema;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -33,9 +34,14 @@ final class Backup_Intro {
 	}
 
 	/**
-	 * Prints the heading and the paragraphs.
+	 * Prints the heading and the paragraphs on the Backup tab.
+	 *
+	 * @param string $tab The current settings tab.
 	 */
-	public static function render(): void {
+	public static function render( string $tab ): void {
+		if ( Settings_Schema::TAB_BACKUP !== $tab ) {
+			return;
+		}
 		$paragraphs = self::paragraphs();
 		?>
 		<h2><?php esc_html_e( 'Backup to Profotograaf', 'profotograaf' ); ?></h2>
