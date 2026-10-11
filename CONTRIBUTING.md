@@ -110,7 +110,7 @@ make test        # PHPUnit
 make build       # blocks
 make e2e         # release copy in WordPress on Docker, Playwright, Plugin Check
 make i18n        # regenerate everything in languages/ (see Translations)
-make i18n-check  # hardcoded strings and a stale .pot
+make i18n-check  # hardcoded strings, untranslated locales and a stale .pot
 ```
 
 Standards a change has to meet:
@@ -185,6 +185,8 @@ GitHub Actions on GitHub-hosted runners:
 
 Every user-facing string goes through `__()` (PHP) or `@wordpress/i18n` (blocks and scripts) with the text domain `profotograaf`, and gets a `/* translators: */` comment where it has placeholders. PHPCS enforces the WordPress i18n sniffs for PHP. `scripts/check-i18n.mjs strings` fails on text in `blocks/` and `assets/` that skips `__()`: JSX text, literal `label`, `title`, `help`, `placeholder` and similar props, and literals written to `textContent` or `innerHTML`. Put `// i18n-ignore` on a line that holds text no person reads.
 
+Every bundled locale in `languages/` ships complete. `scripts/check-i18n.mjs po` fails when a `.po` file has an untranslated or fuzzy string, so a new string lands with its translation in every locale. Run `make po` to merge the new strings into the `.po` files, fill them in, then run `make i18n`.
+
 After changing strings, run `make i18n` and commit everything it changes in `languages/`:
 
 ```sh
@@ -193,7 +195,7 @@ make pot           # build the blocks, then regenerate languages/profotograaf.po
 make po            # merge the .pot into every languages/*.po
 make mo            # compile every .po
 make json          # one JSON file per translated script, for wp_set_script_translations
-make i18n-check    # what CI runs: hardcoded strings and a stale .pot
+make i18n-check    # what CI runs: hardcoded strings, untranslated locales and a stale .pot
 ```
 
 `make pot` reads PHP, `block.json` and the built block scripts in `build/`, because WP-CLI cannot read TypeScript. That is why the `.pot` references `build/gallery/index.js`, and why WordPress finds the JSON by the hash of that path. `make json` deletes the old JSON files first.

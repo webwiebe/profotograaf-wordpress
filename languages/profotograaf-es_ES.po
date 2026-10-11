@@ -10,9 +10,9 @@ msgstr ""
 "POT-Creation-Date: 2026-09-30T11:20:42+00:00\n"
 "PO-Revision-Date: 2026-10-01 12:00+0000\n"
 "Language: es_ES\n"
-"X-Generator: WP-CLI 2.12.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: profotograaf\n"
+"X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
 #. Author of the plugin
@@ -38,12 +38,12 @@ msgstr ""
 #: build/inserter-category/index.js:1
 #: build/media-modal/index.js:3
 msgid "Profotograaf"
-msgstr ""
+msgstr "Profotograaf"
 
 #. Plugin URI of the plugin
 #: profotograaf.php
 msgid "https://github.com/webwiebe/profotograaf-wordpress"
-msgstr ""
+msgstr "https://github.com/webwiebe/profotograaf-wordpress"
 
 #. Description of the plugin
 #: profotograaf.php
@@ -53,7 +53,7 @@ msgstr "Muestra tus galerías de Profotograaf en tu propio sitio, ofrece a tus c
 #. Author URI of the plugin
 #: profotograaf.php
 msgid "https://profotograaf.nl"
-msgstr ""
+msgstr "https://profotograaf.nl"
 
 #: includes/admin/class-leads-settings.php:105
 #: includes/admin/class-leads-settings.php:211
@@ -1485,7 +1485,7 @@ msgstr "fotografía"
 #: blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "profotograaf"
-msgstr ""
+msgstr "profotograaf"
 
 #: blocks/gallery/block.json
 msgctxt "block title"
@@ -1510,162 +1510,162 @@ msgstr "portafolio"
 
 #: includes/admin/class-network-page.php:71
 msgid "Connection ended"
-msgstr ""
+msgstr "Conexión terminada"
 
 #: includes/admin/class-network-page.php:73
 msgid "Plugin not active"
-msgstr ""
+msgstr "Plugin no activo"
 
 #: includes/admin/class-network-page.php:84
 msgid "You do not have permission to view this page."
-msgstr ""
+msgstr "No tienes permiso para ver esta página."
 
 #: includes/admin/class-network-page.php:93
 msgid "Each site connects to Profotograaf on its own. Open a site to connect it or to see its failed enquiries."
-msgstr ""
+msgstr "Cada sitio se conecta a Profotograaf por su cuenta. Abre un sitio para conectarlo o para ver sus consultas fallidas."
 
 #: includes/admin/class-network-page.php:97
 msgid "Site"
-msgstr ""
+msgstr "Sitio"
 
 #: includes/admin/class-network-page.php:99
 msgid "Failed enquiries"
-msgstr ""
+msgstr "Consultas fallidas"
 
 #: includes/class-settings-schema.php:305
 msgid "Duotone colours"
-msgstr ""
+msgstr "Colores de duotono"
 
 #: includes/class-settings-schema.php:306
 msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
-msgstr ""
+msgstr "Tiñe cada foto con dos colores, la sombra y la luz, como dos códigos hexadecimales separados por una coma, por ejemplo #1a1a2e,#f5c542. Un bloque puede elegir su propio duotono. Déjalo vacío para los colores originales."
 
 #: includes/class-settings-schema.php:313
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Link photos to"
-msgstr ""
+msgstr "Enlazar las fotos a"
 
 #: includes/class-settings-schema.php:316
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Nothing"
-msgstr ""
+msgstr "Nada"
 
 #: includes/class-settings-schema.php:317
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
-msgstr ""
+msgstr "La página de la foto en Profotograaf"
 
 #: includes/modules/class-patterns.php:54
 msgid "Sections for galleries, the client portal and enquiries."
-msgstr ""
+msgstr "Secciones para galerías, el portal de clientes y las consultas."
 
 #: patterns/client-portal-cta.php:13
 msgid "Client portal call to action"
-msgstr ""
+msgstr "Llamada a la acción del portal de clientes"
 
 #: patterns/client-portal-cta.php:14
 msgid "A button that takes clients to their private galleries."
-msgstr ""
+msgstr "Un botón que lleva a los clientes a sus galerías privadas."
 
 #: patterns/client-portal-cta.php:15
 msgid "client"
-msgstr ""
+msgstr "cliente"
 
 #: patterns/client-portal-cta.php:15
 msgid "portal"
-msgstr ""
+msgstr "portal"
 
 #: patterns/client-portal-cta.php:15
 msgid "login"
-msgstr ""
+msgstr "inicio de sesión"
 
 #: patterns/contact-page.php:23
 msgid "Replace this text with your enquiry form block."
-msgstr ""
+msgstr "Sustituye este texto por el bloque de tu formulario de consulta."
 
 #: patterns/contact-page.php:27
 msgid "Contact page with enquiry form"
-msgstr ""
+msgstr "Página de contacto con formulario de consulta"
 
 #: patterns/contact-page.php:28
 msgid "An introduction, a place for your enquiry form and a small gallery."
-msgstr ""
+msgstr "Una introducción, un espacio para tu formulario de consulta y una pequeña galería."
 
 #: patterns/contact-page.php:29
 msgid "contact"
-msgstr ""
+msgstr "contacto"
 
 #: patterns/contact-page.php:29
 msgid "enquiry"
-msgstr ""
+msgstr "consulta"
 
 #: patterns/contact-page.php:29
 msgid "form"
-msgstr ""
+msgstr "formulario"
 
 #: patterns/contact-page.php:31
 msgid "Get in touch"
-msgstr ""
+msgstr "Ponte en contacto"
 
 #: patterns/contact-page.php:32
 msgid "Tell me about your plans and I will reply within two working days."
-msgstr ""
+msgstr "Cuéntame tus planes y te responderé en un plazo de dos días laborables."
 
 #: patterns/contact-page.php:34
 msgid "A look at my work"
-msgstr ""
+msgstr "Un vistazo a mi trabajo"
 
 #: patterns/masonry-showcase.php:13
 msgid "Masonry showcase"
-msgstr ""
+msgstr "Escaparate en mosaico"
 
 #: patterns/masonry-showcase.php:14
 msgid "A wide gallery in masonry layout that keeps every photo as shot."
-msgstr ""
+msgstr "Una galería ancha en diseño de mosaico que conserva cada foto tal como se tomó."
 
 #: patterns/masonry-showcase.php:15
 msgid "masonry"
-msgstr ""
+msgstr "mosaico"
 
 #: patterns/masonry-showcase.php:15
 msgid "showcase"
-msgstr ""
+msgstr "escaparate"
 
 #: patterns/masonry-showcase.php:15
 #: patterns/portfolio-grid.php:15
 msgid "gallery"
-msgstr ""
+msgstr "galería"
 
 #: patterns/masonry-showcase.php:17
 msgid "Showcase"
-msgstr ""
+msgstr "Escaparate"
 
 #: patterns/portfolio-grid.php:13
 msgid "Portfolio grid"
-msgstr ""
+msgstr "Cuadrícula de portafolio"
 
 #: patterns/portfolio-grid.php:14
 msgid "A heading, a short introduction and a gallery grid."
-msgstr ""
+msgstr "Un encabezado, una breve introducción y una cuadrícula de galería."
 
 #: patterns/portfolio-grid.php:15
 msgid "portfolio"
-msgstr ""
+msgstr "portafolio"
 
 #: patterns/portfolio-grid.php:15
 msgid "grid"
-msgstr ""
+msgstr "cuadrícula"
 
 #: patterns/portfolio-grid.php:17
 msgid "Selected work"
-msgstr ""
+msgstr "Trabajos seleccionados"
 
 #: patterns/portfolio-grid.php:18
 msgid "A selection of recent sessions. Choose a gallery in the block settings."
-msgstr ""
+msgstr "Una selección de sesiones recientes. Elige una galería en los ajustes del bloque."
 
 #. translators: %d: number of photos left out of the gallery.
 #: build/full-page-gallery/index.js:4
@@ -1673,181 +1673,181 @@ msgstr ""
 #, js-format
 msgid "%d photo left out"
 msgid_plural "%d photos left out"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d foto excluida"
+msgstr[1] "%d fotos excluidas"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Select a photo to leave it out of this gallery block."
-msgstr ""
+msgstr "Selecciona una foto para excluirla de este bloque de galería."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Show all photos"
-msgstr ""
+msgstr "Mostrar todas las fotos"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "This gallery has no photos yet."
-msgstr ""
+msgstr "Esta galería aún no tiene fotos."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Photos"
-msgstr ""
+msgstr "Fotos"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Photo ID"
-msgstr ""
+msgstr "ID de la foto"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Alt text"
-msgstr ""
+msgstr "Texto alternativo"
 
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:9
 #: build/gallery/index.js:4
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Photo captions and alt text"
-msgstr ""
+msgstr "Pies de foto y texto alternativo"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Add a photo"
-msgstr ""
+msgstr "Añadir una foto"
 
 #. translators: %s: what a photo links to, such as "the original photo file".
 #: build/gallery/index.js:6
 #, js-format
 msgid "links to: %s"
-msgstr ""
+msgstr "enlaza a: %s"
 
 #: blocks/gallery/block.json
 msgctxt "block variation title"
 msgid "Profotograaf grid gallery"
-msgstr ""
+msgstr "Galería en cuadrícula de Profotograaf"
 
 #: blocks/gallery/block.json
 msgctxt "block variation description"
 msgid "Show a Profotograaf gallery as an even grid."
-msgstr ""
+msgstr "Muestra una galería de Profotograaf como una cuadrícula uniforme."
 
 #: blocks/gallery/block.json
 msgctxt "block variation keyword"
 msgid "grid"
-msgstr ""
+msgstr "cuadrícula"
 
 #: blocks/gallery/block.json
 msgctxt "block variation title"
 msgid "Profotograaf masonry gallery"
-msgstr ""
+msgstr "Galería en mosaico de Profotograaf"
 
 #: blocks/gallery/block.json
 msgctxt "block variation description"
 msgid "Show a Profotograaf gallery in masonry layout, each photo at its own height."
-msgstr ""
+msgstr "Muestra una galería de Profotograaf en diseño de mosaico, cada foto con su propia altura."
 
 #: blocks/gallery/block.json
 msgctxt "block variation keyword"
 msgid "masonry"
-msgstr ""
+msgstr "mosaico"
 
 #: blocks/gallery/block.json
 msgctxt "block variation title"
 msgid "Profotograaf slideshow"
-msgstr ""
+msgstr "Presentación de Profotograaf"
 
 #: blocks/gallery/block.json
 msgctxt "block variation description"
 msgid "Show a Profotograaf gallery as a slideshow."
-msgstr ""
+msgstr "Muestra una galería de Profotograaf como una presentación."
 
 #: blocks/gallery/block.json
 msgctxt "block variation keyword"
 msgid "slideshow"
-msgstr ""
+msgstr "presentación"
 
 #: blocks/gallery/block.json
 msgctxt "block variation keyword"
 msgid "slider"
-msgstr ""
+msgstr "carrusel"
 
 #: includes/class-settings-schema.php:314
 msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
-msgstr ""
+msgstr "Lo que hace un clic en una foto. Solo se aplica cuando el lightbox está desactivado, porque un lightbox abierto gestiona el clic por sí mismo."
 
 #: includes/class-settings-schema.php:318
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Your photographer site"
-msgstr ""
+msgstr "Tu sitio de fotógrafo"
 
 #: includes/class-settings-schema.php:319
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The original photo file"
-msgstr ""
+msgstr "El archivo original de la foto"
 
 #: includes/class-settings-schema.php:326
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
-msgstr ""
+msgstr "Abrir los enlaces de las fotos en una pestaña nueva"
 
 #: includes/class-settings-schema.php:327
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
-msgstr ""
+msgstr "Si un enlace de foto se abre en una pestaña nueva del navegador. Solo se aplica cuando el lightbox está desactivado y las fotos enlazan a algún sitio."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Applies only when the lightbox is off. An open lightbox handles the click itself."
-msgstr ""
+msgstr "Solo se aplica cuando el lightbox está desactivado. Un lightbox abierto gestiona el clic por sí mismo."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Applies only when the lightbox is off and photos link somewhere."
-msgstr ""
+msgstr "Solo se aplica cuando el lightbox está desactivado y las fotos enlazan a algún sitio."
 
 #. translators: %s: what a photo links to, such as "the original photo file".
 #: build/gallery/index.js:7
 #, js-format
 msgid "links to: %s (lightbox off only)"
-msgstr ""
+msgstr "enlaza a: %s (solo con el lightbox desactivado)"
 
 #: build/gallery/index.js:7
 msgid "same tab"
-msgstr ""
+msgstr "misma pestaña"
 
 #: includes/modules/class-settings-page.php:315
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
-msgstr ""
+msgstr "Al conectar se comparten con Profotograaf el nombre de este sitio y la dirección de correo electrónico del administrador, para que pueda rellenarlos por ti si creas una cuenta."
 
 #: includes/class-settings-schema.php:106
 msgid "Use Profotograaf photos in the editor"
-msgstr ""
+msgstr "Usar fotos de Profotograaf en el editor"
 
 #: includes/class-settings-schema.php:107
 msgid "Lets editors who can upload files browse your Profotograaf photos in the block editor and add them to the Media Library. While this is on, the site asks Profotograaf for your photo list and downloads the photos an editor picks, and editors' browsers load thumbnails from profotograaf.nl. A photo an editor uses is stored on this site. Only galleries with embedding switched on are offered. While this is off, nothing is requested."
-msgstr ""
+msgstr "Permite a los editores que pueden subir archivos explorar tus fotos de Profotograaf en el editor de bloques y añadirlas a la Biblioteca de medios. Mientras esté activado, el sitio pide a Profotograaf tu lista de fotos y descarga las fotos que elige un editor, y los navegadores de los editores cargan las miniaturas desde profotograaf.nl. Una foto que usa un editor se guarda en este sitio. Solo se ofrecen las galerías con la inserción activada. Mientras esté desactivado, no se solicita nada."
 
 #: includes/modules/class-privacy.php:233
 msgid "Photo library in the editor"
-msgstr ""
+msgstr "Biblioteca de fotos en el editor"
 
 #: includes/modules/class-privacy.php:234
 msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. No visitor data is involved."
-msgstr ""
+msgstr "Solo cuando el propietario del sitio activa la fuente de medios: los editores que pueden subir archivos pueden explorar las fotos de la cuenta de Profotograaf conectada en el editor de bloques. El sitio pide a profotograaf.nl la lista de fotos y obtiene las fotos que elige un editor. El navegador del editor carga las miniaturas desde profotograaf.nl, que recibe la dirección IP y los datos del navegador de ese editor. Una foto que usa un editor se guarda en la Biblioteca de medios de este sitio y permanece allí hasta que se elimina. No intervienen datos de visitantes."
 
 #: includes/class-photo-importer.php:90
 #: includes/class-virtual-attachments.php:155
 msgid "You are not allowed to add files to the Media Library."
-msgstr ""
+msgstr "No tienes permiso para añadir archivos a la Biblioteca de medios."
 
 #: includes/class-photo-file-route.php:196
 #: includes/class-photo-importer.php:93
@@ -1855,63 +1855,63 @@ msgstr ""
 #: includes/class-photo-rest.php:319
 #: includes/class-virtual-attachments.php:158
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
-msgstr ""
+msgstr "El uso de fotos de Profotograaf en el editor está desactivado en los ajustes del plugin."
 
 #: includes/class-photo-importer.php:98
 #: includes/class-virtual-attachments.php:162
 msgid "This photo cannot be imported because it has no identifier."
-msgstr ""
+msgstr "Esta foto no se puede importar porque no tiene identificador."
 
 #: includes/class-photo-importer.php:108
 #: includes/class-photo-importer.php:176
 #: includes/class-virtual-attachments.php:172
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
-msgstr ""
+msgstr "La foto no está en la plataforma Profotograaf, así que no se importó."
 
 #: includes/class-photo-file-route.php:227
 #: includes/class-photo-importer.php:333
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
-msgstr ""
+msgstr "No se pudo descargar la foto de Profotograaf. Inténtalo de nuevo más tarde."
 
 #: includes/class-photo-importer.php:231
 #: includes/class-photo-importer.php:239
 #: includes/class-photo-importer.php:372
 #: includes/class-virtual-attachments.php:197
 msgid "The photo could not be added to the Media Library."
-msgstr ""
+msgstr "No se pudo añadir la foto a la Biblioteca de medios."
 
 #: includes/class-photo-importer.php:115
 #: includes/class-photo-importer.php:181
 msgid "This photo is being imported by another request. Try again in a moment."
-msgstr ""
+msgstr "Otra solicitud está importando esta foto. Inténtalo de nuevo en un momento."
 
 #: includes/class-photo-importer.php:324
 msgid "Profotograaf redirected the photo download, so it was not imported."
-msgstr ""
+msgstr "Profotograaf redirigió la descarga de la foto, así que no se importó."
 
 #: includes/class-photo-rest.php:244
 msgid "Choose at least one photo to import."
-msgstr ""
+msgstr "Elige al menos una foto para importar."
 
 #. translators: %d: largest number of photos one import takes.
 #: includes/class-photo-rest.php:251
 #, php-format
 msgid "Import at most %d photos at a time."
-msgstr ""
+msgstr "Importa como máximo %d fotos a la vez."
 
 #: includes/class-photo-rest.php:273
 msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
-msgstr ""
+msgstr "Esta foto ya no está en tu biblioteca de Profotograaf. Actualiza la lista e inténtalo de nuevo."
 
 #: includes/modules/class-media-import-screen.php:78
 #: includes/modules/class-media-import-screen.php:79
 #: includes/modules/class-media-import-screen.php:93
 msgid "Import from Profotograaf"
-msgstr ""
+msgstr "Importar desde Profotograaf"
 
 #: includes/modules/class-media-import-screen.php:243
 msgid "Source"
-msgstr ""
+msgstr "Origen"
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
@@ -1919,655 +1919,655 @@ msgstr ""
 #: includes/modules/class-media-import-screen.php:224
 #, php-format
 msgid "Profotograaf, gallery %s"
-msgstr ""
+msgstr "Profotograaf, galería %s"
 
 #: assets/admin/media-source.js:24
 msgid "All sources"
-msgstr ""
+msgstr "Todos los orígenes"
 
 #: build/import-screen/index.js:1
 #: build/media-modal/index.js:3
 msgid "Something went wrong. Try again."
-msgstr ""
+msgstr "Algo ha salido mal. Inténtalo de nuevo."
 
 #: build/import-screen/index.js:1
 #: build/media-modal/index.js:3
 msgid "All galleries"
-msgstr ""
+msgstr "Todas las galerías"
 
 #. translators: 1: gallery title, 2: number of photos in the gallery.
 #: build/import-screen/index.js:2
 #, js-format
 msgid "%1$s (%2$d)"
-msgstr ""
+msgstr "%1$s (%2$d)"
 
 #: build/import-screen/index.js:2
 #: build/media-modal/index.js:1
 msgid "Search photos"
-msgstr ""
+msgstr "Buscar fotos"
 
 #: build/import-screen/index.js:2
 msgid "Search"
-msgstr ""
+msgstr "Buscar"
 
 #: build/import-screen/index.js:2
 msgid "Previous page"
-msgstr ""
+msgstr "Página anterior"
 
 #. translators: 1: current page number, 2: number of pages.
 #: build/import-screen/index.js:3
 #, js-format
 msgid "Page %1$d of %2$d"
-msgstr ""
+msgstr "Página %1$d de %2$d"
 
 #: build/import-screen/index.js:3
 msgid "Next page"
-msgstr ""
+msgstr "Página siguiente"
 
 #. translators: %d: number of selected photos.
 #: build/import-screen/index.js:4
 #, js-format
 msgid "Import %d photo"
 msgid_plural "Import %d photos"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Importar %d foto"
+msgstr[1] "Importar %d fotos"
 
 #: build/import-screen/index.js:4
 msgid "Select all on this page"
-msgstr ""
+msgstr "Seleccionar todo en esta página"
 
 #: build/import-screen/index.js:4
 msgid "Clear selection"
-msgstr ""
+msgstr "Borrar la selección"
 
 #: includes/modules/class-media-upload.php:304
 #: build/import-screen/index.js:4
 msgid "Imported"
-msgstr ""
+msgstr "Importada"
 
 #: build/import-screen/index.js:4
 msgid "Open in Media Library"
-msgstr ""
+msgstr "Abrir en la Biblioteca de medios"
 
 #: build/import-screen/index.js:4
 #: build/media-modal/index.js:3
 msgid "No photos found."
-msgstr ""
+msgstr "No se encontraron fotos."
 
 #. translators: 1: photos handled so far, 2: photos to import.
 #: build/import-screen/index.js:5
 #, js-format
 msgid "Importing %1$d of %2$d"
-msgstr ""
+msgstr "Importando %1$d de %2$d"
 
 #: build/import-screen/index.js:5
 msgid "These photos could not be imported:"
-msgstr ""
+msgstr "Estas fotos no se pudieron importar:"
 
 #: build/import-screen/index.js:5
 msgid "Profotograaf could not be reached, so this list may be out of date."
-msgstr ""
+msgstr "No se pudo contactar con Profotograaf, así que esta lista puede estar desactualizada."
 
 #. translators: %d: number of photos added to the Media Library.
 #: build/import-screen/index.js:6
 #, js-format
 msgid "%d photo imported."
 msgid_plural "%d photos imported."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d foto importada."
+msgstr[1] "%d fotos importadas."
 
 #: includes/class-photo-file-route.php:202
 msgid "This photo link is not valid or has expired. Reload the photo list and try again."
-msgstr ""
+msgstr "Este enlace de foto no es válido o ha caducado. Recarga la lista de fotos e inténtalo de nuevo."
 
 #: includes/class-photo-file-route.php:212
 msgid "The photo is not on the Profotograaf platform, so it was not served."
-msgstr ""
+msgstr "La foto no está en la plataforma Profotograaf, así que no se sirvió."
 
 #: includes/class-photo-file-route.php:232
 msgid "Profotograaf sent a file that is not a JPEG image, so it was not used."
-msgstr ""
+msgstr "Profotograaf envió un archivo que no es una imagen JPEG, así que no se usó."
 
 #: includes/class-photo-file-route.php:353
 msgid "This photo is no longer available from Profotograaf."
-msgstr ""
+msgstr "Esta foto ya no está disponible en Profotograaf."
 
 #: build/inserter-category/index.js:1
 msgid "Search Profotograaf photos"
-msgstr ""
+msgstr "Buscar fotos de Profotograaf"
 
 #: includes/class-photo-importer.php:146
 msgid "You are not allowed to replace this file."
-msgstr ""
+msgstr "No tienes permiso para sustituir este archivo."
 
 #: includes/class-photo-importer.php:157
 msgid "This file was not imported from Profotograaf."
-msgstr ""
+msgstr "Este archivo no se importó desde Profotograaf."
 
 #: includes/class-photo-importer.php:172
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
-msgstr ""
+msgstr "Esta foto ya no está disponible en Profotograaf. La copia de tu Biblioteca de medios no ha cambiado."
 
 #: includes/modules/class-media-import-screen.php:219
 msgid "Open on Profotograaf"
-msgstr ""
+msgstr "Abrir en Profotograaf"
 
 #: includes/modules/class-media-import-screen.php:238
 msgid "Re-import"
-msgstr ""
+msgstr "Volver a importar"
 
 #: assets/admin/reimport.js:43
 msgid "Re-importing…"
-msgstr ""
+msgstr "Volviendo a importar…"
 
 #: assets/admin/reimport.js:50
 msgid "The photo was replaced with the current version from Profotograaf."
-msgstr ""
+msgstr "La foto se sustituyó por la versión actual de Profotograaf."
 
 #: assets/admin/reimport.js:62
 msgid "The photo could not be re-imported."
-msgstr ""
+msgstr "No se pudo volver a importar la foto."
 
 #: build/media-modal/index.js:1
 msgid "Load more photos"
-msgstr ""
+msgstr "Cargar más fotos"
 
 #. translators: 1: photos done, 2: photos in total.
 #: build/media-modal/index.js:2
 #, js-format
 msgid "Importing %1$d of %2$d photos..."
-msgstr ""
+msgstr "Importando %1$d de %2$d fotos..."
 
 #. translators: %d: number of selected photos.
 #: build/media-modal/index.js:3
 #, js-format
 msgid "%d photo selected"
 msgid_plural "%d photos selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d foto seleccionada"
+msgstr[1] "%d fotos seleccionadas"
 
 #: build/media-modal/index.js:3
 msgid "The platform could not be reached. Showing the last saved list."
-msgstr ""
+msgstr "No se pudo contactar con la plataforma. Se muestra la última lista guardada."
 
 #: build/media-modal/index.js:3
 msgid "The photo was imported but could not be loaded. Try again."
-msgstr ""
+msgstr "La foto se importó pero no se pudo cargar. Inténtalo de nuevo."
 
 #: includes/modules/class-privacy.php:238
 msgid "When the site owner connects the site, the plugin sends the site title, the site address, the site language, the email address of the site administrator, the plugin version and a random identifier of this installation to profotograaf.nl. Profotograaf uses the site title and administrator email address only to prefill the account sign-up form."
-msgstr ""
+msgstr "Cuando el propietario del sitio conecta el sitio, el plugin envía a profotograaf.nl el título del sitio, la dirección del sitio, el idioma del sitio, la dirección de correo electrónico del administrador del sitio, la versión del plugin y un identificador aleatorio de esta instalación. Profotograaf usa el título del sitio y la dirección de correo electrónico del administrador solo para rellenar previamente el formulario de registro de la cuenta."
 
 #: includes/modules/class-privacy.php:239
 msgid "Only when the site owner opts in to anonymous usage data, the plugin sends a daily usage report and reports of its own errors to services operated by the plugin author. They hold the plugin, WordPress and PHP versions, the site language, the active plugin modules, counts of failed connections and enquiry deliveries, and error codes. They hold no site address, visitor data, enquiries or tokens."
-msgstr ""
+msgstr "Solo cuando el propietario del sitio acepta compartir datos de uso anónimos, el plugin envía un informe de uso diario e informes de sus propios errores a servicios gestionados por el autor del plugin. Contienen las versiones del plugin, de WordPress y de PHP, el idioma del sitio, los módulos activos del plugin, recuentos de conexiones fallidas y de entregas de consultas, y códigos de error. No contienen la dirección del sitio, datos de visitantes, consultas ni tokens."
 
 #: includes/class-virtual-attachments.php:152
 msgid "Virtual attachments are switched off."
-msgstr ""
+msgstr "Los adjuntos virtuales están desactivados."
 
 #: includes/class-virtual-attachments.php:231
 msgid "This file is not a virtual Profotograaf attachment."
-msgstr ""
+msgstr "Este archivo no es un adjunto virtual de Profotograaf."
 
 #: includes/class-empty-gallery.php:76
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:11
 msgid "This gallery has no photos that can be shown on your site."
-msgstr ""
+msgstr "Esta galería no tiene fotos que se puedan mostrar en tu sitio."
 
 #: includes/class-empty-gallery.php:83
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet. Visitors do not see this note."
-msgstr ""
+msgstr "Puede que las fotos aún se estén procesando, o que la galería contenga vídeos o tipos de archivo que la inserción en el sitio todavía no puede mostrar. Los visitantes no ven esta nota."
 
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "0 visible"
-msgstr ""
+msgstr "0 visibles"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:11
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
-msgstr ""
+msgstr "Puede que las fotos aún se estén procesando, o que la galería contenga vídeos o tipos de archivo que la inserción en el sitio todavía no puede mostrar."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Original (not drawn in a grid yet)"
-msgstr ""
+msgstr "Original (aún no se dibuja en una cuadrícula)"
 
 #: includes/class-settings-schema.php:240
 msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
-msgstr ""
+msgstr "Recorta cada foto de una cuadrícula o presentación a una sola proporción, o conserva cada foto tal como se tomó. El mosaico siempre conserva la forma propia de cada foto."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Masonry keeps each photo's own shape."
-msgstr ""
+msgstr "El mosaico conserva la forma propia de cada foto."
 
 #: includes/class-settings-schema.php:121
 msgid "Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow."
-msgstr ""
+msgstr "Se usa cuando un bloque de galería o un shortcode no elige un diseño. El predeterminado de Profotograaf muestra cada galería en el diseño más parecido que tu sitio puede dibujar: cuadrícula, mosaico o presentación."
 
 #: build/gallery/index.js:3
 msgid "Justified"
-msgstr ""
+msgstr "Justificado"
 
 #: build/gallery/index.js:3
 msgid "Mosaic"
-msgstr ""
+msgstr "Mosaico"
 
 #: build/gallery/index.js:3
 msgid "Light table"
-msgstr ""
+msgstr "Mesa de luz"
 
 #: build/gallery/index.js:3
 msgid "Parallax"
-msgstr ""
+msgstr "Parallax"
 
 #: build/gallery/index.js:3
 msgid "Direct"
-msgstr ""
+msgstr "Directo"
 
 #: build/gallery/index.js:3
 msgid "Cinema"
-msgstr ""
+msgstr "Cine"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Filmstrip"
-msgstr ""
+msgstr "Tira de película"
 
 #: build/gallery/index.js:3
 msgid "Slideout"
-msgstr ""
+msgstr "Deslizante"
 
 #: build/gallery/index.js:3
 msgid "Flickr"
-msgstr ""
+msgstr "Flickr"
 
 #: build/gallery/index.js:3
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #: build/gallery/index.js:3
 msgid "Duo"
-msgstr ""
+msgstr "Dúo"
 
 #. translators: 1: layout name on Profotograaf, such as Parallax. 2: layout drawn on the site, such as Slideshow.
 #: build/gallery/index.js:9
 #, js-format
 msgid "%1$s on Profotograaf, shown as %2$s on your site"
-msgstr ""
+msgstr "%1$s en Profotograaf, se muestra como %2$s en tu sitio"
 
 #. translators: 1: layout name on Profotograaf, such as Parallax. 2: layout drawn on the site, such as Grid.
 #: build/gallery/index.js:10
 #, js-format
 msgid "%1$s on Profotograaf. This plugin does not know that layout, so it is shown as %2$s on your site."
-msgstr ""
+msgstr "%1$s en Profotograaf. Este plugin no conoce ese diseño, así que se muestra como %2$s en tu sitio."
 
 #. translators: %s: the layout drawn on the site, such as Slideshow.
 #: build/gallery/index.js:11
 #, js-format
 msgid "Shown as %s on your site."
-msgstr ""
+msgstr "Se muestra como %s en tu sitio."
 
 #: includes/modules/class-review-notice.php:75
 msgid "Leave a review"
-msgstr ""
+msgstr "Deja una reseña"
 
 #: includes/modules/class-review-notice.php:77
 msgid "Later"
-msgstr ""
+msgstr "Más tarde"
 
 #: includes/modules/class-review-notice.php:79
 msgid "Don't ask again"
-msgstr ""
+msgstr "No volver a preguntar"
 
 #: includes/modules/class-review-notice.php:148
 msgid "A client just downloaded photos from a gallery you share with Profotograaf. If the plugin helps your work, a short review on WordPress.org helps other photographers find it."
-msgstr ""
+msgstr "Un cliente acaba de descargar fotos de una galería que compartes con Profotograaf. Si el plugin te ayuda en tu trabajo, una breve reseña en WordPress.org ayuda a otros fotógrafos a encontrarlo."
 
 #: includes/modules/class-review-notice.php:151
 msgid "Your Profotograaf galleries have been viewed on your site at least 10 times. If the plugin works well for you, a short review on WordPress.org helps other photographers find it."
-msgstr ""
+msgstr "Tus galerías de Profotograaf se han visto en tu sitio al menos 10 veces. Si el plugin te funciona bien, una breve reseña en WordPress.org ayuda a otros fotógrafos a encontrarlo."
 
 #: includes/modules/class-review-notice.php:153
 msgid "If the Profotograaf plugin works well for you, a short review on WordPress.org helps other photographers find it."
-msgstr ""
+msgstr "Si el plugin de Profotograaf te funciona bien, una breve reseña en WordPress.org ayuda a otros fotógrafos a encontrarlo."
 
 #: includes/class-api-errors.php:164
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
-msgstr ""
+msgstr "Enviar archivos necesita un nuevo permiso. Vuelve a conectar este sitio en Ajustes > Profotograaf para concederlo."
 
 #: includes/modules/class-settings-page.php:182
 msgid "Sending files needs a new permission."
-msgstr ""
+msgstr "Enviar archivos necesita un nuevo permiso."
 
 #: includes/modules/class-settings-page.php:302
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
-msgstr ""
+msgstr "Enviar archivos necesita un nuevo permiso. Vuelve a conectar este sitio para concederlo. Tus galerías y ajustes se quedan como están."
 
 #: includes/trait-api-client-writes.php:35
 msgid "A gallery needs a title."
-msgstr ""
+msgstr "Una galería necesita un título."
 
 #: includes/trait-api-client-writes.php:43
 msgid "Profotograaf did not return the new gallery."
-msgstr ""
+msgstr "Profotograaf no devolvió la nueva galería."
 
 #: includes/trait-api-client-writes.php:75
 #: includes/trait-api-client-writes.php:79
 msgid "The file could not be read."
-msgstr ""
+msgstr "No se pudo leer el archivo."
 
 #: includes/trait-api-client-writes.php:106
 #: includes/trait-upload-queue-outcome.php:42
 msgid "Your Profotograaf storage is full. Free up space or upgrade your plan to send more files."
-msgstr ""
+msgstr "Tu almacenamiento de Profotograaf está lleno. Libera espacio o mejora tu plan para enviar más archivos."
 
 #: includes/trait-api-client-writes.php:115
 msgid "Profotograaf did not return the new photo."
-msgstr ""
+msgstr "Profotograaf no devolvió la nueva foto."
 
 #: includes/trait-api-client-writes.php:175
 msgid "A photo id is required."
-msgstr ""
+msgstr "Se necesita un ID de foto."
 
 #: includes/trait-api-client-writes.php:184
 msgid "Nothing to update: give a title, caption or alt text."
-msgstr ""
+msgstr "Nada que actualizar: indica un título, un pie de foto o un texto alternativo."
 
 #: build/gallery/index.js:1
 msgid "Profotograaf default (the gallery's own layout)"
-msgstr ""
+msgstr "Predeterminado de Profotograaf (el diseño propio de la galería)"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Gallery order"
-msgstr ""
+msgstr "Orden de la galería"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Automatic columns"
-msgstr ""
+msgstr "Columnas automáticas"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "All photos"
-msgstr ""
+msgstr "Todas las fotos"
 
 #: build/gallery/index.js:3
 msgid "Ignores the site default."
-msgstr ""
+msgstr "Ignora el valor predeterminado del sitio."
 
 #. translators: %s: gallery title.
 #: includes/admin/class-upload-panel.php:70
 #, php-format
 msgid "Created the gallery \"%s\" on Profotograaf and linked it."
-msgstr ""
+msgstr "Se creó la galería \"%s\" en Profotograaf y se vinculó."
 
 #: includes/admin/class-upload-panel.php:82
 msgid "Tick the box to confirm that files you send land in this gallery."
-msgstr ""
+msgstr "Marca la casilla para confirmar que los archivos que envías llegan a esta galería."
 
 #: includes/admin/class-upload-panel.php:93
 msgid "Choose one of your Profotograaf galleries."
-msgstr ""
+msgstr "Elige una de tus galerías de Profotograaf."
 
 #. translators: %s: gallery title.
 #: includes/admin/class-upload-panel.php:97
 #, php-format
 msgid "Linked the gallery \"%s\"."
-msgstr ""
+msgstr "Se vinculó la galería \"%s\"."
 
 #: includes/admin/class-upload-panel.php:109
 msgid "Unlinked the gallery. It and its photos stay on Profotograaf."
-msgstr ""
+msgstr "Se desvinculó la galería. Ella y sus fotos se quedan en Profotograaf."
 
 #: includes/admin/class-upload-panel.php:124
 msgid "New image uploads now go to this gallery automatically."
-msgstr ""
+msgstr "Las nuevas imágenes subidas van ahora automáticamente a esta galería."
 
 #: includes/admin/class-upload-panel.php:125
 msgid "New uploads are no longer sent automatically."
-msgstr ""
+msgstr "Las nuevas subidas ya no se envían automáticamente."
 
 #: includes/admin/class-upload-panel.php:142
 msgid "Send files to Profotograaf"
-msgstr ""
+msgstr "Enviar archivos a Profotograaf"
 
 #: includes/admin/class-upload-panel.php:143
 msgid "A file is sent only after a person chooses a linked gallery for it. Link the galleries here."
-msgstr ""
+msgstr "Un archivo solo se envía después de que una persona elija una galería vinculada para él. Vincula aquí las galerías."
 
 #: includes/admin/class-upload-panel.php:145
 msgid "Sending files needs a new permission. Connect this site again to grant it. Files wait until then."
-msgstr ""
+msgstr "Enviar archivos necesita un nuevo permiso. Vuelve a conectar este sitio para concederlo. Hasta entonces los archivos esperan."
 
 #. translators: 1: number of files waiting to be sent, 2: number of files that failed.
 #: includes/admin/class-upload-panel.php:153
 #, php-format
 msgid "%1$d waiting to be sent, %2$d failed."
-msgstr ""
+msgstr "%1$d pendientes de envío, %2$d fallidos."
 
 #: includes/admin/class-upload-panel.php:167
 msgid "New uploads"
-msgstr ""
+msgstr "Nuevas subidas"
 
 #: includes/admin/class-upload-panel.php:168
 msgid "Link"
-msgstr ""
+msgstr "Vincular"
 
 #: includes/admin/class-upload-panel.php:177
 msgid "Profotograaf no longer knows this gallery. Files cannot be sent to it."
-msgstr ""
+msgstr "Profotograaf ya no conoce esta galería. No se le pueden enviar archivos."
 
 #: includes/admin/class-upload-panel.php:188
 msgid "Sent automatically."
-msgstr ""
+msgstr "Se envía automáticamente."
 
 #: includes/admin/class-upload-panel.php:189
 msgid "Stop sending automatically"
-msgstr ""
+msgstr "Dejar de enviar automáticamente"
 
 #: includes/admin/class-upload-panel.php:191
 msgid "Send new image uploads automatically"
-msgstr ""
+msgstr "Enviar automáticamente las nuevas imágenes subidas"
 
 #: includes/admin/class-upload-panel.php:201
 msgid "Unlink"
-msgstr ""
+msgstr "Desvincular"
 
 #: includes/admin/class-upload-panel.php:210
 msgid "Create a gallery"
-msgstr ""
+msgstr "Crear una galería"
 
 #: includes/admin/class-upload-panel.php:214
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: includes/admin/class-upload-panel.php:216
 msgid "Create and link"
-msgstr ""
+msgstr "Crear y vincular"
 
 #: includes/admin/class-upload-panel.php:219
 msgid "Use an existing gallery"
-msgstr ""
+msgstr "Usar una galería existente"
 
 #: includes/admin/class-upload-panel.php:230
 msgid "No galleries were found in your Profotograaf account."
-msgstr ""
+msgstr "No se encontraron galerías en tu cuenta de Profotograaf."
 
 #: includes/admin/class-upload-panel.php:246
 msgid "Files I send land in this gallery, including a client gallery."
-msgstr ""
+msgstr "Los archivos que envío llegan a esta galería, también si es una galería de cliente."
 
 #: includes/admin/class-upload-panel.php:249
 msgid "Link this gallery"
-msgstr ""
+msgstr "Vincular esta galería"
 
 #: includes/admin/class-upload-panel.php:307
 #: includes/class-upload-queue.php:165
 msgid "Sending files to Profotograaf is switched off in the plugin settings."
-msgstr ""
+msgstr "El envío de archivos a Profotograaf está desactivado en los ajustes del plugin."
 
 #: includes/class-photo-importer.php:153
 msgid "This file was sent from this site, so there is nothing to re-import."
-msgstr ""
+msgstr "Este archivo se envió desde este sitio, así que no hay nada que volver a importar."
 
 #: includes/class-settings-schema.php:113
 msgid "Send Media Library files to Profotograaf"
-msgstr ""
+msgstr "Enviar archivos de la Biblioteca de medios a Profotograaf"
 
 #: includes/class-settings-schema.php:114
 msgid "Lets editors who can upload files send images to a Profotograaf gallery you link below. A file is sent only after a person chooses a linked gallery for it, in the attachment details, with the bulk action in the Media Library list, or automatically for a gallery where you switch that on. The original image goes to Profotograaf with its EXIF data except the GPS position, which is removed first. Later changes to the title, caption and alt text of a sent file are sent too. Files are sent in the background, never while you save."
-msgstr ""
+msgstr "Permite a los editores que pueden subir archivos enviar imágenes a una galería de Profotograaf que vincules abajo. Un archivo solo se envía después de que una persona elija una galería vinculada para él, en los detalles del adjunto, con la acción en lote de la lista de la Biblioteca de medios, o automáticamente para una galería en la que actives esa opción. La imagen original va a Profotograaf con sus datos EXIF, salvo la posición GPS, que se elimina antes. Los cambios posteriores en el título, el pie de foto y el texto alternativo de un archivo enviado también se envían. Los archivos se envían en segundo plano, nunca mientras guardas."
 
 #: includes/class-upload-queue.php:169
 msgid "This gallery is not linked for sending files."
-msgstr ""
+msgstr "Esta galería no está vinculada para enviar archivos."
 
 #: includes/class-upload-queue.php:172
 msgid "Only JPEG, PNG, WebP and GIF images can be sent to Profotograaf."
-msgstr ""
+msgstr "Solo se pueden enviar a Profotograaf imágenes JPEG, PNG, WebP y GIF."
 
 #: includes/class-upload-queue.php:175
 msgid "This file is on Profotograaf already."
-msgstr ""
+msgstr "Este archivo ya está en Profotograaf."
 
 #: includes/class-upload-queue.php:386
 msgid "The gallery this file was meant for is no longer linked. Choose a linked gallery to send it again."
-msgstr ""
+msgstr "La galería a la que iba destinado este archivo ya no está vinculada. Elige una galería vinculada para volver a enviarlo."
 
 #: includes/class-upload-queue.php:392
 #: includes/class-upload-queue.php:429
 msgid "The file could not be read from this site."
-msgstr ""
+msgstr "No se pudo leer el archivo desde este sitio."
 
 #: includes/class-upload-queue.php:397
 msgid "The file is too large for this site to send. Resize it and send it again."
-msgstr ""
+msgstr "El archivo es demasiado grande para que este sitio lo envíe. Redimensiónalo y vuelve a enviarlo."
 
 #: includes/class-upload-queue.php:434
 msgid "The file could not be prepared for sending."
-msgstr ""
+msgstr "No se pudo preparar el archivo para su envío."
 
 #: includes/trait-upload-queue-outcome.php:47
 msgid "Profotograaf does not know the gallery this file was meant for. The link was switched off. Link a gallery again to send it."
-msgstr ""
+msgstr "Profotograaf no conoce la galería a la que iba destinado este archivo. El vínculo se desactivó. Vuelve a vincular una galería para enviarlo."
 
 #: includes/trait-upload-queue-outcome.php:51
 msgid "Profotograaf does not accept this kind of file."
-msgstr ""
+msgstr "Profotograaf no acepta este tipo de archivo."
 
 #: includes/modules/class-media-import-screen.php:231
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
-msgstr ""
+msgstr "Enviado desde este sitio. Los cambios en el título, el pie de foto y el texto alternativo también se envían a Profotograaf."
 
 #. translators: %s: date the file was sent.
 #: includes/modules/class-media-upload.php:132
 #, php-format
 msgid "Sent to Profotograaf on %s."
-msgstr ""
+msgstr "Enviado a Profotograaf el %s."
 
 #: includes/modules/class-media-upload.php:138
 msgid "Waiting to be sent to Profotograaf."
-msgstr ""
+msgstr "Pendiente de envío a Profotograaf."
 
 #: includes/modules/class-media-upload.php:140
 msgid "Sending needs a new permission. Connect this site again under Settings > Profotograaf."
-msgstr ""
+msgstr "El envío necesita un nuevo permiso. Vuelve a conectar este sitio en Ajustes > Profotograaf."
 
 #: includes/modules/class-media-upload.php:153
 msgid "Send to Profotograaf"
-msgstr ""
+msgstr "Enviar a Profotograaf"
 
 #: includes/modules/class-media-upload.php:168
 msgid "Link a gallery under Settings > Profotograaf to send files."
-msgstr ""
+msgstr "Vincula una galería en Ajustes > Profotograaf para enviar archivos."
 
 #. translators: %s: gallery title.
 #: includes/modules/class-media-upload.php:212
 #, php-format
 msgid "Send to Profotograaf: %s"
-msgstr ""
+msgstr "Enviar a Profotograaf: %s"
 
 #. translators: %d: number of files queued.
 #: includes/modules/class-media-upload.php:263
 #, php-format
 msgid "%d file will be sent to Profotograaf in the background."
 msgid_plural "%d files will be sent to Profotograaf in the background."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d archivo se enviará a Profotograaf en segundo plano."
+msgstr[1] "%d archivos se enviarán a Profotograaf en segundo plano."
 
 #. translators: %d: number of files skipped.
 #: includes/modules/class-media-upload.php:269
 #, php-format
 msgid "%d file was skipped: it is not a supported image, is on Profotograaf already, or you may not edit it."
 msgid_plural "%d files were skipped: they are not supported images, are on Profotograaf already, or you may not edit them."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Se omitió %d archivo: no es una imagen compatible, ya está en Profotograaf o no puedes editarlo."
+msgstr[1] "Se omitieron %d archivos: no son imágenes compatibles, ya están en Profotograaf o no puedes editarlos."
 
 #: includes/modules/class-media-upload.php:304
 #: includes/modules/class-media-upload.php:311
 msgid "Sent"
-msgstr ""
+msgstr "Enviado"
 
 #: includes/modules/class-media-upload.php:309
 msgid "Waiting to be sent"
-msgstr ""
+msgstr "Pendiente de envío"
 
 #: includes/modules/class-media-upload.php:310
 msgid "Sending"
-msgstr ""
+msgstr "Enviando"
 
 #: includes/modules/class-media-upload.php:312
 msgid "Not sent"
-msgstr ""
+msgstr "No enviado"
 
 #: includes/modules/class-site-health.php:153
 msgid "Profotograaf file uploads"
-msgstr ""
+msgstr "Subidas de archivos a Profotograaf"
 
 #: includes/modules/class-site-health.php:317
 msgid "No Profotograaf file uploads failed"
-msgstr ""
+msgstr "No ha fallado ninguna subida de archivos a Profotograaf"
 
 #: includes/modules/class-site-health.php:317
 msgid "Every file was sent or is still waiting."
-msgstr ""
+msgstr "Cada archivo se envió o sigue esperando."
 
 #: includes/modules/class-site-health.php:322
 msgid "Profotograaf file uploads failed"
-msgstr ""
+msgstr "Fallaron subidas de archivos a Profotograaf"
 
 #. translators: %d: number of files that could not be sent.
 #: includes/modules/class-site-health.php:325
 #, php-format
 msgid "%d file could not be sent to Profotograaf."
 msgid_plural "%d files could not be sent to Profotograaf."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "No se pudo enviar %d archivo a Profotograaf."
+msgstr[1] "No se pudieron enviar %d archivos a Profotograaf."
 
 #: includes/modules/class-site-health.php:328
 msgid "Open the file in the Media Library to read why, and send it again."
-msgstr ""
+msgstr "Abre el archivo en la Biblioteca de medios para ver el motivo y vuelve a enviarlo."
 
 #: includes/trait-api-client-writes.php:139
 msgid "A gallery id and a file name are required."
-msgstr ""
+msgstr "Se necesitan un ID de galería y un nombre de archivo."
 
 #: build/gallery/index.js:4
 msgid "all photos"
-msgstr ""
+msgstr "todas las fotos"
 
 #: includes/modules/class-privacy.php:235
 msgid "Sending Media Library files"
-msgstr ""
+msgstr "Envío de archivos de la Biblioteca de medios"
 
 #: includes/modules/class-privacy.php:236
 msgid "Only when the site owner turns on sending Media Library files: a person who can upload files chooses a linked Profotograaf gallery for an image, and this site then sends that image to profotograaf.nl in the background. The gallery can be a client gallery. Before an image is sent, the plugin removes the GPS position from it. The other metadata stays in the file, such as camera, lens and date. Later changes to the title, caption and alt text of a sent image are sent too. HEIC, video and RAW files are not sent. Photos of people are personal data, so the site owner needs a basis for sending them. Deleting a file here deletes nothing on Profotograaf. The Media Library keeps a few hidden fields per sent file (the photo and gallery identifiers, the send state and the time) until the file is deleted."
-msgstr ""
+msgstr "Solo cuando el propietario del sitio activa el envío de archivos de la Biblioteca de medios: una persona que puede subir archivos elige una galería de Profotograaf vinculada para una imagen, y este sitio envía entonces esa imagen a profotograaf.nl en segundo plano. La galería puede ser una galería de cliente. Antes de enviar una imagen, el plugin elimina de ella la posición GPS. Los demás metadatos se quedan en el archivo, como la cámara, el objetivo y la fecha. Los cambios posteriores en el título, el pie de foto y el texto alternativo de una imagen enviada también se envían. Los archivos HEIC, de vídeo y RAW no se envían. Las fotos de personas son datos personales, así que el propietario del sitio necesita una base legal para enviarlas. Eliminar un archivo aquí no elimina nada en Profotograaf. La Biblioteca de medios guarda unos pocos campos ocultos por cada archivo enviado (los identificadores de la foto y de la galería, el estado de envío y la hora) hasta que se elimina el archivo."
 
 #: includes/class-change-poller.php:394
 msgid "The photo list could not be refreshed."
@@ -2579,474 +2579,474 @@ msgstr "Profotograaf envió una respuesta que este plugin no puede leer."
 
 #: includes/class-cron-health.php:191
 msgid "Profotograaf photo change check"
-msgstr ""
+msgstr "Comprobación de cambios en fotos de Profotograaf"
 
 #: includes/class-cron-health.php:242
 msgid "Profotograaf checks for photo changes"
-msgstr ""
+msgstr "Profotograaf comprueba los cambios en las fotos"
 
 #: includes/class-cron-health.php:248
 msgid "Changes to imported photos on Profotograaf are checked on time, or nothing needs checking yet."
-msgstr ""
+msgstr "Los cambios en las fotos importadas en Profotograaf se comprueban a tiempo, o todavía no hay nada que comprobar."
 
 #: includes/class-cron-health.php:255
 msgid "Profotograaf has not checked for photo changes"
-msgstr ""
+msgstr "Profotograaf no ha comprobado los cambios en las fotos"
 
 #: includes/class-cron-health.php:262
 msgid "Use \"Check now\" on the Profotograaf settings page, or run WordPress cron from the server. Add this line to the crontab of the site:"
-msgstr ""
+msgstr "Usa \"Comprobar ahora\" en la página de ajustes de Profotograaf, o ejecuta el cron de WordPress desde el servidor. Añade esta línea al crontab del sitio:"
 
 #: includes/class-cron-health.php:324
 msgid "This site sets DISABLE_WP_CRON, so photo changes on Profotograaf have not been checked for more than three hours."
-msgstr ""
+msgstr "Este sitio define DISABLE_WP_CRON, así que los cambios en las fotos de Profotograaf no se han comprobado desde hace más de tres horas."
 
 #: includes/class-cron-health.php:325
 msgid "Photo changes on Profotograaf have not been checked for more than three hours."
-msgstr ""
+msgstr "Los cambios en las fotos de Profotograaf no se han comprobado desde hace más de tres horas."
 
 #: includes/class-sync-panel.php:29
 msgid "Photo changes have not been checked yet."
-msgstr ""
+msgstr "Todavía no se han comprobado los cambios en las fotos."
 
 #. translators: %s: time since the last check, for example "5 minutes".
 #: includes/class-sync-panel.php:33
 #, php-format
 msgid "Photo changes last checked %s ago."
-msgstr ""
+msgstr "Cambios en las fotos comprobados por última vez hace %s."
 
 #: includes/class-sync-panel.php:50
 msgid "Check now"
-msgstr ""
+msgstr "Comprobar ahora"
 
 #: includes/class-sync-rest.php:116
 msgid "Connect this site to Profotograaf first."
-msgstr ""
+msgstr "Conecta primero este sitio a Profotograaf."
 
 #: includes/modules/class-settings-page.php:326
 msgid "Photo changes"
-msgstr ""
+msgstr "Cambios en las fotos"
 
 #: includes/modules/class-site-health.php:373
 msgid "Photo changes last checked"
-msgstr ""
+msgstr "Última comprobación de cambios en las fotos"
 
 #: assets/admin/sync.js:37
 msgid "A check is already running."
-msgstr ""
+msgstr "Ya hay una comprobación en curso."
 
 #: assets/admin/sync.js:40
 msgid "Checking is paused until the account is confirmed."
-msgstr ""
+msgstr "La comprobación está en pausa hasta que se confirme la cuenta."
 
 #: assets/admin/sync.js:43
 #: assets/admin/sync.js:63
 msgid "The check did not finish. Try again later."
-msgstr ""
+msgstr "La comprobación no terminó. Inténtalo de nuevo más tarde."
 
 #: assets/admin/sync.js:45
 msgid "Photo changes were checked."
-msgstr ""
+msgstr "Se comprobaron los cambios en las fotos."
 
 #: assets/admin/sync.js:54
 msgid "Checking…"
-msgstr ""
+msgstr "Comprobando…"
 
 #: includes/class-gallery-look.php:161
 #: build/gallery/index.js:4
 msgid "Space between rows (pixels)"
-msgstr ""
+msgstr "Espacio entre filas (píxeles)"
 
 #: includes/class-gallery-look.php:161
 #: includes/class-gallery-look.php:162
 msgid "From 0 to 96 pixels. Empty uses the gap between photos."
-msgstr ""
+msgstr "De 0 a 96 píxeles. Vacío usa el espacio entre fotos."
 
 #: includes/class-gallery-look.php:162
 #: build/gallery/index.js:4
 msgid "Space between columns (pixels)"
-msgstr ""
+msgstr "Espacio entre columnas (píxeles)"
 
 #: includes/class-gallery-look.php:167
 #: build/gallery/index.js:4
 msgid "Corners"
-msgstr ""
+msgstr "Esquinas"
 
 #: includes/class-gallery-look.php:168
 msgid "Rounded corners on every photo. Circle applies to square photos only; other shapes keep the default corners."
-msgstr ""
+msgstr "Esquinas redondeadas en cada foto. Círculo solo se aplica a fotos cuadradas; las demás formas conservan las esquinas predeterminadas."
 
 #: includes/class-gallery-look.php:175
 #: build/gallery/index.js:4
 msgid "Hover effect"
-msgstr ""
+msgstr "Efecto al pasar el ratón"
 
 #: includes/class-gallery-look.php:176
 msgid "What a photo does under the mouse or keyboard focus. Grow lifts the whole photo above its neighbours; the slideshow does not grow. Visitors who ask for less motion see no effect."
-msgstr ""
+msgstr "Lo que hace una foto bajo el ratón o el foco del teclado. Crecer eleva toda la foto por encima de sus vecinas; la presentación no crece. Los visitantes que piden menos movimiento no ven ningún efecto."
 
 #: includes/class-gallery-look.php:183
 #: build/gallery/index.js:4
 msgid "Hover strength"
-msgstr ""
+msgstr "Intensidad del efecto"
 
 #: includes/class-gallery-look.php:186
 #: build/gallery/index.js:4
 msgid "Subtle"
-msgstr ""
+msgstr "Sutil"
 
 #: includes/class-gallery-look.php:187
 #: includes/class-gallery-look.php:216
 #: build/gallery/index.js:4
 msgid "Strong"
-msgstr ""
+msgstr "Fuerte"
 
 #: includes/class-gallery-look.php:194
 #: build/gallery/index.js:4
 msgid "Frame colour"
-msgstr ""
+msgstr "Color del marco"
 
 #: includes/class-gallery-look.php:195
 msgid "The colour of the frame around each photo, as a hex code such as #ffffff. White when only a width is set."
-msgstr ""
+msgstr "El color del marco alrededor de cada foto, como código hexadecimal, por ejemplo #ffffff. Blanco cuando solo se define un ancho."
 
 #: includes/class-gallery-look.php:204
 #: build/gallery/index.js:4
 msgid "Frame width (pixels)"
-msgstr ""
+msgstr "Ancho del marco (píxeles)"
 
 #: includes/class-gallery-look.php:205
 msgid "A frame around each photo, from 1 to 24 pixels. 0 means no frame. Not drawn in a slideshow."
-msgstr ""
+msgstr "Un marco alrededor de cada foto, de 1 a 24 píxeles. 0 significa sin marco. No se dibuja en una presentación."
 
 #: includes/class-gallery-look.php:211
 #: build/gallery/index.js:4
 msgid "Shadow"
-msgstr ""
+msgstr "Sombra"
 
 #: includes/class-gallery-look.php:212
 msgid "A shadow under each photo. Not drawn in a slideshow."
-msgstr ""
+msgstr "Una sombra bajo cada foto. No se dibuja en una presentación."
 
 #: includes/class-gallery-look.php:214
 #: includes/class-gallery-look.php:245
 #: build/gallery/index.js:4
 msgid "None"
-msgstr ""
+msgstr "Ninguna"
 
 #: includes/class-gallery-look.php:215
 #: build/gallery/index.js:4
 msgid "Soft"
-msgstr ""
+msgstr "Suave"
 
 #: includes/class-gallery-look.php:229
 #: build/gallery/index.js:4
 msgid "Square corners"
-msgstr ""
+msgstr "Esquinas rectas"
 
 #: includes/class-gallery-look.php:230
 #: build/gallery/index.js:4
 msgid "Subtle (4 pixels)"
-msgstr ""
+msgstr "Sutiles (4 píxeles)"
 
 #: includes/class-gallery-look.php:231
 #: build/gallery/index.js:4
 msgid "Rounded (12 pixels)"
-msgstr ""
+msgstr "Redondeadas (12 píxeles)"
 
 #: includes/class-gallery-look.php:232
 msgid "Circle (square photos only)"
-msgstr ""
+msgstr "Círculo (solo fotos cuadradas)"
 
 #: includes/class-gallery-look.php:243
 #: build/gallery/index.js:4
 msgid "Zoom inside the frame"
-msgstr ""
+msgstr "Zoom dentro del marco"
 
 #: includes/class-gallery-look.php:244
 #: build/gallery/index.js:4
 msgid "Grow above the neighbours"
-msgstr ""
+msgstr "Crecer por encima de las vecinas"
 
 #: build/gallery/index.js:4
 msgid "Circle"
-msgstr ""
+msgstr "Círculo"
 
 #: build/gallery/index.js:4
 msgid "Circle (square photos only, not drawn now)"
-msgstr ""
+msgstr "Círculo (solo fotos cuadradas, ahora no se dibuja)"
 
 #: build/gallery/index.js:4
 msgid "Gap between photos"
-msgstr ""
+msgstr "Espacio entre fotos"
 
 #: build/gallery/index.js:4
 msgid "None (0 pixels)"
-msgstr ""
+msgstr "Ninguno (0 píxeles)"
 
 #: build/gallery/index.js:4
 msgid "Small (4 pixels)"
-msgstr ""
+msgstr "Pequeño (4 píxeles)"
 
 #: build/gallery/index.js:4
 msgid "Medium (12 pixels)"
-msgstr ""
+msgstr "Mediano (12 píxeles)"
 
 #: build/gallery/index.js:4
 msgid "Large (24 pixels)"
-msgstr ""
+msgstr "Grande (24 píxeles)"
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Custom"
-msgstr ""
+msgstr "Personalizado"
 
 #: build/gallery/index.js:4
 msgid "Custom gap (pixels)"
-msgstr ""
+msgstr "Espacio personalizado (píxeles)"
 
 #: build/gallery/index.js:4
 msgid "From 1 to 24 pixels; 0 means no frame. Leave empty for the site default."
-msgstr ""
+msgstr "De 1 a 24 píxeles; 0 significa sin marco. Déjalo vacío para el valor predeterminado del sitio."
 
 #: build/gallery/index.js:4
 msgid "White when only a width is set."
-msgstr ""
+msgstr "Blanco cuando solo se define un ancho."
 
 #: build/gallery/index.js:4
 msgid "Leave empty to use the gap between photos."
-msgstr ""
+msgstr "Déjalo vacío para usar el espacio entre fotos."
 
 #: build/gallery/index.js:4
 msgid "Spacing and shape"
-msgstr ""
+msgstr "Espaciado y forma"
 
 #: includes/class-full-page-markup.php:134
 msgid "Photo strip. Scroll sideways for more photos."
-msgstr ""
+msgstr "Tira de fotos. Desplázate hacia los lados para ver más fotos."
 
 #: includes/class-full-page-renderer.php:168
 msgid "Made with Profotograaf"
-msgstr ""
+msgstr "Hecho con Profotograaf"
 
 #: build/full-page-gallery/view.js:1
 msgid "Scroll back"
-msgstr ""
+msgstr "Desplazar hacia atrás"
 
 #: build/full-page-gallery/view.js:1
 msgid "Scroll forward"
-msgstr ""
+msgstr "Desplazar hacia delante"
 
 #: build/full-page-gallery/view.js:1
 msgid "Photo viewer"
-msgstr ""
+msgstr "Visor de fotos"
 
 #: build/full-page-gallery/view.js:1
 msgid "Previous photo"
-msgstr ""
+msgstr "Foto anterior"
 
 #: build/full-page-gallery/view.js:1
 msgid "Next photo"
-msgstr ""
+msgstr "Foto siguiente"
 
 #: build/full-page-gallery/view.js:1
 msgid "Close viewer"
-msgstr ""
+msgstr "Cerrar el visor"
 
 #: blocks/full-page-gallery/block.json
 msgctxt "block title"
 msgid "Full-page gallery"
-msgstr ""
+msgstr "Galería a página completa"
 
 #: blocks/full-page-gallery/block.json
 msgctxt "block description"
 msgid "Show one of your Profotograaf galleries across the full page, in sections of different shapes."
-msgstr ""
+msgstr "Muestra una de tus galerías de Profotograaf a lo largo de toda la página, en secciones de distintas formas."
 
 #: blocks/full-page-gallery/block.json
 msgctxt "block keyword"
 msgid "full page"
-msgstr ""
+msgstr "página completa"
 
 #: includes/class-full-page-template.php:37
 #: includes/class-full-page-template.php:65
 msgid "Profotograaf full page"
-msgstr ""
+msgstr "Página completa de Profotograaf"
 
 #: includes/class-full-page-template.php:38
 msgid "Shows the page content without the site header and footer, for a full-page gallery."
-msgstr ""
+msgstr "Muestra el contenido de la página sin la cabecera ni el pie del sitio, para una galería a página completa."
 
 #: build/full-page-gallery/index.js:4
 msgid "Calm"
-msgstr ""
+msgstr "Tranquilo"
 
 #: build/full-page-gallery/index.js:4
 msgid "Editorial"
-msgstr ""
+msgstr "Editorial"
 
 #: build/full-page-gallery/index.js:4
 msgid "Playful"
-msgstr ""
+msgstr "Desenfadado"
 
 #: build/full-page-gallery/index.js:4
 msgid "Large photos in a row"
-msgstr ""
+msgstr "Fotos grandes en fila"
 
 #: build/full-page-gallery/index.js:4
 msgid "Hero photo"
-msgstr ""
+msgstr "Foto principal"
 
 #: build/full-page-gallery/index.js:4
 msgid "One large and two small photos"
-msgstr ""
+msgstr "Una foto grande y dos pequeñas"
 
 #: build/full-page-gallery/index.js:4
 msgid "Rows"
-msgstr ""
+msgstr "Filas"
 
 #: build/full-page-gallery/index.js:4
 msgid "Number of photos"
-msgstr ""
+msgstr "Número de fotos"
 
 #: build/full-page-gallery/index.js:4
 msgid "Space between photos (px)"
-msgstr ""
+msgstr "Espacio entre fotos (px)"
 
 #: build/full-page-gallery/index.js:4
 msgid "Height (% of the screen height)"
-msgstr ""
+msgstr "Altura (% respecto al alto de la pantalla)"
 
 #: build/full-page-gallery/index.js:4
 msgid "Row height (px)"
-msgstr ""
+msgstr "Altura de fila (px)"
 
 #: build/full-page-gallery/index.js:4
 msgid "Side of the large photo"
-msgstr ""
+msgstr "Lado de la foto grande"
 
 #: build/full-page-gallery/index.js:4
 msgid "Swap sides on every second pair"
-msgstr ""
+msgstr "Intercambiar los lados en cada segundo par"
 
 #: build/full-page-gallery/index.js:4
 msgid "Title over the photo"
-msgstr ""
+msgstr "Título sobre la foto"
 
 #: build/full-page-gallery/index.js:4
 msgid "Alignment"
-msgstr ""
+msgstr "Alineación"
 
 #: build/full-page-gallery/index.js:4
 msgid "Left"
-msgstr ""
+msgstr "Izquierda"
 
 #: build/full-page-gallery/index.js:4
 msgid "Center"
-msgstr ""
+msgstr "Centro"
 
 #: build/full-page-gallery/index.js:4
 msgid "Right"
-msgstr ""
+msgstr "Derecha"
 
 #. translators: %s: the default value of a setting, such as 3:2 or Editorial.
 #: build/full-page-gallery/index.js:5
 #, js-format
 msgid "Default (%s)"
-msgstr ""
+msgstr "Predeterminado (%s)"
 
 #. translators: 1: lowest allowed number, 2: highest allowed number.
 #: build/full-page-gallery/index.js:6
 #, js-format
 msgid "From %1$d to %2$d."
-msgstr ""
+msgstr "De %1$d a %2$d."
 
 #: build/full-page-gallery/index.js:6
 msgid "picked"
-msgstr ""
+msgstr "elegida"
 
 #: build/full-page-gallery/index.js:6
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: build/full-page-gallery/index.js:6
 msgid "Choose photo"
-msgstr ""
+msgstr "Elegir foto"
 
 #: build/full-page-gallery/index.js:6
 msgid "Clear"
-msgstr ""
+msgstr "Borrar"
 
 #. translators: 1: section type such as Hero photo, 2: its number in the gallery.
 #: build/full-page-gallery/index.js:7
 #, js-format
 msgid "%1$s %2$d"
-msgstr ""
+msgstr "%1$s %2$d"
 
 #. translators: 1: section type such as Hero photo, 2: its number in the gallery, 3: photo position in it.
 #: build/full-page-gallery/index.js:8
 #, js-format
 msgid "%1$s %2$d, photo %3$d"
-msgstr ""
+msgstr "%1$s %2$d, foto %3$d"
 
 #: build/full-page-gallery/index.js:8
 msgid "Pick the photos for the large slots. A photo shows once, in the slot it was last picked for."
-msgstr ""
+msgstr "Elige las fotos para los huecos grandes. Una foto se muestra una sola vez, en el último hueco para el que se eligió."
 
 #. translators: 1: position of the section in the list, 2: section type such as Grid.
 #: build/full-page-gallery/index.js:9
 #, js-format
 msgid "Section %1$d: %2$s"
-msgstr ""
+msgstr "Sección %1$d: %2$s"
 
 #: build/full-page-gallery/index.js:9
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: build/full-page-gallery/index.js:9
 msgid "Move up"
-msgstr ""
+msgstr "Subir"
 
 #: build/full-page-gallery/index.js:9
 msgid "Move down"
-msgstr ""
+msgstr "Bajar"
 
 #: build/full-page-gallery/index.js:9
 msgid "Add a section. Without a section that shows photos, the gallery uses the default preset."
-msgstr ""
+msgstr "Añade una sección. Sin una sección que muestre fotos, la galería usa el ajuste preestablecido predeterminado."
 
 #: build/full-page-gallery/index.js:9
 msgid "Add a section"
-msgstr ""
+msgstr "Añadir una sección"
 
 #: build/full-page-gallery/index.js:9
 msgid "Preset"
-msgstr ""
+msgstr "Ajuste preestablecido"
 
 #: build/full-page-gallery/index.js:9
 msgid "The pattern of sections repeats until every photo is shown."
-msgstr ""
+msgstr "El patrón de secciones se repite hasta que se muestran todas las fotos."
 
 #: build/full-page-gallery/index.js:9
 msgid "No gallery chosen yet."
-msgstr ""
+msgstr "Todavía no se ha elegido ninguna galería."
 
 #: build/full-page-gallery/index.js:9
 msgid "Full-page gallery"
-msgstr ""
+msgstr "Galería a página completa"
 
 #: includes/class-upload-queue.php:214
 msgid "This file is not waiting for a new upload."
-msgstr ""
+msgstr "Este archivo no está esperando una nueva subida."
 
 #: includes/class-upload-queue.php:418
 msgid "The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there."
-msgstr ""
+msgstr "Puede que el archivo ya exista en Profotograaf, porque un intento anterior no obtuvo respuesta y no se pudo comprobar la galería. Mira en la galería y elige Volver a subir si la foto no está."
 
 #: includes/modules/class-media-upload.php:341
 msgid "Upload again"
-msgstr ""
+msgstr "Volver a subir"
 
 #: includes/trait-upload-queue-outcome.php:56
 msgid "Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery, and choose Upload again if the photo is not there."
-msgstr ""
+msgstr "No se pudo contactar con Profotograaf tras varios intentos. Puede que el archivo exista en Profotograaf. Mira en la galería y elige Volver a subir si la foto no está."
