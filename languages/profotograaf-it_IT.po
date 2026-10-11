@@ -245,11 +245,12 @@ msgstr "Le richieste esportate sono state rimosse."
 msgid "A gallery id is required."
 msgstr "Serve un ID galleria."
 
-#: includes/trait-api-client-writes.php:228
+#: includes/trait-api-client-writes.php:216
+#: includes/trait-api-client-writes.php:233
 msgid "The request to switch embedding on is not valid."
 msgstr "La richiesta di attivare l'incorporamento non è valida."
 
-#: includes/trait-api-client-writes.php:238
+#: includes/trait-api-client-writes.php:243
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Questa connessione non può ancora attivare le gallerie. Ricollega questo sito in Impostazioni > Profotograaf per concedere il nuovo permesso."
 
