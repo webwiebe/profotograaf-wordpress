@@ -206,12 +206,7 @@ final class Section_Sequencer {
 		if ( $rest > 1 ) {
 			$out[] = $this->tail_grid( $section, $rest, 1 );
 		} elseif ( 1 === $rest ) {
-			$hero  = (array) Sections_Schema::normalise(
-				array(
-					'type'     => 'hero',
-					'captions' => $section['captions'] ?? '',
-				)
-			);
+			$hero  = (array) Sections_Schema::normalise( array( 'type' => 'hero' ) + self::look( $section ) );
 			$out[] = array_merge(
 				$hero,
 				array(
@@ -221,6 +216,19 @@ final class Section_Sequencer {
 			);
 		}
 		return $out;
+	}
+
+	/**
+	 * The fields the rest keeps from the section it replaces: the gap, the
+	 * captions and the spacing and shape. A field the new type does not have,
+	 * or a value it does not allow, falls back to its default.
+	 *
+	 * @param array<string,mixed> $section The section the photos did not fill.
+	 * @return array<string,mixed>
+	 */
+	private static function look( array $section ): array {
+		$keep = array( 'gap', 'gapRow', 'gapColumn', 'captions', 'radius', 'hover', 'hoverStrength', 'frameColor', 'frameWidth', 'shadow' );
+		return array_intersect_key( $section, array_flip( $keep ) );
 	}
 
 	/**
@@ -234,13 +242,11 @@ final class Section_Sequencer {
 	private function tail_grid( array $section, int $columns, int $rows ): array {
 		$grid   = (array) Sections_Schema::normalise(
 			array(
-				'type'     => 'grid',
-				'columns'  => $columns,
-				'rows'     => $rows,
-				'ratio'    => $section['ratio'] ?? '',
-				'gap'      => $section['gap'] ?? '',
-				'captions' => $section['captions'] ?? '',
-			)
+				'type'    => 'grid',
+				'columns' => $columns,
+				'rows'    => $rows,
+				'ratio'   => $section['ratio'] ?? '',
+			) + self::look( $section )
 		);
 		$photos = array();
 		for ( $i = 0; $i < $columns * $rows; $i++ ) {

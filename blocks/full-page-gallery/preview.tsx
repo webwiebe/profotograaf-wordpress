@@ -1,6 +1,7 @@
 import { Notice, Spinner } from '@wordpress/components';
 import type { CSSProperties } from 'react';
 import { emptyGalleryNotice, errorMessage } from '../gallery/helpers';
+import { lookData, lookStyle } from './look';
 import type { SectionsState } from './use-sections';
 import type { PreviewPhoto, PreviewSection } from './types';
 
@@ -27,7 +28,7 @@ const TYPE_STYLES: Partial< Record< PreviewSection[ 'type' ], ( section: Preview
  * A hero and a text section have no gap.
  */
 export function sectionStyle( section: PreviewSection ): Style {
-	const own = TYPE_STYLES[ section.type ]?.( section ) ?? {};
+	const own = { ...TYPE_STYLES[ section.type ]?.( section ), ...lookStyle( section ) };
 	return section.type === 'hero' || section.type === 'text' ? own : { '--pf-gap': `${ section.gap ?? 0 }px`, ...own };
 }
 
@@ -69,6 +70,7 @@ function PhotoSection( { section }: { section: PreviewSection } ) {
 			data-type={ section.type }
 			data-side={ section.type === 'pair' ? section.side : undefined }
 			style={ sectionStyle( section ) }
+			{ ...lookData( section ) }
 		>
 			{ section.type === 'filmstrip' ? <div className="pf-fp-track">{ figures }</div> : figures }
 			{ section.type === 'hero' && section.title ? <h2 className="pf-fp-title">{ section.title }</h2> : null }

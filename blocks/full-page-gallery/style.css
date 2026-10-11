@@ -2,8 +2,10 @@
  * Front-end styles of the full-page gallery (#194). The renderer writes the
  * markup contract of docs/full-page-gallery.md; layout values arrive as custom
  * properties on each section. Phone is below 600px (sections.json
- * phoneBreakpoint).
+ * phoneBreakpoint). The spacing and shape of each section are in look.css.
  */
+
+@import "./look.css";
 
 .pf-fp {
 	box-sizing: border-box;

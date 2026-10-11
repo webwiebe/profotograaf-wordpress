@@ -18,6 +18,9 @@ export interface Section {
 	count?: number;
 	ratio?: string;
 	gap?: number;
+	/** Gap per axis in pixels; '' uses `gap`. */
+	gapRow?: number | '';
+	gapColumn?: number | '';
 	captions?: string;
 	height?: number;
 	rowHeight?: number;
@@ -27,6 +30,12 @@ export interface Section {
 	heading?: string;
 	text?: string;
 	align?: string;
+	radius?: string;
+	hover?: string;
+	hoverStrength?: string;
+	frameColor?: string;
+	frameWidth?: number;
+	shadow?: string;
 	/** Photos picked for this section, in slot order. */
 	photoIds?: string[];
 }
@@ -38,6 +47,8 @@ interface FieldRule {
 	min?: number;
 	max?: number;
 	enum?: string[];
+	/** A regular expression a text value must match, such as the frame colour. */
+	pattern?: string;
 }
 
 const TYPES = table.types as Record<

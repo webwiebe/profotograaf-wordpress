@@ -33,10 +33,29 @@ Presets repeat their pattern until the photos run out:
 | `playful` | grid 4×2, pair, filmstrip 8, pair, hero, masonry 3 columns 9 | 32 |
 | `custom` | the photographer's own list | any |
 
-A block stores an empty value for a field the photographer left alone, and
-`Sections_Schema::normalise()` fills it from the table. A site-wide setting
-can later sit between the two (keys `sections_<type>_<field>`) without a
-migration.
+Every photo type except `text` also has the spacing and shape fields of the
+gallery block (#198), with the same choices:
+
+| Field | Values | Default | Types |
+|---|---|---|---|
+| `gapRow`, `gapColumn` | 0 to 96 pixels, empty uses `gap` | empty | grid, masonry, feature, pair |
+| `radius` | `none`, `subtle` (4px), `rounded` (12px), `full` (circle) | `none` | all; `full` in a grid only, drawn for the 1:1 shape only |
+| `hover` | `zoom` (inside the frame), `grow`, `none` | `zoom` | all; hero and filmstrip have no `grow` |
+| `hoverStrength` | `subtle`, `strong` | `subtle` | all |
+| `frameWidth` | 0 to 24 pixels, 0 is no frame | 0 | all |
+| `frameColor` | a 3 or 6 digit hex colour | `#ffffff` | all |
+| `shadow` | `none`, `soft`, `strong` | `none` | all but filmstrip |
+
+The editor offers the gap presets of the gallery block (none 0, small 4,
+medium 12, large 24) or a custom number for `gap`, `gapRow` and `gapColumn`.
+The `gap` range is 0 to 96, as in the gallery block.
+
+A block stores an empty value for a field the photographer left alone.
+`Sections_Schema::normalise()` resolves every field through
+`Option_Resolver`: the section value, then the plugin setting
+`sections_<type>_<field>` (the field in snake case, such as
+`sections_grid_gap_row`) when the settings schema has one, then the table.
+No section has a plugin setting yet, so today the table default applies.
 
 ## Sequencer rules
 
@@ -47,8 +66,8 @@ migration.
    becomes a grid with `columns = min(remaining, columns)` (the columns of the
    section it replaces, or 3) and as many full rows as fit, then one shorter
    row of the photos left, so no row has an empty cell. One leftover photo
-   becomes a hero. The rest keeps the gap, ratio and captions of the section
-   it replaces.
+   becomes a hero. The rest keeps the gap, ratio, captions and spacing and
+   shape of the section it replaces, where its type has the field.
 4. A `text` section takes no photos and never ends the gallery.
 5. No photos: the fallback link, as in the gallery block.
 
@@ -102,6 +121,14 @@ The renderer writes this markup and the front-end script
   `--pf-ratio` (`auto` for `original`), `--pf-gap`, `--pf-height` (hero, in
   vh), `--pf-height-phone`, `--pf-row` and `--pf-row-phone` (filmstrip, in px),
   and `--pf-align` (text).
+- Spacing and shape (`Full_Page_Look`): `--pf-gap-row` and `--pf-gap-col`
+  when the section sets a gap per axis (the CSS falls back to `--pf-gap`),
+  `--pf-radius` (`4px`, `12px` or `50%`; a circle outside a 1:1 grid gets the
+  type's default corners), `--pf-frame` and `--pf-frame-color` when the frame
+  is wider than 0, `data-hover="zoom|grow"` with `data-hover-strength`, and
+  `data-shadow="soft|strong"`. The hover effect also follows keyboard focus,
+  and is off under `prefers-reduced-motion: reduce`. The styles are in
+  `blocks/full-page-gallery/look.css`.
 - `pair` sets `data-side="left|right"`. The renderer resolves the mirroring,
   so the script and the CSS read the side as written.
 - `filmstrip` sets `tabindex="0"`, `role="region"` and an `aria-label`, and
