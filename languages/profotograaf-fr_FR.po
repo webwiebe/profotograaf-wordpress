@@ -301,6 +301,7 @@ msgid "Profotograaf rejected the enquiry because it is incomplete or invalid."
 msgstr "Profotograaf a rejeté la demande car elle est incomplète ou invalide."
 
 #: includes/class-api-errors.php:80
+#: includes/cli/class-backup-command.php:120
 msgid "This site is not connected to Profotograaf."
 msgstr "Ce site n'est pas connecté à Profotograaf."
 
@@ -2249,11 +2250,11 @@ msgstr "Si l'extension Profotograaf vous convient, un court avis sur WordPress.o
 msgid "Sending files needs a new permission. Connect this site again under Settings > Profotograaf to grant it."
 msgstr "L'envoi de fichiers nécessite une nouvelle autorisation. Reconnectez ce site sous Réglages > Profotograaf pour l'accorder."
 
-#: includes/modules/class-settings-page.php:185
+#: includes/admin/class-backup-intro.php:64
 msgid "Sending files needs a new permission."
 msgstr "L'envoi de fichiers nécessite une nouvelle autorisation."
 
-#: includes/modules/class-settings-page.php:305
+#: includes/admin/class-backup-intro.php:63
 msgid "Sending files needs a new permission. Connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr "L'envoi de fichiers nécessite une nouvelle autorisation. Reconnectez ce site pour l'accorder. Vos galeries et vos réglages restent inchangés."
 
@@ -3149,27 +3150,27 @@ msgid_plural "%d photos kept on Profotograaf."
 msgstr[0] "%d photo conservée sur Profotograaf."
 msgstr[1] "%d photos conservées sur Profotograaf."
 
-#: includes/admin/class-backup-intro.php:25
+#: includes/admin/class-backup-intro.php:27
 msgid "Copies your Media Library images to your Profotograaf account."
 msgstr "Copie les images de votre Médiathèque vers votre compte Profotograaf."
 
-#: includes/admin/class-backup-intro.php:26
+#: includes/admin/class-backup-intro.php:28
 msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
 msgstr "La sauvegarde a son propre interrupteur ci-dessous et reste désactivée jusqu'à ce que vous l'activiez. Rien n'est envoyé avant. Le partage des données d'utilisation anonymes, l'utilisation des photos Profotograaf dans l'éditeur et l'envoi des fichiers de la Médiathèque ne l'activent pas."
 
-#: includes/admin/class-backup-intro.php:27
+#: includes/admin/class-backup-intro.php:29
 msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
 msgstr "Les fichiers vont dans des galeries privées de votre compte Profotograaf, une par mois, nommées d'après le titre de ce site. Chaque fichier est envoyé tel qu'il est stocké, avec son nom de fichier et ses métadonnées, qui peuvent contenir la position GPS. Les images, les fichiers RAW et les vidéos sont copiés. Les copies comptent dans votre stockage Profotograaf."
 
-#: includes/admin/class-backup-intro.php:28
+#: includes/admin/class-backup-intro.php:30
 msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
 msgstr "Chaque fichier est copié une fois. Le modifier ou le supprimer ici plus tard ne change rien sur Profotograaf. Lorsque vous désactivez la sauvegarde ou supprimez l'extension, les copies restent dans votre compte Profotograaf jusqu'à ce que vous les y supprimiez."
 
-#: includes/admin/class-backup-intro.php:29
+#: includes/admin/class-backup-intro.php:31
 msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
 msgstr "Les photos de personnes sont des données personnelles. Vérifiez que votre politique de confidentialité et vos accords avec vos clients autorisent une copie sur Profotograaf. Sur un site avec plusieurs auteurs, la sauvegarde copie aussi les fichiers téléversés par d'autres utilisateurs."
 
-#: includes/admin/class-backup-intro.php:39
+#: includes/admin/class-backup-intro.php:41
 #: includes/modules/class-privacy.php:237
 msgid "Backup to Profotograaf"
 msgstr "Sauvegarde sur Profotograaf"
@@ -3338,6 +3339,72 @@ msgstr "Lien copié."
 #: build/client-links/index.js:1
 msgid "This browser does not allow copying here. The link is selected, so press Ctrl+C or Cmd+C to copy it."
 msgstr "Ce navigateur n'autorise pas la copie ici. Le lien est sélectionné : appuyez sur Ctrl+C ou Cmd+C pour le copier."
+
+#: includes/admin/class-backup-intro.php:59
+msgid "The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
+msgstr "La sauvegarde nécessite une nouvelle autorisation pour créer ses galeries et copier des fichiers. Rien n'est copié tant que vous n'avez pas reconnecté ce site pour l'accorder. Vos galeries et réglages restent tels quels."
+
+#: includes/admin/class-backup-intro.php:60
+msgid "The backup to Profotograaf needs a new permission."
+msgstr "La sauvegarde sur Profotograaf nécessite une nouvelle autorisation."
+
+#. translators: 1: site title, 2: year and month, for example 2026-10.
+#: includes/class-backup-galleries.php:80
+#, php-format
+msgid "%1$s backup %2$s"
+msgstr "%1$s sauvegarde %2$s"
+
+#: includes/cli/class-backup-command.php:77
+msgid "The backup is switched off. Switch it on under Settings > Profotograaf > Backup."
+msgstr "La sauvegarde est désactivée. Activez-la sous Réglages > Profotograaf > Sauvegarde."
+
+#. translators: %d: number of Media Library items.
+#: includes/cli/class-backup-command.php:89
+#, php-format
+msgid "Checked %d Media Library item."
+msgid_plural "Checked %d Media Library items."
+msgstr[0] "%d élément de la Médiathèque vérifié."
+msgstr[1] "%d éléments de la Médiathèque vérifiés."
+
+#. translators: %d: number of files.
+#: includes/cli/class-backup-command.php:101
+#, php-format
+msgid "Sent %d file to Profotograaf."
+msgid_plural "Sent %d files to Profotograaf."
+msgstr[0] "%d fichier envoyé à Profotograaf."
+msgstr[1] "%d fichiers envoyés à Profotograaf."
+
+#: includes/cli/class-backup-command.php:122
+msgid "The backup needs a new permission. Connect this site again under Settings > Profotograaf."
+msgstr "La sauvegarde nécessite une nouvelle autorisation. Reconnectez ce site sous Réglages > Profotograaf."
+
+#: includes/cli/class-backup-command.php:124
+msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then run this command with --resume."
+msgstr "Votre espace de stockage Profotograaf est plein, la sauvegarde est donc en pause. Libérez de l'espace ou passez à une offre supérieure, puis lancez cette commande avec --resume."
+
+#: includes/cli/class-backup-command.php:126
+msgid "The backup is paused. Run this command with --resume to try again now."
+msgstr "La sauvegarde est en pause. Lancez cette commande avec --resume pour réessayer maintenant."
+
+#: includes/cli/class-backup-command.php:128
+msgid "Profotograaf did not accept more files for now. The backup tries again later on its own."
+msgstr "Profotograaf n'accepte plus de fichiers pour le moment. La sauvegarde réessaiera plus tard d'elle-même."
+
+#: includes/cli/class-backup-command.php:130
+msgid "Another backup run is in progress."
+msgstr "Une autre sauvegarde est déjà en cours."
+
+#: includes/cli/class-backup-command.php:132
+msgid "This site ran low on memory. Run the command again to send the rest."
+msgstr "Ce site a manqué de mémoire. Relancez la commande pour envoyer le reste."
+
+#: includes/cli/class-backup-command.php:134
+msgid "The backup stopped early. Run the command again to send the rest."
+msgstr "La sauvegarde s'est arrêtée plus tôt que prévu. Relancez la commande pour envoyer le reste."
+
+#: includes/modules/class-backup.php:94
+msgid "Every five minutes (Profotograaf backup)"
+msgstr "Toutes les cinq minutes (sauvegarde Profotograaf)"
 
 #: includes/modules/class-client-galleries.php:232
 #: build/client-galleries/index.js:3

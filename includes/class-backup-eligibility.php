@@ -223,7 +223,8 @@ final class Backup_Eligibility {
 	 * Checks one attachment and records the outcome in its backup state.
 	 *
 	 * A `done` item keeps its state, because the backup copies a file once.
-	 * A `failed` item keeps its state until the photographer retries it. An
+	 * A `failed` or `needs_check` item keeps its state until the photographer
+	 * retries it, and an `uploading` one belongs to a running upload. An
 	 * item the rules now ignore leaves the queue.
 	 *
 	 * @param int $attachment_id Attachment id.
@@ -231,7 +232,7 @@ final class Backup_Eligibility {
 	 */
 	public function apply( int $attachment_id ): string {
 		$current = $this->state->state( $attachment_id );
-		if ( Backup_State::DONE === $current || Backup_State::FAILED === $current ) {
+		if ( in_array( $current, Backup_State::SETTLED, true ) ) {
 			return $current;
 		}
 		$result = $this->check( $attachment_id );

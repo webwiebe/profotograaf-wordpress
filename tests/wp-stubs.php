@@ -60,6 +60,13 @@ if ( ! class_exists( 'WP_Post' ) ) {
 		 * @var string
 		 */
 		public $post_content = '';
+
+		/**
+		 * Date, in the site's time zone.
+		 *
+		 * @var string
+		 */
+		public $post_date = '0000-00-00 00:00:00';
 	}
 }
 
