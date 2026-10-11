@@ -53,7 +53,7 @@ trait Upload_Queue_Outcome {
 		}
 		if ( is_array( $data ) && ! empty( $data['retryable'] ) ) {
 			if ( $attempts >= self::MAX_ATTEMPTS ) {
-				$this->fail( $id, __( 'Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery before you send it again.', 'profotograaf' ) );
+				$this->fail( $id, __( 'Profotograaf could not be reached after several attempts. The file may exist on Profotograaf. Look in the gallery, and choose Upload again if the photo is not there.', 'profotograaf' ), true );
 				return;
 			}
 			// The platform may have saved the file before the answer was lost.
@@ -82,12 +82,18 @@ trait Upload_Queue_Outcome {
 	/**
 	 * Ends a file as failed, with a message the person can read.
 	 *
-	 * @param int    $id      Attachment id.
-	 * @param string $message Translated message.
+	 * @param int    $id         Attachment id.
+	 * @param string $message    Translated message.
+	 * @param bool   $maybe_sent Whether the file may be on Profotograaf already, see maybe_sent().
 	 */
-	private function fail( int $id, string $message ): void {
+	private function fail( int $id, string $message, bool $maybe_sent = false ): void {
 		update_post_meta( $id, self::META_STATE, self::STATE_FAILED );
 		update_post_meta( $id, self::META_ERROR, $message );
+		if ( $maybe_sent ) {
+			update_post_meta( $id, self::META_MAYBE_SENT, '1' );
+		} else {
+			delete_post_meta( $id, self::META_MAYBE_SENT );
+		}
 		delete_post_meta( $id, self::META_CHECK );
 		delete_post_meta( $id, self::META_NEXT_AT );
 		Logger::warning( 'A file could not be sent to Profotograaf.', array( 'attachment' => $id ) );
@@ -107,6 +113,7 @@ trait Upload_Queue_Outcome {
 		update_post_meta( $id, self::META_STATE, self::STATE_UPLOADED );
 		update_post_meta( $id, self::META_UPLOADED, $this->now() );
 		delete_post_meta( $id, self::META_ERROR );
+		delete_post_meta( $id, self::META_MAYBE_SENT );
 		delete_post_meta( $id, self::META_CHECK );
 		delete_post_meta( $id, self::META_NEXT_AT );
 		// The upload route takes the file only, so the text is sent after it. 'initial' skips empty fields.

@@ -52,6 +52,7 @@ class Upload_Queue {
 	public const META_NEXT_AT    = '_profotograaf_upload_next_at';
 	public const META_STARTED    = '_profotograaf_upload_started_at';
 	public const META_CHECK      = '_profotograaf_upload_check';
+	public const META_MAYBE_SENT = '_profotograaf_upload_maybe_sent';
 	public const META_TEXT_PUSH  = '_profotograaf_text_push';
 	public const META_TEXT_TRIES = '_profotograaf_text_attempts';
 
@@ -183,8 +184,36 @@ class Upload_Queue {
 		delete_post_meta( $attachment_id, self::META_ERROR );
 		delete_post_meta( $attachment_id, self::META_NEXT_AT );
 		delete_post_meta( $attachment_id, self::META_CHECK );
+		delete_post_meta( $attachment_id, self::META_MAYBE_SENT );
 		$this->schedule( $this->now() );
 		return true;
+	}
+
+	/**
+	 * Whether a failed file may be on Profotograaf already: an attempt lost its
+	 * answer and the gallery could not be checked. The photographer then
+	 * decides per file whether to upload it again (#201).
+	 *
+	 * @param int $attachment_id Attachment id.
+	 */
+	public function maybe_sent( int $attachment_id ): bool {
+		return self::STATE_FAILED === $this->state( $attachment_id ) && '' !== (string) get_post_meta( $attachment_id, self::META_MAYBE_SENT, true );
+	}
+
+	/**
+	 * Queues a failed file again for the gallery it was meant for. The run
+	 * sends it without looking it up first, so a copy that did arrive earlier
+	 * shows twice. Callers check the capabilities.
+	 *
+	 * @param int $attachment_id Attachment id.
+	 * @return true|WP_Error
+	 */
+	public function upload_again( int $attachment_id ) {
+		$gallery_id = (string) get_post_meta( $attachment_id, self::META_GALLERY, true );
+		if ( self::STATE_FAILED !== $this->state( $attachment_id ) || '' === $gallery_id ) {
+			return Api_Errors::make( 'profotograaf_upload_not_failed', __( 'This file is not waiting for a new upload.', 'profotograaf' ), 400, false );
+		}
+		return $this->assign( $attachment_id, $gallery_id );
 	}
 
 	/**
@@ -386,7 +415,7 @@ class Upload_Queue {
 					$this->retry( $id, $attempts, $found );
 					return;
 				}
-				$this->fail( $id, __( 'The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery before you send it again.', 'profotograaf' ) );
+				$this->fail( $id, __( 'The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there.', 'profotograaf' ), true );
 				return;
 			}
 		}
