@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  * - Leads: enquiries failed for good and wait on this site.
  * - Backup storage: the backup is paused because the storage on Profotograaf
  *   is full.
- * - Backup failures: files could not be backed up and wait for the
+ * - Backup failures: files could not be copied and wait for the
  *   photographer to retry them.
  *
  * Other backup states (waiting, a short backoff, no cron) need no action
@@ -180,9 +180,9 @@ class Admin_Notices implements Module {
 		if ( 'storage_full' === $pause['reason'] ) {
 			$notices[ self::BACKUP_STORAGE ] = array(
 				'signature' => 'backup_storage:' . $pause['until'],
-				'message'   => __( 'Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then press Back up now.', 'profotograaf' ),
+				'message'   => __( 'Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now.', 'profotograaf' ),
 				'link'      => Backup_Panel::url(),
-				'label'     => __( 'Open the backup settings', 'profotograaf' ),
+				'label'     => __( 'Open the copy settings', 'profotograaf' ),
 				'screen'    => 'settings_page_' . Settings_Page::SLUG,
 			);
 		}
@@ -192,7 +192,7 @@ class Admin_Notices implements Module {
 				'signature' => 'backup_failed:' . $waiting,
 				'message'   => sprintf(
 					/* translators: %d: number of files. */
-					_n( '%d file could not be backed up to Profotograaf.', '%d files could not be backed up to Profotograaf.', $waiting, 'profotograaf' ),
+					_n( '%d file could not be copied to Profotograaf.', '%d files could not be copied to Profotograaf.', $waiting, 'profotograaf' ),
 					$waiting
 				),
 				'link'      => Backup_Panel::url(),

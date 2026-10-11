@@ -164,7 +164,7 @@ class Backup_Module_Test extends Wp_Test_Case {
 		$schedules = $this->module->add_schedule( array( 'hourly' => array( 'interval' => 3600 ) ) );
 
 		$this->assertSame( 300, $schedules[ Backup_Worker::SCHEDULE ]['interval'] );
-		$this->assertSame( 'Every five minutes (Profotograaf backup)', $schedules[ Backup_Worker::SCHEDULE ]['display'] );
+		$this->assertSame( 'Every five minutes (Profotograaf copy)', $schedules[ Backup_Worker::SCHEDULE ]['display'] );
 		$this->assertArrayHasKey( 'hourly', $schedules );
 		$this->assertArrayHasKey( Backup_Worker::SCHEDULE, $this->module->add_schedule( null ) );
 	}
@@ -578,7 +578,7 @@ class Backup_Module_Test extends Wp_Test_Case {
 
 		$this->command()->run();
 		$this->assertSame(
-			array( 'Sent 0 files to Profotograaf. Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then run this command with --resume.' ),
+			array( 'Sent 0 files to Profotograaf. Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then run this command with --resume.' ),
 			$this->printed( 'warning' )
 		);
 
@@ -634,10 +634,10 @@ class Backup_Module_Test extends Wp_Test_Case {
 	public static function stops(): array {
 		return array(
 			'not connected' => array( 'not_connected', 'This site is not connected to Profotograaf.' ),
-			'reconnect'     => array( 'reconnect', 'The backup needs a new permission. Connect this site again under Settings > Profotograaf.' ),
-			'backoff'       => array( 'backoff', 'Profotograaf did not accept more files for now. The backup tries again later on its own.' ),
-			'busy'          => array( 'busy', 'Another backup run is in progress.' ),
-			'other'         => array( 'gallery_missing', 'The backup stopped early. Run the command again to send the rest.' ),
+			'reconnect'     => array( 'reconnect', 'Copying needs a new permission. Connect this site again under Settings > Profotograaf.' ),
+			'backoff'       => array( 'backoff', 'Profotograaf did not accept more files for now. Copying tries again later on its own.' ),
+			'busy'          => array( 'busy', 'Another copy run is in progress.' ),
+			'other'         => array( 'gallery_missing', 'Copying stopped early. Run the command again to send the rest.' ),
 		);
 	}
 
@@ -686,7 +686,7 @@ class Backup_Module_Test extends Wp_Test_Case {
 
 		$this->command()->run();
 
-		$this->assertSame( array( 'The backup is switched off. Switch it on under Settings > Profotograaf > Backup.' ), $this->printed( 'warning' ) );
+		$this->assertSame( array( 'Copying is switched off. Switch it on under Settings > Profotograaf > Copy to Profotograaf.' ), $this->printed( 'warning' ) );
 		$this->assertSame( array(), $this->http->requests );
 		$this->assertSame( array(), $this->sql );
 	}
@@ -718,7 +718,7 @@ class Backup_Module_Test extends Wp_Test_Case {
 		$this->assertNull( $state->find_copy( 12, '' ) );
 	}
 
-	// Back up now and Retry failed.
+	// Copy now and Retry failed.
 
 	private function recording(): Recording_Backup {
 		$connection = new Connection();
@@ -785,7 +785,7 @@ class Backup_Module_Test extends Wp_Test_Case {
 		$this->assertSame( '1 file will be sent again in the background.', $this->transients['profotograaf_notice_7']['message'] );
 
 		$module->handle_now();
-		$this->assertSame( 'The backup starts within a minute, in the background. You can leave this page.', $this->transients['profotograaf_notice_7']['message'] );
+		$this->assertSame( 'Copying starts within a minute, in the background. You can leave this page.', $this->transients['profotograaf_notice_7']['message'] );
 
 		$this->backup( 'all', false );
 		$module->handle_now();

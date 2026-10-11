@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Shows where the backup stands while it is switched on: how many files are
  * backed up and how many wait, when the worker last ran and whether WP-Cron
- * runs it, a pause, the bytes still to send, "Back up now", "Retry failed"
+ * runs it, a pause, the bytes still to send, "Copy now", "Retry failed"
  * and the files that wait for the photographer, with the reason.
  *
  * The buttons post to the admin-post actions of Modules\Backup.
@@ -48,7 +48,7 @@ class Backup_Panel {
 	private Backup_State $state;
 
 	/**
-	 * Backup status.
+	 * Copy status.
 	 *
 	 * @var Backup_Status
 	 */
@@ -58,7 +58,7 @@ class Backup_Panel {
 	 * Constructor.
 	 *
 	 * @param Plugin             $plugin Service container.
-	 * @param Backup_Status|null $status Backup status, built from the plugin by default.
+	 * @param Backup_Status|null $status Copy status, built from the plugin by default.
 	 */
 	public function __construct( Plugin $plugin, ?Backup_Status $status = null ) {
 		$this->plugin = $plugin;
@@ -75,7 +75,7 @@ class Backup_Panel {
 		if ( Settings_Schema::TAB_BACKUP !== $tab || ! $this->plugin->settings()->backup_enabled() ) {
 			return;
 		}
-		echo '<h2>' . esc_html__( 'Backup status', 'profotograaf' ) . '</h2><div class="profotograaf-backup-status">';
+		echo '<h2>' . esc_html__( 'Copy status', 'profotograaf' ) . '</h2><div class="profotograaf-backup-status">';
 		if ( ! $this->plugin->connection()->is_connected() ) {
 			printf(
 				'<p>%1$s <a href="%2$s">%3$s</a></p></div>',
@@ -99,7 +99,7 @@ class Backup_Panel {
 		}
 		$this->render_bytes();
 		echo '<div class="profotograaf-backup-status__actions">';
-		self::render_button( Backup::NOW, __( 'Back up now', 'profotograaf' ), 'primary' );
+		self::render_button( Backup::NOW, __( 'Copy now', 'profotograaf' ), 'primary' );
 		if ( $this->status->waiting_for_you() > 0 ) {
 			self::render_button( Backup::RETRY, __( 'Retry failed', 'profotograaf' ), 'secondary' );
 		}
@@ -119,11 +119,11 @@ class Backup_Panel {
 		$total  = $this->status->total();
 		$lines  = array();
 		if ( ! ( new Backup_Backfill( new Backup_Eligibility( $this->plugin->settings(), $this->state ) ) )->status()['complete'] ) {
-			$lines[] = __( 'Still looking through the Media Library for files to back up.', 'profotograaf' );
+			$lines[] = __( 'Still looking through the Media Library for files to copy.', 'profotograaf' );
 		}
 		$lines[] = sprintf(
 			/* translators: 1: number of files backed up, 2: number of files in the backup. */
-			_n( '%1$s of %2$s file backed up.', '%1$s of %2$s files backed up.', $total, 'profotograaf' ),
+			_n( '%1$s of %2$s file copied.', '%1$s of %2$s files copied.', $total, 'profotograaf' ),
 			number_format_i18n( $counts[ Backup_State::DONE ] ),
 			number_format_i18n( $total )
 		);
@@ -140,7 +140,7 @@ class Backup_Panel {
 		$skipped = $counts[ Backup_State::SKIPPED ];
 		if ( $skipped > 0 ) {
 			/* translators: %s: number of files. */
-			$lines[] = sprintf( _n( '%s file is not backed up. The Backup column in the Media Library list says why.', '%s files are not backed up. The Backup column in the Media Library list says why.', $skipped, 'profotograaf' ), number_format_i18n( $skipped ) );
+			$lines[] = sprintf( _n( '%s file is not copied. The Copy column in the Media Library list says why.', '%s files are not copied. The Copy column in the Media Library list says why.', $skipped, 'profotograaf' ), number_format_i18n( $skipped ) );
 		}
 		$last    = $this->status->last_run()['at'];
 		$lines[] = $last > 0
@@ -162,21 +162,21 @@ class Backup_Panel {
 		$when     = '' === $pause['reason'] ? '' : (string) wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $pause['until'] );
 		if ( 'storage_full' === $pause['reason'] ) {
 			/* translators: %s: date and time. */
-			$problems[] = esc_html( sprintf( __( 'Your Profotograaf storage is full, so the backup is paused until %s. Free up space or upgrade your plan, then press Back up now.', 'profotograaf' ), $when ) );
+			$problems[] = esc_html( sprintf( __( 'Your Profotograaf storage is full, so copying is paused until %s. Free up space or upgrade your plan, then press Copy now.', 'profotograaf' ), $when ) );
 		} elseif ( 'backoff' === $pause['reason'] ) {
 			/* translators: %s: date and time. */
-			$problems[] = esc_html( sprintf( __( 'Profotograaf asked the backup to wait. It tries again on its own at %s.', 'profotograaf' ), $when ) );
+			$problems[] = esc_html( sprintf( __( 'Profotograaf asked copying to wait. It tries again on its own at %s.', 'profotograaf' ), $when ) );
 		}
 		$cron = $this->status->cron();
 		if ( ! $cron['ok'] ) {
 			$problems[] = esc_html(
 				$cron['disabled']
-					? __( 'This site sets DISABLE_WP_CRON and no run of the backup has been seen, so nothing is sent.', 'profotograaf' )
-					: __( 'The backup has not run for more than an hour, so WP-Cron does not seem to run on this site.', 'profotograaf' )
+					? __( 'This site sets DISABLE_WP_CRON and no copy run has been seen, so nothing is sent.', 'profotograaf' )
+					: __( 'Copying has not run for more than an hour, so WP-Cron does not seem to run on this site.', 'profotograaf' )
 			) . ' ' . esc_html__( 'Run WordPress cron from the server with this crontab line:', 'profotograaf' ) . ' <code>' . esc_html( Cron_Health::cron_line() ) . '</code>';
 		}
 		if ( $this->status->stuck() ) {
-			$problems[] = esc_html__( 'No file was sent for more than six hours while files wait. Press Back up now to try again, and check Tools > Site Health.', 'profotograaf' );
+			$problems[] = esc_html__( 'No file was sent for more than six hours while files wait. Press Copy now to try again, and check Tools > Site Health.', 'profotograaf' );
 		}
 		return $problems;
 	}
@@ -208,7 +208,7 @@ class Backup_Panel {
 			return;
 		}
 		echo '<h3>' . esc_html__( 'Files that wait for you', 'profotograaf' ) . '</h3>';
-		echo '<p class="description">' . esc_html__( 'Retry failed sends these files again. A file whose backup is not confirmed may then be on Profotograaf twice.', 'profotograaf' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Retry failed sends these files again. A file whose copy is not confirmed may then be on Profotograaf twice.', 'profotograaf' ) . '</p>';
 		echo '<table class="widefat striped profotograaf-backup-failures"><thead><tr>';
 		foreach ( array( __( 'File', 'profotograaf' ), __( 'State', 'profotograaf' ), __( 'Reason', 'profotograaf' ) ) as $heading ) {
 			echo '<th scope="col">' . esc_html( $heading ) . '</th>';

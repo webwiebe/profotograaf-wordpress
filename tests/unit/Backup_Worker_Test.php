@@ -75,7 +75,7 @@ class Backup_Worker_Test extends Wp_Test_Case {
 			array(
 				'id'    => $id,
 				'slug'  => $id,
-				'title' => 'Example Photography backup 2026-10',
+				'title' => 'Example Photography copy 2026-10',
 			)
 		);
 	}
@@ -140,8 +140,8 @@ class Backup_Worker_Test extends Wp_Test_Case {
 			),
 			$this->paths()
 		);
-		$this->assertSame( array( 'title' => 'Example Photography backup 2026-10' ), $this->http->body( 0 ) );
-		$this->assertSame( array( 'title' => 'Example Photography backup 2026-09' ), $this->http->body( 3 ) );
+		$this->assertSame( array( 'title' => 'Example Photography copy 2026-10' ), $this->http->body( 0 ) );
+		$this->assertSame( array( 'title' => 'Example Photography copy 2026-09' ), $this->http->body( 3 ) );
 		$this->assertStringContainsString( 'filename="photo-11.jpg"', (string) $this->http->requests[1]['body'] );
 		$this->assertStringContainsString( 'bytes of 11', (string) $this->http->requests[1]['body'], 'The file is sent as stored.' );
 		$this->assertSame(
@@ -573,9 +573,9 @@ class Backup_Worker_Test extends Wp_Test_Case {
 
 	public function test_a_gallery_title_falls_back_to_the_host_and_stays_short(): void {
 		Functions\when( 'get_bloginfo' )->justReturn( '' );
-		$this->assertSame( 'photos.example.com backup 2026-10', Backup_Galleries::title( '2026-10' ) );
+		$this->assertSame( 'photos.example.com copy 2026-10', Backup_Galleries::title( '2026-10' ) );
 
 		Functions\when( 'get_bloginfo' )->justReturn( str_repeat( 'a', 300 ) );
-		$this->assertSame( str_repeat( 'a', 150 ) . ' backup 2026-10', Backup_Galleries::title( '2026-10' ) );
+		$this->assertSame( str_repeat( 'a', 150 ) . ' copy 2026-10', Backup_Galleries::title( '2026-10' ) );
 	}
 }

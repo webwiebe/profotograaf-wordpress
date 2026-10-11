@@ -242,7 +242,7 @@ class Backup_Worker {
 	}
 
 	/**
-	 * Lifts a pause or a wait, for "Back up now" and after a reconnect.
+	 * Lifts a pause or a wait, for "Copy now" and after a reconnect.
 	 */
 	public function resume(): void {
 		delete_option( self::PAUSE );

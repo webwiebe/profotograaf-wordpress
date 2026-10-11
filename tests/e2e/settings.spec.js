@@ -40,7 +40,7 @@ test.describe( 'Settings > Profotograaf', () => {
 	test( 'the five tabs are linked', async ( { page } ) => {
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
 
-		for ( const name of [ 'General', 'Galleries', 'Enquiry forms', 'Backup', 'Advanced' ] ) {
+		for ( const name of [ 'General', 'Galleries', 'Enquiry forms', 'Copy to Profotograaf', 'Advanced' ] ) {
 			await expect( page.locator( '.nav-tab-wrapper' ).getByRole( 'link', { name } ) ).toBeVisible();
 		}
 	} );

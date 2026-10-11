@@ -163,18 +163,18 @@ test.describe( 'Backup against the mock platform', () => {
 		await login( page );
 		await page.goto( BACKUP_TAB );
 
-		const toggle = page.getByLabel( 'Back up the Media Library to Profotograaf' );
+		const toggle = page.getByLabel( 'Copy the Media Library to Profotograaf' );
 		await expect( toggle ).not.toBeChecked();
-		await expect( page.getByRole( 'heading', { name: 'Backup status' } ) ).toHaveCount( 0 );
+		await expect( page.getByRole( 'heading', { name: 'Copy status' } ) ).toHaveCount( 0 );
 		expect( php( out( "(int) wp_next_scheduled( 'profotograaf_backup_upload' )" ) ) ).toBe( 0 );
 
 		await toggle.check();
-		await page.getByLabel( 'What to back up' ).selectOption( 'all' );
+		await page.getByLabel( 'What to copy' ).selectOption( 'all' );
 		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
 
-		await expect( page.getByLabel( 'Back up the Media Library to Profotograaf' ) ).toBeChecked();
-		await expect( page.getByRole( 'heading', { name: 'Backup status' } ) ).toBeVisible();
-		await expect( page.getByText( 'Still looking through the Media Library for files to back up.', { exact: false } ) ).toBeVisible();
+		await expect( page.getByLabel( 'Copy the Media Library to Profotograaf' ) ).toBeChecked();
+		await expect( page.getByRole( 'heading', { name: 'Copy status' } ) ).toBeVisible();
+		await expect( page.getByText( 'Still looking through the Media Library for files to copy.', { exact: false } ) ).toBeVisible();
 		await expect( page.getByText( 'The first run starts within a few minutes.', { exact: false } ) ).toBeVisible();
 
 		// Switching it on starts the walk of the Media Library from the first
@@ -198,7 +198,7 @@ test.describe( 'Backup against the mock platform', () => {
 		expect( creates[ 0 ].status ).toBe( 201 );
 		// Only a title: the platform creates the gallery private.
 		expect( Object.keys( creates[ 0 ].body ) ).toEqual( [ 'title' ] );
-		expect( creates[ 0 ].body.title ).toMatch( /^Profotograaf E2E backup \d{4}-\d{2}$/ );
+		expect( creates[ 0 ].body.title ).toMatch( /^Profotograaf E2E copy \d{4}-\d{2}$/ );
 		for ( const image of seeded ) {
 			expect( uploads ).toContainEqual( { status: 202, gallery_id: 'g-e2e-new', filename: image.file, type: 'image/png', bytes: image.bytes } );
 			expect( backupState( image.id ) ).toBe( 'done' );
@@ -210,12 +210,12 @@ test.describe( 'Backup against the mock platform', () => {
 
 		await login( page );
 		await page.goto( BACKUP_TAB );
-		await expect( page.locator( '.profotograaf-backup-status__line' ) ).toHaveText( /\b(\d+) of \1 files backed up\..* Last run .+ ago\./ );
+		await expect( page.locator( '.profotograaf-backup-status__line' ) ).toHaveText( /\b(\d+) of \1 files copied\..* Last run .+ ago\./ );
 
 		await page.goto( '/wp-admin/upload.php?mode=list' );
-		await expect( page.locator( 'th#profotograaf_backup' ) ).toHaveText( 'Backup' );
+		await expect( page.locator( 'th#profotograaf_backup' ) ).toHaveText( 'Copy' );
 		for ( const image of seeded ) {
-			await expect( page.locator( `#post-${ image.id } td.column-profotograaf_backup` ) ).toHaveText( 'Backed up' );
+			await expect( page.locator( `#post-${ image.id } td.column-profotograaf_backup` ) ).toHaveText( 'Copied' );
 		}
 	} );
 
@@ -227,7 +227,7 @@ test.describe( 'Backup against the mock platform', () => {
 
 		await mock( '/__mode?mode=storage_full' );
 		const output = wp( 'profotograaf', 'backup', 'run' );
-		expect( output ).toContain( 'Your Profotograaf storage is full, so the backup is paused.' );
+		expect( output ).toContain( 'Your Profotograaf storage is full, so copying is paused.' );
 
 		const { uploads } = await received();
 		expect( uploads.at( -1 ) ).toEqual( { status: 413, gallery_id: 'g-e2e-new', filename: image.file, type: 'image/png', bytes: image.bytes } );
@@ -236,17 +236,17 @@ test.describe( 'Backup against the mock platform', () => {
 
 		// A paused backup sends nothing until it is resumed.
 		const again = wp( 'profotograaf', 'backup', 'run' );
-		expect( again ).toContain( 'The backup is paused.' );
+		expect( again ).toContain( 'Copying is paused.' );
 		expect( ( await received() ).uploads ).toHaveLength( uploads.length );
 
 		await login( page );
 		await page.goto( BACKUP_TAB );
-		await expect( page.getByText( /Your Profotograaf storage is full, so the backup is paused until .+\. Free up space or upgrade your plan, then press Back up now\./ ) ).toBeVisible();
+		await expect( page.getByText( /Your Profotograaf storage is full, so copying is paused until .+\. Free up space or upgrade your plan, then press Copy now\./ ) ).toBeVisible();
 		await expect( page.locator( '.profotograaf-backup-status__line' ) ).toContainText( '1 file waits to be sent.' );
 
 		await page.goto( '/wp-admin/upload.php?mode=list' );
-		await expect( page.locator( '.profotograaf-notice--backup_storage' ) ).toContainText( 'Your Profotograaf storage is full, so the backup is paused.' );
-		await expect( page.locator( `#post-${ image.id } td.column-profotograaf_backup` ) ).toHaveText( 'Waiting to be backed up' );
+		await expect( page.locator( '.profotograaf-notice--backup_storage' ) ).toContainText( 'Your Profotograaf storage is full, so copying is paused.' );
+		await expect( page.locator( `#post-${ image.id } td.column-profotograaf_backup` ) ).toHaveText( 'Waiting to be copied' );
 
 		// Space freed on Profotograaf: --resume lifts the pause and sends the file.
 		await mock( '/__mode?mode=up' );
@@ -266,7 +266,7 @@ test.describe( 'Backup against the mock platform', () => {
 		const before = await received();
 
 		const output = wp( 'profotograaf', 'backup', 'run' );
-		expect( output ).toContain( 'The backup needs a new permission. Connect this site again under Settings > Profotograaf.' );
+		expect( output ).toContain( 'Copying needs a new permission. Connect this site again under Settings > Profotograaf.' );
 
 		const after = await received();
 		expect( after.creates.slice( before.creates.length ) ).toEqual( [ { status: 403, body: { title: before.creates[ 0 ].body.title } } ] );
@@ -277,20 +277,20 @@ test.describe( 'Backup against the mock platform', () => {
 		expect( connection.write_denied ).toBe( true );
 
 		// The next run stops before it calls the platform at all.
-		expect( wp( 'profotograaf', 'backup', 'run' ) ).toContain( 'The backup needs a new permission.' );
+		expect( wp( 'profotograaf', 'backup', 'run' ) ).toContain( 'Copying needs a new permission.' );
 		expect( ( await received() ).apiHits ).toBe( after.apiHits );
 
 		await login( page );
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
-		await expect( page.getByText( 'The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it.', { exact: false } ) ).toBeVisible();
+		await expect( page.getByText( 'Copying needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it.', { exact: false } ) ).toBeVisible();
 		await expect( page.getByRole( 'button', { name: 'Connect again' } ) ).toBeVisible();
 
 		await page.goto( BACKUP_TAB );
-		await expect( page.locator( '.profotograaf-backup-status' ) ).toContainText( 'The backup needs a new permission to create its galleries and copy files.' );
+		await expect( page.locator( '.profotograaf-backup-status' ) ).toContainText( 'Copying needs a new permission to create its galleries and copy files.' );
 		await expect( page.locator( '.profotograaf-backup-status' ).getByRole( 'link', { name: 'Connect this site again' } ) ).toBeVisible();
 
 		await page.goto( '/wp-admin/index.php' );
-		await expect( page.getByText( 'The backup to Profotograaf needs a new permission.' ) ).toBeVisible();
+		await expect( page.getByText( 'Copying to Profotograaf needs a new permission.' ) ).toBeVisible();
 
 		expect( ( await received() ).uploads ).toHaveLength( before.uploads.length );
 	} );

@@ -192,8 +192,8 @@ class Backup_Settings_Test extends Wp_Test_Case {
 
 		( new Privacy() )->add_policy_content();
 
-		$this->assertStringContainsString( 'Backup to Profotograaf', $captured );
-		foreach ( array( 'image files', 'file names', 'site title in the gallery name', 'access token', 'https://profotograaf.nl/api/v1/embed/galleries/&lt;gallery id&gt;/photos', 'https://profotograaf.nl/api/v1/embed/galleries,', 'leaves the copies in the Profotograaf account', 'Only when the site owner switches on the backup' ) as $needle ) {
+		$this->assertStringContainsString( 'Copy to Profotograaf', $captured );
+		foreach ( array( 'image files', 'file names', 'site title in the gallery name', 'access token', 'https://profotograaf.nl/api/v1/embed/galleries/&lt;gallery id&gt;/photos', 'https://profotograaf.nl/api/v1/embed/galleries,', 'leaves the copies in the Profotograaf account', 'Only when the site owner switches on copying' ) as $needle ) {
 			$this->assertStringContainsString( $needle, $captured );
 		}
 	}

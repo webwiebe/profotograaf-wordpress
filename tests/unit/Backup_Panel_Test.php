@@ -92,7 +92,7 @@ class Backup_Panel_Test extends Wp_Test_Case {
 		$html = $this->render();
 
 		$this->assertStringContainsString( 'Nothing is copied while this site is not connected', $html );
-		$this->assertStringNotContainsString( 'Back up now', $html );
+		$this->assertStringNotContainsString( 'Copy now', $html );
 	}
 
 	public function test_the_status_line_counts_the_files_and_names_the_last_run(): void {
@@ -108,10 +108,10 @@ class Backup_Panel_Test extends Wp_Test_Case {
 
 		$this->assertSame(
 			array(
-				'1,240 of 1,256 files backed up.',
+				'1,240 of 1,256 files copied.',
 				'13 files wait to be sent.',
 				'3 files wait for you, see the list below.',
-				'5 files are not backed up. The Backup column in the Media Library list says why.',
+				'5 files are not copied. The Copy column in the Media Library list says why.',
 				'Last run 4 mins ago.',
 			),
 			$this->panel()->summary()
@@ -127,8 +127,8 @@ class Backup_Panel_Test extends Wp_Test_Case {
 
 		$this->assertSame(
 			array(
-				'Still looking through the Media Library for files to back up.',
-				'0 of 1 file backed up.',
+				'Still looking through the Media Library for files to copy.',
+				'0 of 1 file copied.',
 				'1 file waits to be sent.',
 				'The first run starts within a few minutes.',
 			),
@@ -151,13 +151,13 @@ class Backup_Panel_Test extends Wp_Test_Case {
 
 		$html = $this->render();
 
-		$this->assertStringContainsString( '<h2>Backup status</h2>', $html );
-		$this->assertStringContainsString( '<button>Back up now</button>', $html );
+		$this->assertStringContainsString( '<h2>Copy status</h2>', $html );
+		$this->assertStringContainsString( '<button>Copy now</button>', $html );
 		$this->assertStringContainsString( 'value="profotograaf_backup_now"', $html );
 		$this->assertStringContainsString( '<button>Retry failed</button>', $html );
 		$this->assertStringContainsString( '2048 B waits to be sent.', $html );
-		$this->assertStringContainsString( '<a href="https://photos.example.com/wp-admin/post.php?post=2">Photo 2</a></td><td>Backup failed</td><td>Profotograaf answered with error 500.</td>', $html );
-		$this->assertStringContainsString( '>#3</a></td><td>Backup not confirmed</td>', $html );
+		$this->assertStringContainsString( '<a href="https://photos.example.com/wp-admin/post.php?post=2">Photo 2</a></td><td>Copy failed</td><td>Profotograaf answered with error 500.</td>', $html );
+		$this->assertStringContainsString( '>#3</a></td><td>Copy not confirmed</td>', $html );
 		$this->assertStringNotContainsString( 'more file', $html );
 	}
 
@@ -197,7 +197,7 @@ class Backup_Panel_Test extends Wp_Test_Case {
 		);
 		$problems                              = $this->panel()->problems();
 		$this->assertCount( 1, $problems );
-		$this->assertStringContainsString( 'storage is full, so the backup is paused until 2026-09-21', $problems[0] );
+		$this->assertStringContainsString( 'storage is full, so copying is paused until 2026-09-21', $problems[0] );
 
 		$this->options[ Backup_Worker::PAUSE ]['reason'] = 'backoff';
 		$this->assertStringContainsString( 'It tries again on its own at', $this->panel()->problems()[0] );

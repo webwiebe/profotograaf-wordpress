@@ -426,13 +426,13 @@ class Backup_Status_Test extends Wp_Test_Case {
 	// Labels.
 
 	public function test_each_state_has_a_label(): void {
-		$this->assertSame( 'Waiting to be backed up', Backup_Labels::state( 'queued' ) );
-		$this->assertSame( 'Being backed up', Backup_Labels::state( 'uploading' ) );
-		$this->assertSame( 'Backed up', Backup_Labels::state( 'done' ) );
-		$this->assertSame( 'Not backed up', Backup_Labels::state( 'skipped' ) );
-		$this->assertSame( 'Backup failed', Backup_Labels::state( 'failed' ) );
-		$this->assertSame( 'Backup not confirmed', Backup_Labels::state( 'needs_check' ) );
-		$this->assertSame( 'Marked for the backup', Backup_Labels::state( '', true ) );
+		$this->assertSame( 'Waiting to be copied', Backup_Labels::state( 'queued' ) );
+		$this->assertSame( 'Being copied', Backup_Labels::state( 'uploading' ) );
+		$this->assertSame( 'Copied', Backup_Labels::state( 'done' ) );
+		$this->assertSame( 'Not copied', Backup_Labels::state( 'skipped' ) );
+		$this->assertSame( 'Copy failed', Backup_Labels::state( 'failed' ) );
+		$this->assertSame( 'Copy not confirmed', Backup_Labels::state( 'needs_check' ) );
+		$this->assertSame( 'Marked for copying', Backup_Labels::state( '', true ) );
 		$this->assertSame( '', Backup_Labels::state( '' ) );
 	}
 
@@ -469,12 +469,12 @@ class Backup_Status_Test extends Wp_Test_Case {
 
 		$this->assertSame(
 			array(
-				'label'  => 'Backup failed',
+				'label'  => 'Copy failed',
 				'reason' => 'Profotograaf answered with error 502.',
 			),
 			Backup_Labels::of( $state, 1 )
 		);
 		$this->assertSame( '', Backup_Labels::of( $state, 2 )['reason'] );
-		$this->assertSame( 'Marked for the backup', Backup_Labels::of( $state, 3 )['label'] );
+		$this->assertSame( 'Marked for copying', Backup_Labels::of( $state, 3 )['label'] );
 	}
 }

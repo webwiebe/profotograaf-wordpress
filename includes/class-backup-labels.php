@@ -26,19 +26,19 @@ final class Backup_Labels {
 	public static function state( string $state, bool $marked = false ): string {
 		switch ( $state ) {
 			case Backup_State::QUEUED:
-				return __( 'Waiting to be backed up', 'profotograaf' );
+				return __( 'Waiting to be copied', 'profotograaf' );
 			case Backup_State::UPLOADING:
-				return __( 'Being backed up', 'profotograaf' );
+				return __( 'Being copied', 'profotograaf' );
 			case Backup_State::DONE:
-				return __( 'Backed up', 'profotograaf' );
+				return __( 'Copied', 'profotograaf' );
 			case Backup_State::SKIPPED:
-				return __( 'Not backed up', 'profotograaf' );
+				return __( 'Not copied', 'profotograaf' );
 			case Backup_State::FAILED:
-				return __( 'Backup failed', 'profotograaf' );
+				return __( 'Copy failed', 'profotograaf' );
 			case Backup_State::NEEDS_CHECK:
-				return __( 'Backup not confirmed', 'profotograaf' );
+				return __( 'Copy not confirmed', 'profotograaf' );
 		}
-		return $marked ? __( 'Marked for the backup', 'profotograaf' ) : '';
+		return $marked ? __( 'Marked for copying', 'profotograaf' ) : '';
 	}
 
 	/**

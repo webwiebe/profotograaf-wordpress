@@ -1,6 +1,6 @@
 <?php
 /**
- * Backup to Profotograaf: the producers and the schedule.
+ * Copy to Profotograaf: the producers and the schedule.
  *
  * @package Profotograaf
  */
@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * - Backup_Worker sends the queue every five minutes. Each run records a
  *   heartbeat in Backup_Status.
  *
- * The Backup tab offers "Back up now" and "Retry failed" (admin-post
+ * The Backup tab offers "Copy now" and "Retry failed" (admin-post
  * actions NOW and RETRY). Both only change state and move the next upload
  * run forward; the upload itself happens in WP-Cron, never in the page
  * request.
@@ -53,7 +53,7 @@ class Backup implements Module {
 	/** Seconds before the first upload run after the backup is switched on. */
 	public const FIRST_RUN = 60;
 
-	/** The admin-post action of "Back up now". */
+	/** The admin-post action of "Copy now". */
 	public const NOW = 'profotograaf_backup_now';
 
 	/** The admin-post action of "Retry failed". */
@@ -111,7 +111,7 @@ class Backup implements Module {
 		$schedules                            = is_array( $schedules ) ? $schedules : array();
 		$schedules[ Backup_Worker::SCHEDULE ] = array(
 			'interval' => Backup_Worker::INTERVAL,
-			'display'  => __( 'Every five minutes (Profotograaf backup)', 'profotograaf' ),
+			'display'  => __( 'Every five minutes (Profotograaf copy)', 'profotograaf' ),
 		);
 		return $schedules;
 	}
@@ -124,7 +124,7 @@ class Backup implements Module {
 	}
 
 	/**
-	 * "Back up now": lifts a pause, goes on with an unfinished walk of the
+	 * "Copy now": lifts a pause, goes on with an unfinished walk of the
 	 * Media Library and moves the next upload run to now. WP-Cron starts it
 	 * on the next request, so this request sends nothing.
 	 *
@@ -164,14 +164,14 @@ class Backup implements Module {
 	}
 
 	/**
-	 * Handles "Back up now".
+	 * Handles "Copy now".
 	 */
 	public function handle_now(): void {
 		$this->authorize( self::NOW );
 		$this->notice(
 			$this->back_up_now()
-				? __( 'The backup starts within a minute, in the background. You can leave this page.', 'profotograaf' )
-				: __( 'The backup cannot start: switch it on and connect this site to Profotograaf first.', 'profotograaf' )
+				? __( 'Copying starts within a minute, in the background. You can leave this page.', 'profotograaf' )
+				: __( 'Copying cannot start: switch it on and connect this site to Profotograaf first.', 'profotograaf' )
 		);
 		$this->finish();
 	}
@@ -281,7 +281,7 @@ class Backup implements Module {
 		$was = self::backup_values( $old_value );
 		$now = self::backup_values( $new_value );
 		if ( $now['on'] && ( ! $was['on'] || $was['scope'] !== $now['scope'] ) ) {
-			// Switching on is "Back up now": a pause from an earlier full storage is lifted too.
+			// Switching on is "Copy now": a pause from an earlier full storage is lifted too.
 			$this->worker()->resume();
 			// Without a connection the first batch does nothing, and a later pairing resumes the walk.
 			$this->backfill()->restart();

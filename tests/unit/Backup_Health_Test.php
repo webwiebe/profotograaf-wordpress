@@ -81,7 +81,7 @@ class Backup_Health_Test extends Wp_Test_Case {
 		$result = $this->health()->permission_result();
 
 		$this->assertSame( 'recommended', $result['status'] );
-		$this->assertSame( 'The Profotograaf backup waits for a connection', $result['label'] );
+		$this->assertSame( 'The Profotograaf copy waits for a connection', $result['label'] );
 	}
 
 	public function test_cron_is_good_after_a_recent_run_or_while_inactive(): void {
@@ -135,7 +135,7 @@ class Backup_Health_Test extends Wp_Test_Case {
 		$result = $this->health()->queue_result();
 
 		$this->assertSame( 'recommended', $result['status'] );
-		$this->assertSame( 'The Profotograaf backup queue is stuck', $result['label'] );
+		$this->assertSame( 'The Profotograaf copy queue is stuck', $result['label'] );
 		$this->assertStringContainsString( '4 files wait', $result['description'] );
 	}
 
@@ -148,7 +148,7 @@ class Backup_Health_Test extends Wp_Test_Case {
 		$result = $this->health()->queue_result();
 
 		$this->assertSame( 'recommended', $result['status'] );
-		$this->assertStringContainsString( '2 files could not be backed up', $result['description'] );
+		$this->assertStringContainsString( '2 files could not be copied', $result['description'] );
 		$this->assertStringContainsString( 'Retry failed', $result['actions'] );
 	}
 

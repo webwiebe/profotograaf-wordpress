@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T16:51:55+00:00\n"
+"POT-Creation-Date: 2026-10-11T18:08:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -61,7 +61,7 @@ msgid "Copies your Media Library images to your Profotograaf account."
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:29
-msgid "The backup has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
+msgid "Copying has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on."
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:30
@@ -69,24 +69,27 @@ msgid "Files go to private galleries in your Profotograaf account, one per month
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:31
-msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch the backup off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
+msgid "Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch copying off or delete the plugin, the copies stay in your Profotograaf account until you delete them there."
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:32
-msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, the backup also copies files that other users uploaded."
+msgid "Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, copying also includes files that other users uploaded."
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:47
+#: includes/class-settings-schema.php:64
+#: includes/modules/class-backup-admin.php:129
+#: includes/modules/class-backup-admin.php:145
 #: includes/modules/class-privacy.php:237
-msgid "Backup to Profotograaf"
+msgid "Copy to Profotograaf"
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:65
-msgid "The backup needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
+msgid "Copying needs a new permission to create its galleries and copy files. Nothing is copied until you connect this site again to grant it. Your galleries and settings stay as they are."
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:66
-msgid "The backup to Profotograaf needs a new permission."
+msgid "Copying to Profotograaf needs a new permission."
 msgstr ""
 
 #: includes/admin/class-backup-intro.php:69
@@ -98,7 +101,7 @@ msgid "Sending files needs a new permission."
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:78
-msgid "Backup status"
+msgid "Copy status"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:82
@@ -117,7 +120,7 @@ msgid "Connect this site again"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:102
-msgid "Back up now"
+msgid "Copy now"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:104
@@ -125,14 +128,14 @@ msgid "Retry failed"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:122
-msgid "Still looking through the Media Library for files to back up."
+msgid "Still looking through the Media Library for files to copy."
 msgstr ""
 
 #. translators: 1: number of files backed up, 2: number of files in the backup.
 #: includes/admin/class-backup-panel.php:126
 #, php-format
-msgid "%1$s of %2$s file backed up."
-msgid_plural "%1$s of %2$s files backed up."
+msgid "%1$s of %2$s file copied."
+msgid_plural "%1$s of %2$s files copied."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -155,8 +158,8 @@ msgstr[1] ""
 #. translators: %s: number of files.
 #: includes/admin/class-backup-panel.php:143
 #, php-format
-msgid "%s file is not backed up. The Backup column in the Media Library list says why."
-msgid_plural "%s files are not backed up. The Backup column in the Media Library list says why."
+msgid "%s file is not copied. The Copy column in the Media Library list says why."
+msgid_plural "%s files are not copied. The Copy column in the Media Library list says why."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -173,23 +176,23 @@ msgstr ""
 #. translators: %s: date and time.
 #: includes/admin/class-backup-panel.php:165
 #, php-format
-msgid "Your Profotograaf storage is full, so the backup is paused until %s. Free up space or upgrade your plan, then press Back up now."
+msgid "Your Profotograaf storage is full, so copying is paused until %s. Free up space or upgrade your plan, then press Copy now."
 msgstr ""
 
 #. translators: %s: date and time.
 #: includes/admin/class-backup-panel.php:168
 #, php-format
-msgid "Profotograaf asked the backup to wait. It tries again on its own at %s."
+msgid "Profotograaf asked copying to wait. It tries again on its own at %s."
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:174
 #: includes/class-backup-health.php:111
-msgid "This site sets DISABLE_WP_CRON and no run of the backup has been seen, so nothing is sent."
+msgid "This site sets DISABLE_WP_CRON and no copy run has been seen, so nothing is sent."
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:175
 #: includes/class-backup-health.php:112
-msgid "The backup has not run for more than an hour, so WP-Cron does not seem to run on this site."
+msgid "Copying has not run for more than an hour, so WP-Cron does not seem to run on this site."
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:176
@@ -198,7 +201,7 @@ msgid "Run WordPress cron from the server with this crontab line:"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:179
-msgid "No file was sent for more than six hours while files wait. Press Back up now to try again, and check Tools > Site Health."
+msgid "No file was sent for more than six hours while files wait. Press Copy now to try again, and check Tools > Site Health."
 msgstr ""
 
 #. translators: %s: size, for example "1.2 GB".
@@ -218,7 +221,7 @@ msgid "Files that wait for you"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:211
-msgid "Retry failed sends these files again. A file whose backup is not confirmed may then be on Profotograaf twice."
+msgid "Retry failed sends these files again. A file whose copy is not confirmed may then be on Profotograaf twice."
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:213
@@ -701,51 +704,51 @@ msgstr ""
 #. translators: 1: site title, 2: year and month, for example 2026-10.
 #: includes/class-backup-galleries.php:80
 #, php-format
-msgid "%1$s backup %2$s"
+msgid "%1$s copy %2$s"
 msgstr ""
 
 #: includes/class-backup-health.php:67
-msgid "Profotograaf backup permission"
+msgid "Profotograaf copy permission"
 msgstr ""
 
 #: includes/class-backup-health.php:71
-msgid "Profotograaf backup schedule"
+msgid "Profotograaf copy schedule"
 msgstr ""
 
 #: includes/class-backup-health.php:75
-msgid "Profotograaf backup queue"
+msgid "Profotograaf copy queue"
 msgstr ""
 
 #: includes/class-backup-health.php:88
-msgid "The Profotograaf backup waits for a connection"
+msgid "The Profotograaf copy waits for a connection"
 msgstr ""
 
 #: includes/class-backup-health.php:88
-msgid "The backup is switched on, but this site is not connected to Profotograaf, so nothing is copied."
+msgid "Copying is switched on, but this site is not connected to Profotograaf, so nothing is copied."
 msgstr ""
 
 #: includes/class-backup-health.php:91
-msgid "The Profotograaf backup needs a new permission"
+msgid "The Profotograaf copy needs a new permission"
 msgstr ""
 
 #: includes/class-backup-health.php:93
-msgid "The Profotograaf backup has the permission it needs"
+msgid "The Profotograaf copy has the permission it needs"
 msgstr ""
 
 #: includes/class-backup-health.php:93
-msgid "The connection may create the backup galleries and send files."
+msgid "The connection may create galleries and send files."
 msgstr ""
 
 #: includes/class-backup-health.php:104
-msgid "WP-Cron runs the Profotograaf backup"
+msgid "WP-Cron runs the Profotograaf copy"
 msgstr ""
 
 #: includes/class-backup-health.php:104
-msgid "The backup ran recently, or nothing needs to run yet."
+msgid "The copy ran recently, or nothing needs to run yet."
 msgstr ""
 
 #: includes/class-backup-health.php:109
-msgid "WP-Cron does not run the Profotograaf backup"
+msgid "WP-Cron does not run the Profotograaf copy"
 msgstr ""
 
 #: includes/class-backup-health.php:113
@@ -762,15 +765,15 @@ msgid "Your Profotograaf storage is full"
 msgstr ""
 
 #: includes/class-backup-health.php:125
-msgid "The backup is paused because Profotograaf has no room for more files."
+msgid "Copying is paused because Profotograaf has no room for more files."
 msgstr ""
 
 #: includes/class-backup-health.php:125
-msgid "Free up space or upgrade your plan on Profotograaf, then press Back up now on the Backup tab."
+msgid "Free up space or upgrade your plan on Profotograaf, then press Copy now on the Copy to Profotograaf tab."
 msgstr ""
 
 #: includes/class-backup-health.php:132
-msgid "The Profotograaf backup queue is stuck"
+msgid "The Profotograaf copy queue is stuck"
 msgstr ""
 
 #. translators: %d: number of files.
@@ -782,27 +785,27 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/class-backup-health.php:138
-msgid "Press Back up now on the Backup tab. When nothing changes, read the recent errors under Info, Profotograaf on this screen."
+msgid "Press Copy now on the Copy to Profotograaf tab. When nothing changes, read the recent errors under Info, Profotograaf on this screen."
 msgstr ""
 
 #: includes/class-backup-health.php:146
-msgid "Some files could not be backed up to Profotograaf"
+msgid "Some files could not be copied to Profotograaf"
 msgstr ""
 
 #. translators: %d: number of files.
 #: includes/class-backup-health.php:149
 #, php-format
-msgid "%d file could not be backed up and waits for you."
-msgid_plural "%d files could not be backed up and wait for you."
+msgid "%d file could not be copied and waits for you."
+msgid_plural "%d files could not be copied and wait for you."
 msgstr[0] ""
 msgstr[1] ""
 
 #: includes/class-backup-health.php:152
-msgid "The Backup tab lists each file with the reason. Press Retry failed to send them again."
+msgid "The Copy to Profotograaf tab lists each file with the reason. Press Retry failed to send them again."
 msgstr ""
 
 #: includes/class-backup-health.php:155
-msgid "The Profotograaf backup queue moves"
+msgid "The Profotograaf copy queue moves"
 msgstr ""
 
 #: includes/class-backup-health.php:155
@@ -816,35 +819,36 @@ msgstr ""
 
 #: includes/class-backup-health.php:198
 #: includes/modules/class-admin-notices.php:185
-msgid "Open the backup settings"
+msgid "Open the copy settings"
 msgstr ""
 
 #: includes/class-backup-labels.php:29
-msgid "Waiting to be backed up"
+msgid "Waiting to be copied"
 msgstr ""
 
 #: includes/class-backup-labels.php:31
-msgid "Being backed up"
+msgid "Being copied"
 msgstr ""
 
 #: includes/class-backup-labels.php:33
-msgid "Backed up"
+msgid "Copied"
 msgstr ""
 
 #: includes/class-backup-labels.php:35
-msgid "Not backed up"
+#: includes/modules/class-backup-admin.php:115
+msgid "Not copied"
 msgstr ""
 
 #: includes/class-backup-labels.php:37
-msgid "Backup failed"
+msgid "Copy failed"
 msgstr ""
 
 #: includes/class-backup-labels.php:39
-msgid "Backup not confirmed"
+msgid "Copy not confirmed"
 msgstr ""
 
 #: includes/class-backup-labels.php:41
-msgid "Marked for the backup"
+msgid "Marked for copying"
 msgstr ""
 
 #: includes/class-backup-labels.php:51
@@ -1274,12 +1278,6 @@ msgstr ""
 msgid "Galleries"
 msgstr ""
 
-#: includes/class-settings-schema.php:64
-#: includes/modules/class-backup-admin.php:79
-#: includes/modules/class-backup-admin.php:129
-msgid "Backup"
-msgstr ""
-
 #: includes/class-settings-schema.php:65
 msgid "Advanced"
 msgstr ""
@@ -1390,7 +1388,7 @@ msgid "Enquiries that could not be delivered stay in the database until you expo
 msgstr ""
 
 #: includes/class-settings-schema.php:174
-msgid "Back up the Media Library to Profotograaf"
+msgid "Copy the Media Library to Profotograaf"
 msgstr ""
 
 #: includes/class-settings-schema.php:175
@@ -1398,7 +1396,7 @@ msgid "Copies your Media Library images to your Profotograaf account. Off by def
 msgstr ""
 
 #: includes/class-settings-schema.php:181
-msgid "What to back up"
+msgid "What to copy"
 msgstr ""
 
 #: includes/class-settings-schema.php:182
@@ -1720,7 +1718,7 @@ msgid "Profotograaf no longer serves this photo, so no local copy could be made.
 msgstr ""
 
 #: includes/cli/class-backup-command.php:77
-msgid "The backup is switched off. Switch it on under Settings > Profotograaf > Backup."
+msgid "Copying is switched off. Switch it on under Settings > Profotograaf > Copy to Profotograaf."
 msgstr ""
 
 #. translators: %d: number of Media Library items.
@@ -1740,23 +1738,23 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/cli/class-backup-command.php:122
-msgid "The backup needs a new permission. Connect this site again under Settings > Profotograaf."
+msgid "Copying needs a new permission. Connect this site again under Settings > Profotograaf."
 msgstr ""
 
 #: includes/cli/class-backup-command.php:124
-msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then run this command with --resume."
+msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then run this command with --resume."
 msgstr ""
 
 #: includes/cli/class-backup-command.php:126
-msgid "The backup is paused. Run this command with --resume to try again now."
+msgid "Copying is paused. Run this command with --resume to try again now."
 msgstr ""
 
 #: includes/cli/class-backup-command.php:128
-msgid "Profotograaf did not accept more files for now. The backup tries again later on its own."
+msgid "Profotograaf did not accept more files for now. Copying tries again later on its own."
 msgstr ""
 
 #: includes/cli/class-backup-command.php:130
-msgid "Another backup run is in progress."
+msgid "Another copy run is in progress."
 msgstr ""
 
 #: includes/cli/class-backup-command.php:132
@@ -1764,7 +1762,7 @@ msgid "This site ran low on memory. Run the command again to send the rest."
 msgstr ""
 
 #: includes/cli/class-backup-command.php:134
-msgid "The backup stopped early. Run the command again to send the rest."
+msgid "Copying stopped early. Run the command again to send the rest."
 msgstr ""
 
 #. translators: %d: number of failed leads put back in line.
@@ -1923,14 +1921,14 @@ msgid "Retry or export the enquiries"
 msgstr ""
 
 #: includes/modules/class-admin-notices.php:183
-msgid "Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then press Back up now."
+msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now."
 msgstr ""
 
 #. translators: %d: number of files.
 #: includes/modules/class-admin-notices.php:195
 #, php-format
-msgid "%d file could not be backed up to Profotograaf."
-msgid_plural "%d files could not be backed up to Profotograaf."
+msgid "%d file could not be copied to Profotograaf."
+msgid_plural "%d files could not be copied to Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1942,54 +1940,50 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: includes/modules/class-backup-admin.php:115
-msgid "Not in the backup"
+#: includes/modules/class-backup-admin.php:79
+msgid "Copy"
 msgstr ""
 
 #. translators: %s: date the file was copied.
 #: includes/modules/class-backup-admin.php:119
 #, php-format
-msgid "Backed up to Profotograaf on %s."
+msgid "Copied to Profotograaf on %s."
 msgstr ""
 
 #: includes/modules/class-backup-admin.php:126
-msgid "Retry it on the Backup tab"
-msgstr ""
-
-#: includes/modules/class-backup-admin.php:145
-msgid "Back up to Profotograaf"
+msgid "Retry it on the Copy to Profotograaf tab"
 msgstr ""
 
 #: includes/modules/class-backup-admin.php:146
-msgid "Do not back up"
+msgid "Do not copy"
 msgstr ""
 
 #. translators: %d: number of files.
 #: includes/modules/class-backup-admin.php:192
 #, php-format
-msgid "%d file is no longer marked for the backup. A file that is backed up already stays on Profotograaf."
-msgid_plural "%d files are no longer marked for the backup. Files that are backed up already stay on Profotograaf."
+msgid "%d file is no longer marked for copying. A file that is copied already stays on Profotograaf."
+msgid_plural "%d files are no longer marked for copying. Files that are copied already stay on Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of files.
 #: includes/modules/class-backup-admin.php:198
 #, php-format
-msgid "%d file is marked for the backup. It is copied to Profotograaf in the background."
-msgid_plural "%d files are marked for the backup. They are copied to Profotograaf in the background."
+msgid "%d file is marked for copying. It is copied to Profotograaf in the background."
+msgid_plural "%d files are marked for copying. They are copied to Profotograaf in the background."
 msgstr[0] ""
 msgstr[1] ""
 
 #: includes/modules/class-backup.php:114
-msgid "Every five minutes (Profotograaf backup)"
+msgid "Every five minutes (Profotograaf copy)"
 msgstr ""
 
 #: includes/modules/class-backup.php:173
-msgid "The backup starts within a minute, in the background. You can leave this page."
+msgid "Copying starts within a minute, in the background. You can leave this page."
 msgstr ""
 
 #: includes/modules/class-backup.php:174
-msgid "The backup cannot start: switch it on and connect this site to Profotograaf first."
+msgid "Copying cannot start: switch it on and connect this site to Profotograaf first."
 msgstr ""
 
 #. translators: %d: number of files.
@@ -2215,7 +2209,7 @@ msgid "Only when the site owner turns on sending Media Library files: a person w
 msgstr ""
 
 #: includes/modules/class-privacy.php:238
-msgid "Only when the site owner switches on the backup: this site copies files from its Media Library to the connected Profotograaf account, in the background. It sends the image files, and RAW and video files, with their file names and the access token to https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. It first creates private galleries with https://profotograaf.nl/api/v1/embed/galleries, with the site title in the gallery name. Files are sent as stored, with their metadata, which can include the GPS position. Photos of people are personal data, so the site owner needs a basis for sending them, and Profotograaf stores the copies for the site owner. The anonymous usage data and photo library choices do not switch the backup on. Deleting a file here, switching the backup off or deleting the plugin leaves the copies in the Profotograaf account until they are deleted there. The Media Library keeps a few hidden fields per file (the backup state, the photo and gallery identifiers and a checksum) until the plugin is deleted."
+msgid "Only when the site owner switches on copying: this site copies files from its Media Library to the connected Profotograaf account, in the background. It sends the image files, and RAW and video files, with their file names and the access token to https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. It first creates private galleries with https://profotograaf.nl/api/v1/embed/galleries, with the site title in the gallery name. Files are sent as stored, with their metadata, which can include the GPS position. Photos of people are personal data, so the site owner needs a basis for sending them, and Profotograaf stores the copies for the site owner. The anonymous usage data and photo library choices do not switch copying on. Deleting a file here, switching copying off or deleting the plugin leaves the copies in the Profotograaf account until they are deleted there. The Media Library keeps a few hidden fields per file (the copy state, the photo and gallery identifiers and a checksum) until the plugin is deleted."
 msgstr ""
 
 #: includes/modules/class-privacy.php:239
@@ -2920,8 +2914,8 @@ msgstr ""
 #. translators: %d: number of files.
 #: uninstall.php:33
 #, php-format
-msgid "- %d file from the Media Library is backed up there. It stays until you delete it on Profotograaf."
-msgid_plural "- %d files from the Media Library are backed up there. They stay until you delete them on Profotograaf."
+msgid "- %d file from the Media Library is copied there. It stays until you delete it on Profotograaf."
+msgid_plural "- %d files from the Media Library are copied there. They stay until you delete them on Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
