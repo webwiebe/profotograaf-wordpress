@@ -205,6 +205,7 @@ msgid "Enquiries that could not be sent are kept on this site until you export a
 msgstr "Les demandes qui n'ont pas pu être envoyées restent sur ce site jusqu'à ce que vous les exportiez et les supprimiez, ou que la durée de conservation définie dans les réglages soit écoulée."
 
 #: includes/admin/class-leads-settings.php:368
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #: build/import-screen/index.js:7
@@ -800,25 +801,25 @@ msgstr "Réessayer ou exporter les demandes"
 msgid "Dismiss"
 msgstr "Ignorer"
 
-#: includes/modules/class-client-galleries.php:202
+#: includes/modules/class-client-galleries.php:255
 #: patterns/client-portal-cta.php:21
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Find your gallery"
 msgstr "Retrouvez votre galerie"
 
-#: includes/modules/class-client-galleries.php:203
+#: includes/modules/class-client-galleries.php:256
 #: patterns/client-portal-cta.php:22
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Sign in to the client portal to see your photos."
 msgstr "Connectez-vous au portail client pour voir vos photos."
 
-#: includes/modules/class-client-galleries.php:204
+#: includes/modules/class-client-galleries.php:257
 #: patterns/client-portal-cta.php:23
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Open my gallery"
 msgstr "Ouvrir ma galerie"
 
-#: includes/modules/class-client-galleries.php:258
+#: includes/modules/class-client-galleries.php:249
 msgid "Only editors see this note. The \"Find your gallery\" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block."
 msgstr "Seuls les éditeurs voient cette note. Le bloc \"Retrouvez votre galerie\" n'a pas encore d'adresse Profotograaf. Saisissez-la dans les réglages du bloc. D'ici là, les visiteurs ne voient pas ce bloc."
 
@@ -1244,77 +1245,78 @@ msgstr[1] "%d demandes qui n'avaient pas pu être livrées à Profotograaf ont �
 msgid "Could not check the connection. Reload this page to try again."
 msgstr "La connexion n'a pas pu être vérifiée. Rechargez cette page pour réessayer."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Client portal"
 msgstr "Portail client"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Portal address"
 msgstr "Adresse du portail"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Your Profotograaf address (for example studio), your subdomain or your own domain."
 msgstr "Votre adresse Profotograaf (par exemple studio), votre sous-domaine ou votre propre domaine."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Portal path"
 msgstr "Chemin du portail"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Where the portal is on that address. Leave empty to use the site setting, which is /client unless you changed it."
 msgstr "L'emplacement du portail sur cette adresse. Laissez vide pour utiliser le réglage du site, soit /client sauf modification."
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Open in a new tab"
 msgstr "Ouvrir dans un nouvel onglet"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
 msgid "Text"
 msgstr "Texte"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
 msgid "Heading"
 msgstr "Titre"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading level"
 msgstr "Niveau de titre"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 2"
 msgstr "Titre 2"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 3"
 msgstr "Titre 3"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 4"
 msgstr "Titre 4"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 5"
 msgstr "Titre 5"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Heading 6"
 msgstr "Titre 6"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Paragraph"
 msgstr "Paragraphe"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Button label"
 msgstr "Libellé du bouton"
 
-#: build/client-galleries/index.js:1
+#: build/client-galleries/index.js:3
 msgid "Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block."
 msgstr "Seuls les éditeurs voient cette note. Saisissez votre adresse Profotograaf dans les réglages du bloc. D'ici là, les visiteurs ne voient pas ce bloc."
 
 #. translators: %d: number of photos in a gallery.
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 #, js-format
@@ -1330,22 +1332,26 @@ msgstr[1] "%d photos"
 msgid "Site default"
 msgstr "Valeur par défaut du site"
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf under Settings > Profotograaf to pick a gallery."
 msgstr "Connectez ce site à Profotograaf sous Réglages > Profotograaf pour choisir une galerie."
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Connect this site to Profotograaf again under Settings > Profotograaf. The connection needs a new permission."
 msgstr "Reconnectez ce site à Profotograaf sous Réglages > Profotograaf. La connexion a besoin d'une nouvelle autorisation."
 
+#: build/client-galleries/index.js:1
 #: build/full-page-gallery/index.js:1
 #: build/gallery/index.js:1
 msgid "Profotograaf is receiving too many requests. Try again in a moment."
 msgstr "Profotograaf reçoit trop de requêtes. Réessayez dans un instant."
 
 #. translators: %d: number of seconds to wait.
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 #, js-format
@@ -1354,11 +1360,13 @@ msgid_plural "Profotograaf is receiving too many requests. Try again in %d secon
 msgstr[0] "Profotograaf reçoit trop de requêtes. Réessayez dans %d seconde."
 msgstr[1] "Profotograaf reçoit trop de requêtes. Réessayez dans %d secondes."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "Profotograaf could not be reached. Check your connection and try again."
 msgstr "Profotograaf n'a pas pu être joint. Vérifiez votre connexion et réessayez."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "Profotograaf reported a problem. Try again later."
@@ -1369,6 +1377,7 @@ msgstr "Profotograaf a signalé un problème. Réessayez plus tard."
 msgid "This gallery cannot be shown on other sites right now. A password, an expiry date, proofing mode or a client-only setting stops embedding."
 msgstr "Cette galerie ne peut pas être affichée sur d'autres sites pour le moment. Un mot de passe, une date d'expiration, le mode de validation ou un réglage réservé aux clients empêche l'intégration."
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
 msgid "There are no galleries in your Profotograaf account yet."
@@ -1424,6 +1433,7 @@ msgstr "disposition : %s"
 #: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 #: build/import-screen/index.js:2
@@ -1436,6 +1446,7 @@ msgstr "Galerie"
 msgid "Layout"
 msgstr "Disposition"
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:11
 msgid "Choose another gallery"
@@ -2118,6 +2129,7 @@ msgstr "Cette galerie ne contient aucune photo pouvant être affichée sur votre
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet. Visitors do not see this note."
 msgstr "Les photos sont peut-être encore en cours de traitement, ou la galerie contient des vidéos ou des types de fichiers que l'intégration sur le site ne peut pas encore afficher. Les visiteurs ne voient pas cette note."
 
+#: build/client-galleries/index.js:2
 #: build/full-page-gallery/index.js:2
 #: build/gallery/index.js:2
 msgid "0 visible"
@@ -3051,6 +3063,7 @@ msgstr "Préréglage"
 msgid "The pattern of sections repeats until every photo is shown."
 msgstr "Le motif des sections se répète jusqu'à ce que toutes les photos soient affichées."
 
+#: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:11
 msgid "No gallery chosen yet."
 msgstr "Aucune galerie choisie pour l'instant."
@@ -3325,3 +3338,67 @@ msgstr "Lien copié."
 #: build/client-links/index.js:1
 msgid "This browser does not allow copying here. The link is selected, so press Ctrl+C or Cmd+C to copy it."
 msgstr "Ce navigateur n'autorise pas la copie ici. Le lien est sélectionné : appuyez sur Ctrl+C ou Cmd+C pour le copier."
+
+#: includes/modules/class-client-galleries.php:232
+#: build/client-galleries/index.js:3
+msgid "Your photos"
+msgstr "Vos photos"
+
+#: includes/modules/class-client-galleries.php:233
+#: build/client-galleries/index.js:3
+msgid "See the photos in your gallery."
+msgstr "Voyez les photos de votre galerie."
+
+#: includes/modules/class-client-galleries.php:234
+#: build/client-galleries/index.js:3
+msgid "Open your gallery"
+msgstr "Ouvrir votre galerie"
+
+#: includes/modules/class-client-galleries.php:241
+#: build/client-galleries/index.js:3
+msgid "Only editors see this note. Choose a gallery in the block settings. Until then visitors do not see this block."
+msgstr "Seuls les éditeurs voient cette note. Choisissez une galerie dans les réglages du bloc. D'ici là, les visiteurs ne voient pas ce bloc."
+
+#: build/client-galleries/index.js:3
+msgid "This gallery has no share link yet. Choose another gallery."
+msgstr "Cette galerie n'a pas encore de lien de partage. Choisissez une autre galerie."
+
+#: build/client-galleries/index.js:3
+msgid "No gallery chosen. The block links to the client portal."
+msgstr "Aucune galerie choisie. Le bloc renvoie au portail client."
+
+#: build/client-galleries/index.js:3
+msgid "Choose a gallery"
+msgstr "Choisir une galerie"
+
+#: build/client-galleries/index.js:3
+msgid "Remove gallery"
+msgstr "Retirer la galerie"
+
+#: build/client-galleries/index.js:3
+msgid "Open a delivered gallery"
+msgstr "Ouvrir une galerie livrée"
+
+#: build/client-galleries/index.js:3
+msgid "Choose the gallery this button opens. Visitors go to its share link in the same tab."
+msgstr "Choisissez la galerie que ce bouton ouvre. Les visiteurs accèdent à son lien de partage dans le même onglet."
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation title"
+msgid "Open a delivered gallery"
+msgstr "Ouvrir une galerie livrée"
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation description"
+msgid "A button that opens one delivered gallery through its share link."
+msgstr "Un bouton qui ouvre une galerie livrée via son lien de partage."
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation keyword"
+msgid "share"
+msgstr "partage"
+
+#: blocks/client-galleries/block.json
+msgctxt "block variation keyword"
+msgid "delivered"
+msgstr "livrée"
