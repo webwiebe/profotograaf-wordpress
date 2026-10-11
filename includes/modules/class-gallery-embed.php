@@ -113,7 +113,7 @@ class Gallery_Embed implements Module {
 				'title'  => $attributes['galleryTitle'] ?? '',
 				'url'    => $attributes['galleryUrl'] ?? '',
 				'class'  => $class,
-			) + Gallery_Renderer::options_from_block( $attributes ) + $this->wrapper_argument()
+			) + Gallery_Renderer::options_from_block( $attributes ) + $this->wrapper_argument( (string) ( $attributes['anchor'] ?? '' ) )
 		);
 	}
 
@@ -122,14 +122,24 @@ class Gallery_Embed implements Module {
 	 * string from the block's supports (color, typography, border, spacing,
 	 * anchor, extra classes and alignment).
 	 *
+	 * WordPress 6.9 and older add no anchor to a server-rendered block, so the
+	 * anchor becomes the div's id when the supports left it out.
+	 *
+	 * @param string $anchor The block's HTML anchor.
 	 * @return array<string,callable>
 	 */
-	private function wrapper_argument(): array {
+	private function wrapper_argument( string $anchor ): array {
 		if ( ! function_exists( 'get_block_wrapper_attributes' ) ) {
 			return array();
 		}
 		return array(
-			'wrapper' => static fn( array $attributes ): string => get_block_wrapper_attributes( $attributes ),
+			'wrapper' => static function ( array $attributes ) use ( $anchor ): string {
+				$html = get_block_wrapper_attributes( $attributes );
+				if ( '' === $anchor || 1 === preg_match( '/(^|\s)id="/', $html ) ) {
+					return $html;
+				}
+				return $html . ' id="' . esc_attr( $anchor ) . '"';
+			},
 		);
 	}
 
