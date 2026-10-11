@@ -120,6 +120,8 @@ test.describe( 'Convert to local', () => {
 		await mock( '/__reset' );
 		const page = await browser.newPage();
 		await login( page );
+		// mode=list is saved per user; later specs expect the grid.
+		await page.goto( '/wp-admin/upload.php?mode=grid' );
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
 		await page.getByRole( 'button', { name: 'Disconnect' } ).click();
 		await page.close();
