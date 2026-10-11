@@ -9,6 +9,9 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
+use Profotograaf\Backup_Status;
+use Profotograaf\Backup_Worker;
+use Profotograaf\Settings;
 use Profotograaf\Connection;
 use Profotograaf\Modules\Admin_Notices;
 use Profotograaf\Plugin;
@@ -38,6 +41,18 @@ class Stubbed_Admin_Notices extends Admin_Notices {
 
 	protected function now(): int {
 		return 5000;
+	}
+
+	/**
+	 * Backup counts per state for backup_status().
+	 *
+	 * @var array<string,int>
+	 */
+	public array $backup_counts = array();
+
+	protected function backup_status(): Backup_Status {
+		$settings = new Settings();
+		return new Backup_Status( $settings, new Connection(), null, fn() => 5000, fn() => $this->backup_counts );
 	}
 }
 
@@ -240,5 +255,78 @@ class Admin_Notices_Test extends Wp_Test_Case {
 
 		$this->expectExceptionMessage( 'wp_die' );
 		$this->notices->handle_dismiss();
+	}
+
+	// Backup.
+
+	private function backup_on(): void {
+		$this->connect();
+		$this->options[ Settings::OPTION ] = array( 'backup' => true );
+		Functions\when( 'add_query_arg' )->alias(
+			fn( $args, $value = null, $url = null ) => is_array( $args ) ? $value . '?' . http_build_query( $args ) : $url . '&' . $args . '=' . $value
+		);
+	}
+
+	public function test_a_full_backup_storage_shows_a_notice_with_the_backup_tab(): void {
+		$this->backup_on();
+		$this->options[ Backup_Worker::PAUSE ] = array(
+			'reason' => 'storage_full',
+			'until'  => 9000,
+		);
+
+		$html = $this->html();
+
+		$this->assertSame( 1, substr_count( $html, 'profotograaf-notice--backup_storage' ) );
+		$this->assertStringContainsString( 'Free up space or upgrade your plan, then press Back up now.', $html );
+		$this->assertStringContainsString( 'tab=backup', $html );
+		$this->assertSame( 'backup_storage:9000', $this->notices->active()[ Admin_Notices::BACKUP_STORAGE ]['signature'] );
+	}
+
+	public function test_files_that_wait_for_the_photographer_show_a_notice_with_the_count(): void {
+		$this->backup_on();
+		$this->notices->backup_counts = array(
+			'failed'      => 2,
+			'needs_check' => 1,
+		);
+
+		$html = $this->html();
+
+		$this->assertStringContainsString( '3 files could not be backed up to Profotograaf.', $html );
+		$this->assertStringContainsString( 'See why and retry', $html );
+		$this->assertSame( 'backup_failed:3', $this->notices->active()[ Admin_Notices::BACKUP_FAILED ]['signature'] );
+	}
+
+	public function test_a_waiting_queue_or_a_short_wait_shows_no_backup_notice(): void {
+		$this->backup_on();
+		$this->notices->backup_counts          = array( 'queued' => 40 );
+		$this->options[ Backup_Worker::PAUSE ] = array(
+			'reason' => 'backoff',
+			'until'  => 9000,
+		);
+
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_no_backup_notice_while_the_backup_is_off(): void {
+		$this->connect();
+		$this->notices->backup_counts = array( 'failed' => 2 );
+
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_a_backup_notice_can_be_dismissed(): void {
+		$this->backup_on();
+		$this->notices->backup_counts = array( 'failed' => 1 );
+		$_GET                         = array(
+			'kind'      => Admin_Notices::BACKUP_FAILED,
+			'signature' => 'backup_failed:1',
+		);
+		Functions\when( 'check_admin_referer' )->justReturn( 1 );
+		Functions\when( 'wp_get_referer' )->justReturn( false );
+
+		$this->notices->handle_dismiss();
+		$_GET = array();
+
+		$this->assertSame( '', $this->html() );
 	}
 }

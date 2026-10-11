@@ -323,11 +323,10 @@ class Settings_Page implements Module {
 			<?php if ( Settings_Schema::TAB_ENQUIRY === $tab ) : ?>
 				<p><a href="<?php echo esc_url( Leads_Settings::url() ); ?>"><?php esc_html_e( 'Set up the enquiry forms', 'profotograaf' ); ?></a></p>
 			<?php endif; ?>
-			<?php if ( Settings_Schema::TAB_BACKUP === $tab ) : ?>
-				<?php Backup_Intro::render(); ?>
-			<?php endif; ?>
+			<?php Backup_Intro::render( $tab ); ?>
 			<?php ( new Settings_Fields( $this->plugin()->settings() ) )->render_form( $tab ); ?>
 			<?php ( new Client_Links_Panel( $this->plugin() ) )->render( $tab ); ?>
+			<?php ( new \Profotograaf\Admin\Backup_Panel( $this->plugin() ) )->render( $tab ); ?>
 
 			<?php if ( Settings_Schema::TAB_GENERAL === $tab && 'connected' === $status['state'] ) : ?>
 				<h2><?php esc_html_e( 'Photo changes', 'profotograaf' ); ?></h2>
