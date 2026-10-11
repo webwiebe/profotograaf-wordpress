@@ -1,6 +1,7 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	PanelBody,
+	Placeholder,
 	SelectControl,
 	TextControl,
 	TextareaControl,
@@ -12,7 +13,14 @@ import { __ } from '@wordpress/i18n';
 import './style.css';
 import { registerServerRenderedBlock } from '../register';
 import metadata from './block.json';
-import { headingTag, previewCopy } from './helpers';
+import { GalleryChooser, GalleryPanel } from './gallery-panel';
+import {
+	defaultCopy,
+	galleryMode,
+	headingTag,
+	isGalleryUrl,
+	previewCopy,
+} from './helpers';
 import type { ClientGalleriesAttributes } from './helpers';
 
 interface EditProps {
@@ -72,6 +80,7 @@ function PortalPanel( { attributes, setAttributes }: EditProps ) {
 
 function TextPanel( { attributes, setAttributes }: EditProps ) {
 	const { heading, headingLevel, description, buttonLabel } = attributes;
+	const defaults = defaultCopy( galleryMode( attributes ) );
 	return (
 		<PanelBody title={ __( 'Text', 'profotograaf' ) } initialOpen={ false }>
 			<TextControl
@@ -79,7 +88,7 @@ function TextPanel( { attributes, setAttributes }: EditProps ) {
 				__next40pxDefaultSize
 				label={ __( 'Heading', 'profotograaf' ) }
 				value={ heading }
-				placeholder={ __( 'Find your gallery', 'profotograaf' ) }
+				placeholder={ defaults.heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
 			/>
 			<SelectControl
@@ -96,10 +105,7 @@ function TextPanel( { attributes, setAttributes }: EditProps ) {
 				__nextHasNoMarginBottom
 				label={ __( 'Text', 'profotograaf' ) }
 				value={ description }
-				placeholder={ __(
-					'Sign in to the client portal to see your photos.',
-					'profotograaf'
-				) }
+				placeholder={ defaults.description }
 				onChange={ ( value ) =>
 					setAttributes( { description: value } )
 				}
@@ -109,7 +115,7 @@ function TextPanel( { attributes, setAttributes }: EditProps ) {
 				__next40pxDefaultSize
 				label={ __( 'Button label', 'profotograaf' ) }
 				value={ buttonLabel }
-				placeholder={ __( 'Open my gallery', 'profotograaf' ) }
+				placeholder={ defaults.buttonLabel }
 				onChange={ ( value ) =>
 					setAttributes( { buttonLabel: value } )
 				}
@@ -121,15 +127,43 @@ function TextPanel( { attributes, setAttributes }: EditProps ) {
 function SettingsPanels( props: EditProps ) {
 	return (
 		<InspectorControls>
-			<PortalPanel { ...props } />
+			<GalleryPanel { ...props } />
+			{ ! galleryMode( props.attributes ) && <PortalPanel { ...props } /> }
 			<TextPanel { ...props } />
 		</InspectorControls>
 	);
 }
 
+function Preview( { attributes }: { attributes: ClientGalleriesAttributes } ) {
+	const copy = previewCopy( attributes );
+	return (
+		<>
+			{ createElement(
+				headingTag( attributes.headingLevel ),
+				{ className: 'wp-block-profotograaf-client-galleries__heading' },
+				copy.heading
+			) }
+			<p className="wp-block-profotograaf-client-galleries__text">
+				{ copy.description }
+			</p>
+			<div className="wp-block-button">
+				<span className="wp-block-profotograaf-client-galleries__button wp-block-button__link wp-element-button">
+					{ copy.buttonLabel }
+				</span>
+			</div>
+			{ copy.notice && (
+				<p className="wp-block-profotograaf-client-galleries__notice">
+					{ copy.notice }
+				</p>
+			) }
+		</>
+	);
+}
+
 function Edit( { attributes, setAttributes }: EditProps ) {
 	const blockProps = useBlockProps();
-	const copy = previewCopy( attributes );
+	const asksForGallery =
+		attributes.linkTo === 'gallery' && ! isGalleryUrl( attributes.gallery );
 
 	return (
 		<>
@@ -138,26 +172,19 @@ function Edit( { attributes, setAttributes }: EditProps ) {
 				setAttributes={ setAttributes }
 			/>
 			<div { ...blockProps }>
-				{ createElement(
-					headingTag( attributes.headingLevel ),
-					{ className: 'wp-block-profotograaf-client-galleries__heading' },
-					copy.heading
-				) }
-				<p className="wp-block-profotograaf-client-galleries__text">
-					{ copy.description }
-				</p>
-				<div className="wp-block-button">
-					<span className="wp-block-profotograaf-client-galleries__button wp-block-button__link wp-element-button">
-						{ copy.buttonLabel }
-					</span>
-				</div>
-				{ copy.showNotice && (
-					<p className="wp-block-profotograaf-client-galleries__notice">
-						{ __(
-							'Only editors see this note. Enter your Profotograaf address in the block settings. Until then visitors do not see this block.',
+				{ asksForGallery ? (
+					<Placeholder
+						icon="format-gallery"
+						label={ __( 'Open a delivered gallery', 'profotograaf' ) }
+						instructions={ __(
+							'Choose the gallery this button opens. Visitors go to its share link in the same tab.',
 							'profotograaf'
 						) }
-					</p>
+					>
+						<GalleryChooser setAttributes={ setAttributes } />
+					</Placeholder>
+				) : (
+					<Preview attributes={ attributes } />
 				) }
 			</div>
 		</>

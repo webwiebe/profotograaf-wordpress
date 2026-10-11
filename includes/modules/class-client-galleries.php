@@ -34,6 +34,11 @@ defined( 'ABSPATH' ) || exit;
  * it for one block, the `client_portal_path` setting for the site, and
  * `/client` is the default.
  *
+ * The optional `gallery` attribute holds the share link of one delivered
+ * gallery, chosen in the editor. When it is set the block links to that
+ * gallery. `linkTo` is `gallery` for blocks inserted through the
+ * "Open a delivered gallery" variation, so the editor asks for a gallery.
+ *
  * The block itself is registered by the Blocks module from
  * blocks/client-galleries/block.json. This module only attaches the render
  * callback and the editor script translations.
@@ -45,6 +50,12 @@ class Client_Galleries implements Module {
 	public const DEFAULT_PATH = '/client';
 
 	public const DEFAULT_HEADING_LEVEL = 3;
+
+	/**
+	 * `linkTo` value of the "Open a delivered gallery" variation: the block
+	 * links to the gallery in its `gallery` attribute.
+	 */
+	public const LINK_TO_GALLERY = 'gallery';
 
 	/**
 	 * Settings.
@@ -185,24 +196,83 @@ class Client_Galleries implements Module {
 	}
 
 	/**
+	 * Turns a stored gallery share link into the URL to link to, or an empty
+	 * string. Only an absolute http(s) URL with a host is used.
+	 *
+	 * @param mixed $value Raw `gallery` attribute.
+	 */
+	public static function gallery_url( $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+		$url = trim( $value );
+		if ( '' === $url || preg_match( '/\s/', $url ) || ! preg_match( '#^https?://#i', $url ) ) {
+			return '';
+		}
+		return '' !== (string) wp_parse_url( $url, PHP_URL_HOST ) ? $url : '';
+	}
+
+	/**
 	 * Renders the block.
+	 *
+	 * With a `gallery` share link the block links to that gallery, in the same
+	 * tab. The share page shows its own install prompt, so the block says
+	 * nothing about installing. Without one the block links to the client
+	 * portal, as it always did.
 	 *
 	 * @param array<string,mixed> $attributes Block attributes.
 	 * @return string HTML.
 	 */
 	public function render( array $attributes ): string {
+		$gallery = self::gallery_url( $attributes['gallery'] ?? '' );
+		if ( '' !== $gallery ) {
+			return $this->markup(
+				$attributes,
+				array(
+					'heading' => __( 'Your photos', 'profotograaf' ),
+					'text'    => __( 'See the photos in your gallery.', 'profotograaf' ),
+					'label'   => __( 'Open your gallery', 'profotograaf' ),
+				),
+				$gallery,
+				false
+			);
+		}
+		if ( self::LINK_TO_GALLERY === ( $attributes['linkTo'] ?? '' ) ) {
+			return $this->render_notice( __( 'Only editors see this note. Choose a gallery in the block settings. Until then visitors do not see this block.', 'profotograaf' ) );
+		}
+
 		$address = $this->resolve_address( isset( $attributes['portal'] ) ? (string) $attributes['portal'] : '' );
 		$path    = (string) $this->settings()->resolve( 'client_portal_path', array( 'client_portal_path' => $attributes['portalPath'] ?? '' ) );
 		$url     = self::portal_url( $address, $path );
 
 		if ( '' === $url ) {
-			return $this->render_notice();
+			return $this->render_notice( __( 'Only editors see this note. The "Find your gallery" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block.', 'profotograaf' ) );
 		}
 
-		$heading = $this->text( $attributes, 'heading', __( 'Find your gallery', 'profotograaf' ) );
-		$text    = $this->text( $attributes, 'description', __( 'Sign in to the client portal to see your photos.', 'profotograaf' ) );
-		$label   = $this->text( $attributes, 'buttonLabel', __( 'Open my gallery', 'profotograaf' ) );
-		$new_tab = ! empty( $attributes['openInNewTab'] );
+		return $this->markup(
+			$attributes,
+			array(
+				'heading' => __( 'Find your gallery', 'profotograaf' ),
+				'text'    => __( 'Sign in to the client portal to see your photos.', 'profotograaf' ),
+				'label'   => __( 'Open my gallery', 'profotograaf' ),
+			),
+			$url,
+			! empty( $attributes['openInNewTab'] )
+		);
+	}
+
+	/**
+	 * The block markup: heading, text and a button link.
+	 *
+	 * @param array<string,mixed>                            $attributes Block attributes.
+	 * @param array{heading:string,text:string,label:string} $defaults Text used where the block has none.
+	 * @param string                                         $url        Link target.
+	 * @param bool                                           $new_tab    Whether the link opens a new tab.
+	 */
+	private function markup( array $attributes, array $defaults, string $url, bool $new_tab ): string {
+		$heading = $this->text( $attributes, 'heading', $defaults['heading'] );
+		$text    = $this->text( $attributes, 'description', $defaults['text'] );
+		$label   = $this->text( $attributes, 'buttonLabel', $defaults['label'] );
 
 		$rel = $new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
 
@@ -245,17 +315,19 @@ class Client_Galleries implements Module {
 	}
 
 	/**
-	 * A note for people who can edit, shown while the block has no address.
-	 * Visitors get nothing.
+	 * A note for people who can edit, shown while the block has nothing to
+	 * link to. Visitors get nothing.
+	 *
+	 * @param string $message The note.
 	 */
-	private function render_notice(): string {
+	private function render_notice( string $message ): string {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return '';
 		}
 		return sprintf(
 			'<div %1$s><p class="wp-block-profotograaf-client-galleries__notice">%2$s</p></div>',
 			$this->wrapper_attributes(),
-			esc_html__( 'Only editors see this note. The "Find your gallery" block has no Profotograaf address yet. Enter it in the block settings. Until then visitors do not see this block.', 'profotograaf' )
+			esc_html( $message )
 		);
 	}
 
