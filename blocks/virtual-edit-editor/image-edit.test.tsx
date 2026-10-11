@@ -74,7 +74,7 @@ describe( 'withVirtualImage', () => {
 describe( 'cropStyle', () => {
 	it( 'targets the Crop button by its label while the class is set', () => {
 		expect( cropStyle( 'Crop' ) ).toBe(
-			`body.${ BODY_CLASS } .block-editor-block-toolbar button[aria-label="Crop"][aria-haspopup="dialog"] { display: none; }`
+			`body.${ BODY_CLASS } .block-editor-block-toolbar button[aria-label="Crop"] { display: none; }`
 		);
 	} );
 

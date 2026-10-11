@@ -34,7 +34,7 @@ export interface BlockEditProps {
  */
 export function cropStyle( label: string ): string {
 	const escaped = label.replace( /["\\]/g, '\\$&' );
-	return `body.${ BODY_CLASS } .block-editor-block-toolbar button[aria-label="${ escaped }"][aria-haspopup="dialog"] { display: none; }`; // i18n-ignore: a CSS selector.
+	return `body.${ BODY_CLASS } .block-editor-block-toolbar button[aria-label="${ escaped }"] { display: none; }`; // i18n-ignore: a CSS selector.
 }
 
 /** The kept-photo data of an attachment, or null for a normal one. */
