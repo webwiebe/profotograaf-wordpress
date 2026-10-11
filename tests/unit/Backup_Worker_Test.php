@@ -176,6 +176,26 @@ class Backup_Worker_Test extends Wp_Test_Case {
 		$this->assertTrue( ( new Backup_Galleries( new Api_Client( new Connection(), $this->http ) ) )->contains( 'bg-1' ) );
 	}
 
+	public function test_the_api_client_refuses_to_make_a_backup_gallery_embeddable(): void {
+		$this->options[ Backup_Galleries::OPTION ] = array( '2026-10' => 'bg-oct' );
+		$api                                       = new Api_Client( new Connection(), $this->http );
+
+		$result = $api->mark_embeddable( 'bg-oct' );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertSame( 'profotograaf_backup_gallery', $result->get_error_code() );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
+	public function test_contains_reads_the_stored_ids_without_a_request(): void {
+		$this->options[ Backup_Galleries::OPTION ] = array( '2026-10' => 'bg-oct' );
+
+		$this->assertTrue( Backup_Galleries::contains( 'bg-oct' ) );
+		$this->assertFalse( Backup_Galleries::contains( 'g-1' ) );
+		$this->assertFalse( Backup_Galleries::contains( '' ) );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
 	public function test_nothing_is_sent_while_the_backup_is_off(): void {
 		$this->queued( 11 );
 		$this->backup( 'all', false );

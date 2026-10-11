@@ -269,7 +269,7 @@ class Photo_Catalogue {
 			$offset += count( $list );
 			foreach ( $list as $photo ) {
 				$row = self::normalise( $photo );
-				if ( null === $row ) {
+				if ( null === $row || Backup_Galleries::contains( (string) $row['gallery_id'] ) ) {
 					continue;
 				}
 				if ( $kept >= self::MAX_PHOTOS ) {

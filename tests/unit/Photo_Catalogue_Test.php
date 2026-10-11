@@ -8,6 +8,7 @@
 namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
+use Profotograaf\Backup_Galleries;
 use Profotograaf\Logger;
 use Profotograaf\Modules\Photo_Catalogue_Refresh;
 use Profotograaf\Photo_Catalogue;
@@ -103,6 +104,28 @@ class Photo_Catalogue_Test extends Gallery_Test_Case {
 		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/photos?limit=200&offset=200', $this->http->requests[1]['url'] );
 		$this->assertSame( 'https://profotograaf.nl/api/v1/embed/photos?limit=200&offset=400', $this->http->requests[2]['url'] );
 		$this->assertFalse( $this->autoload[ Photo_Catalogue::OPTION ] );
+	}
+
+	public function test_it_never_lists_a_photo_from_a_backup_gallery(): void {
+		$this->options[ Backup_Galleries::OPTION ] = array( '2026-10' => 'bg-oct' );
+		$this->http->reply(
+			200,
+			array(
+				'photos' => array(
+					$this->photo( 'p-1' ),
+					$this->photo( 'p-backup', array( 'gallery_id' => 'bg-oct' ) ),
+					$this->photo( 'p-2' ),
+				),
+				'total'  => 3,
+				'limit'  => 200,
+				'offset' => 0,
+			)
+		);
+
+		$result = $this->catalogue->refresh();
+
+		$this->assertSame( array( 'p-1', 'p-2' ), array_column( $result['photos'], 'id' ) );
+		$this->assertSame( 0, $result['dropped'] );
 	}
 
 	public function test_it_stops_at_the_cap_and_logs_what_it_dropped(): void {
