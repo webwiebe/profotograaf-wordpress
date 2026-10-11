@@ -25,6 +25,41 @@ if ( ! class_exists( 'WP_Post' ) ) {
 		 * @var string
 		 */
 		public $post_excerpt = '';
+
+		/**
+		 * Id.
+		 *
+		 * @var int
+		 */
+		public $ID = 0;
+
+		/**
+		 * Post type.
+		 *
+		 * @var string
+		 */
+		public $post_type = 'post';
+
+		/**
+		 * Status.
+		 *
+		 * @var string
+		 */
+		public $post_status = 'publish';
+
+		/**
+		 * MIME type.
+		 *
+		 * @var string
+		 */
+		public $post_mime_type = '';
+
+		/**
+		 * Content.
+		 *
+		 * @var string
+		 */
+		public $post_content = '';
 	}
 }
 

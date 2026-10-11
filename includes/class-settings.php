@@ -30,6 +30,15 @@ final class Settings {
 	public const DEFAULT_LAYOUT = '';
 
 	/**
+	 * Backup scopes: files used on the site, every file, or the files the
+	 * photographer marks.
+	 */
+	public const BACKUP_SCOPES = array( 'used', 'all', 'marked' );
+
+	/** The backup scope when none is saved. */
+	public const BACKUP_SCOPE_DEFAULT = 'used';
+
+	/**
 	 * Registers the option with WordPress: sanitiser, default and REST schema.
 	 * Call on `init`, so the REST endpoint sees it too.
 	 */
@@ -137,6 +146,33 @@ final class Settings {
 			return false;
 		}
 		return true === filter_var( $stored['virtual_attachments'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+	}
+
+	/**
+	 * Whether the backup to Profotograaf is switched on (setting "Back up the
+	 * Media Library to Profotograaf"). Off by default, and nothing is sent
+	 * while it is off. Telemetry, the media source and sending Media Library
+	 * files are separate choices and never switch it on.
+	 *
+	 * Like virtual_attachments_enabled() it reads the stored value without the
+	 * schema, so it is safe before `init`.
+	 */
+	public function backup_enabled(): bool {
+		$stored = get_option( self::OPTION, array() );
+		if ( ! is_array( $stored ) || ! array_key_exists( 'backup', $stored ) ) {
+			return false;
+		}
+		return true === filter_var( $stored['backup'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+	}
+
+	/**
+	 * The backup scope: `used`, `all` or `marked`. A missing or unknown value
+	 * gives `used`. Safe before `init`, like backup_enabled().
+	 */
+	public function backup_scope(): string {
+		$stored = get_option( self::OPTION, array() );
+		$scope  = is_array( $stored ) && isset( $stored['backup_scope'] ) && is_string( $stored['backup_scope'] ) ? $stored['backup_scope'] : '';
+		return in_array( $scope, self::BACKUP_SCOPES, true ) ? $scope : self::BACKUP_SCOPE_DEFAULT;
 	}
 
 	/**

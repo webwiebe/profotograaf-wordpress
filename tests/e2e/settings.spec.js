@@ -37,10 +37,10 @@ test.describe( 'Settings > Profotograaf', () => {
 		await expect( page.locator( '#menu-settings' ).getByRole( 'link', { name: 'Profotograaf' } ) ).toBeVisible();
 	} );
 
-	test( 'the four tabs are linked', async ( { page } ) => {
+	test( 'the five tabs are linked', async ( { page } ) => {
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
 
-		for ( const name of [ 'General', 'Galleries', 'Enquiry forms', 'Advanced' ] ) {
+		for ( const name of [ 'General', 'Galleries', 'Enquiry forms', 'Backup', 'Advanced' ] ) {
 			await expect( page.locator( '.nav-tab-wrapper' ).getByRole( 'link', { name } ) ).toBeVisible();
 		}
 	} );
