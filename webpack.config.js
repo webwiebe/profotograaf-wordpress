@@ -13,6 +13,9 @@
  * - The virtual attachment edit guards: blocks/virtual-edit-media/index.ts for
  *   the media views and blocks/virtual-edit-editor/index.ts for the block
  *   editor (Virtual_Edit_Guard loads them).
+ * - The client galleries list on the settings page: blocks/client-links/index.ts
+ *   builds to build/client-links/index.js with an index.asset.php
+ *   (Admin\Client_Links_Panel loads it on the Galleries tab).
  */
 const fs = require( 'node:fs' );
 const path = require( 'node:path' );
@@ -25,6 +28,7 @@ const extraEntries = {
 	'media-modal/index': path.resolve( __dirname, 'blocks/media-modal/index.ts' ),
 	'virtual-edit-media/index': path.resolve( __dirname, 'blocks/virtual-edit-media/index.ts' ),
 	'virtual-edit-editor/index': path.resolve( __dirname, 'blocks/virtual-edit-editor/index.ts' ),
+	'client-links/index': path.resolve( __dirname, 'blocks/client-links/index.ts' ),
 };
 
 module.exports = {
