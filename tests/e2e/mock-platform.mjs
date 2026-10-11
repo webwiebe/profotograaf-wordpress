@@ -315,12 +315,16 @@ const routes = {
 	'GET /api/v1/embed/changes': authed( ( { res, url } ) => {
 		const since = url.searchParams.get( 'since' ) || '';
 		state.changeCalls.push( { since, limit: Number( url.searchParams.get( 'limit' ) ) || 0 } );
-		const lists = { created: [], updated: [], deleted: [] };
+		// The answer shape of docs/embed-api.md in the platform repository: gallery ids, the serving
+		// state of each gallery written since the cursor (`unavailable` with a reason, `available`),
+		// and photo entries { id, gallery_id }.
+		const galleries = { created: [], updated: [], deleted: [], unavailable: [], available: [] };
+		const photos = { created: [], updated: [], deleted: [] };
 		const queued = state.changes.shift();
 		if ( queued ) {
-			return json( res, 200, { cursor: 'cursor-next', has_more: false, resync: false, galleries: lists, photos: lists, ...queued } );
+			return json( res, 200, { cursor: 'cursor-next', has_more: false, resync: false, galleries, photos, ...queued } );
 		}
-		return json( res, 200, { cursor: since || 'cursor-1', has_more: false, resync: '' === since, galleries: lists, photos: lists } );
+		return json( res, 200, { cursor: since || 'cursor-1', has_more: false, resync: '' === since, galleries, photos } );
 	} ),
 	'GET /api/v1/embed/photos': authed( libraryPage ),
 	'POST /api/v1/embed/galleries': authed( ( { res, body } ) =>
