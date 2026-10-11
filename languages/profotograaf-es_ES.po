@@ -81,6 +81,7 @@ msgstr "Formularios de consulta"
 #: includes/modules/class-settings-page.php:480
 #: includes/modules/class-telemetry-consent.php:126
 #: includes/modules/class-virtual-convert.php:203
+#: includes/modules/class-virtual-removal.php:83
 msgid "You do not have permission to do this."
 msgstr "No tienes permiso para hacer esto."
 
@@ -1238,12 +1239,12 @@ msgstr "Activar telemetría"
 msgid "Not now"
 msgstr "Ahora no"
 
-#: uninstall.php:33
+#: uninstall.php:57
 msgid "Undeliverable enquiries were deleted"
 msgstr "Se eliminaron las consultas no entregables"
 
 #. translators: %d: number of enquiries.
-#: uninstall.php:36
+#: uninstall.php:60
 #, php-format
 msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
 msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
@@ -3270,7 +3271,9 @@ msgstr "No tienes permiso para cambiar este archivo."
 msgid "File %d"
 msgstr "Archivo %d"
 
+#. translators: %d: number of photos.
 #. translators: %d: number of photos converted.
+#: includes/cli/class-virtual-command.php:89
 #: includes/modules/class-virtual-convert.php:269
 #, php-format
 msgid "%d photo converted to local."
@@ -3872,6 +3875,94 @@ msgstr "Esta foto se mantiene en Profotograaf, así que este sitio no tiene ning
 #: includes/modules/class-virtual-edit-guard.php:127
 msgid "Set when the photo is kept on Profotograaf and has no file on this site."
 msgstr "Presente cuando la foto se mantiene en Profotograaf y no tiene ningún archivo en este sitio."
+
+#. translators: %d: number of photos.
+#: includes/cli/class-virtual-command.php:63
+#, php-format
+msgid "%d photo is kept on Profotograaf."
+msgid_plural "%d photos are kept on Profotograaf."
+msgstr[0] "%d foto se mantiene en Profotograaf."
+msgstr[1] "%d fotos se mantienen en Profotograaf."
+
+#: includes/cli/class-virtual-command.php:68
+msgid "Run this command as a user who may upload files, for example with --user=admin."
+msgstr "Ejecuta este comando como un usuario que pueda subir archivos, por ejemplo con --user=admin."
+
+#. translators: 1: photos converted so far, 2: photos that failed so far.
+#: includes/cli/class-virtual-command.php:83
+#, php-format
+msgid "Converted %1$d, failed %2$d."
+msgstr "%1$d convertidas, %2$d fallidas."
+
+#. translators: 1: photos converted, 2: photos that stay kept on Profotograaf.
+#: includes/cli/class-virtual-command.php:93
+#, php-format
+msgid "%1$d converted, %2$d could not be converted and stay kept on Profotograaf."
+msgstr "%1$d convertidas, %2$d no se pudieron convertir y siguen mantenidas en Profotograaf."
+
+#. translators: 1: photos converted so far, 2: photos that could not be converted, 3: photos still waiting.
+#: includes/modules/class-virtual-removal.php:104
+#, php-format
+msgid "Converting photos kept on Profotograaf to local in the background: %1$d converted, %2$d could not be converted, %3$d left. Reload this page to see the progress."
+msgstr "Convirtiendo en local en segundo plano las fotos mantenidas en Profotograaf: %1$d convertidas, %2$d no se pudieron convertir, quedan %3$d. Recarga esta página para ver el progreso."
+
+#: includes/modules/class-virtual-removal.php:115
+msgid "Every photo kept on Profotograaf is converted to local. You can deactivate or delete this plugin and your images stay in place."
+msgstr "Todas las fotos mantenidas en Profotograaf están convertidas en local. Puedes desactivar o eliminar este plugin y tus imágenes se quedan donde están."
+
+#. translators: %d: number of photos.
+#: includes/modules/class-virtual-removal.php:122
+#, php-format
+msgid "%d photo is kept on Profotograaf and has no copy on this site. It shows no image while this plugin is deactivated or after you delete it. Convert it to local first."
+msgid_plural "%d photos are kept on Profotograaf and have no copy on this site. They show no image while this plugin is deactivated or after you delete it. Convert them to local first."
+msgstr[0] "%d foto se mantiene en Profotograaf y no tiene copia en este sitio. No muestra ninguna imagen mientras este plugin está desactivado o después de eliminarlo. Conviértela en local primero."
+msgstr[1] "%d fotos se mantienen en Profotograaf y no tienen copia en este sitio. No muestran ninguna imagen mientras este plugin está desactivado o después de eliminarlo. Conviértelas en local primero."
+
+#: includes/modules/class-virtual-removal.php:136
+msgid "Convert all to local"
+msgstr "Convertir todas en local"
+
+#. translators: 1: batch size, 2: WP-CLI command.
+#: includes/modules/class-virtual-removal.php:141
+#, php-format
+msgid "The conversion runs in the background, %1$d photos at a time. For a large library, or when WP-Cron does not run on this site, run %2$s instead."
+msgstr "La conversión se ejecuta en segundo plano, %1$d fotos cada vez. Para una biblioteca grande, o si WP-Cron no se ejecuta en este sitio, ejecuta %2$s en su lugar."
+
+#: includes/modules/class-virtual-removal.php:156
+msgid "The last conversion stopped because the user who started it may no longer upload files."
+msgstr "La última conversión se detuvo porque el usuario que la inició ya no puede subir archivos."
+
+#. translators: %d: number of photos.
+#: includes/modules/class-virtual-removal.php:169
+#, php-format
+msgid "%d photo could not be converted in the last run:"
+msgid_plural "%d photos could not be converted in the last run:"
+msgstr[0] "%d foto no se pudo convertir en la última ejecución:"
+msgstr[1] "%d fotos no se pudieron convertir en la última ejecución:"
+
+#: uninstall.php:30
+msgid "The Profotograaf plugin was deleted from this site. Some of your photos are still in your Profotograaf account:"
+msgstr "El plugin de Profotograaf se ha eliminado de este sitio. Algunas de tus fotos siguen en tu cuenta de Profotograaf:"
+
+#. translators: %d: number of files.
+#: uninstall.php:33
+#, php-format
+msgid "- %d file from the Media Library is backed up there. It stays until you delete it on Profotograaf."
+msgid_plural "- %d files from the Media Library are backed up there. They stay until you delete them on Profotograaf."
+msgstr[0] "- %d archivo de la biblioteca de medios tiene una copia de seguridad allí. Se queda hasta que lo elimines en Profotograaf."
+msgstr[1] "- %d archivos de la biblioteca de medios tienen una copia de seguridad allí. Se quedan hasta que los elimines en Profotograaf."
+
+#. translators: %d: number of photos.
+#: uninstall.php:37
+#, php-format
+msgid "- %d photo was shown from Profotograaf and shows no image on this site now. To show it again, install and connect the plugin and use Convert to local."
+msgid_plural "- %d photos were shown from Profotograaf and show no image on this site now. To show them again, install and connect the plugin and use Convert to local."
+msgstr[0] "- %d foto se mostraba desde Profotograaf y ahora no muestra ninguna imagen en este sitio. Para volver a mostrarla, instala y conecta el plugin y usa Convertir en local."
+msgstr[1] "- %d fotos se mostraban desde Profotograaf y ahora no muestran ninguna imagen en este sitio. Para volver a mostrarlas, instala y conecta el plugin y usa Convertir en local."
+
+#: uninstall.php:41
+msgid "Your photos on Profotograaf"
+msgstr "Tus fotos en Profotograaf"
 
 #: includes/modules/class-virtual-plugin-compat.php:190
 msgid "This photo is kept on Profotograaf, so this site has no file to make thumbnails from. Profotograaf serves its sizes. Convert it to local if you need the files on this site."

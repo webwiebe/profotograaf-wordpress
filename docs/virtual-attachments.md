@@ -38,6 +38,11 @@ All of it sat behind a hidden flag that was off by default and had no UI. Issue 
 | `includes/modules/class-virtual-plugin-compat.php` | Issue #156: tells WP Offload Media, Advanced Media Offloader and Regenerate Thumbnails to skip kept photos. |
 | `tests/unit/Virtual_Plugin_Compat_Test.php` | Issue #156: unit tests of those guards. |
 | `tests/e2e/plugin-compat.spec.js` | Issue #156: browser tests with Regenerate Thumbnails 3.1.6 installed from wordpress.org. |
+| `includes/class-virtual-bulk-convert.php` | Issue #158: `Virtual_Bulk_Convert`, the batched conversion of every virtual attachment, through WP-Cron or WP-CLI. |
+| `includes/modules/class-virtual-removal.php` | Issue #158: the row on the Plugins screen with "Convert all to local", and the cron and WP-CLI registration. |
+| `includes/cli/class-virtual-command.php` | Issue #158: `wp profotograaf virtual convert`. |
+| `tests/unit/Virtual_Removal_Test.php` | Issue #158: the bulk job, the Plugins screen row, the WP-CLI command and deactivation. `Uninstall_Test` covers uninstall. |
+| `tests/e2e/virtual-removal.spec.js` | Issue #158: browser test of "Convert all to local" on the Plugins screen. |
 | `includes/class-virtual-block-urls.php` | Issue #154: `Profotograaf\Virtual_Block_Urls`, the render-time URL rewrite of Image and Gallery blocks and the REST field `profotograaf_urls`. |
 | `includes/modules/class-virtual-block-urls.php` | Issue #154: module that registers the rewrite whatever the setting and loads the editor script. |
 | `blocks/virtual-urls/` | Issue #154: editor script that updates the `url` attribute of Image blocks, Gallery items included. |
@@ -63,6 +68,30 @@ Issue #152 added the UI for `convert_to_local()`, in the module `includes/module
 - Attachments marked gone get a warning with a "Convert to local" button: on their edit screen, and in the Media Library as a list of up to 20 of them. The details field says the same.
 
 Decision for the setting-off case: conversion stays available for every attachment that carries `_profotograaf_virtual`, whatever the setting. Once the setting is off the filters are gone, so such an attachment points at `profotograaf-virtual/...` under uploads, a file that does not exist, and shows no image. Convert to local is the way back, so `Virtual_Convert` registers its hooks unconditionally and checks the mark per attachment (`Virtual_Attachments::is_marked()`, which reads meta only and ignores the setting). The bulk action appears while the setting is on, or while at least one marked attachment exists (one query for one id). With the setting off and no marked attachment, nothing of it shows. The details field then explains that the photo shows no image until it is converted, and the Re-import button stays hidden for marked attachments, because a re-import would leave the virtual marks in place. The keep route, the filters and the sync stay off with the setting, as before. The block URL rewrite of issue #154 is hooked whatever the setting, so posts saved with the platform URL show the local file after a conversion (issue #219).
+
+### Deactivation and uninstall
+
+Issue #158. A virtual attachment has no file under uploads. Only the plugin's filters give it an image, so without the plugin it points at `profotograaf-virtual/...`, which does not exist, and shows no image. Posts keep their blocks, with an empty image.
+
+Deactivation:
+
+- Nothing is deleted or changed. The attachments keep `_profotograaf_virtual`, `_profotograaf_virtual_urls` and the other meta, so activating the plugin again brings the images back.
+- `Plugin::deactivate()` clears every `profotograaf_` cron event, including `profotograaf_virtual_sync` and the bulk conversion's `profotograaf_virtual_bulk_convert`. A running bulk conversion keeps its state (`profotograaf_virtual_bulk`) and continues when the plugin is active again: loading the Plugins screen schedules the next batch (`load-plugins.php`).
+
+Uninstall (`uninstall.php`):
+
+- Virtual attachments stay, with their meta. Uninstall deletes only the `_profotograaf_backup_` post meta, as before. Deleting the attachments would break the posts that use them in the same way and would also lose the photo id, so they stay. Installing and connecting the plugin again makes Convert to local work on them, and with the setting on they show again.
+- When any exist, uninstall sends the site's `admin_email` one short note that Profotograaf still holds some of their photos: the number of kept photos, how to show them again, and the number of backup copies, which stay on Profotograaf. The owner chose a plain heads-up over a warning (#158). It is sent once per site on a network, also when "keep data on uninstall" is set, because the images break either way.
+- The job state `profotograaf_virtual_bulk` and its event are removed with the other `profotograaf_` options and events, unless the data is kept.
+
+Bulk conversion before removal (`Virtual_Bulk_Convert`, module `Virtual_Removal`):
+
+- While at least one attachment carries the virtual mark, the Plugins screen shows a row under the plugin (`after_plugin_row_{basename}`) with the number, the warning that they show no image after deactivation or deletion, a "Convert all to local" button and the WP-CLI command. The row needs `upload_files` and `activate_plugins` and does not show in the network admin.
+- The button posts to `admin-post.php?action=profotograaf_convert_all` with a nonce. `start()` stores the job with the current user and schedules one single WP-Cron event. Each run sets that user as the current user, converts 10 attachments with `Virtual_Convert::convert_many()` (the conversion of issue #152, with its capability checks) and schedules the next run. No page request converts anything.
+- An attachment that fails stays virtual and is skipped for the rest of the job, so the job always ends. The row lists up to 20 failures with their reason after the job is done and offers the button again. When the user who started the job can no longer upload files, the job stops and the row says so.
+- While the job runs, the row shows converted, failed and left. When no virtual attachment is left, it says the plugin can be removed without losing images.
+- `wp profotograaf virtual convert [--batch-size=<n>] [--dry-run]` converts in batches of 20 by default from the command line, for large libraries and hosts without WP-Cron. It needs a user who may upload files (`--user=<admin>`) and prints each failure. On a network it runs per site with `--url`.
+- The module registers whatever the setting says, like `Virtual_Convert`, because attachments kept while the setting was on need the conversion after it was switched off. With no virtual attachment and no job, it prints nothing.
 
 ### Image editing (issue #155)
 
@@ -255,7 +284,7 @@ Open these only if the recommendation is accepted.
 5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error. Done in issue #155, see "Image editing".
 6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1. Done in issue #156, see "Third-party plugins".
 7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving.
-8. Uninstall and deactivation behaviour: what happens to virtual attachments when the plugin is removed (the files do not exist locally, so every image would break). Offer a bulk conversion before removal.
+8. Uninstall and deactivation behaviour: what happens to virtual attachments when the plugin is removed (the files do not exist locally, so every image would break). Offer a bulk conversion before removal. Done in issue #158, see "Deactivation and uninstall".
 9. Platform request: a webhook or a feed entry when a gallery stops being available, and an optional purge call. Both are absent from the platform documentation read.
 
 ## Running the tests
