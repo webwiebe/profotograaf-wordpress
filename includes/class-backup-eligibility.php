@@ -193,6 +193,8 @@ final class Backup_Eligibility {
 		if ( '' === $file ) {
 			return self::result( self::SKIP, self::REASON_MISSING_FILE );
 		}
+		// A long-running backfill sees files change; read the size from disk.
+		clearstatcache( true, $file );
 		$bytes = filesize( $file );
 		if ( false === $bytes ) {
 			return self::result( self::SKIP, self::REASON_MISSING_FILE );

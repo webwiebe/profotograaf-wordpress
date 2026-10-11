@@ -93,14 +93,13 @@ final class Backup_Usage {
 		do {
 			$posts = get_posts(
 				array(
-					'post_type'        => $this->post_types(),
-					'post_status'      => 'publish',
-					'posts_per_page'   => self::PAGE,
-					'paged'            => $page,
-					'orderby'          => 'ID',
-					'order'            => 'ASC',
-					'no_found_rows'    => true,
-					'suppress_filters' => true,
+					'post_type'      => $this->post_types(),
+					'post_status'    => 'publish',
+					'posts_per_page' => self::PAGE,
+					'paged'          => $page,
+					'orderby'        => 'ID',
+					'order'          => 'ASC',
+					'no_found_rows'  => true,
 				)
 			);
 			foreach ( $posts as $post ) {
