@@ -166,6 +166,15 @@ final class Settings {
 	}
 
 	/**
+	 * Whether a feature that writes to Profotograaf is on: sending Media
+	 * Library files or the backup. Both need the galleries:write permission,
+	 * so a connection without it is asked to connect again.
+	 */
+	public function writes_to_platform(): bool {
+		return $this->media_upload_enabled() || $this->backup_enabled();
+	}
+
+	/**
 	 * The backup scope: `used`, `all` or `marked`. A missing or unknown value
 	 * gives `used`. Safe before `init`, like backup_enabled().
 	 */
