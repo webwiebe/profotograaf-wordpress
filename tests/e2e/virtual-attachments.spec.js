@@ -355,8 +355,8 @@ test.describe( 'Virtual attachments prototype', () => {
 			return result;
 		}, [ id, media.source_url ] );
 		observe( 'rest edit', edit );
-		expect( edit.rotate.ok ).toBe( false );
-		expect( edit.crop.ok ).toBe( false );
+		expect( edit.rotate ).toMatchObject( { ok: false, code: 'profotograaf_virtual_not_editable' } );
+		expect( edit.crop ).toMatchObject( { ok: false, code: 'profotograaf_virtual_not_editable' } );
 	} );
 
 	test( 'the Media Library shows the attachment, and the legacy image editor cannot change it', async ( { page, context } ) => {
@@ -392,7 +392,8 @@ test.describe( 'Virtual attachments prototype', () => {
 			await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
 			const open = page.locator( `#imgedit-open-btn-${ id }` );
 			observe( `${ label } edit image button`, await open.count() );
-			await open.click();
+			// Issue #155 hides the button for a kept photo, so it is clicked through the DOM.
+			await open.evaluate( ( button ) => /** @type {HTMLElement} */ ( button ).click() );
 			const panel = page.locator( `#image-editor-${ id }` );
 			await expect( panel ).toBeVisible( { timeout: 15_000 } );
 			await page.waitForTimeout( 2000 );

@@ -3236,6 +3236,9 @@ msgstr "Convertir «%s» en local"
 #: includes/modules/class-virtual-convert.php:174
 #: includes/modules/class-virtual-convert.php:323
 #: includes/modules/class-virtual-convert.php:342
+#: includes/modules/class-virtual-edit-guard.php:189
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
 msgid "Convert to local"
 msgstr "Convertir en local"
 
@@ -3854,3 +3857,17 @@ msgstr "compartir"
 msgctxt "block variation keyword"
 msgid "delivered"
 msgstr "entregada"
+
+#: includes/modules/class-virtual-edit-guard.php:79
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local to crop, rotate or scale it."
+msgstr "Esta foto se mantiene en Profotograaf, así que este sitio no tiene ningún archivo que editar. Conviértela en local para recortarla, girarla o escalarla."
+
+#: includes/modules/class-virtual-edit-guard.php:106
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local in the Media Library first, then edit it."
+msgstr "Esta foto se mantiene en Profotograaf, así que este sitio no tiene ningún archivo que editar. Conviértela primero en local en la Biblioteca de medios y luego edítala."
+
+#: includes/modules/class-virtual-edit-guard.php:127
+msgid "Set when the photo is kept on Profotograaf and has no file on this site."
+msgstr "Presente cuando la foto se mantiene en Profotograaf y no tiene ningún archivo en este sitio."

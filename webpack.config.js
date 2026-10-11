@@ -10,6 +10,9 @@
  * - The media modal tab is a script for admin screens that load the media
  *   views: blocks/media-modal/index.ts builds to build/media-modal/index.js
  *   with an index.asset.php and style-index.css (Media_Modal_Tab loads them).
+ * - The virtual attachment edit guards: blocks/virtual-edit-media/index.ts for
+ *   the media views and blocks/virtual-edit-editor/index.ts for the block
+ *   editor (Virtual_Edit_Guard loads them).
  * - The client galleries list on the settings page: blocks/client-links/index.ts
  *   builds to build/client-links/index.js with an index.asset.php
  *   (Admin\Client_Links_Panel loads it on the Galleries tab).
@@ -23,6 +26,8 @@ const SCREENS = [ 'import-screen' ];
 const extraEntries = {
 	'inserter-category/index': path.resolve( __dirname, 'blocks/inserter-category/index.ts' ),
 	'media-modal/index': path.resolve( __dirname, 'blocks/media-modal/index.ts' ),
+	'virtual-edit-media/index': path.resolve( __dirname, 'blocks/virtual-edit-media/index.ts' ),
+	'virtual-edit-editor/index': path.resolve( __dirname, 'blocks/virtual-edit-editor/index.ts' ),
 	'client-links/index': path.resolve( __dirname, 'blocks/client-links/index.ts' ),
 };
 
