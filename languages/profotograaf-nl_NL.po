@@ -3211,6 +3211,9 @@ msgstr "“%s” lokaal opslaan"
 #: includes/modules/class-virtual-convert.php:174
 #: includes/modules/class-virtual-convert.php:323
 #: includes/modules/class-virtual-convert.php:342
+#: includes/modules/class-virtual-edit-guard.php:189
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
 msgid "Convert to local"
 msgstr "Lokaal opslaan"
 
@@ -3272,3 +3275,17 @@ msgid "%d photo kept on Profotograaf is no longer listed there and may stop show
 msgid_plural "%d photos kept on Profotograaf are no longer listed there and may stop showing on your site. Convert them to local while Profotograaf still serves them."
 msgstr[0] "%d foto die op Profotograaf wordt gehouden staat daar niet meer in de lijst en kan van je site verdwijnen. Sla hem lokaal op zolang Profotograaf hem nog levert."
 msgstr[1] "%d foto's die op Profotograaf worden gehouden staan daar niet meer in de lijst en kunnen van je site verdwijnen. Sla ze lokaal op zolang Profotograaf ze nog levert."
+
+#: includes/modules/class-virtual-edit-guard.php:79
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local to crop, rotate or scale it."
+msgstr "Deze foto wordt op Profotograaf gehouden, dus deze site heeft geen bestand om te bewerken. Sla hem lokaal op om hem bij te snijden, te draaien of te schalen."
+
+#: includes/modules/class-virtual-edit-guard.php:106
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local in the Media Library first, then edit it."
+msgstr "Deze foto wordt op Profotograaf gehouden, dus deze site heeft geen bestand om te bewerken. Sla hem eerst lokaal op in de mediabibliotheek en bewerk hem daarna."
+
+#: includes/modules/class-virtual-edit-guard.php:127
+msgid "Set when the photo is kept on Profotograaf and has no file on this site."
+msgstr "Gezet als de foto op Profotograaf wordt gehouden en geen bestand op deze site heeft."

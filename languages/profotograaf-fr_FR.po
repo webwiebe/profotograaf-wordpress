@@ -3211,6 +3211,9 @@ msgstr "Convertir « %s » en local"
 #: includes/modules/class-virtual-convert.php:174
 #: includes/modules/class-virtual-convert.php:323
 #: includes/modules/class-virtual-convert.php:342
+#: includes/modules/class-virtual-edit-guard.php:189
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
 msgid "Convert to local"
 msgstr "Convertir en local"
 
@@ -3272,3 +3275,17 @@ msgid "%d photo kept on Profotograaf is no longer listed there and may stop show
 msgid_plural "%d photos kept on Profotograaf are no longer listed there and may stop showing on your site. Convert them to local while Profotograaf still serves them."
 msgstr[0] "%d photo conservée sur Profotograaf n'y est plus listée et peut disparaître de votre site. Convertissez-la en local tant que Profotograaf la fournit encore."
 msgstr[1] "%d photos conservées sur Profotograaf n'y sont plus listées et peuvent disparaître de votre site. Convertissez-les en local tant que Profotograaf les fournit encore."
+
+#: includes/modules/class-virtual-edit-guard.php:79
+#: build/virtual-edit-editor/index.js:1
+#: build/virtual-edit-media/index.js:1
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local to crop, rotate or scale it."
+msgstr "Cette photo est conservée sur Profotograaf, ce site n'a donc aucun fichier à modifier. Convertissez-la en local pour la recadrer, la faire pivoter ou la redimensionner."
+
+#: includes/modules/class-virtual-edit-guard.php:106
+msgid "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local in the Media Library first, then edit it."
+msgstr "Cette photo est conservée sur Profotograaf, ce site n'a donc aucun fichier à modifier. Convertissez-la d'abord en local dans la Médiathèque, puis modifiez-la."
+
+#: includes/modules/class-virtual-edit-guard.php:127
+msgid "Set when the photo is kept on Profotograaf and has no file on this site."
+msgstr "Présent lorsque la photo est conservée sur Profotograaf et n'a aucun fichier sur ce site."

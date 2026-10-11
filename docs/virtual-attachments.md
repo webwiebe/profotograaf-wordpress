@@ -29,7 +29,9 @@ All of it sat behind a hidden flag that was off by default and had no UI. Issue 
 | `tests/e2e/virtual-attachments.spec.js` | 9 browser tests against a real WordPress and the mock platform. |
 | `tests/e2e/mock-platform.mjs` | Modes `up`, `down`, `unpublished` and `unlisted` (issue #152: the library lists nothing while the images still answer), and a record of API calls. |
 | `includes/modules/class-virtual-convert.php` | Issue #152: the "Convert to local" row action, bulk action, details field and notices. |
-| `tests/e2e/convert-to-local.spec.js` | Issue #152: browser tests of the conversion, its failure, the gone notice and the setting-off case. |
+| `tests/e2e/convert-to-local.spec.js` | Issue #152: browser tests of the conversion, its failure, the gone notice and the setting-off case. Issue #155: the REST edit error, the hidden Edit Image button and the hidden Crop button. |
+| `includes/modules/class-virtual-edit-guard.php` | Issue #155: the REST image edit error and the explanation in place of Edit Image and Crop. |
+| `blocks/virtual-edit-media/`, `blocks/virtual-edit-editor/` | Issue #155: the scripts for the media modal and the block editor. |
 
 ### Switching it on
 
@@ -50,6 +52,17 @@ Issue #152 added the UI for `convert_to_local()`, in the module `includes/module
 - Attachments marked gone get a warning with a "Convert to local" button: on their edit screen, and in the Media Library as a list of up to 20 of them. The details field says the same.
 
 Decision for the setting-off case: conversion stays available for every attachment that carries `_profotograaf_virtual`, whatever the setting. Once the setting is off the filters are gone, so such an attachment points at `profotograaf-virtual/...` under uploads, a file that does not exist, and shows no image. Convert to local is the way back, so `Virtual_Convert` registers its hooks unconditionally and checks the mark per attachment (`Virtual_Attachments::is_marked()`, which reads meta only and ignores the setting). The bulk action appears while the setting is on, or while at least one marked attachment exists (one query for one id). With the setting off and no marked attachment, nothing of it shows. The details field then explains that the photo shows no image until it is converted, and the Re-import button stays hidden for marked attachments, because a re-import would leave the virtual marks in place. The keep route, the filters and the sync stay off with the setting, as before. One gap: with the setting off the `render_block_data` rewrite is not hooked, so an Image block saved with the platform URL keeps that URL after a conversion until the setting is on again or the block is edited.
+
+### Image editing (issue #155)
+
+WordPress cannot edit the image of a virtual attachment, because there is no file on disk. `Virtual_Edit_Guard` (`includes/modules/class-virtual-edit-guard.php`) says so wherever editing is offered, and points to Convert to local. Like `Virtual_Convert` it registers while the setting is off and checks the virtual mark per attachment. Attachments without the mark are left alone.
+
+- REST image editor (`POST /wp/v2/media/{id}/edit`): `rest_request_before_callbacks` answers a virtual attachment with the error code `profotograaf_virtual_not_editable`, status 409, and the message "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local in the Media Library first, then edit it." The error data holds `attachment_id` and `convert_url` (the nonced Convert to local link, empty when the user may not convert). A user who may not edit the attachment gets core's own answer. The block editor shows the message as "Could not edit image. ..." when an edit is sent anyway.
+- Media modal (attachment details, both the sidebar and the two-column view of the Media Library): `wp_prepare_attachment_for_js` adds `profotograafNotEditable` with `convertUrl`, and `build/virtual-edit-media/index.js` replaces the Edit Image button with "This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local to crop, rotate or scale it." and a Convert to local link.
+- Attachment edit screen: the Edit Image button (`#imgedit-open-btn-{id}`) is hidden and the same text and button are printed below the image.
+- Block editor: the REST media response carries `profotograaf_virtual` (null, or an object with `convert_url`). `build/virtual-edit-editor/index.js` wraps `core/image` through `editor.BlockEdit`: while an Image block with a virtual attachment is selected, the Crop button is hidden (it has no class, so a style matches its translated label "Crop" under a body class), and the block settings show the same text with a Convert to local link, in the Content tab (WordPress 7.0 and later) and in the Settings panel.
+- The scripts load for users with `upload_files` while the setting is on or a virtual attachment exists.
+- Not covered: the "Edit Original" button of the classic editor's image details. The legacy editor guard still refuses that path.
 
 ### What the class does
 
@@ -82,7 +95,7 @@ Result observed in the browser and WP-CLI tests, run on WordPress 6.9.4, 7.0.4 a
 | `srcset` | Not applicable | Not applicable | Not applicable | `wp_get_attachment_image_srcset` returns false and the tag has no `srcset` or `sizes`. The only other variant is a square crop, so no second candidate has the same aspect ratio. The browser always loads the `web` variant (at most 1600 px). |
 | Block editor opens the blocks | Works | Works | Works | No invalid block, four images with platform URLs, the canvas image loads. |
 | REST media (`GET /wp/v2/media/{id}`) | Works | Works | Works | `source_url`, `media_details.sizes` (`thumbnail`, `full`) and alt are returned. |
-| REST image edit (rotate, crop) | Fails | Fails | Fails | `rest_unknown_attachment`, "Unable to get meta information for file." It reads the file on disk. |
+| REST image edit (rotate, crop) | Fails | Fails | Fails | Spike result: `rest_unknown_attachment`, "Unable to get meta information for file." It reads the file on disk. Since issue #155 the plugin answers first with `profotograaf_virtual_not_editable` (409) and the convert link. |
 | Media Library modal | Works | Works | Works | The model carries `profotograafVirtual`, and `url`, the `thumbnail` size and the `full` size are platform URLs. The attachment details image loads. |
 | Legacy image editor (Edit image) with the guard | Refused | Refused | Refused | The editor panel opens without an image and nothing is written. |
 | Legacy image editor without the guard | Inconsistent | Inconsistent | Inconsistent | The editor loads the image by downloading it server side and "Image saved" appears. WordPress writes a rotated local file, changes `_wp_attached_file` and the stored size, and creates backup sizes. The attachment keeps the virtual marker and still serves the platform URL, so the saved edit never shows on the site. |
@@ -144,7 +157,7 @@ Open these only if the recommendation is accepted.
 2. "Convert to local" action in the Media Library (single and bulk), plus a notice on attachments marked gone that offers conversion while the photo is still available.
 3. Sync on the change feed instead of the full catalogue: use `GET /api/v1/embed/changes` with the cursor, fall back to the full list on `resync`. Also listen for `available` per gallery.
 4. Editor-side URL refresh: update the `url` attribute of Image blocks and Gallery items in the editor when the attachment URL changes (JavaScript), and rewrite saved URLs in Gallery blocks.
-5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error.
+5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error. Done in issue #155, see "Image editing".
 6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1.
 7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving.
 8. Uninstall and deactivation behaviour: what happens to virtual attachments when the plugin is removed (the files do not exist locally, so every image would break). Offer a bulk conversion before removal.

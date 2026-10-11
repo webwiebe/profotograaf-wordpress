@@ -1,7 +1,8 @@
 // @ts-check
 //
 // Issue #152: "Convert to local" for photos kept on Profotograaf (virtual
-// attachments). A row action, a bulk action in the Media Library list view, a
+// attachments). Issue #155: editing the image of such a photo is refused with
+// an explanation that points to Convert to local. A row action, a bulk action in the Media Library list view, a
 // button in the attachment details and a notice on photos that left the
 // catalogue. A conversion keeps the attachment id, stores the file in uploads
 // with generated sizes and removes the virtual marks. A failure leaves the
@@ -13,7 +14,7 @@
 const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
-const { login, mock } = require( './helpers' );
+const { login, mock, MOCK } = require( './helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 const PROJECT = process.env.E2E_COMPOSE_PROJECT ? [ '-p', process.env.E2E_COMPOSE_PROJECT ] : [];
@@ -89,6 +90,37 @@ function stateOf( id ) {
 			" $out( array( 'exists' => (bool) get_post( $id ), 'virtual' => get_post_meta( $id, '_profotograaf_virtual', true ), 'urls' => get_post_meta( $id, '_profotograaf_virtual_urls', true ), 'gone' => get_post_meta( $id, '_profotograaf_virtual_gone', true ), 'photo' => get_post_meta( $id, '_profotograaf_photo_id', true ), 'on_disk' => file_exists( (string) get_attached_file( $id ) ), 'url' => wp_get_attachment_url( $id ), 'sizes' => is_array( $meta ) && isset( $meta['sizes'] ) ? array_keys( $meta['sizes'] ) : array() ) );"
 	);
 }
+
+/**
+ * Lets the browser load the stored mock-platform URLs from the mock's host port.
+ *
+ * @param {import('@playwright/test').BrowserContext} context
+ */
+async function routeMock( context ) {
+	await context.route( /^http:\/\/mock-platform:8090\//, ( route ) =>
+		route.continue( { url: route.request().url().replace( 'http://mock-platform:8090', MOCK ) } )
+	);
+}
+
+/**
+ * Calls the REST image editor as the admin, the way the block editor does.
+ *
+ * @param {number} id Attachment id.
+ */
+function restEdit( id ) {
+	return php(
+		`$id = ${ id }; wp_set_current_user( get_user_by( 'login', 'admin' )->ID ); $r = new WP_REST_Request( 'POST', "/wp/v2/media/$id/edit" );` +
+			" $r->set_body_params( array( 'src' => wp_get_attachment_url( $id ), 'modifiers' => array( array( 'type' => 'rotate', 'args' => array( 'angle' => 90 ) ) ) ) );" +
+			" $res = rest_do_request( $r ); $data = $res->get_data(); $out( array( 'status' => $res->get_status(), 'code' => $data['code'] ?? '', 'message' => $data['message'] ?? '', 'data' => $data['data'] ?? null, 'id' => $data['id'] ?? 0 ) );"
+	);
+}
+
+/** The id of the attachment of a photo id. */
+function attachmentOf( photo ) {
+	return php( `$ids = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'any', 'meta_key' => '_profotograaf_photo_id', 'meta_value' => '${ photo }', 'fields' => 'ids' ) ); $out( (int) $ids[0] );` );
+}
+
+const NOT_EDITABLE = 'This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local to crop, rotate or scale it.';
 
 test.describe.configure( { mode: 'serial' } );
 
@@ -238,5 +270,113 @@ test.describe( 'Convert to local', () => {
 		// The one left is still marked, so the action stays available.
 		await page.goto( '/wp-admin/upload.php?mode=list' );
 		await expect( page.locator( '#bulk-action-selector-top option[value="profotograaf_convert_local"]' ) ).toHaveCount( 1 );
+	} );
+	test( 'the REST image editor answers a kept photo with a specific error and leaves a local photo alone', () => {
+		settings( true );
+		const kept = keep( [ 'p-7' ] )[ 'p-7' ];
+		const refused = restEdit( kept );
+		expect( refused ).toMatchObject( {
+			status: 409,
+			code: 'profotograaf_virtual_not_editable',
+			message: 'This photo is kept on Profotograaf, so this site has no file to edit. Convert it to local in the Media Library first, then edit it.',
+		} );
+		expect( refused.data.attachment_id ).toBe( kept );
+		expect( refused.data.convert_url ).toContain( `admin-post.php?action=profotograaf_convert_local&attachment=${ kept }&_wpnonce=` );
+		expect( stateOf( kept ) ).toMatchObject( { virtual: '1', on_disk: false } );
+
+		// p-1 was converted to local earlier: core edits it into a new attachment.
+		const edited = restEdit( attachmentOf( 'p-1' ) );
+		expect( edited.status ).toBe( 201 );
+		expect( edited.code ).toBe( '' );
+		wp( 'post', 'delete', String( edited.id ), '--force' );
+	} );
+
+	test( 'the media modal and the edit screen swap Edit Image for the explanation', async ( { page, context } ) => {
+		test.setTimeout( 120_000 );
+		settings( true );
+		await routeMock( context );
+		const kept = attachmentOf( 'p-7' );
+		const local = attachmentOf( 'p-1' );
+		await login( page );
+
+		// The grid router knows ?item= only on its own, so the view is set first.
+		await page.goto( '/wp-admin/upload.php?mode=grid' );
+		await page.goto( `/wp-admin/upload.php?item=${ kept }` );
+		const details = page.locator( '.media-modal .attachment-details' );
+		await expect( details ).toBeVisible( { timeout: 30_000 } );
+		await expect( details.locator( '.profotograaf-not-editable' ) ).toContainText( NOT_EDITABLE );
+		await expect( details.locator( '.profotograaf-not-editable' ).getByRole( 'link', { name: 'Convert to local' } ) ).toHaveAttribute( 'href', new RegExp( `attachment=${ kept }&_wpnonce=` ) );
+		await expect( details.locator( '.edit-attachment' ) ).toHaveCount( 0 );
+
+		await page.goto( `/wp-admin/upload.php?item=${ local }` );
+		await expect( page.locator( '.media-modal .attachment-details .edit-attachment' ) ).toBeVisible( { timeout: 30_000 } );
+		await expect( page.locator( '.media-modal .profotograaf-not-editable' ) ).toHaveCount( 0 );
+
+		await page.goto( `/wp-admin/post.php?post=${ kept }&action=edit` );
+		await expect( page.locator( '.profotograaf-not-editable' ) ).toContainText( NOT_EDITABLE );
+		await expect( page.locator( `#imgedit-open-btn-${ kept }` ) ).toBeHidden();
+
+		await page.goto( `/wp-admin/post.php?post=${ local }&action=edit` );
+		await expect( page.locator( `#imgedit-open-btn-${ local }` ) ).toBeVisible();
+		await expect( page.locator( '.profotograaf-not-editable' ) ).toHaveCount( 0 );
+	} );
+
+	test( 'the Image block of a kept photo has no Crop button and says why', async ( { page, context } ) => {
+		test.setTimeout( 180_000 );
+		settings( true );
+		await routeMock( context );
+		const kept = attachmentOf( 'p-7' );
+		const local = attachmentOf( 'p-1' );
+		const urls = php( `$out( array( wp_get_attachment_url( ${ kept } ), wp_get_attachment_url( ${ local } ) ) );` );
+		const block = ( id, url ) =>
+			`<!-- wp:image {"id":${ id },"sizeSlug":"full","linkDestination":"none"} --><figure class="wp-block-image size-full"><img src="${ url }" alt="" class="wp-image-${ id }"/></figure><!-- /wp:image -->`;
+		const postId = wp( 'post', 'create', '--post_type=post', '--post_status=draft', '--post_title=Edit guard', `--post_content=${ block( kept, urls[ 0 ] ) }${ block( local, urls[ 1 ] ) }`, '--porcelain' );
+
+		try {
+			await login( page );
+			await page.goto( `/wp-admin/post.php?post=${ postId }&action=edit` );
+			await page.waitForFunction( () => window.wp?.data?.select( 'core/block-editor' )?.getBlocks().length === 2, null, { timeout: 60_000 } );
+			await page.evaluate( () => {
+				window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-post', 'welcomeGuide', false );
+				window.wp.data.dispatch( 'core/edit-post' ).openGeneralSidebar( 'edit-post/block' );
+			} );
+			const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
+			// The editor renders the image without the wp-image class, so it is found by its URL.
+			const keptImage = canvas.locator( 'img[src*="/img/p-7/"]' );
+			const localImage = canvas.locator( 'img[src*="/uploads/"]' );
+			await expect.poll( () => localImage.evaluate( ( img ) => /** @type {HTMLImageElement} */ ( img ).naturalWidth ), { timeout: 30_000 } ).toBeGreaterThan( 0 );
+			await expect.poll( () => keptImage.evaluate( ( img ) => /** @type {HTMLImageElement} */ ( img ).naturalWidth ), { timeout: 30_000 } ).toBeGreaterThan( 0 );
+			const select = ( index ) =>
+				page.evaluate( ( i ) => {
+					const editor = window.wp.data.select( 'core/block-editor' );
+					window.wp.data.dispatch( 'core/block-editor' ).selectBlock( editor.getBlocks()[ i ].clientId );
+				}, index );
+			const crop = page.locator( '.block-editor-block-toolbar button[aria-label="Crop"]' );
+
+			await select( 1 );
+			await expect( crop ).toBeVisible();
+			await expect( page.locator( '.profotograaf-not-editable' ) ).toHaveCount( 0 );
+
+			await select( 0 );
+			// The notice fills the Content tab and the Settings tab; the open one shows it.
+			const notice = page.locator( '.profotograaf-not-editable' ).filter( { visible: true } );
+			await expect( notice ).toContainText( NOT_EDITABLE );
+			await expect( notice.getByRole( 'link', { name: 'Convert to local' } ) ).toHaveAttribute( 'href', new RegExp( `attachment=${ kept }&_wpnonce=` ) );
+			await expect( page.locator( '.block-editor-block-toolbar' ).first() ).toBeVisible();
+			await expect( crop ).toBeHidden();
+
+			// The error the block editor shows when the edit is sent anyway.
+			const error = await page.evaluate( async ( [ id, src ] ) => {
+				try {
+					await window.wp.apiFetch( { path: `/wp/v2/media/${ id }/edit`, method: 'POST', data: { src, modifiers: [ { type: 'rotate', args: { angle: 90 } } ] } } );
+					return null;
+				} catch ( e ) {
+					return { code: e.code, status: e.data?.status };
+				}
+			}, [ kept, urls[ 0 ] ] );
+			expect( error ).toEqual( { code: 'profotograaf_virtual_not_editable', status: 409 } );
+		} finally {
+			wp( 'post', 'delete', postId, '--force' );
+		}
 	} );
 } );
