@@ -32,6 +32,6 @@ class Virtual_Attachments implements Module {
 		}
 		$settings  = $plugin->settings();
 		$catalogue = new Photo_Catalogue( $plugin->api(), $settings );
-		( new Prototype( $settings, new Photo_Importer( $settings, null, $catalogue ), $catalogue ) )->register();
+		( new Prototype( $settings, new Photo_Importer( $settings, null, $catalogue ), $catalogue, $plugin->api() ) )->register();
 	}
 }
