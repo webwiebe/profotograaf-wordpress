@@ -1,0 +1,477 @@
+/*
+ * Front-end styles of the full-page gallery (#194). The renderer writes the
+ * markup contract of docs/full-page-gallery.md; layout values arrive as custom
+ * properties on each section. Phone is below 600px (sections.json
+ * phoneBreakpoint).
+ */
+
+.pf-fp {
+	box-sizing: border-box;
+	max-width: 100%;
+	overflow-x: clip;
+}
+
+.pf-fp *,
+.pf-fp *::before,
+.pf-fp *::after {
+	box-sizing: inherit;
+}
+
+.pf-fp-s {
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+.pf-fp-s + .pf-fp-s {
+	margin-block-start: var(--pf-gap, 8px);
+}
+
+.pf-fp-photo {
+	position: relative;
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.pf-fp-open {
+	display: block;
+	color: inherit;
+}
+
+.pf-fp-open:focus-visible {
+	outline: 3px solid #2456d6;
+	outline-offset: -3px;
+}
+
+.pf-fp-photo img {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	object-position: var(--pf-focus, 50% 50%);
+}
+
+/* Captions */
+
+.pf-fp-photo figcaption {
+	padding: 6px 0 0;
+	font-size: 0.875em;
+	line-height: 1.4;
+}
+
+.pf-fp-s[data-captions="overlay"] figcaption {
+	position: absolute;
+	inset: auto 0 0;
+	padding: 24px 12px 10px;
+	background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+	color: #fff;
+	pointer-events: none;
+}
+
+/* Grid */
+
+.pf-fp-grid {
+	display: grid;
+	grid-template-columns: repeat(var(--pf-cols, 3), minmax(0, 1fr));
+	gap: var(--pf-gap, 8px);
+}
+
+.pf-fp-grid img {
+	aspect-ratio: var(--pf-ratio, auto);
+	object-fit: cover;
+}
+
+/* Masonry: columns of uncropped photos */
+
+.pf-fp-masonry {
+	column-count: var(--pf-cols, 3);
+	column-gap: var(--pf-gap, 8px);
+}
+
+.pf-fp-masonry .pf-fp-photo {
+	break-inside: avoid;
+	margin-block-end: var(--pf-gap, 8px);
+}
+
+/* Feature: one row; the flex share follows each photo's shape, so the photos
+   share one height and keep their shape. */
+
+.pf-fp-feature {
+	display: flex;
+	gap: var(--pf-gap, 8px);
+}
+
+.pf-fp-feature .pf-fp-photo {
+	flex: var(--pf-ar, 1.5) 1 0;
+}
+
+/* Hero: the full width, up to the section height, cropped around the focus */
+
+.pf-fp-hero img {
+	max-height: var(--pf-height, 85vh);
+	object-fit: cover;
+}
+
+.pf-fp-title {
+	position: absolute;
+	inset: auto 0 0;
+	margin: 0;
+	padding: 48px 24px 24px;
+	background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+	color: #fff;
+	font-size: clamp(1.5rem, 4vw, 3rem);
+	line-height: 1.15;
+	pointer-events: none;
+}
+
+/* Pair: one large photo beside two small stacked ones */
+
+.pf-fp-pair {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: var(--pf-gap, 8px);
+}
+
+.pf-fp-pair[data-side="right"] {
+	grid-template-columns: 1fr 2fr;
+}
+
+.pf-fp-pair .pf-fp-photo:first-child {
+	grid-row: span 2;
+}
+
+.pf-fp-pair[data-side="right"] .pf-fp-photo:first-child {
+	grid-column: 2;
+	grid-row: 1 / span 2;
+}
+
+.pf-fp-pair img {
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+}
+
+/* The large photo fills the height of the two small ones. */
+
+.pf-fp-pair .pf-fp-photo:first-child .pf-fp-open {
+	position: absolute;
+	inset: 0;
+}
+
+.pf-fp-pair .pf-fp-photo:first-child img {
+	height: 100%;
+	aspect-ratio: auto;
+}
+
+.pf-fp-pair .pf-fp-photo:first-child figcaption {
+	position: absolute;
+	inset: auto 0 0;
+	padding: 24px 12px 10px;
+	background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+	color: #fff;
+	pointer-events: none;
+}
+
+/* Filmstrip: a horizontal scroller with snap points */
+
+.pf-fp-filmstrip:focus-visible {
+	outline: 3px solid #2456d6;
+	outline-offset: 2px;
+}
+
+.pf-fp-track {
+	display: flex;
+	gap: var(--pf-gap, 8px);
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	scrollbar-width: thin;
+}
+
+.pf-fp-track .pf-fp-photo {
+	flex: none;
+	scroll-snap-align: start;
+}
+
+.pf-fp-track img {
+	width: auto;
+	height: var(--pf-row, 360px);
+	max-width: none;
+	aspect-ratio: var(--pf-ar, 1.5);
+	object-fit: cover;
+}
+
+.pf-fp-track figcaption {
+	max-width: calc(var(--pf-row, 360px) * var(--pf-ar, 1.5));
+}
+
+.pf-fp-strip-prev,
+.pf-fp-strip-next {
+	position: absolute;
+	top: calc(var(--pf-row, 360px) / 2);
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin-top: -22px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.55);
+	color: #fff;
+	font-size: 28px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.pf-fp-strip-prev {
+	left: 8px;
+}
+
+.pf-fp-strip-next {
+	right: 8px;
+}
+
+.pf-fp-strip-prev[hidden],
+.pf-fp-strip-next[hidden] {
+	display: none;
+}
+
+.pf-fp-strip-prev:focus-visible,
+.pf-fp-strip-next:focus-visible {
+	outline: 3px solid #fff;
+	outline-offset: 2px;
+}
+
+/* Text */
+
+.pf-fp-text {
+	padding: 2em 16px;
+	text-align: var(--pf-align, center);
+}
+
+.pf-fp-text h2 {
+	margin: 0 auto 0.5em;
+	max-width: 40ch;
+}
+
+.pf-fp-text p {
+	margin: 0 auto;
+	max-width: 65ch;
+}
+
+.pf-fp-text[style*="--pf-align:left"] h2,
+.pf-fp-text[style*="--pf-align:left"] p {
+	margin-inline-start: 0;
+}
+
+.pf-fp-text[style*="--pf-align:right"] h2,
+.pf-fp-text[style*="--pf-align:right"] p {
+	margin-inline-end: 0;
+}
+
+/* Badge, as embed.js draws it */
+
+.pf-fp-badge {
+	display: inline-block;
+	margin-top: 8px;
+	padding: 4px 0;
+	color: #5a5650;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.pf-fp-badge:hover {
+	text-decoration: underline;
+}
+
+.pf-fp-badge.prominent {
+	display: block;
+	padding: 10px 12px;
+	border-radius: 4px;
+	background: #1a1a1a;
+	color: #fff;
+	font-size: 14px;
+	text-align: center;
+}
+
+.pf-fp-badge:focus-visible {
+	outline: 3px solid #2456d6;
+	outline-offset: 2px;
+}
+
+/* Lightbox: the script appends div.pf-fp-lightbox to the body */
+
+.pf-fp-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 56px 64px 24px;
+	background: rgba(0, 0, 0, 0.92);
+	color: #fff;
+}
+
+.pf-fp-lb-img {
+	display: block;
+	max-width: 100%;
+	max-height: calc(100vh - 140px);
+	width: auto;
+	height: auto;
+	object-fit: contain;
+}
+
+.pf-fp-lb-caption {
+	max-width: 70ch;
+	margin: 12px 0 0;
+	text-align: center;
+	font-size: 0.95rem;
+	line-height: 1.4;
+}
+
+.pf-fp-lb-caption[hidden] {
+	display: none;
+}
+
+.pf-fp-lb-prev,
+.pf-fp-lb-next,
+.pf-fp-lb-close {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.12);
+	color: #fff;
+	font-size: 32px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.pf-fp-lb-prev {
+	top: 50%;
+	left: 8px;
+	margin-top: -24px;
+}
+
+.pf-fp-lb-next {
+	top: 50%;
+	right: 8px;
+	margin-top: -24px;
+}
+
+.pf-fp-lb-close {
+	top: 8px;
+	right: 8px;
+}
+
+.pf-fp-lb-prev[hidden],
+.pf-fp-lb-next[hidden] {
+	display: none;
+}
+
+.pf-fp-lb-prev:hover,
+.pf-fp-lb-next:hover,
+.pf-fp-lb-close:hover {
+	background: rgba(255, 255, 255, 0.24);
+}
+
+.pf-fp-lb-prev:focus-visible,
+.pf-fp-lb-next:focus-visible,
+.pf-fp-lb-close:focus-visible {
+	outline: 3px solid #fff;
+	outline-offset: 2px;
+}
+
+/* Phone */
+
+@media (max-width: 599px) {
+
+	.pf-fp-grid {
+		grid-template-columns: repeat(var(--pf-cols-phone, 2), minmax(0, 1fr));
+	}
+
+	.pf-fp-masonry {
+		column-count: var(--pf-cols-phone, 2);
+	}
+
+	.pf-fp-feature {
+		flex-direction: column;
+	}
+
+	.pf-fp-feature .pf-fp-photo {
+		flex: none;
+	}
+
+	.pf-fp-hero img {
+		max-height: var(--pf-height-phone, 70vh);
+	}
+
+	.pf-fp-pair,
+	.pf-fp-pair[data-side="right"] {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.pf-fp-pair .pf-fp-photo:first-child,
+	.pf-fp-pair[data-side="right"] .pf-fp-photo:first-child {
+		grid-column: 1 / -1;
+		grid-row: auto;
+	}
+
+	.pf-fp-pair .pf-fp-photo:first-child .pf-fp-open {
+		position: static;
+	}
+
+	.pf-fp-pair .pf-fp-photo:first-child img {
+		height: auto;
+		aspect-ratio: var(--pf-ar, 1.5);
+	}
+
+	.pf-fp-pair:not([data-captions="overlay"]) .pf-fp-photo:first-child figcaption {
+		position: static;
+		padding: 6px 0 0;
+		background: none;
+		color: inherit;
+	}
+
+	.pf-fp-track img {
+		height: var(--pf-row-phone, 240px);
+	}
+
+	.pf-fp-track figcaption {
+		max-width: calc(var(--pf-row-phone, 240px) * var(--pf-ar, 1.5));
+	}
+
+	.pf-fp-strip-prev,
+	.pf-fp-strip-next {
+		top: calc(var(--pf-row-phone, 240px) / 2);
+	}
+
+	.pf-fp-lightbox {
+		padding: 56px 8px 16px;
+	}
+
+	.pf-fp-lb-prev,
+	.pf-fp-lb-next {
+		top: auto;
+		bottom: 8px;
+		margin-top: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.pf-fp-track {
+		scroll-behavior: auto;
+	}
+}

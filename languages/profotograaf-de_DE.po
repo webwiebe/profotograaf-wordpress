@@ -1420,6 +1420,7 @@ msgid "client"
 msgstr "Kunde"
 
 #: blocks/client-galleries/block.json
+#: blocks/full-page-gallery/block.json
 #: blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "gallery"
@@ -1436,6 +1437,7 @@ msgid "photography"
 msgstr "Fotografie"
 
 #: blocks/client-galleries/block.json
+#: blocks/full-page-gallery/block.json
 #: blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "profotograaf"
@@ -1451,6 +1453,7 @@ msgctxt "block description"
 msgid "Show one of your Profotograaf galleries as a grid, masonry or slideshow."
 msgstr "Zeige eine deiner Profotograaf-Galerien als Raster, Masonry oder Diashow."
 
+#: blocks/full-page-gallery/block.json
 #: blocks/gallery/block.json
 msgctxt "block keyword"
 msgid "photos"
@@ -2751,4 +2754,51 @@ msgstr ""
 
 #: build/gallery/index.js:4
 msgid "Spacing and shape"
+msgstr ""
+
+#: includes/class-full-page-markup.php:134
+msgid "Photo strip. Scroll sideways for more photos."
+msgstr ""
+
+#: includes/class-full-page-renderer.php:168
+msgid "Made with Profotograaf"
+msgstr ""
+
+#: build/full-page-gallery/view.js:1
+msgid "Scroll back"
+msgstr ""
+
+#: build/full-page-gallery/view.js:1
+msgid "Scroll forward"
+msgstr ""
+
+#: build/full-page-gallery/view.js:1
+msgid "Photo viewer"
+msgstr ""
+
+#: build/full-page-gallery/view.js:1
+msgid "Previous photo"
+msgstr ""
+
+#: build/full-page-gallery/view.js:1
+msgid "Next photo"
+msgstr ""
+
+#: build/full-page-gallery/view.js:1
+msgid "Close viewer"
+msgstr ""
+
+#: blocks/full-page-gallery/block.json
+msgctxt "block title"
+msgid "Full-page gallery"
+msgstr ""
+
+#: blocks/full-page-gallery/block.json
+msgctxt "block description"
+msgid "Show one of your Profotograaf galleries across the full page, in sections of different shapes."
+msgstr ""
+
+#: blocks/full-page-gallery/block.json
+msgctxt "block keyword"
+msgid "full page"
 msgstr ""
