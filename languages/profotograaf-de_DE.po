@@ -232,6 +232,7 @@ msgstr "Die exportierten Anfragen wurden entfernt."
 #: includes/class-gallery-rest.php:184
 #: includes/class-gallery-rest.php:211
 #: includes/class-photo-list.php:56
+#: includes/class-sections-rest.php:91
 #: includes/trait-api-client-writes.php:72
 #: includes/trait-api-client-writes.php:211
 msgid "A gallery id is required."

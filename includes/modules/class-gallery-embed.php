@@ -14,6 +14,7 @@ use Profotograaf\Gallery_Rest;
 use Profotograaf\Module;
 use Profotograaf\Oembed;
 use Profotograaf\Plugin;
+use Profotograaf\Sections_Rest;
 use Profotograaf\Settings;
 use Profotograaf\Shortcode;
 
@@ -67,6 +68,7 @@ class Gallery_Embed implements Module {
 		( new Shortcode( $renderer ) )->register();
 		( new Oembed( $script ) )->register();
 		( new Gallery_Rest( $plugin->api(), $index ) )->register();
+		( new Sections_Rest( $plugin->api() ) )->register();
 
 		add_action( Gallery_Index::LOOKUP_HOOK, array( $index, 'lookup' ) );
 		add_action( Embed_Script::REFRESH_HOOK, array( $script, 'refresh' ) );
