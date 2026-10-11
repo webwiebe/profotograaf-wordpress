@@ -5,6 +5,9 @@ import './style.css';
 const root = document.getElementById( 'profotograaf-import-root' );
 if ( root ) {
 	createRoot( root ).render(
-		<App adminUrl={ root.getAttribute( 'data-admin-url' ) ?? '' } />
+		<App
+			adminUrl={ root.getAttribute( 'data-admin-url' ) ?? '' }
+			canKeep={ root.getAttribute( 'data-keep' ) === '1' }
+		/>
 	);
 }

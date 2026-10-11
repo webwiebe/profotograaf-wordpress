@@ -57,14 +57,33 @@ function listing( items: PhotoItem[], extra: Partial< PhotosResponse > = {} ): P
 	};
 }
 
-/** Answers list requests from `pages` (by request path) and import requests with `onImport`. */
-function platform( list: ( path: string ) => PhotosResponse, onImport: ( ids: string[] ) => unknown ) {
+/**
+ * Answers list requests from `pages` (by request path), import requests with
+ * `onImport` and keep requests with `onKeep`.
+ */
+function platform(
+	list: ( path: string ) => PhotosResponse,
+	onImport: ( ids: string[] ) => unknown,
+	onKeep: ( ids: string[] ) => unknown = () => {
+		throw new Error( 'The keep route was called.' );
+	}
+) {
 	fetchMock.mockImplementation( ( async ( options: { path: string; data?: { ids: string[] } } ) => {
 		if ( options.path.startsWith( '/profotograaf/v1/photos/import' ) ) {
 			return onImport( options.data?.ids ?? [] );
 		}
+		if ( options.path.startsWith( '/profotograaf/v1/photos/keep' ) ) {
+			return onKeep( options.data?.ids ?? [] );
+		}
 		return list( options.path );
 	} ) as unknown as typeof apiFetch );
+}
+
+/** Whether any request went to the keep route. */
+function keepCalled(): boolean {
+	return fetchMock.mock.calls.some( ( [ options ] ) =>
+		String( ( options as { path: string } ).path ).startsWith( '/profotograaf/v1/photos/keep' )
+	);
 }
 
 beforeEach( () => {
@@ -261,5 +280,81 @@ describe( 'App', () => {
 		fireEvent.click( screen.getByRole( 'button', { name: 'Try again' } ) );
 		await screen.findByText( 'Photo p-1' );
 		expect( screen.queryByText( 'Connect this site first.' ) ).toBeNull();
+	} );
+} );
+
+describe( 'Keep on Profotograaf', () => {
+	it( 'is absent while the setting is off, and Import never calls the keep route', async () => {
+		platform(
+			() => listing( [ photo( 'p-1' ) ] ),
+			( ids ) => ( { results: ids.map( ( id ) => ( { id, attachment_id: 3 } ) ) } )
+		);
+		render( <App adminUrl="" /> );
+		await screen.findByText( 'Photo p-1' );
+
+		expect( screen.queryByRole( 'button', { name: /on Profotograaf/ } ) ).toBeNull();
+		expect( screen.queryByText( /Keep on Profotograaf/ ) ).toBeNull();
+		fireEvent.click( screen.getByRole( 'button', { name: /Photo p-1/ } ) );
+		fireEvent.click( screen.getByRole( 'button', { name: 'Import 1 photo' } ) );
+		await screen.findByText( '1 photo imported.' );
+		expect( screen.getByText( 'Imported' ) ).toBeTruthy();
+		expect( keepCalled() ).toBe( false );
+	} );
+
+	it( 'explains that withdrawn photos can keep showing from caches', async () => {
+		platform( () => listing( [ photo( 'p-1' ) ] ), () => ( { results: [] } ) );
+		render( <App adminUrl="" canKeep /> );
+		await screen.findByText( 'Photo p-1' );
+
+		const notice = screen.getByText( /Keep on Profotograaf adds a photo to the Media Library without a download/ );
+		expect( notice.textContent ).toContain( 'edge caches' );
+		expect( notice.textContent ).toContain( "visitors' browsers can keep showing it for up to a year" );
+		expect( screen.getByRole( 'button', { name: 'Keep 0 photos on Profotograaf' } ).hasAttribute( 'disabled' ) ).toBe( true );
+	} );
+
+	it( 'keeps the chosen photos through the keep route and marks them', async () => {
+		const kept: string[][] = [];
+		let release: ( value: unknown ) => void = () => undefined;
+		platform(
+			() => listing( [ photo( 'p-1' ), photo( 'p-2' ), photo( 'p-3' ) ] ),
+			() => {
+				throw new Error( 'The import route was called.' );
+			},
+			( ids ) => {
+				kept.push( ids );
+				return new Promise( ( resolve ) => {
+					release = resolve;
+				} );
+			}
+		);
+		render( <App adminUrl="https://site.test/wp-admin/" canKeep /> );
+		await screen.findByText( 'Photo p-1' );
+		fireEvent.click( screen.getByRole( 'button', { name: /Photo p-1/ } ) );
+		fireEvent.click( screen.getByRole( 'button', { name: /Photo p-2/ } ) );
+		fireEvent.click( screen.getByRole( 'button', { name: 'Keep 2 photos on Profotograaf' } ) );
+
+		await screen.findByText( 'Keeping 0 of 2 on Profotograaf' );
+		release( { results: [ { id: 'p-1', attachment_id: 51 }, { id: 'p-2', error: 'Nope.' } ] } );
+
+		await screen.findByText( '1 photo kept on Profotograaf.' );
+		expect( kept ).toEqual( [ [ 'p-1', 'p-2' ] ] );
+		expect( screen.getByText( 'Kept on Profotograaf' ) ).toBeTruthy();
+		expect( screen.getByRole( 'link', { name: 'Open in Media Library' } ).getAttribute( 'href' ) ).toBe(
+			'https://site.test/wp-admin/post.php?post=51&action=edit'
+		);
+		expect( screen.getByText( 'These photos could not be kept on Profotograaf:' ) ).toBeTruthy();
+		expect( screen.getByText( /Photo p-2: Nope\./ ) ).toBeTruthy();
+		expect( screen.getByRole( 'button', { name: 'Keep 1 photo on Profotograaf' } ) ).toBeTruthy();
+	} );
+
+	it( 'marks a photo the list reports as kept', async () => {
+		platform(
+			() => listing( [ photo( 'p-1', { id: 7, kept: true } ), photo( 'p-2', { id: 8 } ) ] ),
+			() => ( { results: [] } )
+		);
+		render( <App adminUrl="" canKeep /> );
+		await screen.findByText( 'Photo p-1' );
+		expect( screen.getByText( 'Kept on Profotograaf' ) ).toBeTruthy();
+		expect( screen.getByText( 'Imported' ) ).toBeTruthy();
 	} );
 } );

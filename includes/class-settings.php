@@ -123,6 +123,23 @@ final class Settings {
 	}
 
 	/**
+	 * Whether editors may keep a photo on Profotograaf as a virtual attachment
+	 * (setting "Keep photos on Profotograaf"). Off by default. While it is off
+	 * no virtual attachment hook, route or button exists.
+	 *
+	 * Modules ask this while the plugin loads, before `init`. It reads the
+	 * stored value without the schema, whose labels would load the translations
+	 * too early. The default is false, so a missing or unusable value is off.
+	 */
+	public function virtual_attachments_enabled(): bool {
+		$stored = get_option( self::OPTION, array() );
+		if ( ! is_array( $stored ) || ! array_key_exists( 'virtual_attachments', $stored ) ) {
+			return false;
+		}
+		return true === filter_var( $stored['virtual_attachments'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+	}
+
+	/**
 	 * Sanitize callback for register_setting().
 	 *
 	 * Keys missing from the input keep their saved value, so a REST request

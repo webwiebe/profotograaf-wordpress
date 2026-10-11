@@ -2,8 +2,8 @@
 //
 // Spike #104: the virtual attachment prototype (docs/virtual-attachments.md).
 //
-// The prototype is hidden behind PROFOTOGRAAF_VIRTUAL_ATTACHMENTS or the filter
-// profotograaf_virtual_attachments. This spec switches the filter on and off
+// The setting "Keep photos on Profotograaf" switches it on (issue #151), and the
+// filter profotograaf_virtual_attachments overrides the setting. This spec switches the filter on and off
 // through a must-use plugin that reads one option, so it proves both sides: the
 // first test shows nothing changes with the flag off, the others run with it on.
 //

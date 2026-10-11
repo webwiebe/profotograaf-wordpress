@@ -11,10 +11,14 @@ use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use Profotograaf\Logger;
+use Profotograaf\Modules\Media_Import_Screen;
+use Profotograaf\Modules\Media_Source_Rest;
 use Profotograaf\Modules\Virtual_Attachments as Virtual_Module;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
+use Profotograaf\Photo_Rest;
 use Profotograaf\Settings;
+use Profotograaf\Settings_Schema;
 use Profotograaf\Virtual_Attachments;
 
 class Virtual_Attachments_Test extends Gallery_Test_Case {
@@ -106,6 +110,13 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 			function ( $args ) {
 				$ids = array();
 				foreach ( $this->meta as $id => $meta ) {
+					if ( isset( $args['meta_query'] ) ) {
+						$clause = $args['meta_query'][0];
+						if ( isset( $meta[ $clause['key'] ] ) && in_array( (string) $meta[ $clause['key'] ], $clause['value'], true ) ) {
+							$ids[] = $id;
+						}
+						continue;
+					}
 					if ( isset( $meta[ $args['meta_key'] ] ) && (string) $meta[ $args['meta_key'] ] === (string) $args['meta_value'] ) {
 						$ids[] = $id;
 					}
@@ -612,5 +623,238 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 		$block = $this->image_block( 9, 'https://profotograaf.nl/share/img/a1/web-aaaaaaaaaaaa.jpg' );
 
 		$this->assertSame( $block, $virtual->filter_block_data( $block ) );
+	}
+
+	/**
+	 * Switches the setting "Keep photos on Profotograaf" on, next to the media source.
+	 */
+	private function setting_on(): void {
+		$this->options[ Settings::OPTION ] = array(
+			'media_source'        => true,
+			'virtual_attachments' => true,
+		);
+	}
+
+	/**
+	 * The photo routes as the Media_Source_Rest module registers them.
+	 *
+	 * @return array<string,array<string,mixed>> Route arguments by route.
+	 */
+	private function routes(): array {
+		$routes = array();
+		Functions\when( 'register_rest_route' )->alias(
+			function ( $space, $route, $args ) use ( &$routes ) {
+				$routes[ $route ] = $args;
+			}
+		);
+		Actions\expectAdded( 'rest_api_init' )->whenHappen( fn( $callback ) => $callback() );
+		( new Media_Source_Rest() )->register( $this->plugin );
+		return $routes;
+	}
+
+	/**
+	 * A REST request carrying some params.
+	 *
+	 * @param array<string,mixed> $params Params.
+	 */
+	private function request( array $params ): object {
+		return new class( $params ) {
+			/**
+			 * Constructor.
+			 *
+			 * @param array<string,mixed> $params Params.
+			 */
+			public function __construct( private array $params ) {}
+
+			/**
+			 * Param.
+			 *
+			 * @param string $name Name.
+			 */
+			public function get_param( $name ) {
+				return $this->params[ $name ] ?? null;
+			}
+		};
+	}
+
+	/**
+	 * Photo_Rest with virtual attachments, as the module builds it while the setting is on.
+	 */
+	private function keep_rest(): Photo_Rest {
+		$settings      = new Settings();
+		$catalogue     = new Photo_Catalogue( $this->api, $settings, $this->clock() );
+		$importer      = new Photo_Importer( $settings, null, $catalogue );
+		$this->virtual = new Virtual_Attachments( $settings, $importer, $catalogue );
+		return new Photo_Rest( $catalogue, $importer, $settings, $this->virtual );
+	}
+
+	public function test_the_setting_is_off_by_default_on_the_general_tab(): void {
+		$entry = Settings_Schema::entry( 'virtual_attachments' );
+
+		$this->assertNotNull( $entry );
+		$this->assertFalse( $entry['default'] );
+		$this->assertSame( 'bool', $entry['type'] );
+		$this->assertSame( Settings_Schema::TAB_GENERAL, $entry['tab'] );
+		$this->assertSame( 'Keep photos on Profotograaf', $entry['label'] );
+		$this->assertStringContainsString( 'edge caches', $entry['description'] );
+		$this->assertStringContainsString( 'up to a year', $entry['description'] );
+		$this->assertFalse( ( new Settings() )->virtual_attachments_enabled() );
+	}
+
+	public function test_the_setting_switches_it_on_and_sanitises_like_any_bool(): void {
+		$settings = new Settings();
+
+		$this->options[ Settings::OPTION ] = $settings->sanitize( array( 'virtual_attachments' => '1' ) );
+		$this->assertTrue( $settings->virtual_attachments_enabled() );
+		$this->assertTrue( Virtual_Attachments::enabled() );
+
+		$this->options[ Settings::OPTION ] = $settings->sanitize( array( 'virtual_attachments' => 'junk' ) );
+		$this->assertTrue( $settings->virtual_attachments_enabled(), 'An unusable value keeps the saved state.' );
+
+		$this->options[ Settings::OPTION ] = $settings->sanitize( array( '_tab' => 'general' ) );
+		$this->assertFalse( $settings->virtual_attachments_enabled(), 'Unchecking the box on the General tab turns it off.' );
+		$this->assertFalse( Virtual_Attachments::enabled() );
+	}
+
+	public function test_the_filter_can_switch_the_setting_off(): void {
+		$this->setting_on();
+		Filters\expectApplied( Virtual_Attachments::FILTER )->andReturn( false );
+
+		$this->assertFalse( Virtual_Attachments::enabled() );
+	}
+
+	public function test_with_the_setting_on_the_module_registers_the_filters(): void {
+		$this->setting_on();
+
+		( new Virtual_Module() )->register( $this->plugin );
+
+		foreach ( self::HOOKED as $hook ) {
+			$this->assertNotFalse( has_filter( $hook ), $hook );
+		}
+	}
+
+	public function test_with_the_setting_off_there_is_no_keep_route(): void {
+		$routes = $this->routes();
+
+		$this->assertSame( array( '/photos', '/photos/import', '/photos/reimport' ), array_keys( $routes ) );
+	}
+
+	public function test_with_the_setting_on_the_keep_route_needs_upload_files(): void {
+		$this->setting_on();
+
+		$routes = $this->routes();
+
+		$this->assertArrayHasKey( '/photos/keep', $routes );
+		$this->assertSame( 'POST', $routes['/photos/keep']['methods'] );
+		$this->assertTrue( $routes['/photos/keep']['args']['ids']['required'] );
+		$check = $routes['/photos/keep']['permission_callback'];
+		$this->assertTrue( $check() );
+		$this->caps = array( 'edit_posts' );
+		$this->assertFalse( $check(), 'Without upload_files the action is refused.' );
+		$this->caps                        = array( 'upload_files' );
+		$this->options[ Settings::OPTION ] = array( 'media_source' => true );
+		$this->assertFalse( $check(), 'A route registered before the setting went off refuses.' );
+	}
+
+	public function test_without_virtual_attachments_photo_rest_refuses_to_keep(): void {
+		$settings  = new Settings();
+		$catalogue = new Photo_Catalogue( $this->api, $settings, $this->clock() );
+		$rest      = new Photo_Rest( $catalogue, new Photo_Importer( $settings, null, $catalogue ), $settings );
+
+		$this->assertFalse( $rest->can_keep() );
+		$error = $rest->keep_photos( $this->request( array( 'ids' => array( 'p-1' ) ) ) );
+		$this->assertSame( 'profotograaf_virtual_off', $error->get_error_code() );
+		$this->assertSame( array(), $this->inserted );
+	}
+
+	public function test_keep_creates_virtual_attachments_without_a_download(): void {
+		$this->setting_on();
+		$this->store_catalogue( array( $this->photo(), $this->photo( array( 'id' => 'p-2', 'title' => 'Rings' ) ) ) );
+		Functions\expect( 'download_url' )->never();
+		Functions\expect( 'media_handle_sideload' )->never();
+
+		$results = $this->keep_rest()->keep_photos( $this->request( array( 'ids' => array( 'p-1', 'p-2', 'p-404' ) ) ) )['results'];
+
+		$this->assertSame( array( 'p-1', 'p-2', 'p-404' ), array_column( $results, 'id' ) );
+		$this->assertSame( 101, $results[0]['attachment_id'] );
+		$this->assertSame( 102, $results[1]['attachment_id'] );
+		$this->assertStringContainsString( 'not in your Profotograaf library', $results[2]['error'] );
+		$this->assertSame( '1', $this->meta[101][ Virtual_Attachments::META_VIRTUAL ] );
+		$this->assertSame( '1', $this->meta[102][ Virtual_Attachments::META_VIRTUAL ] );
+		$this->assertSame( 'Rings', $this->inserted[1]['post_title'] );
+		$this->assertSame( array(), $this->downloads );
+		$this->assertSame( array(), $this->http->requests );
+	}
+
+	public function test_keep_refuses_while_the_media_source_is_off(): void {
+		$this->options[ Settings::OPTION ] = array( 'virtual_attachments' => true );
+
+		$error = $this->keep_rest()->keep_photos( $this->request( array( 'ids' => array( 'p-1' ) ) ) );
+
+		$this->assertSame( 'profotograaf_media_source_off', $error->get_error_code() );
+		$this->assertSame( array(), $this->inserted );
+	}
+
+	public function test_the_photo_list_marks_kept_photos(): void {
+		$this->setting_on();
+		$this->store_catalogue( array( $this->photo(), $this->photo( array( 'id' => 'p-2' ) ) ) );
+		$this->meta[50] = array( Photo_Importer::META_PHOTO_ID => 'p-2' );
+		$rest           = $this->keep_rest();
+		$this->virtual->create( $this->photo() );
+
+		$items = $rest->list_photos( $this->request( array() ) )['items'];
+
+		$this->assertSame( 101, $items[0]['id'] );
+		$this->assertTrue( $items[0]['kept'] );
+		$this->assertSame( 50, $items[1]['id'] );
+		$this->assertArrayNotHasKey( 'kept', $items[1] );
+	}
+
+	public function test_with_the_setting_off_the_photo_list_carries_no_kept_mark(): void {
+		$this->store_catalogue( array( $this->photo() ) );
+		$this->meta[50] = array(
+			Photo_Importer::META_PHOTO_ID     => 'p-1',
+			Virtual_Attachments::META_VIRTUAL => '1',
+		);
+		$settings       = new Settings();
+		$catalogue      = new Photo_Catalogue( $this->api, $settings, $this->clock() );
+		$rest           = new Photo_Rest( $catalogue, new Photo_Importer( $settings, null, $catalogue ), $settings );
+
+		$items = $rest->list_photos( $this->request( array() ) )['items'];
+
+		$this->assertSame( 50, $items[0]['id'] );
+		$this->assertArrayNotHasKey( 'kept', $items[0] );
+	}
+
+	/**
+	 * The Import from Profotograaf page as the module prints it.
+	 */
+	private function import_page(): string {
+		Functions\when( 'admin_url' )->justReturn( 'https://site.test/wp-admin/' );
+		ob_start();
+		( new Media_Import_Screen() )->render();
+		return (string) ob_get_clean();
+	}
+
+	public function test_the_import_page_offers_keep_only_while_the_setting_is_on(): void {
+		$this->assertStringNotContainsString( 'data-keep', $this->import_page() );
+
+		$this->setting_on();
+		$this->assertStringContainsString( 'data-admin-url="https://site.test/wp-admin/" data-keep="1"', $this->import_page() );
+	}
+
+	public function test_a_kept_photo_says_so_in_its_source_field_and_has_no_reimport_button(): void {
+		$this->setting_on();
+		$this->meta[60] = array(
+			Photo_Importer::META_PHOTO_ID     => 'p-1',
+			Virtual_Attachments::META_VIRTUAL => '1',
+		);
+		$screen         = new Media_Import_Screen();
+		$screen->register( $this->plugin );
+
+		$html = $screen->source_field( array(), (object) array( 'ID' => 60 ) )['profotograaf_source']['html'];
+
+		$this->assertStringContainsString( 'Kept on Profotograaf.', $html );
+		$this->assertStringNotContainsString( 'Re-import', $html );
 	}
 }
