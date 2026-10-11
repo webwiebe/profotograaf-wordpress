@@ -30,6 +30,9 @@ All of it sat behind a hidden flag that was off by default and had no UI. Issue 
 | `tests/e2e/mock-platform.mjs` | Modes `up`, `down`, `unpublished` and `unlisted` (issue #152: the library lists nothing while the images still answer), and a record of API calls. |
 | `includes/modules/class-virtual-convert.php` | Issue #152: the "Convert to local" row action, bulk action, details field and notices. |
 | `tests/e2e/convert-to-local.spec.js` | Issue #152: browser tests of the conversion, its failure, the gone notice and the setting-off case. |
+| `includes/class-virtual-sync.php` | Issue #153: `Profotograaf\Virtual_Sync`, the sync from the change feed. |
+| `tests/unit/Virtual_Sync_Test.php` | Issue #153: unit tests of the feed sync. |
+| `tests/e2e/virtual-sync.spec.js` | Issue #153: the feed sync against WordPress and the mock platform's queued feed pages. |
 
 ### Switching it on
 
@@ -56,8 +59,23 @@ Decision for the setting-off case: conversion stays available for every attachme
 - `create( array $photo )` makes an attachment from a catalogue row (the same row `Photo_Catalogue` stores). It needs the flag, the `upload_files` capability, the media source setting and a `web` URL on the platform host. It returns the existing attachment when the photo id is already imported. It stores the platform photo id (the same meta the importer uses), the gallery id, the image version, the alt text, `_wp_attachment_metadata` (width and height of the `web` variant scaled to at most 1600 px, plus a 400 px `thumbnail` size when a `thumb` URL exists), the two URLs in `_profotograaf_virtual_urls` and the marker `_profotograaf_virtual`. `_wp_attached_file` holds a path that does not exist on disk (`profotograaf-virtual/{photo id}/web-{version}.jpg`).
 - Filters, all at priority 20 and all reading post meta only: `wp_get_attachment_url` (the `web` URL), `image_downsize` (the `thumb` URL for `thumbnail` and for arrays up to 400 px, otherwise `web` with the stored size), `wp_calculate_image_srcset` (one candidate, the `web` variant), `wp_prepare_attachment_for_js` (adds `profotograafVirtual`), `load_image_to_edit_path` (refuses the legacy image editor) and `render_block_data` (rewrites the saved `src` of a core Image block that points at a platform URL to the attachment's current URL).
 - `convert_to_local( $id )` calls `Photo_Importer::reimport()`, with the stored `web` URL as a fallback for a photo the catalogue no longer lists. The attachment id stays, the file lands in `uploads`, and the virtual marks are removed. On failure (platform down, photo no longer served) the attachment stays virtual. It acts on any attachment with the virtual mark, also while the setting is off (see "Convert to local").
-- `sync( array $catalogue )` and a twice-daily cron event `profotograaf_virtual_sync`. For each virtual attachment: a photo listed in the catalogue gets fresh URLs and version and loses a gone mark; a photo missing from a fresh catalogue gets the gone mark once and fires `profotograaf_virtual_attachment_gone`. A stale catalogue (the last refresh failed) changes nothing.
+- `sync( array $catalogue )`, the full sync. For each virtual attachment: a photo listed in the catalogue gets fresh URLs and version and loses a gone mark; a photo missing from a fresh catalogue gets the gone mark once and fires `profotograaf_virtual_attachment_gone`. A stale catalogue (the last refresh failed) changes nothing, and a catalogue that hit its size limit marks nothing gone.
+- An hourly cron event `profotograaf_virtual_sync` runs `Virtual_Sync` on the change feed (see "Sync from the change feed"). Since issue #153 the full sync runs only when the feed answers `resync`.
 - Filter `profotograaf_virtual_attachments_block_editing` (default `true`) turns the legacy editor guard off. Only the compatibility test uses it, to record the unguarded behaviour.
+
+### Sync from the change feed
+
+Issue #153 replaced the twice-daily full catalogue sync with `Virtual_Sync` (`includes/class-virtual-sync.php`), which reads `GET /api/v1/embed/changes` through `Api_Client::changes()`, the client the change feed poll for imported copies uses.
+
+- The cursor is stored in the option `profotograaf_virtual_changes_cursor` (not autoloaded), apart from `profotograaf_changes_cursor` of `Change_Poller`, so each reader moves past only the pages it applied. The cursor is written after each applied page. `profotograaf_virtual_changes_last_ok` holds the time of the last run that finished. Disconnecting deletes both, and uninstall removes them with every other `profotograaf_` option. A run with no virtual attachment makes no request and drops the cursor, so the first attachment kept later starts from a resync.
+- A run reads at most 20 pages of 500 entries and follows `has_more`.
+- `photos.deleted`: the virtual attachments of that photo are marked gone when the entry has no gallery (deleted from the library) or names the attachment's gallery (taken out of it). An entry for another gallery changes nothing.
+- `galleries.deleted` and `galleries.unavailable` (with its `reason`): every virtual attachment of that gallery is marked gone, because the embed route answers 404 for it.
+- `photos.created` and `photos.updated`, and `galleries.created`, `galleries.updated` and `galleries.available`: the attachments concerned are refreshed from the photo list (`refresh_for_sync()`, read once per run). A listed photo gets fresh URLs, version, size and gallery, and loses a gone mark, also when the same page listed it as deleted, because the later entry wins. So a gallery that comes back in `available` clears the gone mark of its photos.
+- `"resync": true` (no cursor, an unknown one, or one past the 90 day retention): the full sync runs over the whole photo list, then the new cursor is stored.
+- The gone mark is the same `_profotograaf_virtual_gone` that the notices of issue #152 read, and `profotograaf_virtual_attachment_gone` fires once per attachment.
+- A failed or malformed feed page, and a photo list that fails or comes back stale, change nothing: no attachment is marked, the cursor stays and the page is read again on the next run. The failure is logged as a warning, the level `Change_Poller` uses for the same outage.
+- The feed has no entry for a plan change that moves a Free client gallery's expiry into the past (platform `docs/embed-api.md`). Such a photo is caught at the next resync.
 
 ### What it never does
 
@@ -119,8 +137,9 @@ Signals the plugin can read to learn that a photo is no longer published:
 | `available` is false for a gallery | `GET /api/v1/embed/galleries` (token, `galleries:read`) | Password, expiry, client link, proofing mode, and the embeddable switch ("whether the public route serves it right now"). |
 | The photo is missing from `GET /api/v1/embed/photos` | The library-wide list `Photo_Catalogue` already reads | Only embeddable, available galleries are listed. The prototype's sync uses this. |
 | `deleted` entries in the change feed `GET /api/v1/embed/changes` | `embed-api.md` | Photos deleted from the library or taken out of a gallery, and galleries "removed from sharing". Kept as tombstones for 90 days, after which the feed answers `"resync": true`. |
+| `galleries.unavailable` and `galleries.available` in the change feed | `embed-api.md`, added after this spike | The serving state of every gallery written since the cursor, with a reason (`disabled`, `password`, `proofing`, `client_only`, `expired`). An expiry is listed even though nothing wrote to the gallery. Issue #153 reads both. |
 
-Not found in the documentation or code read: a webhook or push notification to the plugin, and a feed entry for a gallery whose embeddable switch is turned off, that gets a password, expires or enters proofing mode. For those cases only `available` and the photo list change. The plugin has no way to be told within seconds.
+Not found in the documentation or code read: a webhook or push notification to the plugin. The plugin has no way to be told within seconds.
 
 Answer for the spike: unpublishing breaks the image at the origin at once, but copies already cached by an edge or a browser keep being shown for up to a year, and the platform offers no purge. The plugin learns about it only by polling, so a virtual attachment can serve a photo that was withdrawn, and can serve a broken image until the next poll. A site that needs withdrawn photos to disappear quickly should not use virtual attachments for them.
 
@@ -142,7 +161,7 @@ Open these only if the recommendation is accepted.
 
 1. Per-photo choice "Keep on Profotograaf" in the picker, next to the import. Includes the flag becoming a setting, the capability check and copy that explains the unpublish behaviour.
 2. "Convert to local" action in the Media Library (single and bulk), plus a notice on attachments marked gone that offers conversion while the photo is still available.
-3. Sync on the change feed instead of the full catalogue: use `GET /api/v1/embed/changes` with the cursor, fall back to the full list on `resync`. Also listen for `available` per gallery.
+3. Sync on the change feed instead of the full catalogue: use `GET /api/v1/embed/changes` with the cursor, fall back to the full list on `resync`. Also listen for `available` per gallery. Done in issue #153.
 4. Editor-side URL refresh: update the `url` attribute of Image blocks and Gallery items in the editor when the attachment URL changes (JavaScript), and rewrite saved URLs in Gallery blocks.
 5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error.
 6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1.

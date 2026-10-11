@@ -24,11 +24,14 @@ trait Api_Client_Feed {
 	 * Needs the galleries:read scope. The cursor is opaque. An empty `$since`
 	 * asks for a fresh cursor and the platform answers with `resync` true.
 	 * Delivery is at least once, so a caller applies an entry twice without harm.
-	 * Entries carry ids only.
+	 * Entries carry ids only. `galleries.unavailable` and `galleries.available`
+	 * give the serving state of every gallery written since the cursor
+	 * (docs/embed-api.md in the platform repository): an unavailable gallery
+	 * answers 404 on its embed route, so its images stop serving.
 	 *
 	 * @param string $since Cursor from the previous page, empty for the first call.
 	 * @param int    $limit Entries per list, 1 to 1000.
-	 * @return array{cursor:string,has_more:bool,resync:bool,galleries:array{created:array<int,string>,updated:array<int,string>,deleted:array<int,string>},photos:array{created:array<int,array{id:string,gallery_id:string}>,updated:array<int,array{id:string,gallery_id:string}>,deleted:array<int,array{id:string,gallery_id:string}>}}|WP_Error
+	 * @return array{cursor:string,has_more:bool,resync:bool,galleries:array{created:array<int,string>,updated:array<int,string>,deleted:array<int,string>,unavailable:array<int,array{id:string,reason:string}>,available:array<int,string>},photos:array{created:array<int,array{id:string,gallery_id:string}>,updated:array<int,array{id:string,gallery_id:string}>,deleted:array<int,array{id:string,gallery_id:string}>}}|WP_Error
 	 */
 	public function changes( string $since = '', int $limit = 500 ) {
 		$query = array( 'limit' => max( 1, min( 1000, $limit ) ) );
@@ -49,9 +52,11 @@ trait Api_Client_Feed {
 			'has_more'  => ! empty( $body['has_more'] ),
 			'resync'    => ! empty( $body['resync'] ),
 			'galleries' => array(
-				'created' => self::feed_ids( $galleries['created'] ?? null ),
-				'updated' => self::feed_ids( $galleries['updated'] ?? null ),
-				'deleted' => self::feed_ids( $galleries['deleted'] ?? null ),
+				'created'     => self::feed_ids( $galleries['created'] ?? null ),
+				'updated'     => self::feed_ids( $galleries['updated'] ?? null ),
+				'deleted'     => self::feed_ids( $galleries['deleted'] ?? null ),
+				'unavailable' => self::feed_unavailable( $galleries['unavailable'] ?? null ),
+				'available'   => self::feed_ids( $galleries['available'] ?? null ),
 			),
 			'photos'    => array(
 				'created' => self::feed_photos( $photos['created'] ?? null ),
@@ -102,6 +107,25 @@ trait Api_Client_Feed {
 			}
 		}
 		return $ids;
+	}
+
+	/**
+	 * Gallery entries `{ id, reason }` from the feed list `unavailable`.
+	 *
+	 * @param mixed $raw Raw list.
+	 * @return array<int,array{id:string,reason:string}>
+	 */
+	private static function feed_unavailable( $raw ): array {
+		$entries = array();
+		foreach ( is_array( $raw ) ? $raw : array() as $entry ) {
+			if ( is_array( $entry ) && isset( $entry['id'] ) && is_scalar( $entry['id'] ) && '' !== (string) $entry['id'] ) {
+				$entries[] = array(
+					'id'     => (string) $entry['id'],
+					'reason' => is_scalar( $entry['reason'] ?? null ) ? (string) $entry['reason'] : '',
+				);
+			}
+		}
+		return $entries;
 	}
 
 	/**
