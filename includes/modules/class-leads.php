@@ -69,11 +69,19 @@ class Leads implements Module {
 				static fn( $bridge ): bool => $bridge instanceof Bridge
 			)
 		);
-		if ( $plugin->settings()->get( 'leads_enabled' ) ) {
-			foreach ( $bridges as $bridge ) {
-				$bridge->register();
+		// Reading a setting builds the translated schema, and translations load
+		// on `init` at the earliest. The form plugins submit after `init`.
+		add_action(
+			'init',
+			static function () use ( $plugin, $bridges ): void {
+				if ( ! $plugin->settings()->get( 'leads_enabled' ) ) {
+					return;
+				}
+				foreach ( $bridges as $bridge ) {
+					$bridge->register();
+				}
 			}
-		}
+		);
 
 		$store    = new Option_Job_Store();
 		$delivery = new Delivery( $queue, $plugin->api() );
