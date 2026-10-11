@@ -8,7 +8,7 @@
 // the docker WordPress (which has none) stays green. E2E_SCREENSHOT_DIR collects
 // the review screenshots at desktop, tablet and phone width in one folder.
 const { test, expect } = require( '@playwright/test' );
-const { PAGES } = require( './sample-pages' );
+const { PAGES, FULL_PAGE } = require( './sample-pages' );
 const { WIDTHS, expectPhotos, checkLightbox, checkSlideshow, checkLoadMore, expectFallback, shoot, loadLazyImages } = require( './gallery-checks' );
 
 /**
@@ -18,6 +18,30 @@ const { WIDTHS, expectPhotos, checkLightbox, checkSlideshow, checkLoadMore, expe
  * @param {string} anchor
  */
 const gallery = ( page, anchor ) => page.locator( `#${ anchor }[data-profotograaf-gallery]` );
+
+/**
+ * The element of one sample block: the gallery div, or for a full-page gallery
+ * the group with the anchor around it.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {import('./sample-pages').SampleBlock} block
+ */
+const blockOf = ( page, block ) => ( block.block === FULL_PAGE ? page.locator( `#${ block.anchor }` ) : gallery( page, block.anchor ) );
+
+/**
+ * Waits until a full-page gallery shows its photos: at least one section with
+ * figures, and the first photo loaded.
+ *
+ * @param {import('@playwright/test').Locator} group
+ */
+async function expectFullPagePhotos( group ) {
+	const root = group.locator( 'div[data-pf-full-page]' );
+	await expect( root ).toHaveCount( 1 );
+	await expect( root ).toHaveAttribute( 'data-preset', /./ );
+	const first = root.locator( 'figure.pf-fp-photo img' ).first();
+	await first.scrollIntoViewIfNeeded();
+	await expect.poll( () => first.evaluate( ( img ) => /** @type {HTMLImageElement} */ ( img ).naturalWidth ), { message: 'first photo loaded', timeout: 20_000 } ).toBeGreaterThan( 0 );
+}
 
 /** @type {Map<string, boolean>} */
 const present = new Map();
@@ -35,8 +59,8 @@ async function openSample( page, slug ) {
 	const response = await page.goto( `/${ slug }/` );
 	// A site without pretty permalinks answers any path with its front page,
 	// so the page counts as present only when it holds its own first gallery.
-	const first = PAGES.find( ( candidate ) => candidate.slug === slug )?.blocks[ 0 ].anchor;
-	const has = !! response && response.ok() && ( await gallery( page, String( first ) ).count() ) > 0;
+	const first = PAGES.find( ( candidate ) => candidate.slug === slug )?.blocks[ 0 ];
+	const has = !! response && response.ok() && !! first && ( await blockOf( page, first ).count() ) > 0;
 	present.set( slug, has );
 	test.skip( ! has, `no /${ slug }/ page with galleries on this site; run tests/e2e/sample-pages.js first` );
 }
@@ -46,9 +70,11 @@ for ( const sample of PAGES ) {
 		test( 'every gallery draws its photos or its fallback', async ( { page } ) => {
 			await openSample( page, sample.slug );
 			for ( const block of sample.blocks ) {
-				const host = gallery( page, block.anchor );
+				const host = blockOf( page, block );
 				await expect( host, block.anchor ).toHaveCount( 1 );
-				if ( block.expect === 'empty' ) {
+				if ( block.block === FULL_PAGE ) {
+					await expectFullPagePhotos( host );
+				} else if ( block.expect === 'empty' ) {
 					await expectFallback( host );
 				} else if ( block.expect !== 'png' ) {
 					await expectPhotos( host );
@@ -64,7 +90,7 @@ for ( const sample of PAGES ) {
 				await loadLazyImages( page );
 				await shoot( page, `${ sample.slug }-${ width }` );
 				for ( const block of sample.blocks ) {
-					const host = gallery( page, block.anchor );
+					const host = blockOf( page, block );
 					await host.scrollIntoViewIfNeeded();
 					await shoot( host, `${ block.anchor }-${ width }` );
 				}

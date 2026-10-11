@@ -116,10 +116,15 @@ function embedScript( { req, res } ) {
 const SHAPES = [
 	[ 3000, 2000 ], [ 2000, 3000 ], [ 4000, 3000 ], [ 3000, 4000 ], [ 3200, 1800 ], [ 2000, 2500 ], [ 3000, 2000 ],
 ];
-const PUBLIC_PHOTOS = Array.from( { length: 19 }, ( _, index ) => {
-	const [ width, height ] = SHAPES[ index % SHAPES.length ];
-	return { id: `p-${ index + 1 }`, width, height };
-} );
+const shapedPhotos = ( length ) =>
+	Array.from( { length }, ( _, index ) => {
+		const [ width, height ] = SHAPES[ index % SHAPES.length ];
+		return { id: `p-${ index + 1 }`, width, height };
+	} );
+const PUBLIC_PHOTOS = shapedPhotos( 19 );
+// g-e2e-fifty: 50 photos in the same mix, for the full-page gallery (#194).
+// The first 19 are the photos of g-e2e, so the image route serves all of them.
+const FIFTY_PHOTOS = shapedPhotos( 50 );
 
 function variantSize( photo, variant ) {
 	if ( variant === 'thumb' ) {
@@ -129,23 +134,24 @@ function variantSize( photo, variant ) {
 	return [ Math.round( photo.width * scale ), Math.round( photo.height * scale ) ];
 }
 
-function publicGallery( origin, overrides = {} ) {
+function publicGallery( origin, overrides = {}, list = PUBLIC_PHOTOS ) {
+	const slug = overrides.slug || 'spring-wedding';
 	return {
 		id: 'g-e2e',
 		slug: 'spring-wedding',
 		title: 'Spring wedding',
 		description: '',
 		layout: 'grid',
-		url: `${ origin }/share/g/spring-wedding`,
+		url: `${ origin }/share/g/${ slug }`,
 		site_url: `${ origin }/studio-e2e`,
-		photo_count: PUBLIC_PHOTOS.length,
+		photo_count: list.length,
 		badge: { show: false, prominent: false, url: `${ origin }/made-with?ref=embed-badge` },
-		photos: PUBLIC_PHOTOS.map( ( photo, index ) => ( {
+		photos: list.map( ( photo, index ) => ( {
 			...photo,
 			alt: '',
 			title: `Photo ${ index + 1 }`,
 			caption: '',
-			url: `${ origin }/share/g/spring-wedding/photo/${ photo.id }`,
+			url: `${ origin }/share/g/${ slug }/photo/${ photo.id }`,
 			images: [ 'thumb', 'web' ].map( ( variant ) => {
 				const [ w, h ] = variantSize( photo, variant );
 				return { variant, url: `${ origin }/img/${ photo.id }/${ variant }.svg`, width: w, height: h };
@@ -188,7 +194,7 @@ function scenicJpeg( id, variant ) {
 
 function image( { res, url } ) {
 	const [ , id, variant ] = IMAGE.exec( url.pathname );
-	const photo = PUBLIC_PHOTOS.find( ( candidate ) => candidate.id === id );
+	const photo = FIFTY_PHOTOS.find( ( candidate ) => candidate.id === id );
 	if ( ! photo ) {
 		return json( res, 404, { error: 'not found' } );
 	}
@@ -332,6 +338,13 @@ const routes = {
 			res,
 			200,
 			publicGallery( `http://${ req.headers.host }`, { id: 'g-e2e-parallax', slug: 'sample-parallax', title: 'Sample parallax', layout: 'parallax' } ),
+			{ 'access-control-allow-origin': '*' }
+		),
+	'GET /api/v1/embed/galleries/g-e2e-fifty': ( { req, res } ) =>
+		json(
+			res,
+			200,
+			publicGallery( `http://${ req.headers.host }`, { id: 'g-e2e-fifty', slug: 'sample-fifty', title: 'Sample fifty', version: 'e2e0000000000050' }, FIFTY_PHOTOS ),
 			{ 'access-control-allow-origin': '*' }
 		),
 	'POST /share/embed/view': ( { res } ) => {
