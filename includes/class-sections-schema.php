@@ -121,7 +121,7 @@ final class Sections_Schema {
 	/**
 	 * A section with every field of its type set: the stored value when it is
 	 * valid, the default otherwise. Fields the type does not have are dropped,
-	 * except `photoIds` (picked photos, kept as a list of strings).
+	 * except `photoIds` (picked photos by position, '' for an open one).
 	 *
 	 * @param mixed $section Stored section.
 	 * @return array<string,mixed>|null Null when the type is missing or unknown.
@@ -195,20 +195,28 @@ final class Sections_Schema {
 	}
 
 	/**
-	 * A list of photo ids: strings of letters, digits, dashes and underscores.
+	 * A list of photo ids by position: strings of letters, digits, dashes and
+	 * underscores. An empty string keeps a position open, so a photo picked for
+	 * the third slot stays in the third slot. A repeated id becomes an open
+	 * position, and open positions at the end are dropped.
 	 *
 	 * @param mixed $ids Stored ids.
 	 * @return string[]
 	 */
 	private static function ids( $ids ): array {
-		$out = array();
-		foreach ( is_array( $ids ) ? $ids : array() as $id ) {
+		$out  = array();
+		$seen = array();
+		foreach ( is_array( $ids ) ? array_values( $ids ) : array() as $id ) {
 			$clean = is_string( $id ) ? (string) preg_replace( '/[^A-Za-z0-9_-]/', '', $id ) : '';
+			$out[] = isset( $seen[ $clean ] ) ? '' : $clean;
 			if ( '' !== $clean ) {
-				$out[] = $clean;
+				$seen[ $clean ] = true;
 			}
 		}
-		return array_values( array_unique( $out ) );
+		while ( array() !== $out && '' === end( $out ) ) {
+			array_pop( $out );
+		}
+		return $out;
 	}
 
 	/**

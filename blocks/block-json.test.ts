@@ -27,7 +27,7 @@ function load( block: string ): BlockJson {
 	return JSON.parse( readFileSync( join( __dirname, block, 'block.json' ), 'utf8' ) ) as BlockJson;
 }
 
-describe.each( [ 'gallery', 'client-galleries' ] )( 'blocks/%s/block.json', ( block ) => {
+describe.each( [ 'gallery', 'client-galleries', 'full-page-gallery' ] )( 'blocks/%s/block.json', ( block ) => {
 	const json = load( block );
 
 	it( 'is namespaced and uses the plugin text domain', () => {

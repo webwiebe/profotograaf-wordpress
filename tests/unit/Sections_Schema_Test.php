@@ -77,7 +77,7 @@ class Sections_Schema_Test extends Wp_Test_Case {
 				'ratio'    => '3-2',
 				'gap'      => 8,
 				'captions' => 'below',
-				'photoIds' => array( 'a1', 'b2' ),
+				'photoIds' => array( 'a1', '', 'b2' ),
 			),
 			$section
 		);

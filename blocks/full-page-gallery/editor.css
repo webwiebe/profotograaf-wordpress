@@ -1,0 +1,96 @@
+/*
+ * Editor styles of the full-page gallery: the Layout panel (section list and
+ * slot picker) and the canvas preview. The preview itself uses the front-end
+ * classes of style.css.
+ */
+
+.profotograaf-fp-preview .pf-fp-open {
+	pointer-events: none;
+}
+
+.profotograaf-fp-help {
+	margin-block: 0 8px;
+	color: #555;
+}
+
+.profotograaf-fp-sections {
+	margin-block: 16px;
+}
+
+.profotograaf-fp-section {
+	display: grid;
+	gap: 8px;
+	margin-block-end: 12px;
+	padding: 8px;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+}
+
+.profotograaf-fp-section__title {
+	margin: 0;
+	font-weight: 600;
+}
+
+.profotograaf-fp-section__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.profotograaf-fp-slots {
+	margin-block-start: 16px;
+}
+
+.profotograaf-fp-slot {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-block-end: 8px;
+}
+
+.profotograaf-fp-slot__thumb {
+	flex: 0 0 48px;
+	width: 48px;
+	height: 48px;
+	object-fit: cover;
+	background: #f0f0f0;
+}
+
+.profotograaf-fp-slot__label {
+	flex: 1 1 120px;
+}
+
+.profotograaf-fp-choices {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 4px;
+	margin: 0 0 12px;
+	padding: 0;
+	list-style: none;
+}
+
+.profotograaf-fp-choices li {
+	margin: 0;
+}
+
+.profotograaf-fp-choice {
+	display: block;
+	width: 100%;
+	padding: 0;
+	border: 2px solid transparent;
+	background: #e0e0e0;
+	cursor: pointer;
+}
+
+.profotograaf-fp-choice img,
+.profotograaf-fp-choice span {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+}
+
+.profotograaf-fp-choice[aria-pressed="true"] {
+	border-color: var(--wp-admin-theme-color, #3858e9);
+}

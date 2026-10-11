@@ -381,12 +381,31 @@ class Full_Page_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( 'pf-fp-hero', $module->render_block( array( 'galleryId' => 'g-1' ) ) );
 	}
 
-	public function test_the_front_end_script_loads_its_translations(): void {
-		Functions\when( 'generate_block_asset_handle' )->justReturn( 'profotograaf-full-page-gallery-view-script' );
+	public function test_the_editor_and_front_end_scripts_load_their_translations(): void {
+		Functions\when( 'generate_block_asset_handle' )->alias(
+			static fn( string $block, string $field ): string => 'editorScript' === $field ? 'profotograaf-full-page-gallery-editor-script' : 'profotograaf-full-page-gallery-view-script'
+		);
 		Functions\when( 'wp_script_is' )->justReturn( true );
 		Functions\expect( 'wp_set_script_translations' )
 			->once()
+			->with( 'profotograaf-full-page-gallery-editor-script', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		Functions\expect( 'wp_set_script_translations' )
+			->once()
 			->with( 'profotograaf-full-page-gallery-view-script', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+
+		( new Full_Page_Gallery() )->load_script_translations();
+	}
+
+	public function test_a_script_that_is_not_registered_gets_no_translations(): void {
+		Functions\when( 'generate_block_asset_handle' )->alias(
+			static fn( string $block, string $field ): string => $block . '-' . $field
+		);
+		Functions\when( 'wp_script_is' )->alias(
+			static fn( string $handle ): bool => Full_Page_Gallery::BLOCK . '-editorScript' === $handle
+		);
+		Functions\expect( 'wp_set_script_translations' )
+			->once()
+			->with( Full_Page_Gallery::BLOCK . '-editorScript', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
 
 		( new Full_Page_Gallery() )->load_script_translations();
 	}

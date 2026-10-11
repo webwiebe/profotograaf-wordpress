@@ -328,7 +328,9 @@ final class Section_Sequencer {
 		$out = array();
 		foreach ( $pattern as $index => $section ) {
 			foreach ( (array) ( $section['photoIds'] ?? array() ) as $position => $id ) {
-				$out[ '0.' . $index . '.' . $position ] = (string) $id;
+				if ( '' !== (string) $id ) {
+					$out[ '0.' . $index . '.' . $position ] = (string) $id;
+				}
 			}
 		}
 		return $out;

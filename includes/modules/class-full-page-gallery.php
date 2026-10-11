@@ -71,16 +71,23 @@ class Full_Page_Gallery implements Module {
 	}
 
 	/**
-	 * Loads the translations of the front-end script (the lightbox and
-	 * filmstrip labels) from this plugin's languages folder.
+	 * Loads the translations of the editor script (the inspector and the
+	 * preview) and the front-end script (the lightbox and filmstrip labels)
+	 * from this plugin's languages folder.
+	 *
+	 * The JSON files are named after the built scripts (build/full-page-gallery/
+	 * index.js and view.js), the paths WordPress hashes, so the standard lookup
+	 * finds them.
 	 */
 	public function load_script_translations(): void {
 		if ( ! function_exists( 'generate_block_asset_handle' ) ) {
 			return;
 		}
-		$handle = generate_block_asset_handle( self::BLOCK, 'viewScript' );
-		if ( wp_script_is( $handle, 'registered' ) ) {
-			wp_set_script_translations( $handle, 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		foreach ( array( 'editorScript', 'viewScript' ) as $field ) {
+			$handle = generate_block_asset_handle( self::BLOCK, $field );
+			if ( wp_script_is( $handle, 'registered' ) ) {
+				wp_set_script_translations( $handle, 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+			}
 		}
 	}
 }
