@@ -3,6 +3,10 @@
 // It speaks the device pairing endpoints and the two scoped calls the plugin
 // uses, with the shapes documented in the platform repository (docs/features.md
 // and docs/embed-api.md). The test approves a pairing with POST /__approve.
+//
+// The write routes (create a gallery, upload a photo, switch a gallery on for
+// embedding) record each call in `galleryCreates`, `uploads` and `embeddable`
+// of GET /__state, so a test can see what the plugin sent.
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -10,25 +14,54 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
-const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: /** @type {Record<string, unknown>[]} */ ( [] ), changeCalls: /** @type {Record<string, unknown>[]} */ ( [] ) };
+const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: /** @type {Record<string, unknown>[]} */ ( [] ), changeCalls: /** @type {Record<string, unknown>[]} */ ( [] ), ...writeLog() };
+
+// The calls to the write routes, empty after /__reset.
+function writeLog() {
+	return {
+		galleryCreates: /** @type {Record<string, unknown>[]} */ ( [] ),
+		uploads: /** @type {Record<string, unknown>[]} */ ( [] ),
+		embeddable: /** @type {string[]} */ ( [] ),
+	};
+}
 
 function json( res, status, body, headers = {} ) {
 	res.writeHead( status, { 'content-type': 'application/json', ...headers } );
 	res.end( body === undefined ? '' : JSON.stringify( body ) );
 }
 
+// The request body as bytes (`raw`) and, for a JSON body, decoded (`body`).
 function readBody( req ) {
 	return new Promise( ( resolve ) => {
-		let raw = '';
-		req.on( 'data', ( chunk ) => ( raw += chunk ) );
+		const chunks = [];
+		req.on( 'data', ( chunk ) => chunks.push( chunk ) );
 		req.on( 'end', () => {
+			const raw = Buffer.concat( chunks );
 			try {
-				resolve( raw ? JSON.parse( raw ) : {} );
+				resolve( { raw, body: raw.length ? JSON.parse( raw.toString( 'utf8' ) ) : {} } );
 			} catch {
-				resolve( {} );
+				resolve( { raw, body: {} } );
 			}
 		} );
 	} );
+}
+
+// The one `file` part of a multipart upload: its file name, media type and size.
+function uploadedFile( req, raw ) {
+	const type = String( req.headers[ 'content-type' ] || '' );
+	const boundary = /boundary=([^;\s]+)/.exec( type );
+	if ( ! type.startsWith( 'multipart/' ) || ! boundary ) {
+		return { filename: '', type: '', bytes: 0 };
+	}
+	const text = raw.toString( 'latin1' );
+	const start = text.indexOf( '\r\n\r\n' );
+	const end = text.indexOf( `\r\n--${ boundary[ 1 ] }`, start );
+	const head = start < 0 ? '' : text.slice( 0, start );
+	return {
+		filename: ( /filename="([^"]*)"/.exec( head ) || [ '', '' ] )[ 1 ],
+		type: ( /content-type:\s*([^\r\n]+)/i.exec( head ) || [ '', '' ] )[ 1 ],
+		bytes: start < 0 || end < 0 ? 0 : end - start - 4,
+	};
 }
 
 function tokenPair() {
@@ -266,7 +299,7 @@ const routes = {
 	},
 	'GET /__changes': ( { res } ) => json( res, 200, state.changeCalls ),
 	'POST /__reset': ( { res } ) => {
-		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: [], changeCalls: [] } );
+		Object.assign( state, { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: [], changeCalls: [], ...writeLog() } );
 		return json( res, 200, { ok: true } );
 	},
 	// Makes the status call answer that the site may be asked for a review.
@@ -276,8 +309,11 @@ const routes = {
 	},
 	'GET /__state': ( { res } ) => json( res, 200, state ),
 	// Switches the platform between 'up', 'down' (every call answers 503),
-	// 'unpublished' (the images answer 404 and the library lists nothing) and
-	// 'unlisted' (the library lists nothing while the images still answer).
+	// 'unpublished' (the images answer 404 and the library lists nothing),
+	// 'unlisted' (the library lists nothing while the images still answer),
+	// 'storage_full' (an upload answers 413: the account is at its storage cap)
+	// and 'no_write' (the write routes answer 403, as for a token paired
+	// without galleries:write).
 	'POST /__mode': ( { res, url } ) => {
 		state.mode = url.searchParams.get( 'mode' ) || 'up';
 		return json( res, 200, { mode: state.mode } );
@@ -327,11 +363,14 @@ const routes = {
 		return json( res, 200, { cursor: since || 'cursor-1', has_more: false, resync: '' === since, galleries, photos } );
 	} ),
 	'GET /api/v1/embed/photos': authed( libraryPage ),
-	'POST /api/v1/embed/galleries': authed( ( { res, body } ) =>
-		body && body.title
-			? json( res, 201, { id: 'g-e2e-new', slug: 'new', title: body.title, url: 'http://localhost:8090/share/g/new' } )
-			: json( res, 400, { error: 'title required' } )
-	),
+	'POST /api/v1/embed/galleries': authed( ( { res, body } ) => {
+		const status = writeRefused() || ( body && body.title ? 201 : 400 );
+		state.galleryCreates.push( { status, body } );
+		if ( status !== 201 ) {
+			return writeError( res, status, 'title required' );
+		}
+		return json( res, 201, { id: 'g-e2e-new', slug: 'new', title: body.title, url: 'http://localhost:8090/share/g/new' } );
+	} ),
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY, GALLERY_PARALLAX ] ) ),
 	'GET /api/v1/embed/galleries/g-e2e-error': ( { res } ) => json( res, 503, { error: 'unavailable' }, { 'access-control-allow-origin': '*' } ),
 	'GET /share/embed/embed.js': embedScript,
@@ -468,12 +507,38 @@ function photoPage( { res, url } ) {
 
 const EMBED_VERSIONED = /^\/share\/embed\/embed\.[a-f0-9]{12}\.js$/;
 
+// The status a write route answers in the current mode instead of its usual
+// one, 0 when it answers as usual.
+function writeRefused( upload = false ) {
+	if ( state.mode === 'no_write' ) {
+		return 403;
+	}
+	return upload && state.mode === 'storage_full' ? 413 : 0;
+}
+
+function writeError( res, status, fallback ) {
+	if ( status === 403 ) {
+		return json( res, 403, { error: 'the token lacks the scope galleries:write', code: 'forbidden' } );
+	}
+	if ( status === 413 ) {
+		return json( res, 413, { error: 'this upload would pass the storage quota of the plan', code: 'storage.quota_exceeded' } );
+	}
+	return json( res, status, { error: fallback } );
+}
+
 // Write routes of the platform (galleries:write): upload and photo metadata.
 function writeRoute( method, pathname ) {
 	if ( method === 'POST' && UPLOAD.test( pathname ) ) {
-		return authed( ( { res, req } ) =>
-			json( res, 202, { id: 'p-up-1', status: 'uploaded', gallery_id: pathname.split( '/' )[ 5 ], filename: String( req.headers[ 'content-type' ] ).startsWith( 'multipart/' ) ? 'upload.jpg' : '' } )
-		);
+		return authed( ( { res, req, raw } ) => {
+			const galleryId = pathname.split( '/' )[ 5 ];
+			const status = writeRefused( true ) || 202;
+			state.uploads.push( { status, gallery_id: galleryId, ...uploadedFile( req, raw ) } );
+			if ( status !== 202 ) {
+				return writeError( res, status, '' );
+			}
+			const accepted = state.uploads.filter( ( upload ) => upload.status === 202 ).length;
+			return json( res, 202, { id: `p-up-${ accepted }`, status: 'uploaded', gallery_id: galleryId, filename: String( req.headers[ 'content-type' ] ).startsWith( 'multipart/' ) ? 'upload.jpg' : '' } );
+		} );
 	}
 	if ( method === 'PATCH' && PHOTO.test( pathname ) ) {
 		return authed( ( { res, body } ) => {
@@ -485,9 +550,10 @@ function writeRoute( method, pathname ) {
 		} );
 	}
 	if ( method === 'PUT' && EMBEDDABLE.test( pathname ) ) {
-		return authed( ( { res } ) =>
-			json( res, 200, { id: pathname.split( '/' )[ 5 ], embeddable: true, available: true } )
-		);
+		return authed( ( { res } ) => {
+			state.embeddable.push( pathname.split( '/' )[ 5 ] );
+			return json( res, 200, { id: pathname.split( '/' )[ 5 ], embeddable: true, available: true } );
+		} );
 	}
 	return null;
 }
@@ -514,7 +580,7 @@ function findRoute( method, pathname ) {
 
 const server = createServer( async ( req, res ) => {
 	const url = new URL( req.url, 'http://mock' );
-	const body = await readBody( req );
+	const { body, raw } = await readBody( req );
 	const bearer = ( req.headers.authorization || '' ).replace( /^Bearer /, '' );
 	const handler = findRoute( req.method, url.pathname );
 	if ( ! handler ) {
@@ -532,7 +598,7 @@ const server = createServer( async ( req, res ) => {
 			return json( res, 404, { error: 'not found' }, { 'cache-control': 'no-store' } );
 		}
 	}
-	return handler( { req, res, url, body, bearer } );
+	return handler( { req, res, url, body, raw, bearer } );
 } );
 
 server.listen( PORT, '0.0.0.0', () => console.log( `mock platform on ${ PORT }` ) );

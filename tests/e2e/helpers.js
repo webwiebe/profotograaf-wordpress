@@ -15,13 +15,15 @@ async function login( page ) {
 }
 
 /**
- * Talks to the mock platform's control endpoints.
+ * Talks to the mock platform's control endpoints. Each call opens its own
+ * connection: a kept-alive one that the mock closed while idle fails the next
+ * call with "other side closed".
  *
  * @param {string} path
  * @param {'GET'|'POST'} method
  */
 async function mock( path, method = 'POST' ) {
-	const response = await fetch( `${ MOCK }${ path }`, { method } );
+	const response = await fetch( `${ MOCK }${ path }`, { method, headers: { connection: 'close' } } );
 	return response.json();
 }
 

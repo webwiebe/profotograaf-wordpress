@@ -73,7 +73,7 @@ msgstr "Formularios de consulta"
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:245
-#: includes/modules/class-backup.php:201
+#: includes/modules/class-backup.php:202
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -3419,7 +3419,7 @@ msgstr "Este sitio se quedó sin memoria. Vuelve a ejecutar el comando para envi
 msgid "The backup stopped early. Run the command again to send the rest."
 msgstr "La copia de seguridad se detuvo antes de tiempo. Vuelve a ejecutar el comando para enviar el resto."
 
-#: includes/modules/class-backup.php:113
+#: includes/modules/class-backup.php:114
 msgid "Every five minutes (Profotograaf backup)"
 msgstr "Cada cinco minutos (copia de seguridad de Profotograaf)"
 
@@ -3782,16 +3782,16 @@ msgid_plural "%d files are marked for the backup. They are copied to Profotograa
 msgstr[0] "%d archivo está marcado para la copia de seguridad. Se copia a Profotograaf en segundo plano."
 msgstr[1] "%d archivos están marcados para la copia de seguridad. Se copian a Profotograaf en segundo plano."
 
-#: includes/modules/class-backup.php:172
+#: includes/modules/class-backup.php:173
 msgid "The backup starts within a minute, in the background. You can leave this page."
 msgstr "La copia de seguridad empieza en menos de un minuto, en segundo plano. Puedes salir de esta página."
 
-#: includes/modules/class-backup.php:173
+#: includes/modules/class-backup.php:174
 msgid "The backup cannot start: switch it on and connect this site to Profotograaf first."
 msgstr "La copia de seguridad no puede empezar: actívala primero y conecta este sitio a Profotograaf."
 
 #. translators: %d: number of files.
-#: includes/modules/class-backup.php:187
+#: includes/modules/class-backup.php:188
 #, php-format
 msgid "%d file will be sent again in the background."
 msgid_plural "%d files will be sent again in the background."

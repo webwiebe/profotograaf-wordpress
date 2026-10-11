@@ -89,6 +89,7 @@ class Backup implements Module {
 		add_action( self::SCAN_HOOK, array( $this, 'scan_post' ) );
 		add_action( 'init', array( $this, 'sync_schedule' ) );
 		add_action( 'update_option_' . Settings::OPTION, array( $this, 'settings_changed' ), 10, 2 );
+		add_action( 'add_option_' . Settings::OPTION, array( $this, 'settings_added' ), 10, 2 );
 		add_action( 'profotograaf_connected', array( $this, 'on_connected' ) );
 		add_action( 'profotograaf_disconnected', array( $this, 'unschedule' ) );
 		add_action( 'add_attachment', array( $this, 'on_new_attachment' ) );
@@ -286,6 +287,20 @@ class Backup implements Module {
 			$this->backfill()->restart();
 		}
 		$this->sync_schedule();
+	}
+
+	/**
+	 * After the settings were stored through add_option(). update_option() takes
+	 * that path too while the stored settings equal the registered defaults, so
+	 * switching the backup on from untouched settings arrives here and never
+	 * fires update_option_profotograaf_settings.
+	 *
+	 * @param string $option    Option name.
+	 * @param mixed  $new_value Settings after.
+	 */
+	public function settings_added( $option, $new_value ): void {
+		unset( $option );
+		$this->settings_changed( array(), $new_value );
 	}
 
 	/**
