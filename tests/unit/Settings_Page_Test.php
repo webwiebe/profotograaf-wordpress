@@ -141,6 +141,26 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( 'Connect this site again', $html );
 	}
 
+	public function test_the_backup_asks_a_connection_without_the_write_scope_to_connect_again(): void {
+		$this->allow( true );
+		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://example.com/wp-admin/' . $path );
+		$this->connect();
+		$this->options['profotograaf_connection']['scope_revision'] = \Profotograaf\Config::SCOPE_REVISION;
+		$this->options[ \Profotograaf\Settings::OPTION ]            = array( 'backup' => true );
+
+		ob_start();
+		$this->page->reconnect_notice();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'The backup to Profotograaf needs a new permission.', $html );
+		$this->assertStringContainsString( 'Connect this site again', $html );
+
+		$this->options['profotograaf_connection']['scopes'][] = 'galleries:write';
+		ob_start();
+		$this->page->reconnect_notice();
+		$this->assertSame( '', (string) ob_get_clean(), 'the grant holds galleries:write' );
+	}
+
 	/**
 	 * @return array<string,array{string}>
 	 */
