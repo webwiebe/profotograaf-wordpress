@@ -281,11 +281,14 @@ test.describe( 'full-page gallery in the editor', () => {
 		const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
 		const card = canvas.getByRole( 'button', { name: /Spring wedding/ } );
 		await expect( card ).toBeVisible( { timeout: 20_000 } );
-		// The modal can still open after the preference is set; close it when it does.
+		// The modal can still open after the preference is set; close it when it
+		// does. Escape misses it while the focus is in the editor canvas, so the
+		// test clicks its Close button and waits until the overlay is gone.
 		const modal = page.locator( '.components-modal__screen-overlay' );
 		await expect( async () => {
 			if ( await modal.isVisible() ) {
-				await page.keyboard.press( 'Escape' );
+				await modal.getByRole( 'button', { name: 'Close' } ).click( { timeout: 2_000 } );
+				await expect( modal ).toBeHidden( { timeout: 2_000 } );
 			}
 			await card.click( { timeout: 2_000 } );
 		} ).toPass( { timeout: 15_000 } );
