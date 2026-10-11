@@ -287,7 +287,7 @@ class Client_Galleries_Test extends Wp_Test_Case {
 
 		$this->assertSame( Client_Galleries::BLOCK, $json['name'] );
 		$this->assertSame( 'profotograaf', $json['textdomain'] );
-		foreach ( array( 'portal', 'portalPath', 'heading', 'headingLevel', 'description', 'buttonLabel', 'openInNewTab' ) as $attribute ) {
+		foreach ( array( 'portal', 'portalPath', 'heading', 'headingLevel', 'description', 'buttonLabel', 'openInNewTab', 'gallery', 'linkTo' ) as $attribute ) {
 			$this->assertArrayHasKey( $attribute, $json['attributes'] );
 		}
 		$this->assertArrayNotHasKey( 'render', $json, 'The render callback is attached in PHP.' );

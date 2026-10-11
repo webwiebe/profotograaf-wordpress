@@ -148,7 +148,7 @@ are the pairs and triples where one option changes what another does.
 | align x layout | wide and full change the width the columns divide; full width has no side gutter | `sample-pages.spec.js` (`combo-wide`, `combo-full`) |
 | duotone (site) x duotone (block) | the block value replaces the site value in `data-duotone`; without a block value the site value stays | `Gallery_Renderer_Test.php`, `gallery-display.spec.js`, `sample-pages.spec.js` (`combo-duotone`) |
 | gap 0 x radius | a gap of 0 squares the corners | `embed-options.spec.js`, `sample-pages.spec.js` (`combo-flush`) |
-| captions x ratio | overlay captions sit on cropped tiles; captions below add height masonry must balance | `sample-pages.spec.js` (`combo-captions`) |
+| captions x ratio x width | overlay captions sit on cropped tiles; on a phone embed.js puts them below the tile so they do not cover it (professionals#2360); captions below add height masonry must balance | `sample-pages.spec.js` (`combo-captions` at 1280 and 390px) |
 | empty or failed x layout | the reserved box shows as a blank area until it is released | `embed-empty.spec.js`, `gallery-display.spec.js` (failed platform call), `sample-pages.spec.js` (`slideshow-empty`, `combo-empty`) |
 
 ## Sample pages

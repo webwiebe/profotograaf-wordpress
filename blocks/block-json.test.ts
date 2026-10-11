@@ -96,9 +96,33 @@ describe( 'client galleries attributes', () => {
 		const defaults = Object.fromEntries(
 			Object.entries( json.attributes ).map( ( [ k, v ] ) => [ k, v.default ] )
 		) as ClientGalleriesAttributes;
-		expect( previewCopy( defaults ).showNotice ).toBe( true );
-		expect( Object.keys( defaults ).sort() ).toEqual(
-			[ 'buttonLabel', 'description', 'heading', 'headingLevel', 'openInNewTab', 'portal', 'portalPath' ]
-		);
+		expect( previewCopy( defaults ).notice ).toContain( 'Enter your Profotograaf address' );
+		expect( previewCopy( defaults ).buttonLabel ).toBe( 'Open my gallery' );
+		expect( Object.keys( defaults ).sort() ).toEqual( [
+			'buttonLabel',
+			'description',
+			'gallery',
+			'heading',
+			'headingLevel',
+			'linkTo',
+			'openInNewTab',
+			'portal',
+			'portalPath',
+		] );
+	} );
+
+	it( 'keep the gallery link optional and offer the delivered gallery variation', () => {
+		const json = load( 'client-galleries' );
+		expect( json.attributes.gallery ).toEqual( { type: 'string', default: '' } );
+		expect( json.attributes.linkTo ).toEqual( { type: 'string', enum: [ 'portal', 'gallery' ], default: 'portal' } );
+		const variations = ( json as { variations?: Array< Record< string, unknown > > } ).variations ?? [];
+		expect( variations ).toHaveLength( 1 );
+		expect( variations[ 0 ] ).toMatchObject( {
+			name: 'delivered-gallery',
+			title: 'Open a delivered gallery',
+			attributes: { linkTo: 'gallery' },
+			isActive: [ 'linkTo' ],
+		} );
+		expect( JSON.stringify( variations[ 0 ] ).toLowerCase() ).not.toContain( 'install' );
 	} );
 } );
