@@ -70,6 +70,53 @@ if ( ! class_exists( 'WP_Post' ) ) {
 	}
 }
 
+if ( ! class_exists( 'WP_REST_Request' ) ) {
+	/**
+	 * Minimal WP_REST_Request: a method and a route.
+	 */
+	class WP_REST_Request {
+
+		/**
+		 * HTTP method.
+		 *
+		 * @var string
+		 */
+		private $method;
+
+		/**
+		 * Route.
+		 *
+		 * @var string
+		 */
+		private $route;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param string $method HTTP method.
+		 * @param string $route  Route.
+		 */
+		public function __construct( $method = '', $route = '' ) {
+			$this->method = strtoupper( $method );
+			$this->route  = $route;
+		}
+
+		/**
+		 * HTTP method.
+		 */
+		public function get_method() {
+			return $this->method;
+		}
+
+		/**
+		 * Route.
+		 */
+		public function get_route() {
+			return $this->route;
+		}
+	}
+}
+
 if ( ! class_exists( 'WP_Error' ) ) {
 	/**
 	 * Minimal WP_Error.
