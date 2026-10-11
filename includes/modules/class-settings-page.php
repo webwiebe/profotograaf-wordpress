@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Admin\Client_Links_Panel;
 use Profotograaf\Admin\Leads_Settings;
 use Profotograaf\Admin\Settings_Fields;
 use Profotograaf\Admin\Upload_Panel;
@@ -129,6 +130,7 @@ class Settings_Page implements Module {
 				'nonce'   => wp_create_nonce( 'profotograaf_poll' ),
 			)
 		);
+		( new Client_Links_Panel( $this->plugin() ) )->enqueue( $this->current_tab() );
 	}
 
 	/**
@@ -321,6 +323,7 @@ class Settings_Page implements Module {
 				<p><a href="<?php echo esc_url( Leads_Settings::url() ); ?>"><?php esc_html_e( 'Set up the enquiry forms', 'profotograaf' ); ?></a></p>
 			<?php endif; ?>
 			<?php ( new Settings_Fields( $this->plugin()->settings() ) )->render_form( $tab ); ?>
+			<?php ( new Client_Links_Panel( $this->plugin() ) )->render( $tab ); ?>
 
 			<?php if ( Settings_Schema::TAB_GENERAL === $tab && 'connected' === $status['state'] ) : ?>
 				<h2><?php esc_html_e( 'Photo changes', 'profotograaf' ); ?></h2>

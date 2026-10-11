@@ -90,6 +90,33 @@ class Gallery_Index {
 	}
 
 	/**
+	 * Every stored gallery that has a share link, sorted by title. Reads the
+	 * option only and never schedules a lookup.
+	 *
+	 * @return array<int,array{id:string,title:string,url:string}>
+	 */
+	public function all(): array {
+		$index = get_option( self::OPTION, array() );
+		$rows  = array();
+		foreach ( is_array( $index ) ? $index : array() as $id => $entry ) {
+			$url = is_array( $entry ) ? (string) ( $entry['url'] ?? '' ) : '';
+			if ( ! preg_match( '#^https?://[^/\s]+#i', $url ) ) {
+				continue;
+			}
+			$rows[] = array(
+				'id'    => (string) $id,
+				'title' => (string) ( $entry['title'] ?? '' ),
+				'url'   => $url,
+			);
+		}
+		usort(
+			$rows,
+			static fn( array $a, array $b ): int => strnatcasecmp( '' !== $a['title'] ? $a['title'] : $a['id'], '' !== $b['title'] ? $b['title'] : $b['id'] )
+		);
+		return $rows;
+	}
+
+	/**
 	 * Photo count of one gallery as last listed, or null when unknown. Reads the
 	 * option only and never schedules a lookup.
 	 *
