@@ -200,6 +200,8 @@ test.describe( 'Media > Import from Profotograaf', () => {
 	} );
 
 	test( 'resolves a conflict: update text per field, keep both, use the platform version and keep mine', async ( { page } ) => {
+		// Many wp-cli calls and four server round trips: slower than the 30 s default on a busy runner.
+		test.setTimeout( 180_000 );
 		mediaSource( true );
 		const id = wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--field=ID' ).split( /\s+/ )[ 0 ];
 		const meta = ( key ) => wp( 'eval', `echo get_post_meta( ${ id }, '${ key }', true );` );
