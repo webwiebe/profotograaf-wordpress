@@ -83,6 +83,79 @@
 		}, failure( id, button ) );
 	}
 
+	function bulk( button ) {
+		var stop = document.querySelector( '.profotograaf-bulk__stop' );
+		var status = document.querySelector( '.profotograaf-bulk__status' );
+		var count = parseInt( button.getAttribute( 'data-missing' ), 10 ) || 0;
+		var sample = button.getAttribute( 'data-sample' );
+		var question = sprintf(
+			/* translators: %d: number of copies. */
+			_n( 'Remove %d copy that was removed on Profotograaf from the Media Library?', 'Remove %d copies that were removed on Profotograaf from the Media Library?', count, 'profotograaf' ),
+			count
+		);
+		if ( sample ) {
+			question += ' ' + sprintf(
+				/* translators: %s: file names. */
+				__( 'For example: %s.', 'profotograaf' ),
+				sample
+			);
+		}
+		question += ' ' + __( 'The photos on Profotograaf are not touched.', 'profotograaf' );
+		if ( ! window.confirm( question ) ) {
+			return;
+		}
+		var stopped = false;
+		var removed = 0;
+		button.disabled = true;
+		stop.hidden = false;
+		stop.onclick = function () {
+			stopped = true;
+		};
+		function finish( message ) {
+			button.disabled = false;
+			stop.hidden = true;
+			status.textContent = message;
+		}
+		function next() {
+			if ( stopped ) {
+				finish( sprintf(
+					/* translators: %d: number of copies. */
+					__( 'Stopped. %d removed.', 'profotograaf' ),
+					removed
+				) );
+				return;
+			}
+			wp.apiFetch( { path: '/profotograaf/v1/sync/remove-missing', method: 'POST', data: { confirm: true } } ).then( function ( result ) {
+				removed += result.removed;
+				status.textContent = sprintf(
+					/* translators: %d: number of copies. */
+					__( '%d removed…', 'profotograaf' ),
+					removed
+				);
+				if ( result.removed > 0 && result.remaining > 0 ) {
+					next();
+					return;
+				}
+				finish( sprintf(
+					/* translators: %d: number of copies. */
+					__( 'Done. %d removed. Reload the page to see what is left.', 'profotograaf' ),
+					removed
+				) );
+			}, function ( error ) {
+				finish( error && error.message ? error.message : __( 'That did not work. Try again.', 'profotograaf' ) );
+			} );
+		}
+		next();
+	}
+
+	document.addEventListener( 'click', function ( event ) {
+		var all = event.target && event.target.closest ? event.target.closest( '.profotograaf-bulk__remove' ) : null;
+		if ( all && ! all.disabled ) {
+			event.preventDefault();
+			bulk( all );
+		}
+	} );
+
 	document.addEventListener( 'click', function ( event ) {
 		var button = event.target && event.target.closest ? event.target.closest( '.profotograaf-sync__button' ) : null;
 		if ( ! button || button.disabled ) {

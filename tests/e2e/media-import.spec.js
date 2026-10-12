@@ -163,6 +163,16 @@ test.describe( 'Media > Import from Profotograaf', () => {
 		await expect( page.getByText( 'This photo was deleted on Profotograaf.' ) ).toBeVisible();
 		await expect( page.getByRole( 'button', { name: 'Re-import' } ) ).toHaveCount( 0 );
 
+		// The flag shows in the library list, on the Import screen and as a notice, and none of them uses colour alone.
+		wp( 'eval', "update_option( 'profotograaf_sync_counts', array( 'changed' => 0, 'missing' => 1, 'conflict' => 0 ) );" );
+		await page.goto( '/wp-admin/upload.php?mode=list&profotograaf_source=attention' );
+		await expect( page.locator( '.column-profotograaf_sync' ).getByText( 'Removed on Profotograaf' ) ).toBeVisible();
+		await expect( page.locator( '.profotograaf-notice--sync' ) ).toContainText( '1 imported photo needs attention' );
+		await page.goto( '/wp-admin/upload.php?page=profotograaf-import' );
+		await expect( page.getByRole( 'region', { name: /needs attention/ } ) ).toContainText( 'Removed on Profotograaf: 1' );
+		await expect( page.getByRole( 'button', { name: 'Remove all copies removed on Profotograaf' } ) ).toBeVisible();
+		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+
 		// Keep stops the watching and records the decision.
 		await page.getByRole( 'button', { name: 'Keep', exact: true } ).click();
 		await expect( page.getByText( 'Kept as this site' ).first() ).toBeVisible( { timeout: 30_000 } );

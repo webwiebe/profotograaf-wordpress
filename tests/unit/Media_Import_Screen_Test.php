@@ -134,11 +134,18 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		$this->assertSame( array(), $scripts );
 
 		$this->screen->enqueue( 'media_page_profotograaf-import' );
-		$this->assertCount( 1, $scripts );
+		$this->assertCount( 2, $scripts );
+		$this->assertSame( 'profotograaf-sync-actions', $scripts[1][0] );
 		$this->assertSame( 'profotograaf-import-screen', $scripts[0][0] );
 		$this->assertSame( 'https://example.test/wp-content/plugins/profotograaf/build/import-screen/index.js', $scripts[0][1] );
 		$this->assertTrue( $scripts[0][4] );
-		$this->assertSame( array( array( 'profotograaf-import-screen', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ) ), $translated );
+		$this->assertSame(
+			array(
+				array( 'profotograaf-import-screen', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ),
+				array( 'profotograaf-sync-actions', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ),
+			),
+			$translated
+		);
 	}
 
 	public function test_the_filter_script_loads_only_while_active(): void {

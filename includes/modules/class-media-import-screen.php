@@ -14,6 +14,7 @@ use Profotograaf\Photo_Catalogue;
 use Profotograaf\Photo_Importer;
 use Profotograaf\Plugin;
 use Profotograaf\Reconcile;
+use Profotograaf\Sync_Attention;
 use Profotograaf\Sync_Field;
 use Profotograaf\Sync_Panel;
 use Profotograaf\Virtual_Attachments;
@@ -100,6 +101,7 @@ class Media_Import_Screen implements Module {
 		if ( null !== $this->plugin ) {
 			Sync_Panel::render( $this->plugin->connection() );
 		}
+		echo Sync_Attention::section( static fn( int $id ): bool => current_user_can( 'edit_post', $id ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped where built.
 		printf(
 			'<div id="profotograaf-import-root" data-admin-url="%1$s"%2$s></div></div>',
 			esc_url( admin_url() ),
@@ -128,6 +130,9 @@ class Media_Import_Screen implements Module {
 		wp_enqueue_style( 'profotograaf-import-screen', PROFOTOGRAAF_URL . 'build/import-screen/style-index.css', array( 'wp-components' ), $ver );
 		wp_enqueue_script( 'profotograaf-import-screen', PROFOTOGRAAF_URL . 'build/import-screen/index.js', $deps, $ver, true );
 		wp_set_script_translations( 'profotograaf-import-screen', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		// The attention section's bulk removal.
+		wp_enqueue_script( 'profotograaf-sync-actions', PROFOTOGRAAF_URL . 'assets/admin/sync-actions.js', array( 'wp-api-fetch', 'wp-i18n' ), PROFOTOGRAAF_VERSION, true );
+		wp_set_script_translations( 'profotograaf-sync-actions', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
 	}
 
 	/**

@@ -16,6 +16,7 @@ use Profotograaf\Leads\Option_Job_Store;
 use Profotograaf\Leads\Queue;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
+use Profotograaf\Sync_Attention;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -46,6 +47,7 @@ class Admin_Notices implements Module {
 	public const REVOKED = 'revoked';
 	public const REFRESH = 'refresh';
 	public const LEADS   = 'leads';
+	public const SYNC    = 'sync';
 
 	public const BACKUP_STORAGE = 'backup_storage';
 	public const BACKUP_FAILED  = 'backup_failed';
@@ -120,7 +122,7 @@ class Admin_Notices implements Module {
 	/**
 	 * Notices whose state is active now, by kind.
 	 *
-	 * @return array<string,array{signature:string,message:string,link:string,label:string,screen:string}>
+	 * @return array<string,array{signature:string,message:string,link:string,label:string,screen:string,only?:array<int,string>}>
 	 */
 	public function active(): array {
 		$notices    = array();
@@ -162,13 +164,38 @@ class Admin_Notices implements Module {
 				'screen'    => 'settings_page_' . Leads_Settings::SLUG,
 			);
 		}
+		$notices = array_merge( $notices, $this->sync_notices() );
 		return array_merge( $notices, $this->backup_notices() );
+	}
+
+	/**
+	 * The notice for imported photos that need attention. It shows on the
+	 * Media screens and the settings page, and links to the filtered library.
+	 *
+	 * @return array<string,array{signature:string,message:string,link:string,label:string,screen:string,only?:array<int,string>}>
+	 */
+	private function sync_notices(): array {
+		$plugin = $this->plugin ?? Plugin::instance();
+		$total  = Sync_Attention::total();
+		if ( $total < 1 || ! $plugin->settings()->media_source_enabled() ) {
+			return array();
+		}
+		return array(
+			self::SYNC => array(
+				'signature' => Sync_Attention::signature(),
+				'message'   => Sync_Attention::message( $total ),
+				'link'      => Sync_Attention::list_url(),
+				'label'     => __( 'Show them', 'profotograaf' ),
+				'screen'    => '',
+				'only'      => array( 'upload', 'media_page_' . Media_Import_Screen::SLUG, 'settings_page_' . Settings_Page::SLUG ),
+			),
+		);
 	}
 
 	/**
 	 * The backup notices that are active now, by kind.
 	 *
-	 * @return array<string,array{signature:string,message:string,link:string,label:string,screen:string}>
+	 * @return array<string,array{signature:string,message:string,link:string,label:string,screen:string,only?:array<int,string>}>
 	 */
 	private function backup_notices(): array {
 		$status = $this->backup_status();
@@ -224,6 +251,9 @@ class Admin_Notices implements Module {
 			if ( ( $dismissed[ $kind ] ?? '' ) === $notice['signature'] || $screen === $notice['screen'] ) {
 				continue;
 			}
+			if ( isset( $notice['only'] ) && ! in_array( $screen, $notice['only'], true ) ) {
+				continue;
+			}
 			printf(
 				'<div class="notice notice-error profotograaf-notice profotograaf-notice--%1$s"><p>%2$s <a href="%3$s">%4$s</a> | <a href="%5$s">%6$s</a></p></div>',
 				esc_attr( $kind ),
@@ -248,7 +278,7 @@ class Admin_Notices implements Module {
 
 		$kind      = isset( $_GET['kind'] ) ? sanitize_key( wp_unslash( $_GET['kind'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked above.
 		$signature = isset( $_GET['signature'] ) ? sanitize_text_field( wp_unslash( $_GET['signature'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked above.
-		if ( in_array( $kind, array( self::REVOKED, self::REFRESH, self::LEADS, self::BACKUP_STORAGE, self::BACKUP_FAILED ), true ) && '' !== $signature ) {
+		if ( in_array( $kind, array( self::REVOKED, self::REFRESH, self::LEADS, self::SYNC, self::BACKUP_STORAGE, self::BACKUP_FAILED ), true ) && '' !== $signature ) {
 			$this->dismiss( $kind, $signature );
 		}
 		$this->finish();

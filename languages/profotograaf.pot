@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-12T14:31:17+00:00\n"
+"POT-Creation-Date: 2026-10-12T15:23:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -25,8 +25,9 @@ msgstr ""
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
-#: includes/modules/class-media-import-screen.php:222
-#: includes/modules/class-media-import-screen.php:235
+#: includes/class-sync-attention.php:189
+#: includes/modules/class-media-import-screen.php:227
+#: includes/modules/class-media-import-screen.php:240
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -35,6 +36,7 @@ msgstr ""
 #: includes/modules/class-settings-page.php:279
 #: includes/modules/class-site-health.php:357
 #: includes/modules/class-site-health.php:428
+#: includes/modules/class-sync-flags.php:66
 #: assets/admin/media-source.js:29
 #: build/inserter-category/index.js:1
 #: build/media-modal/index.js:3
@@ -114,7 +116,7 @@ msgid "Connect this site"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:93
-#: includes/modules/class-admin-notices.php:136
+#: includes/modules/class-admin-notices.php:138
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr ""
@@ -315,7 +317,7 @@ msgstr ""
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:245
+#: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
@@ -818,7 +820,7 @@ msgid "Open the Profotograaf settings"
 msgstr ""
 
 #: includes/class-backup-health.php:198
-#: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-admin-notices.php:212
 msgid "Open the copy settings"
 msgstr ""
 
@@ -1666,6 +1668,69 @@ msgstr ""
 msgid "This file is not a copy imported from Profotograaf."
 msgstr ""
 
+#. translators: %d: number of imported photos.
+#: includes/class-sync-attention.php:55
+#, php-format
+msgid "Profotograaf: %d imported photo needs attention."
+msgid_plural "Profotograaf: %d imported photos need attention."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-sync-attention.php:95
+msgid "Removed on Profotograaf"
+msgstr ""
+
+#: includes/class-sync-attention.php:97
+msgid "Changed on Profotograaf"
+msgstr ""
+
+#: includes/class-sync-attention.php:99
+msgid "Changed in both places"
+msgstr ""
+
+#: includes/class-sync-attention.php:101
+msgid "Kept"
+msgstr ""
+
+#: includes/class-sync-attention.php:103
+msgid "In sync"
+msgstr ""
+
+#: includes/class-sync-attention.php:130
+msgid "(no title)"
+msgstr ""
+
+#. translators: 1: number of photos removed on Profotograaf, 2: number changed there, 3: number changed in both places.
+#: includes/class-sync-attention.php:139
+#, php-format
+msgid "Removed on Profotograaf: %1$d. Changed on Profotograaf: %2$d. Changed in both places: %3$d."
+msgstr ""
+
+#: includes/class-sync-attention.php:144
+#: includes/class-sync-attention.php:201
+msgid "Show them in the Media Library"
+msgstr ""
+
+#: includes/class-sync-attention.php:149
+msgid "Remove all copies removed on Profotograaf"
+msgstr ""
+
+#: includes/class-sync-attention.php:150
+msgid "Stop"
+msgstr ""
+
+#: includes/class-sync-attention.php:186
+msgid "Imported Profotograaf photos are in sync"
+msgstr ""
+
+#: includes/class-sync-attention.php:192
+msgid "No imported photo was removed or changed on Profotograaf."
+msgstr ""
+
+#: includes/class-sync-attention.php:200
+msgid "Photos removed or changed on Profotograaf stay on this site until you decide. Nothing is deleted for you."
+msgstr ""
+
 #: includes/class-sync-field.php:30
 msgid "This photo was changed on Profotograaf."
 msgstr ""
@@ -1963,47 +2028,51 @@ msgstr ""
 msgid "The embed script is at version %s."
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:134
+#: includes/modules/class-admin-notices.php:136
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:144
+#: includes/modules/class-admin-notices.php:146
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:146
+#: includes/modules/class-admin-notices.php:148
 msgid "Check the connection"
 msgstr ""
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:157
+#: includes/modules/class-admin-notices.php:159
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-admin-notices.php:161
+#: includes/modules/class-admin-notices.php:163
 msgid "Retry or export the enquiries"
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:183
+#: includes/modules/class-admin-notices.php:188
+msgid "Show them"
+msgstr ""
+
+#: includes/modules/class-admin-notices.php:210
 msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now."
 msgstr ""
 
 #. translators: %d: number of files.
-#: includes/modules/class-admin-notices.php:195
+#: includes/modules/class-admin-notices.php:222
 #, php-format
 msgid "%d file could not be copied to Profotograaf."
 msgid_plural "%d files could not be copied to Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-admin-notices.php:199
+#: includes/modules/class-admin-notices.php:226
 msgid "See why and retry"
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:234
+#: includes/modules/class-admin-notices.php:264
 msgid "Dismiss"
 msgstr ""
 
@@ -2103,37 +2172,37 @@ msgstr ""
 msgid "Open my gallery"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:81
 #: includes/modules/class-media-import-screen.php:82
-#: includes/modules/class-media-import-screen.php:98
+#: includes/modules/class-media-import-screen.php:83
+#: includes/modules/class-media-import-screen.php:99
 msgid "Import from Profotograaf"
 msgstr ""
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:219
-#: includes/modules/class-media-import-screen.php:232
+#: includes/modules/class-media-import-screen.php:224
+#: includes/modules/class-media-import-screen.php:237
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:227
+#: includes/modules/class-media-import-screen.php:232
 msgid "Open on Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:240
+#: includes/modules/class-media-import-screen.php:245
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:242
+#: includes/modules/class-media-import-screen.php:247
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:251
+#: includes/modules/class-media-import-screen.php:256
 msgid "Re-import"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:258
+#: includes/modules/class-media-import-screen.php:263
 msgid "Source"
 msgstr ""
 
@@ -2672,6 +2741,24 @@ msgstr ""
 msgid "Open the leads screen"
 msgstr ""
 
+#: includes/modules/class-sync-flags.php:131
+msgid "Filter by Profotograaf state"
+msgstr ""
+
+#: includes/modules/class-sync-flags.php:133
+#: assets/admin/media-source.js:24
+msgid "All sources"
+msgstr ""
+
+#: includes/modules/class-sync-flags.php:136
+#: assets/admin/media-source.js:34
+msgid "Profotograaf: needs attention"
+msgstr ""
+
+#: includes/modules/class-sync-flags.php:151
+msgid "Imported Profotograaf photos"
+msgstr ""
+
 #: includes/modules/class-telemetry-consent.php:107
 msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
 msgstr ""
@@ -3010,10 +3097,6 @@ msgid_plural "%d enquiries that could not be delivered to Profotograaf were dele
 msgstr[0] ""
 msgstr[1] ""
 
-#: assets/admin/media-source.js:24
-msgid "All sources"
-msgstr ""
-
 #: assets/admin/reimport.js:43
 msgid "Re-importing…"
 msgstr ""
@@ -3031,6 +3114,7 @@ msgid "Could not check the connection. Reload this page to try again."
 msgstr ""
 
 #: assets/admin/sync-actions.js:44
+#: assets/admin/sync-actions.js:145
 msgid "That did not work. Try again."
 msgstr ""
 
@@ -3070,11 +3154,47 @@ msgstr ""
 msgid "The copy was removed."
 msgstr ""
 
-#: assets/admin/sync-actions.js:107
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:93
+#, js-format
+msgid "Remove %d copy that was removed on Profotograaf from the Media Library?"
+msgid_plural "Remove %d copies that were removed on Profotograaf from the Media Library?"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: file names.
+#: assets/admin/sync-actions.js:99
+#, js-format
+msgid "For example: %s."
+msgstr ""
+
+#: assets/admin/sync-actions.js:103
+msgid "The photos on Profotograaf are not touched."
+msgstr ""
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:123
+#, js-format
+msgid "Stopped. %d removed."
+msgstr ""
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:132
+#, js-format
+msgid "%d removed…"
+msgstr ""
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:141
+#, js-format
+msgid "Done. %d removed. Reload the page to see what is left."
+msgstr ""
+
+#: assets/admin/sync-actions.js:180
 msgid "Kept as this site's own file."
 msgstr ""
 
-#: assets/admin/sync-actions.js:107
+#: assets/admin/sync-actions.js:180
 msgid "Watching this photo again."
 msgstr ""
 
