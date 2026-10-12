@@ -61,6 +61,20 @@ Privacy:
 - Per file the plugin keeps hidden fields: `_profotograaf_photo_id`, `_profotograaf_gallery_id`, `_profotograaf_origin` and the `_profotograaf_upload_*` fields. Deleting the plugin removes the settings, the linked galleries and the scheduled events and leaves these fields. See [docs/media-lifecycle.md](docs/media-lifecycle.md).
 - Deleting a file in WordPress deletes nothing on Profotograaf. See the External services section of `readme.txt` for every request.
 
+## Copy to Profotograaf
+
+Optional. Settings > Profotograaf > Copy to Profotograaf > "Copy the Media Library to Profotograaf" is off by default (setting `backup`). While it is off nothing is sent.
+
+- What it copies: images, RAW files and videos from the Media Library, as stored, with their metadata. Choose the scope: files used on the site (default), every file, or only the files you mark. Photos imported from Profotograaf are skipped.
+- Where it goes: private galleries in your Profotograaf account, one per month, named after the site title. The files count towards your Profotograaf storage. A full storage pauses copying for a day.
+- It is a copy, not a mirror. A file is copied once. Editing or deleting it in WordPress later changes nothing on Profotograaf, and switching copying off or deleting the plugin leaves the copies there.
+- Status: the Copy to Profotograaf tab shows the status line, failed files with the reason, Copy now and Retry failed. The Media Library list has a Copy column and Site Health reports failures. `wp profotograaf backup run` copies the queue at once.
+- Photos of people are personal data. You need the right to send them. See the External services section of `readme.txt` for every request.
+
+## Find your gallery
+
+The "Find your gallery" block is a plain link to your client portal on your Profotograaf address, subdomain or own domain. It makes no request while a page loads.
+
 ## License
 
 GPL-2.0-or-later. See [LICENSE](LICENSE).
