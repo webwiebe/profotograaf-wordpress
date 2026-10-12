@@ -199,88 +199,115 @@ test.describe( 'Media > Import from Profotograaf', () => {
 		await expect.poll( () => wp( 'eval', `echo get_post( ${ id } ) ? 'present' : 'gone';` ), { timeout: 30_000 } ).toBe( 'gone' );
 	} );
 
-	test( 'resolves a conflict: update text per field, keep both, use the platform version and keep mine', async ( { page } ) => {
-		// Many wp-cli calls and four server round trips: slower than the 30 s default on a busy runner.
-		test.setTimeout( 180_000 );
-		mediaSource( true );
-		const id = wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--field=ID' ).split( /\s+/ )[ 0 ];
-		const meta = ( key ) => wp( 'eval', `echo get_post_meta( ${ id }, '${ key }', true );` );
-		const attachments = () => Number( wp( 'post', 'list', '--post_type=attachment', '--format=count' ) );
+	test.describe( 'resolving a conflict', () => {
+		/** The imported copy the conflict tests work on, and wp-cli helpers bound to it. */
+		function copy() {
+			const id = wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--field=ID' ).split( /\s+/ )[ 0 ];
+			return {
+				id,
+				meta: ( key ) => wp( 'eval', `echo get_post_meta( ${ id }, '${ key }', true );` ),
+				attachments: () => Number( wp( 'post', 'list', '--post_type=attachment', '--format=count' ) ),
+				/** Flags the copy as a conflict with a platform photo that has other text and another file version. */
+				flag: ( fileEdited ) =>
+					wp(
+						'eval',
+						`$pid = get_post_meta( ${ id }, '_profotograaf_photo_id', true ); $c = get_option( 'profotograaf_photo_catalogue' );` +
+							" foreach ( $c['photos'] as $i => $p ) { if ( (string) $p['id'] === (string) $pid ) { $c['photos'][ $i ]['title'] = 'Their title'; $c['photos'][ $i ]['caption'] = 'Their caption'; $c['photos'][ $i ]['alt'] = ''; $c['photos'][ $i ]['version'] = 'remote-v2'; } }" +
+							" update_option( 'profotograaf_photo_catalogue', $c );" +
+							` wp_update_post( array( 'ID' => ${ id }, 'post_title' => 'My title', 'post_excerpt' => 'My caption' ) ); update_post_meta( ${ id }, '_wp_attachment_image_alt', 'My alt' );` +
+							` update_post_meta( ${ id }, '_profotograaf_sync_state', 'conflict' ); update_post_meta( ${ id }, '_profotograaf_remote_version', 'remote-v2' ); update_post_meta( ${ id }, '_profotograaf_sync_reason', '' );` +
+							( fileEdited ? ` update_post_meta( ${ id }, '_profotograaf_file_hash', 'not-the-current-file' );` : '' ) +
+							" update_option( 'profotograaf_sync_counts', array( 'changed' => 0, 'missing' => 0, 'conflict' => 1 ) );"
+					),
+			};
+		}
 
-		// Refetch the catalogue, then make the platform's copy differ in text and file version.
-		wp( 'eval', "delete_option( 'profotograaf_photo_catalogue' );" );
-		await login( page );
-		await page.goto( '/wp-admin/upload.php?page=profotograaf-import' );
-		await expect( page.locator( '.profotograaf-import__card' ) ).toHaveCount( 4, { timeout: 30_000 } );
-		const flag = ( fileEdited ) => {
-			wp(
-				'eval',
-				"$pid = get_post_meta( " + id + ", '_profotograaf_photo_id', true ); $c = get_option( 'profotograaf_photo_catalogue' );" +
-					" foreach ( $c['photos'] as $i => $p ) { if ( (string) $p['id'] === (string) $pid ) { $c['photos'][ $i ]['title'] = 'Their title'; $c['photos'][ $i ]['caption'] = 'Their caption'; $c['photos'][ $i ]['alt'] = ''; $c['photos'][ $i ]['version'] = 'remote-v2'; } }" +
-					" update_option( 'profotograaf_photo_catalogue', $c );" +
-					` wp_update_post( array( 'ID' => ${ id }, 'post_title' => 'My title', 'post_excerpt' => 'My caption' ) ); update_post_meta( ${ id }, '_wp_attachment_image_alt', 'My alt' );` +
-					` update_post_meta( ${ id }, '_profotograaf_sync_state', 'conflict' ); update_post_meta( ${ id }, '_profotograaf_remote_version', 'remote-v2' ); update_post_meta( ${ id }, '_profotograaf_sync_reason', '' );` +
-					( fileEdited ? ` update_post_meta( ${ id }, '_profotograaf_file_hash', 'not-the-current-file' );` : '' ) +
-					" update_option( 'profotograaf_sync_counts', array( 'changed' => 0, 'missing' => 0, 'conflict' => 1 ) );"
-			);
-		};
-		flag( true );
+		/** Opens the dialog of the copy. Each click that changes the copy reloads the page, which the tests wait for. */
+		async function open( page, id ) {
+			await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+			await page.getByRole( 'button', { name: 'Resolve conflict' } ).click();
+			const dialog = page.getByRole( 'dialog', { name: 'Resolve conflict' } );
+			await expect( dialog ).toBeVisible( { timeout: 30_000 } );
+			return dialog;
+		}
 
-		// The dialog shows both images and warns before the local edit is lost. Nothing is applied by opening it.
-		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
-		await expect( page.getByRole( 'button', { name: 'Re-import' } ) ).toHaveCount( 0 );
-		await page.getByRole( 'button', { name: 'Resolve conflict' } ).click();
-		const dialog = page.getByRole( 'dialog', { name: 'Resolve conflict' } );
-		await expect( dialog ).toBeVisible( { timeout: 30_000 } );
-		await expect( dialog.locator( 'img' ) ).toHaveCount( 2 );
-		await expect( dialog ).toContainText( 'You edited the file on this site' );
-		await expect( dialog.getByRole( 'link', { name: 'Download my version first' } ) ).toBeVisible();
-		await expect( dialog.getByText( 'Kept: Profotograaf has no value' ) ).toBeVisible();
-		expect( meta( '_profotograaf_sync_state' ) ).toBe( 'conflict' );
-
-		// Update text takes only the ticked field and never an empty platform alt.
-		await dialog.getByLabel( 'Title' ).check();
-		await Promise.all( [ page.waitForEvent( 'load' ), dialog.getByRole( 'button', { name: 'Update text' } ).click() ] );
-		await expect.poll( () => wp( 'post', 'get', id, '--field=post_title' ), { timeout: 30_000 } ).toBe( 'Their title' );
-		expect( wp( 'post', 'get', id, '--field=post_excerpt' ) ).toBe( 'My caption' );
-		expect( meta( '_wp_attachment_image_alt' ) ).toBe( 'My alt' );
-		expect( meta( '_profotograaf_sync_state' ) ).toBe( 'conflict' );
-
-		// Keep both saves the local file as a separate attachment without the platform link, then replaces the original.
-		const before = attachments();
-		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
-		await page.getByRole( 'button', { name: 'Resolve conflict' } ).click();
-		await Promise.all( [ page.waitForEvent( 'load', { timeout: 60_000 } ), page.getByRole( 'button', { name: 'Keep both' } ).click() ] );
-		await expect.poll( () => meta( '_profotograaf_sync_state' ), { timeout: 60_000 } ).toBe( '' );
-		expect( attachments() ).toBe( before + 1 );
-		expect( wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--format=count' ) ).toBe( '1' );
-
-		// Use Profotograaf's version asks first because the file was edited, and replaces the file after the confirmation.
-		flag( true );
-		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
-		await page.getByRole( 'button', { name: 'Resolve conflict' } ).click();
-		let asked = '';
-		page.once( 'dialog', async ( confirmation ) => {
-			asked = confirmation.message();
-			await confirmation.dismiss();
+		test.beforeAll( async ( { browser } ) => {
+			mediaSource( true );
+			// Refetch the catalogue so it lists the photos again.
+			wp( 'eval', "delete_option( 'profotograaf_photo_catalogue' );" );
+			const page = await browser.newPage();
+			await login( page );
+			await page.goto( '/wp-admin/upload.php?page=profotograaf-import' );
+			await expect( page.locator( '.profotograaf-import__card' ) ).toHaveCount( 4, { timeout: 30_000 } );
+			await page.close();
 		} );
-		await page.getByRole( 'button', { name: "Use Profotograaf's version" } ).click();
-		await expect.poll( () => asked ).toContain( 'Your edit is lost.' );
-		expect( meta( '_profotograaf_sync_state' ) ).toBe( 'conflict' );
-		page.once( 'dialog', async ( confirmation ) => {
-			await confirmation.accept();
-		} );
-		await Promise.all( [ page.waitForEvent( 'load', { timeout: 60_000 } ), page.getByRole( 'button', { name: "Use Profotograaf's version" } ).click() ] );
-		await expect.poll( () => meta( '_profotograaf_sync_state' ), { timeout: 60_000 } ).toBe( '' );
-		expect( attachments() ).toBe( before + 1 );
 
-		// Keep mine accepts the platform version and its text, so the copy stays in sync.
-		flag( false );
-		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
-		await page.getByRole( 'button', { name: 'Resolve conflict' } ).click();
-		await Promise.all( [ page.waitForEvent( 'load' ), page.getByRole( 'button', { name: 'Keep mine' } ).click() ] );
-		await expect.poll( () => meta( '_profotograaf_sync_state' ), { timeout: 30_000 } ).toBe( '' );
-		expect( meta( '_profotograaf_version' ) ).toBe( 'remote-v2' );
-		expect( wp( 'post', 'get', id, '--field=post_title' ) ).toBe( 'My title' );
+		test( 'shows both images, warns before the local edit is lost and updates only the ticked text fields', async ( { page } ) => {
+			const { id, meta, flag } = copy();
+			flag( true );
+			await login( page );
+			await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+			await expect( page.getByRole( 'button', { name: 'Re-import' } ) ).toHaveCount( 0 );
+			const dialog = await open( page, id );
+			await expect( dialog.locator( 'img' ) ).toHaveCount( 2 );
+			await expect( dialog ).toContainText( 'You edited the file on this site' );
+			await expect( dialog.getByRole( 'link', { name: 'Download my version first' } ) ).toBeVisible();
+			await expect( dialog.getByText( 'Kept: Profotograaf has no value' ) ).toBeVisible();
+			expect( meta( '_profotograaf_sync_state' ) ).toBe( 'conflict' );
+
+			// Update text takes only the ticked field and never an empty platform alt.
+			await dialog.getByLabel( 'Title' ).check();
+			await Promise.all( [ page.waitForEvent( 'load' ), dialog.getByRole( 'button', { name: 'Update text' } ).click() ] );
+			expect( wp( 'post', 'get', id, '--field=post_title' ) ).toBe( 'Their title' );
+			expect( wp( 'post', 'get', id, '--field=post_excerpt' ) ).toBe( 'My caption' );
+			expect( meta( '_wp_attachment_image_alt' ) ).toBe( 'My alt' );
+			expect( meta( '_profotograaf_sync_state' ) ).toBe( 'conflict' );
+		} );
+
+		test( 'Keep both saves the local file as a separate attachment and replaces the original', async ( { page } ) => {
+			const { id, meta, attachments, flag } = copy();
+			flag( true );
+			const before = attachments();
+			await login( page );
+			await open( page, id );
+			await Promise.all( [ page.waitForEvent( 'load' ), page.getByRole( 'button', { name: 'Keep both' } ).click() ] );
+			expect( meta( '_profotograaf_sync_state' ) ).toBe( '' );
+			expect( attachments() ).toBe( before + 1 );
+			expect( wp( 'post', 'list', '--post_type=attachment', '--meta_key=_profotograaf_photo_id', '--format=count' ) ).toBe( '1' );
+		} );
+
+		test( "Use Profotograaf's version asks first because the file was edited", async ( { page } ) => {
+			const { id, meta, attachments, flag } = copy();
+			flag( true );
+			const before = attachments();
+			await login( page );
+			await open( page, id );
+			let asked = '';
+			page.once( 'dialog', async ( confirmation ) => {
+				asked = confirmation.message();
+				await confirmation.dismiss();
+			} );
+			await page.getByRole( 'button', { name: "Use Profotograaf's version" } ).click();
+			await expect.poll( () => asked ).toContain( 'Your edit is lost.' );
+			expect( meta( '_profotograaf_sync_state' ) ).toBe( 'conflict' );
+
+			page.once( 'dialog', async ( confirmation ) => {
+				await confirmation.accept();
+			} );
+			await Promise.all( [ page.waitForEvent( 'load' ), page.getByRole( 'button', { name: "Use Profotograaf's version" } ).click() ] );
+			expect( meta( '_profotograaf_sync_state' ) ).toBe( '' );
+			expect( attachments() ).toBe( before );
+		} );
+
+		test( 'Keep mine accepts the platform version and its text, so the copy stays in sync', async ( { page } ) => {
+			const { id, meta, flag } = copy();
+			flag( false );
+			await login( page );
+			await open( page, id );
+			await Promise.all( [ page.waitForEvent( 'load' ), page.getByRole( 'button', { name: 'Keep mine' } ).click() ] );
+			expect( meta( '_profotograaf_sync_state' ) ).toBe( '' );
+			expect( meta( '_profotograaf_version' ) ).toBe( 'remote-v2' );
+			expect( wp( 'post', 'get', id, '--field=post_title' ) ).toBe( 'My title' );
+		} );
 	} );
 } );
