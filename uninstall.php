@@ -30,7 +30,7 @@ function profotograaf_uninstall_site(): void {
 		$lines = array( __( 'The Profotograaf plugin was deleted from this site. Some of your photos are still in your Profotograaf account:', 'profotograaf' ) );
 		if ( $copies > 0 ) {
 			/* translators: %d: number of files. */
-			$lines[] = sprintf( _n( '- %d file from the Media Library is backed up there. It stays until you delete it on Profotograaf.', '- %d files from the Media Library are backed up there. They stay until you delete them on Profotograaf.', $copies, 'profotograaf' ), $copies );
+			$lines[] = sprintf( _n( '- %d file from the Media Library is copied there. It stays until you delete it on Profotograaf.', '- %d files from the Media Library are copied there. They stay until you delete them on Profotograaf.', $copies, 'profotograaf' ), $copies );
 		}
 		if ( $virtual > 0 ) {
 			/* translators: %d: number of photos. */

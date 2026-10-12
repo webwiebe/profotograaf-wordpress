@@ -59,7 +59,7 @@ function cleanUp() {
 
 test.describe.configure( { mode: 'serial' } );
 
-test.describe( 'Backup status', () => {
+test.describe( 'Copy status', () => {
 	/** @type {{ failed: number, plain: number }} */
 	let ids;
 
@@ -97,24 +97,24 @@ test.describe( 'Backup status', () => {
 		await login( page );
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=backup' );
 
-		await expect( page.getByRole( 'heading', { name: 'Backup status' } ) ).toBeVisible();
-		await expect( page.getByText( '0 of 1 file backed up.' ) ).toBeVisible();
+		await expect( page.getByRole( 'heading', { name: 'Copy status' } ) ).toBeVisible();
+		await expect( page.getByText( '0 of 1 file copied.' ) ).toBeVisible();
 		await expect( page.getByText( '1 file waits for you, see the list below.' ) ).toBeVisible();
 		await expect( page.getByText( /Last run \d+ minutes? ago\./ ) ).toBeVisible();
 
 		const row = page.locator( '.profotograaf-backup-failures tbody tr' );
 		await expect( row ).toHaveCount( 1 );
 		await expect( row ).toContainText( 'Backup E2E failed' );
-		await expect( row ).toContainText( 'Backup failed' );
+		await expect( row ).toContainText( 'Copy failed' );
 		await expect( row ).toContainText( 'Profotograaf answered with error 500.' );
 	} );
 
-	test( 'Back up now schedules a run and says so', async ( { page } ) => {
+	test( 'Copy now schedules a run and says so', async ( { page } ) => {
 		await login( page );
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf&tab=backup' );
-		await page.getByRole( 'button', { name: 'Back up now' } ).click();
+		await page.getByRole( 'button', { name: 'Copy now' } ).click();
 
-		await expect( page.getByText( 'The backup starts within a minute, in the background. You can leave this page.' ) ).toBeVisible();
+		await expect( page.getByText( 'Copying starts within a minute, in the background. You can leave this page.' ) ).toBeVisible();
 		expect( page.url() ).toContain( 'tab=backup' );
 		const next = Number( wp( 'eval', "echo (int) wp_next_scheduled( 'profotograaf_backup_upload' );" ) );
 		expect( next ).toBeGreaterThan( 0 );
@@ -125,9 +125,9 @@ test.describe( 'Backup status', () => {
 		await login( page );
 		await page.goto( '/wp-admin/upload.php?mode=list' );
 
-		await expect( page.locator( 'th#profotograaf_backup' ) ).toHaveText( 'Backup' );
+		await expect( page.locator( 'th#profotograaf_backup' ) ).toHaveText( 'Copy' );
 		const failed = page.locator( `#post-${ ids.failed } td.column-profotograaf_backup` );
-		await expect( failed ).toContainText( 'Backup failed' );
+		await expect( failed ).toContainText( 'Copy failed' );
 		await expect( failed ).toContainText( 'Profotograaf answered with error 500.' );
 		await expect( page.locator( `#post-${ ids.plain } td.column-profotograaf_backup` ) ).toHaveText( '' );
 
@@ -135,8 +135,8 @@ test.describe( 'Backup status', () => {
 		await page.locator( '#bulk-action-selector-top' ).selectOption( 'profotograaf_backup_mark' );
 		await page.locator( '#doaction' ).click();
 
-		await expect( page.getByText( '1 file is marked for the backup. It is copied to Profotograaf in the background.' ) ).toBeVisible();
-		await expect( page.locator( `#post-${ ids.plain } td.column-profotograaf_backup` ) ).toHaveText( 'Waiting to be backed up' );
+		await expect( page.getByText( '1 file is marked for copying. It is copied to Profotograaf in the background.' ) ).toBeVisible();
+		await expect( page.locator( `#post-${ ids.plain } td.column-profotograaf_backup` ) ).toHaveText( 'Waiting to be copied' );
 	} );
 
 	test( 'Retry failed queues the failed file again', async ( { page } ) => {

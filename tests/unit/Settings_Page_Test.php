@@ -152,7 +152,7 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->page->reconnect_notice();
 		$html = (string) ob_get_clean();
 
-		$this->assertStringContainsString( 'The backup to Profotograaf needs a new permission.', $html );
+		$this->assertStringContainsString( 'Copying to Profotograaf needs a new permission.', $html );
 		$this->assertStringContainsString( 'Connect this site again', $html );
 
 		$this->options['profotograaf_connection']['scopes'][] = 'galleries:write';

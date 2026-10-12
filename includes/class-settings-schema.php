@@ -61,7 +61,7 @@ final class Settings_Schema {
 			self::TAB_GENERAL   => __( 'General', 'profotograaf' ),
 			self::TAB_GALLERIES => __( 'Galleries', 'profotograaf' ),
 			self::TAB_ENQUIRY   => __( 'Enquiry forms', 'profotograaf' ),
-			self::TAB_BACKUP    => __( 'Backup', 'profotograaf' ),
+			self::TAB_BACKUP    => __( 'Copy to Profotograaf', 'profotograaf' ),
 			self::TAB_ADVANCED  => __( 'Advanced', 'profotograaf' ),
 		);
 	}
@@ -171,14 +171,14 @@ final class Settings_Schema {
 				'tab'         => self::TAB_BACKUP,
 				'type'        => 'bool',
 				'default'     => false,
-				'label'       => __( 'Back up the Media Library to Profotograaf', 'profotograaf' ),
+				'label'       => __( 'Copy the Media Library to Profotograaf', 'profotograaf' ),
 				'description' => __( 'Copies your Media Library images to your Profotograaf account. Off by default. Nothing is sent before you switch it on.', 'profotograaf' ),
 			),
 			'backup_scope'           => array(
 				'tab'         => self::TAB_BACKUP,
 				'type'        => 'enum',
 				'default'     => Settings::BACKUP_SCOPE_DEFAULT,
-				'label'       => __( 'What to back up', 'profotograaf' ),
+				'label'       => __( 'What to copy', 'profotograaf' ),
 				'description' => __( 'Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. Images, RAW files and videos are copied. Photos imported from Profotograaf are skipped.', 'profotograaf' ),
 				'choices'     => array(
 					'used'   => __( 'Files used on the site (recommended)', 'profotograaf' ),

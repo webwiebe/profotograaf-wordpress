@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * - a Backup column in the Media Library list view,
  * - a Backup line in the attachment details,
- * - the bulk actions "Back up to Profotograaf" and "Do not back up", which
+ * - the bulk actions "Copy to Profotograaf" and "Do not copy", which
  *   mark files for the scopes `marked` and `used`,
  * - the Site Health tests of Backup_Health.
  *
@@ -76,7 +76,7 @@ class Backup_Admin implements Module {
 	public function add_column( $columns ) {
 		$columns = is_array( $columns ) ? $columns : array();
 		if ( $this->active() ) {
-			$columns[ self::COLUMN ] = __( 'Backup', 'profotograaf' );
+			$columns[ self::COLUMN ] = __( 'Copy', 'profotograaf' );
 		}
 		return $columns;
 	}
@@ -112,21 +112,21 @@ class Backup_Admin implements Module {
 			return $fields;
 		}
 		$label = Backup_Labels::of( $this->state(), $id );
-		$text  = '' !== $label['label'] ? $label['label'] : __( 'Not in the backup', 'profotograaf' );
+		$text  = '' !== $label['label'] ? $label['label'] : __( 'Not copied', 'profotograaf' );
 		if ( Backup_State::DONE === $this->state()->state( $id ) ) {
 			$at = (int) get_post_meta( $id, Backup_State::META_AT, true );
 			/* translators: %s: date the file was copied. */
-			$text = sprintf( __( 'Backed up to Profotograaf on %s.', 'profotograaf' ), $at > 0 ? (string) wp_date( (string) get_option( 'date_format' ), $at ) : '' );
+			$text = sprintf( __( 'Copied to Profotograaf on %s.', 'profotograaf' ), $at > 0 ? (string) wp_date( (string) get_option( 'date_format' ), $at ) : '' );
 		}
 		$html = esc_html( $text );
 		if ( '' !== $label['reason'] ) {
 			$html .= '<br /><span class="description">' . esc_html( $label['reason'] ) . '</span>';
 		}
 		if ( in_array( $this->state()->state( $id ), array( Backup_State::FAILED, Backup_State::NEEDS_CHECK ), true ) && current_user_can( Settings_Page::CAPABILITY ) ) {
-			$html .= '<br /><a href="' . esc_url( \Profotograaf\Admin\Backup_Panel::url() ) . '">' . esc_html__( 'Retry it on the Backup tab', 'profotograaf' ) . '</a>';
+			$html .= '<br /><a href="' . esc_url( \Profotograaf\Admin\Backup_Panel::url() ) . '">' . esc_html__( 'Retry it on the Copy to Profotograaf tab', 'profotograaf' ) . '</a>';
 		}
 		$fields[ self::COLUMN ] = array(
-			'label' => __( 'Backup', 'profotograaf' ),
+			'label' => __( 'Copy to Profotograaf', 'profotograaf' ),
 			'input' => 'html',
 			'html'  => '<span class="profotograaf-backup-line">' . $html . '</span>',
 		);
@@ -142,8 +142,8 @@ class Backup_Admin implements Module {
 	public function bulk_actions( $actions ) {
 		$actions = is_array( $actions ) ? $actions : array();
 		if ( $this->active() && 'all' !== $this->plugin()->settings()->backup_scope() ) {
-			$actions[ self::MARK ]   = __( 'Back up to Profotograaf', 'profotograaf' );
-			$actions[ self::UNMARK ] = __( 'Do not back up', 'profotograaf' );
+			$actions[ self::MARK ]   = __( 'Copy to Profotograaf', 'profotograaf' );
+			$actions[ self::UNMARK ] = __( 'Do not copy', 'profotograaf' );
 		}
 		return $actions;
 	}
@@ -189,13 +189,13 @@ class Backup_Admin implements Module {
 		if ( 0 === strpos( $value, '-' ) ) {
 			$message = sprintf(
 				/* translators: %d: number of files. */
-				_n( '%d file is no longer marked for the backup. A file that is backed up already stays on Profotograaf.', '%d files are no longer marked for the backup. Files that are backed up already stay on Profotograaf.', $count, 'profotograaf' ),
+				_n( '%d file is no longer marked for copying. A file that is copied already stays on Profotograaf.', '%d files are no longer marked for copying. Files that are copied already stay on Profotograaf.', $count, 'profotograaf' ),
 				$count
 			);
 		} else {
 			$message = sprintf(
 				/* translators: %d: number of files. */
-				_n( '%d file is marked for the backup. It is copied to Profotograaf in the background.', '%d files are marked for the backup. They are copied to Profotograaf in the background.', $count, 'profotograaf' ),
+				_n( '%d file is marked for copying. It is copied to Profotograaf in the background.', '%d files are marked for copying. They are copied to Profotograaf in the background.', $count, 'profotograaf' ),
 				$count
 			);
 		}

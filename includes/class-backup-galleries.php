@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * One private gallery per month, titled after the site ("Example
- * Photography backup 2026-10"). The month is the month an attachment was
+ * Photography copy 2026-10"). The month is the month an attachment was
  * uploaded to WordPress. A gallery is created on first need and its id kept
  * in the option `profotograaf_backup_galleries` (month => id), so every file
  * of that month goes to the same gallery.
@@ -77,7 +77,7 @@ final class Backup_Galleries {
 			$site = substr( $site, 0, self::TITLE_CHARS );
 		}
 		/* translators: 1: site title, 2: year and month, for example 2026-10. */
-		return trim( sprintf( __( '%1$s backup %2$s', 'profotograaf' ), $site, $month ) );
+		return trim( sprintf( __( '%1$s copy %2$s', 'profotograaf' ), $site, $month ) );
 	}
 
 	/**

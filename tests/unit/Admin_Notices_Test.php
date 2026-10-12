@@ -277,7 +277,7 @@ class Admin_Notices_Test extends Wp_Test_Case {
 		$html = $this->html();
 
 		$this->assertSame( 1, substr_count( $html, 'profotograaf-notice--backup_storage' ) );
-		$this->assertStringContainsString( 'Free up space or upgrade your plan, then press Back up now.', $html );
+		$this->assertStringContainsString( 'Free up space or upgrade your plan, then press Copy now.', $html );
 		$this->assertStringContainsString( 'tab=backup', $html );
 		$this->assertSame( 'backup_storage:9000', $this->notices->active()[ Admin_Notices::BACKUP_STORAGE ]['signature'] );
 	}
@@ -291,7 +291,7 @@ class Admin_Notices_Test extends Wp_Test_Case {
 
 		$html = $this->html();
 
-		$this->assertStringContainsString( '3 files could not be backed up to Profotograaf.', $html );
+		$this->assertStringContainsString( '3 files could not be copied to Profotograaf.', $html );
 		$this->assertStringContainsString( 'See why and retry', $html );
 		$this->assertSame( 'backup_failed:3', $this->notices->active()[ Admin_Notices::BACKUP_FAILED ]['signature'] );
 	}

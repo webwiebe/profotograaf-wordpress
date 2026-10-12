@@ -292,7 +292,7 @@ class Uninstall_Test extends Wp_Test_Case {
 		$this->uninstall_with_virtual_attachments( false, 1 );
 
 		$this->assertCount( 1, $this->mails );
-		$this->assertStringContainsString( '1 file from the Media Library is backed up there. It stays until you delete it on Profotograaf.', $this->mails[0][2] );
+		$this->assertStringContainsString( '1 file from the Media Library is copied there. It stays until you delete it on Profotograaf.', $this->mails[0][2] );
 		$this->assertStringContainsString( '3 photos were shown from Profotograaf', $this->mails[0][2] );
 	}
 }

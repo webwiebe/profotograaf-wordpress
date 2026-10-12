@@ -74,7 +74,7 @@ final class Backup_Command {
 	 */
 	public function run( array $args = array(), array $assoc_args = array() ): void {
 		if ( ! $this->settings->backup_enabled() ) {
-			\WP_CLI::warning( __( 'The backup is switched off. Switch it on under Settings > Profotograaf > Backup.', 'profotograaf' ) );
+			\WP_CLI::warning( __( 'Copying is switched off. Switch it on under Settings > Profotograaf > Copy to Profotograaf.', 'profotograaf' ) );
 			return;
 		}
 		if ( isset( $assoc_args['resume'] ) ) {
@@ -119,19 +119,19 @@ final class Backup_Command {
 			case 'not_connected':
 				return __( 'This site is not connected to Profotograaf.', 'profotograaf' );
 			case 'reconnect':
-				return __( 'The backup needs a new permission. Connect this site again under Settings > Profotograaf.', 'profotograaf' );
+				return __( 'Copying needs a new permission. Connect this site again under Settings > Profotograaf.', 'profotograaf' );
 			case 'storage_full':
-				return __( 'Your Profotograaf storage is full, so the backup is paused. Free up space or upgrade your plan, then run this command with --resume.', 'profotograaf' );
+				return __( 'Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then run this command with --resume.', 'profotograaf' );
 			case 'paused':
-				return __( 'The backup is paused. Run this command with --resume to try again now.', 'profotograaf' );
+				return __( 'Copying is paused. Run this command with --resume to try again now.', 'profotograaf' );
 			case 'backoff':
-				return __( 'Profotograaf did not accept more files for now. The backup tries again later on its own.', 'profotograaf' );
+				return __( 'Profotograaf did not accept more files for now. Copying tries again later on its own.', 'profotograaf' );
 			case 'busy':
-				return __( 'Another backup run is in progress.', 'profotograaf' );
+				return __( 'Another copy run is in progress.', 'profotograaf' );
 			case 'memory':
 				return __( 'This site ran low on memory. Run the command again to send the rest.', 'profotograaf' );
 			default:
-				return __( 'The backup stopped early. Run the command again to send the rest.', 'profotograaf' );
+				return __( 'Copying stopped early. Run the command again to send the rest.', 'profotograaf' );
 		}
 	}
 }

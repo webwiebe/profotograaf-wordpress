@@ -75,7 +75,7 @@ class Backup_Admin_Test extends Wp_Test_Case {
 		$this->assertSame(
 			array(
 				'title'              => 'File',
-				Backup_Admin::COLUMN => 'Backup',
+				Backup_Admin::COLUMN => 'Copy',
 			),
 			$this->module->add_column( array( 'title' => 'File' ) )
 		);
@@ -94,8 +94,8 @@ class Backup_Admin_Test extends Wp_Test_Case {
 		);
 		$this->meta[2] = array( Backup_State::META_STATE => 'done' );
 
-		$this->assertSame( 'Not backed up<br /><span class="description">The file is larger than 100 MB, the most Profotograaf accepts.</span>', $this->column( 1 ) );
-		$this->assertSame( 'Backed up', $this->column( 2 ) );
+		$this->assertSame( 'Not copied<br /><span class="description">The file is larger than 100 MB, the most Profotograaf accepts.</span>', $this->column( 1 ) );
+		$this->assertSame( 'Copied', $this->column( 2 ) );
 		$this->assertSame( '', $this->column( 3 ) );
 
 		ob_start();
@@ -112,12 +112,12 @@ class Backup_Admin_Test extends Wp_Test_Case {
 		);
 
 		$fields = $this->module->details_field( array(), $this->posts[1] );
-		$this->assertSame( 'Backup', $fields[ Backup_Admin::COLUMN ]['label'] );
+		$this->assertSame( 'Copy to Profotograaf', $fields[ Backup_Admin::COLUMN ]['label'] );
 		$this->assertSame( 'html', $fields[ Backup_Admin::COLUMN ]['input'] );
-		$this->assertStringContainsString( 'Not in the backup', $fields[ Backup_Admin::COLUMN ]['html'] );
+		$this->assertStringContainsString( 'Not copied', $fields[ Backup_Admin::COLUMN ]['html'] );
 
 		$fields = $this->module->details_field( null, $this->posts[2] );
-		$this->assertStringContainsString( 'Backed up to Profotograaf on 2026-09-21.', $fields[ Backup_Admin::COLUMN ]['html'] );
+		$this->assertStringContainsString( 'Copied to Profotograaf on 2026-09-21.', $fields[ Backup_Admin::COLUMN ]['html'] );
 	}
 
 	public function test_a_failed_file_links_to_the_backup_tab(): void {
@@ -129,8 +129,8 @@ class Backup_Admin_Test extends Wp_Test_Case {
 
 		$html = $this->module->details_field( array(), $this->posts[1] )[ Backup_Admin::COLUMN ]['html'];
 
-		$this->assertStringContainsString( 'Backup not confirmed<br /><span class="description">The file was sent', $html );
-		$this->assertStringContainsString( 'tab=backup">Retry it on the Backup tab</a>', $html );
+		$this->assertStringContainsString( 'Copy not confirmed<br /><span class="description">The file was sent', $html );
+		$this->assertStringContainsString( 'tab=backup">Retry it on the Copy to Profotograaf tab</a>', $html );
 
 		$this->caps = array( 'upload_files' );
 		$html       = $this->module->details_field( array(), $this->posts[1] )[ Backup_Admin::COLUMN ]['html'];
@@ -150,8 +150,8 @@ class Backup_Admin_Test extends Wp_Test_Case {
 		$this->assertSame(
 			array(
 				'delete'             => 'Delete',
-				Backup_Admin::MARK   => 'Back up to Profotograaf',
-				Backup_Admin::UNMARK => 'Do not back up',
+				Backup_Admin::MARK   => 'Copy to Profotograaf',
+				Backup_Admin::UNMARK => 'Do not copy',
 			),
 			$this->module->bulk_actions( array( 'delete' => 'Delete' ) )
 		);
@@ -211,12 +211,12 @@ class Backup_Admin_Test extends Wp_Test_Case {
 		$_GET[ Backup_Admin::NOTICE_ARG ] = '3';
 		ob_start();
 		$this->module->bulk_notice();
-		$this->assertStringContainsString( '3 files are marked for the backup. They are copied to Profotograaf in the background.', (string) ob_get_clean() );
+		$this->assertStringContainsString( '3 files are marked for copying. They are copied to Profotograaf in the background.', (string) ob_get_clean() );
 
 		$_GET[ Backup_Admin::NOTICE_ARG ] = '-1';
 		ob_start();
 		$this->module->bulk_notice();
-		$this->assertStringContainsString( '1 file is no longer marked for the backup.', (string) ob_get_clean() );
+		$this->assertStringContainsString( '1 file is no longer marked for copying.', (string) ob_get_clean() );
 	}
 
 	public function test_site_health_gets_the_backup_tests(): void {
