@@ -40,6 +40,7 @@ class Photo_Catalogue_Refresh implements Module {
 		add_action( self::HOOK, array( $this, 'run' ) );
 		add_action( 'init', array( $this, 'sync_schedule' ) );
 		add_action( 'update_option_' . Settings::OPTION, array( $this, 'sync_schedule' ) );
+		add_action( 'add_option_' . Settings::OPTION, array( $this, 'sync_schedule' ) );
 		add_action( 'profotograaf_connected', array( $this, 'sync_schedule' ) );
 		add_action( 'profotograaf_disconnected', array( $this, 'on_disconnected' ) );
 	}

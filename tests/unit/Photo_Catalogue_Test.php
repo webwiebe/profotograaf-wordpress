@@ -332,6 +332,13 @@ class Photo_Catalogue_Test extends Gallery_Test_Case {
 		$this->assertSame( array( Photo_Catalogue_Refresh::HOOK ), $cleared );
 	}
 
+	public function test_the_first_save_through_add_option_syncs_the_schedule(): void {
+		$module = new Photo_Catalogue_Refresh();
+		$module->register( $this->plugin );
+
+		$this->assertNotFalse( has_action( 'add_option_' . Settings::OPTION, array( $module, 'sync_schedule' ) ) );
+	}
+
 	public function test_the_cron_run_refreshes_only_while_the_setting_is_on(): void {
 		$module = new Photo_Catalogue_Refresh();
 		$module->register( $this->plugin );

@@ -152,6 +152,15 @@ class Telemetry_Test extends Wp_Test_Case {
 		$this->assertFalse( $this->sender()->is_enabled() );
 	}
 
+	public function test_the_first_save_through_add_option_marks_consent_as_answered(): void {
+		$this->connect();
+
+		$this->consent->on_settings_added( Settings::OPTION, array( 'telemetry_enabled' => true ) );
+		$this->opt_in();
+
+		$this->assertTrue( $this->options[ Telemetry_Consent::PROMPT_OPTION ]['answered'] );
+	}
+
 	public function test_revoking_clears_the_queue(): void {
 		$this->opt_in();
 		$sender = $this->sender();
@@ -287,6 +296,7 @@ class Telemetry_Test extends Wp_Test_Case {
 		$this->assertNotFalse( has_action( 'admin_notices', array( $this->consent, 'render' ) ) );
 		$this->assertNotFalse( has_action( 'admin_post_' . Telemetry_Consent::ACTION, array( $this->consent, 'handle_choice' ) ) );
 		$this->assertNotFalse( has_action( 'update_option_' . Settings::OPTION, array( $this->consent, 'on_settings_updated' ) ) );
+		$this->assertNotFalse( has_action( 'add_option_' . Settings::OPTION, array( $this->consent, 'on_settings_added' ) ) );
 		$this->assertNotFalse( has_action( 'profotograaf_disconnected', array( $this->consent, 'on_disconnected' ) ) );
 	}
 }

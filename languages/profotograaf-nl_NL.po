@@ -83,7 +83,7 @@ msgstr "Aanvraagformulieren"
 #: includes/modules/class-settings-page.php:244
 #: includes/modules/class-settings-page.php:271
 #: includes/modules/class-settings-page.php:480
-#: includes/modules/class-telemetry-consent.php:126
+#: includes/modules/class-telemetry-consent.php:127
 #: includes/modules/class-virtual-convert.php:203
 #: includes/modules/class-virtual-removal.php:83
 msgid "You do not have permission to do this."
@@ -1311,19 +1311,19 @@ msgid "Help improve Profotograaf by sharing anonymous usage and error data. This
 msgstr "Help Profotograaf te verbeteren door anonieme gebruiks- en foutgegevens te delen. Dit is optioneel en je kunt het op elk moment uitzetten. Er worden geen persoonsgegevens verzameld. Uitzetten stopt het versturen meteen en verwijdert gegevens die nog wachten op verzending."
 
 #: includes/class-settings-schema.php:197
-#: includes/modules/class-telemetry-consent.php:108
+#: includes/modules/class-telemetry-consent.php:109
 msgid "What is shared"
 msgstr "Wat wordt gedeeld"
 
-#: includes/modules/class-telemetry-consent.php:107
+#: includes/modules/class-telemetry-consent.php:108
 msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
 msgstr "Help je Profotograaf te verbeteren? Je kunt anonieme gebruiks- en foutgegevens delen: versies van de plugin, WordPress en PHP, taal, ingeschakelde modules en aantallen geslaagde en mislukte acties. Je siteadres, bezoekers, galerijen en aanvragen worden nooit gedeeld. Je kunt het op elk moment uitzetten."
 
-#: includes/modules/class-telemetry-consent.php:113
+#: includes/modules/class-telemetry-consent.php:114
 msgid "Enable telemetry"
 msgstr "Telemetrie inschakelen"
 
-#: includes/modules/class-telemetry-consent.php:114
+#: includes/modules/class-telemetry-consent.php:115
 msgid "Not now"
 msgstr "Niet nu"
 

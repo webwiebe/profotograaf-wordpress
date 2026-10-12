@@ -50,6 +50,7 @@ class Telemetry_Consent implements Module {
 		add_action( 'admin_notices', array( $this, 'render' ) );
 		add_action( 'admin_post_' . self::ACTION, array( $this, 'handle_choice' ) );
 		add_action( 'update_option_' . Settings::OPTION, array( $this, 'on_settings_updated' ), 10, 2 );
+		add_action( 'add_option_' . Settings::OPTION, array( $this, 'on_settings_added' ), 10, 2 );
 		add_action( 'profotograaf_disconnected', array( $this, 'on_disconnected' ) );
 		add_action( 'init', array( $this, 'ensure_scheduled' ) );
 		add_action( Telemetry_Sender::BATCH_HOOK, array( $this->sender(), 'cron_run' ) );
@@ -167,6 +168,18 @@ class Telemetry_Consent implements Module {
 		if ( $was && ! $is ) {
 			$this->sender()->clear_queue();
 		}
+	}
+
+	/**
+	 * The first save on a site whose settings equal the defaults takes the
+	 * add_option() path, which fires add_option_ and not update_option_.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  The value that was added.
+	 */
+	public function on_settings_added( $option, $value ): void {
+		unset( $option );
+		$this->on_settings_updated( array(), $value );
 	}
 
 	/**
