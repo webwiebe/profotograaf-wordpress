@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-11T18:41:29+00:00\n"
+"POT-Creation-Date: 2026-10-12T14:31:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -25,8 +25,8 @@ msgstr ""
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
-#: includes/modules/class-media-import-screen.php:218
-#: includes/modules/class-media-import-screen.php:231
+#: includes/modules/class-media-import-screen.php:222
+#: includes/modules/class-media-import-screen.php:235
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -1654,6 +1654,73 @@ msgstr ""
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr ""
 
+#: includes/class-sync-actions-rest.php:162
+msgid "Confirm the removal first."
+msgstr ""
+
+#: includes/class-sync-actions.php:146
+msgid "The photo could not be removed."
+msgstr ""
+
+#: includes/class-sync-actions.php:234
+msgid "This file is not a copy imported from Profotograaf."
+msgstr ""
+
+#: includes/class-sync-field.php:30
+msgid "This photo was changed on Profotograaf."
+msgstr ""
+
+#: includes/class-sync-field.php:32
+msgid "This photo was changed on Profotograaf and on this site."
+msgstr ""
+
+#: includes/class-sync-field.php:34
+msgid "Kept as this site's own file. Profotograaf changes are not watched."
+msgstr ""
+
+#: includes/class-sync-field.php:57
+msgid "Keep"
+msgstr ""
+
+#: includes/class-sync-field.php:58
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:11
+#: build/gallery/index.js:4
+msgid "Remove"
+msgstr ""
+
+#: includes/class-sync-field.php:63
+msgid "Keep my copy"
+msgstr ""
+
+#: includes/class-sync-field.php:66
+msgid "Watch again"
+msgstr ""
+
+#: includes/class-sync-field.php:69
+msgid "Stop watching"
+msgstr ""
+
+#: includes/class-sync-field.php:97
+msgid "This photo was deleted on Profotograaf."
+msgstr ""
+
+#: includes/class-sync-field.php:99
+msgid "This photo was taken out of its gallery on Profotograaf."
+msgstr ""
+
+#: includes/class-sync-field.php:101
+msgid "The gallery of this photo was removed on Profotograaf."
+msgstr ""
+
+#: includes/class-sync-field.php:103
+msgid "The gallery of this photo is not shared on Profotograaf at the moment."
+msgstr ""
+
+#: includes/class-sync-field.php:105
+msgid "This photo is no longer listed on Profotograaf."
+msgstr ""
+
 #: includes/class-sync-panel.php:29
 msgid "Photo changes have not been checked yet."
 msgstr ""
@@ -2036,37 +2103,37 @@ msgstr ""
 msgid "Open my gallery"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:79
-#: includes/modules/class-media-import-screen.php:80
-#: includes/modules/class-media-import-screen.php:96
+#: includes/modules/class-media-import-screen.php:81
+#: includes/modules/class-media-import-screen.php:82
+#: includes/modules/class-media-import-screen.php:98
 msgid "Import from Profotograaf"
 msgstr ""
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:215
-#: includes/modules/class-media-import-screen.php:228
+#: includes/modules/class-media-import-screen.php:219
+#: includes/modules/class-media-import-screen.php:232
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:223
+#: includes/modules/class-media-import-screen.php:227
 msgid "Open on Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:236
+#: includes/modules/class-media-import-screen.php:240
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:238
+#: includes/modules/class-media-import-screen.php:242
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:245
+#: includes/modules/class-media-import-screen.php:251
 msgid "Re-import"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:250
+#: includes/modules/class-media-import-screen.php:258
 msgid "Source"
 msgstr ""
 
@@ -2963,6 +3030,54 @@ msgstr ""
 msgid "Could not check the connection. Reload this page to try again."
 msgstr ""
 
+#: assets/admin/sync-actions.js:44
+msgid "That did not work. Try again."
+msgstr ""
+
+#. translators: %d: number of posts that use the photo.
+#: assets/admin/sync-actions.js:53
+#, js-format
+msgid "This photo is used in %d post."
+msgid_plural "This photo is used in %d posts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/admin/sync-actions.js:55
+msgid "There may be more."
+msgstr ""
+
+#: assets/admin/sync-actions.js:56
+msgid "No post uses this photo."
+msgstr ""
+
+#: assets/admin/sync-actions.js:58
+msgid "Move this copy to the trash?"
+msgstr ""
+
+#: assets/admin/sync-actions.js:59
+msgid "Delete this copy from the Media Library? This cannot be undone."
+msgstr ""
+
+#: assets/admin/sync-actions.js:60
+msgid "The photo on Profotograaf is not touched."
+msgstr ""
+
+#: assets/admin/sync-actions.js:76
+msgid "The copy was moved to the trash."
+msgstr ""
+
+#: assets/admin/sync-actions.js:77
+msgid "The copy was removed."
+msgstr ""
+
+#: assets/admin/sync-actions.js:107
+msgid "Kept as this site's own file."
+msgstr ""
+
+#: assets/admin/sync-actions.js:107
+msgid "Watching this photo again."
+msgstr ""
+
 #: assets/admin/sync.js:37
 msgid "A check is already running."
 msgstr ""
@@ -3207,12 +3322,6 @@ msgstr ""
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Alt text"
-msgstr ""
-
-#: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:11
-#: build/gallery/index.js:4
-msgid "Remove"
 msgstr ""
 
 #: build/full-page-gallery/index.js:4

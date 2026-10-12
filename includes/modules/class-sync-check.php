@@ -12,6 +12,7 @@ use Profotograaf\Module;
 use Profotograaf\Photo_Catalogue;
 use Profotograaf\Plugin;
 use Profotograaf\Sync_Panel;
+use Profotograaf\Sync_Actions_Rest;
 use Profotograaf\Sync_Rest;
 
 defined( 'ABSPATH' ) || exit;
@@ -38,6 +39,7 @@ class Sync_Check implements Module {
 	public function register( Plugin $plugin ): void {
 		$this->plugin = $plugin;
 		( new Sync_Rest( new Change_Poller( $plugin->api(), new Photo_Catalogue( $plugin->api(), $plugin->settings() ) ), $plugin->connection() ) )->register();
+		( new Sync_Actions_Rest() )->register();
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
 

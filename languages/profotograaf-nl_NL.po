@@ -25,8 +25,8 @@ msgstr ""
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
-#: includes/modules/class-media-import-screen.php:218
-#: includes/modules/class-media-import-screen.php:231
+#: includes/modules/class-media-import-screen.php:222
+#: includes/modules/class-media-import-screen.php:235
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -1726,6 +1726,7 @@ msgstr "Foto-ID"
 msgid "Alt text"
 msgstr "Alternatieve tekst"
 
+#: includes/class-sync-field.php:58
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:11
 #: build/gallery/index.js:4
@@ -1926,20 +1927,20 @@ msgstr "Importeer maximaal %d foto's tegelijk."
 msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
 msgstr "Deze foto staat niet meer in je Profotograaf-bibliotheek. Vernieuw de lijst en probeer het opnieuw."
 
-#: includes/modules/class-media-import-screen.php:79
-#: includes/modules/class-media-import-screen.php:80
-#: includes/modules/class-media-import-screen.php:96
+#: includes/modules/class-media-import-screen.php:81
+#: includes/modules/class-media-import-screen.php:82
+#: includes/modules/class-media-import-screen.php:98
 msgid "Import from Profotograaf"
 msgstr "Importeren uit Profotograaf"
 
-#: includes/modules/class-media-import-screen.php:250
+#: includes/modules/class-media-import-screen.php:258
 msgid "Source"
 msgstr "Bron"
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:215
-#: includes/modules/class-media-import-screen.php:228
+#: includes/modules/class-media-import-screen.php:219
+#: includes/modules/class-media-import-screen.php:232
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr "Profotograaf, galerij %s"
@@ -2071,11 +2072,11 @@ msgstr "Dit bestand is niet vanuit Profotograaf geïmporteerd."
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr "Deze foto is niet meer beschikbaar op Profotograaf. De kopie in je mediabibliotheek is ongewijzigd."
 
-#: includes/modules/class-media-import-screen.php:223
+#: includes/modules/class-media-import-screen.php:227
 msgid "Open on Profotograaf"
 msgstr "Openen op Profotograaf"
 
-#: includes/modules/class-media-import-screen.php:245
+#: includes/modules/class-media-import-screen.php:251
 msgid "Re-import"
 msgstr "Opnieuw importeren"
 
@@ -2457,7 +2458,7 @@ msgstr "Profotograaf kent de galerij niet waarvoor dit bestand bedoeld was. De k
 msgid "Profotograaf does not accept this kind of file."
 msgstr "Profotograaf accepteert dit soort bestand niet."
 
-#: includes/modules/class-media-import-screen.php:238
+#: includes/modules/class-media-import-screen.php:242
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr "Verstuurd vanaf deze site. Wijzigingen in de titel, het bijschrift en de alt-tekst worden ook naar Profotograaf gestuurd."
 
@@ -3122,7 +3123,7 @@ msgstr "Foto's op Profotograaf houden"
 msgid "Adds the choice \"Keep on Profotograaf\" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs \"Use Profotograaf photos in the editor\". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site."
 msgstr "Voegt op het scherm Importeren uit Profotograaf naast Importeren de keuze \"Op Profotograaf houden\" toe, voor redacteuren die bestanden mogen uploaden. Een foto die op Profotograaf blijft, wordt zonder download aan de mediabibliotheek toegevoegd. Deze site toont hem vanaf Profotograaf en slaat geen kopie op. Hiervoor moet \"Profotograaf-foto's gebruiken in de editor\" aan staan. Als je een galerij op Profotograaf depubliceert, laden de foto's ervan meteen niet meer vanaf Profotograaf, maar kopieën die al in edge-caches en in de browsers van bezoekers staan, kunnen tot een jaar zichtbaar blijven. Importeer de foto's die je later misschien wilt intrekken. Als je dit uitzet, worden de foto's die op Profotograaf zijn gehouden niet meer getoond op deze site."
 
-#: includes/modules/class-media-import-screen.php:236
+#: includes/modules/class-media-import-screen.php:240
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr "Op Profotograaf gehouden. Deze site toont de foto vanaf Profotograaf en slaat geen kopie op."
 
@@ -3961,3 +3962,111 @@ msgid "- %d file from the Media Library is copied there. It stays until you dele
 msgid_plural "- %d files from the Media Library are copied there. They stay until you delete them on Profotograaf."
 msgstr[0] "- %d bestand uit de mediabibliotheek is daarheen gekopieerd. Het blijft staan tot je het op Profotograaf verwijdert."
 msgstr[1] "- %d bestanden uit de mediabibliotheek zijn daarheen gekopieerd. Ze blijven staan tot je ze op Profotograaf verwijdert."
+
+#: includes/class-sync-actions-rest.php:162
+msgid "Confirm the removal first."
+msgstr "Bevestig eerst de verwijdering."
+
+#: includes/class-sync-actions.php:146
+msgid "The photo could not be removed."
+msgstr "De foto kon niet worden verwijderd."
+
+#: includes/class-sync-actions.php:234
+msgid "This file is not a copy imported from Profotograaf."
+msgstr "Dit bestand is geen kopie die vanuit Profotograaf is geïmporteerd."
+
+#: includes/class-sync-field.php:30
+msgid "This photo was changed on Profotograaf."
+msgstr "Deze foto is gewijzigd op Profotograaf."
+
+#: includes/class-sync-field.php:32
+msgid "This photo was changed on Profotograaf and on this site."
+msgstr "Deze foto is gewijzigd op Profotograaf en op deze site."
+
+#: includes/class-sync-field.php:34
+msgid "Kept as this site's own file. Profotograaf changes are not watched."
+msgstr "Bewaard als eigen bestand van deze site. Wijzigingen op Profotograaf worden niet gevolgd."
+
+#: includes/class-sync-field.php:57
+msgid "Keep"
+msgstr "Bewaren"
+
+#: includes/class-sync-field.php:63
+msgid "Keep my copy"
+msgstr "Mijn kopie bewaren"
+
+#: includes/class-sync-field.php:66
+msgid "Watch again"
+msgstr "Weer volgen"
+
+#: includes/class-sync-field.php:69
+msgid "Stop watching"
+msgstr "Niet meer volgen"
+
+#: includes/class-sync-field.php:97
+msgid "This photo was deleted on Profotograaf."
+msgstr "Deze foto is verwijderd op Profotograaf."
+
+#: includes/class-sync-field.php:99
+msgid "This photo was taken out of its gallery on Profotograaf."
+msgstr "Deze foto is uit de galerij gehaald op Profotograaf."
+
+#: includes/class-sync-field.php:101
+msgid "The gallery of this photo was removed on Profotograaf."
+msgstr "De galerij van deze foto is verwijderd op Profotograaf."
+
+#: includes/class-sync-field.php:103
+msgid "The gallery of this photo is not shared on Profotograaf at the moment."
+msgstr "De galerij van deze foto wordt op dit moment niet gedeeld op Profotograaf."
+
+#: includes/class-sync-field.php:105
+msgid "This photo is no longer listed on Profotograaf."
+msgstr "Deze foto staat niet meer in de lijst van Profotograaf."
+
+#: assets/admin/sync-actions.js:44
+msgid "That did not work. Try again."
+msgstr "Dat is niet gelukt. Probeer het opnieuw."
+
+#. translators: %d: number of posts that use the photo.
+#: assets/admin/sync-actions.js:53
+#, js-format
+msgid "This photo is used in %d post."
+msgid_plural "This photo is used in %d posts."
+msgstr[0] "Deze foto wordt gebruikt in %d post."
+msgstr[1] "Deze foto wordt gebruikt in %d posts."
+
+#: assets/admin/sync-actions.js:55
+msgid "There may be more."
+msgstr "Er kunnen er meer zijn."
+
+#: assets/admin/sync-actions.js:56
+msgid "No post uses this photo."
+msgstr "Geen enkele post gebruikt deze foto."
+
+#: assets/admin/sync-actions.js:58
+msgid "Move this copy to the trash?"
+msgstr "Deze kopie naar de prullenbak verplaatsen?"
+
+#: assets/admin/sync-actions.js:59
+msgid "Delete this copy from the Media Library? This cannot be undone."
+msgstr "Deze kopie uit de mediabibliotheek verwijderen? Dit kan niet ongedaan worden gemaakt."
+
+#: assets/admin/sync-actions.js:60
+msgid "The photo on Profotograaf is not touched."
+msgstr "De foto op Profotograaf blijft ongemoeid."
+
+#: assets/admin/sync-actions.js:76
+msgid "The copy was moved to the trash."
+msgstr "De kopie is naar de prullenbak verplaatst."
+
+#: assets/admin/sync-actions.js:77
+msgid "The copy was removed."
+msgstr "De kopie is verwijderd."
+
+#: assets/admin/sync-actions.js:107
+msgid "Kept as this site's own file."
+msgstr "Bewaard als eigen bestand van deze site."
+
+#: assets/admin/sync-actions.js:107
+msgid "Watching this photo again."
+msgstr "Deze foto wordt weer gevolgd."

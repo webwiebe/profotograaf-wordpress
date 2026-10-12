@@ -155,5 +155,37 @@ test.describe( 'Media > Import from Profotograaf', () => {
 		await page.reload();
 		await page.getByRole( 'button', { name: 'Re-import' } ).click();
 		await expect( page.locator( '.profotograaf-reimport__status' ) ).toContainText( 'no longer available on Profotograaf', { timeout: 30_000 } );
+
+		// Flag the copy as the poll would. The details say so in words and offer Keep and Remove, not Re-import.
+		const state = () => wp( 'eval', `echo get_post_meta( ${ id }, '_profotograaf_sync_state', true );` );
+		wp( 'eval', `update_post_meta( ${ id }, '_profotograaf_sync_state', 'missing' ); update_post_meta( ${ id }, '_profotograaf_sync_reason', 'deleted' );` );
+		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+		await expect( page.getByText( 'This photo was deleted on Profotograaf.' ) ).toBeVisible();
+		await expect( page.getByRole( 'button', { name: 'Re-import' } ) ).toHaveCount( 0 );
+
+		// Keep stops the watching and records the decision.
+		await page.getByRole( 'button', { name: 'Keep', exact: true } ).click();
+		await expect( page.getByText( 'Kept as this site' ).first() ).toBeVisible( { timeout: 30_000 } );
+		expect( state() ).toBe( 'kept' );
+		await page.getByRole( 'button', { name: 'Watch again' } ).click();
+		await expect( page.getByRole( 'button', { name: 'Stop watching' } ) ).toBeVisible( { timeout: 30_000 } );
+		expect( state() ).toBe( '' );
+
+		// Remove asks first, names the used-in count and deletes only after the confirmation.
+		wp( 'eval', `update_post_meta( ${ id }, '_profotograaf_sync_state', 'missing' ); update_post_meta( ${ id }, '_profotograaf_sync_reason', 'deleted' );` );
+		await page.goto( `/wp-admin/post.php?post=${ id }&action=edit` );
+		let asked = '';
+		page.once( 'dialog', async ( dialog ) => {
+			asked = dialog.message();
+			await dialog.dismiss();
+		} );
+		await page.getByRole( 'button', { name: 'Remove', exact: true } ).click();
+		await expect.poll( () => asked ).toContain( 'No post uses this photo.' );
+		expect( wp( 'eval', `echo get_post( ${ id } ) ? 'present' : 'gone';` ) ).toBe( 'present' );
+		page.once( 'dialog', async ( dialog ) => {
+			await dialog.accept();
+		} );
+		await page.getByRole( 'button', { name: 'Remove', exact: true } ).click();
+		await expect.poll( () => wp( 'eval', `echo get_post( ${ id } ) ? 'present' : 'gone';` ), { timeout: 30_000 } ).toBe( 'gone' );
 	} );
 } );
