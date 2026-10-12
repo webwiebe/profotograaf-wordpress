@@ -151,7 +151,7 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		Functions\when( 'wp_set_script_translations' )->justReturn( true );
 
 		$this->screen->enqueue_filter();
-		$this->assertSame( array( 'profotograaf-media-source', 'profotograaf-reimport' ), $loaded );
+		$this->assertSame( array( 'profotograaf-media-source', 'profotograaf-reimport', 'profotograaf-sync-actions' ), $loaded );
 
 		$loaded                            = array();
 		$this->options[ Settings::OPTION ] = array( 'media_source' => false );
@@ -305,7 +305,13 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		$this->screen->source_field( array(), (object) array( 'ID' => 12 ) );
 		$this->assertSame( 'profotograaf-reimport', $loaded[0][0] );
 		$this->assertSame( array( 'wp-api-fetch', 'wp-i18n' ), $loaded[0][2] );
-		$this->assertSame( array( array( 'profotograaf-reimport', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ) ), $translated );
+		$this->assertSame(
+			array(
+				array( 'profotograaf-reimport', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ),
+				array( 'profotograaf-sync-actions', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' ),
+			),
+			$translated
+		);
 	}
 
 	public function test_without_a_stored_catalogue_the_field_names_the_platform_only(): void {
