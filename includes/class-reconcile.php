@@ -29,6 +29,9 @@ final class Reconcile {
 	public const META_SINCE          = '_profotograaf_sync_since';
 	public const META_REMOTE_VERSION = '_profotograaf_remote_version';
 
+	/** Hash of the platform text the author has seen and decided on (Sync_Resolve). */
+	public const META_ACCEPTED_TEXT = '_profotograaf_accepted_text';
+
 	public const COUNTS_OPTION = 'profotograaf_sync_counts';
 
 	public const STATE_SYNCED   = 'synced';
@@ -70,7 +73,7 @@ final class Reconcile {
 			}
 			$file_base = (string) get_post_meta( $attachment_id, Media_Baseline::META_FILE_HASH, true );
 			$text_base = (string) get_post_meta( $attachment_id, Media_Baseline::META_TEXT_HASH, true );
-			$text_now  = self::current_text_hash( $attachment_id );
+			$text_now  = Media_Baseline::current_text_hash( $attachment_id );
 			$version   = (string) get_post_meta( $attachment_id, Photo_Importer::META_VERSION, true );
 			$hash_file = '' !== $file_base;
 			if ( $hash_file && null !== $listed ) {
@@ -93,6 +96,7 @@ final class Reconcile {
 				'remote_version' => (string) get_post_meta( $attachment_id, self::META_REMOTE_VERSION, true ),
 				'text_base'      => $text_base,
 				'text_now'       => $text_now,
+				'text_accepted'  => (string) get_post_meta( $attachment_id, self::META_ACCEPTED_TEXT, true ),
 				// A copy without a baseline counts as unedited. The file hash is empty when the file cannot be read.
 				'file_edited'    => $hash_file && '' !== $file_now && $file_base !== $file_now,
 				'text_edited'    => '' !== $text_base && '' !== $text_now && $text_base !== $text_now,
@@ -404,6 +408,8 @@ final class Reconcile {
 	 * title stands in for an empty alt. It counts as a change only when it
 	 * differs from both the baseline and the copy as it is now. The second
 	 * test keeps a title that WordPress rewrote on insert from flagging forever.
+	 * Platform text the author already decided on (Keep mine, Update text)
+	 * does not flag again until the platform changes it once more.
 	 *
 	 * @param array<string,mixed> $row   Imported copy.
 	 * @param array<string,mixed> $photo Catalogue row.
@@ -412,11 +418,12 @@ final class Reconcile {
 		if ( '' === (string) $row['text_base'] ) {
 			return false;
 		}
-		$title   = sanitize_text_field( (string) ( $photo['title'] ?? '' ) );
-		$caption = sanitize_text_field( (string) ( $photo['caption'] ?? '' ) );
-		$alt     = sanitize_text_field( (string) ( $photo['alt'] ?? '' ) );
-		$hash    = Media_Baseline::text_hash( $title, $caption, '' !== $alt ? $alt : $title );
-		return $hash !== (string) $row['text_base'] && $hash !== (string) $row['text_now'];
+		$title    = sanitize_text_field( (string) ( $photo['title'] ?? '' ) );
+		$caption  = sanitize_text_field( (string) ( $photo['caption'] ?? '' ) );
+		$alt      = sanitize_text_field( (string) ( $photo['alt'] ?? '' ) );
+		$hash     = Media_Baseline::text_hash( $title, $caption, '' !== $alt ? $alt : $title );
+		$accepted = (string) ( $row['text_accepted'] ?? '' );
+		return $hash !== (string) $row['text_base'] && $hash !== (string) $row['text_now'] && $hash !== $accepted;
 	}
 
 	/**
@@ -482,19 +489,5 @@ final class Reconcile {
 	private static function stored_state( int $attachment_id ): string {
 		$state = (string) get_post_meta( $attachment_id, self::META_STATE, true );
 		return in_array( $state, array( self::STATE_CHANGED, self::STATE_MISSING, self::STATE_CONFLICT, self::STATE_KEPT ), true ) ? $state : '';
-	}
-
-	/**
-	 * Hash of the title, caption and alt text the attachment has now.
-	 *
-	 * @param int $attachment_id Attachment id.
-	 */
-	private static function current_text_hash( int $attachment_id ): string {
-		$post = get_post( $attachment_id );
-		if ( ! $post instanceof \WP_Post ) {
-			return '';
-		}
-		$alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
-		return Media_Baseline::text_hash( (string) $post->post_title, (string) $post->post_excerpt, is_scalar( $alt ) ? (string) $alt : '' );
 	}
 }

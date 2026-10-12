@@ -1,0 +1,53 @@
+.profotograaf-resolve {
+	max-width: 640px;
+	width: 90vw;
+	padding: 20px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.profotograaf-resolve::backdrop {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.profotograaf-resolve__images {
+	display: flex;
+	gap: 16px;
+	margin: 12px 0;
+}
+
+.profotograaf-resolve__images figure {
+	margin: 0;
+	flex: 1;
+}
+
+.profotograaf-resolve__images img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+.profotograaf-resolve__warning {
+	border-left: 4px solid #dba617;
+	padding: 6px 10px;
+	background: #fcf9e8;
+}
+
+.profotograaf-resolve table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.profotograaf-resolve th,
+.profotograaf-resolve td {
+	text-align: left;
+	vertical-align: top;
+	padding: 4px 8px 4px 0;
+}
+
+.profotograaf-resolve__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 12px 0;
+}

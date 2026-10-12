@@ -10,9 +10,11 @@ namespace Profotograaf\Modules;
 use Profotograaf\Change_Poller;
 use Profotograaf\Module;
 use Profotograaf\Photo_Catalogue;
+use Profotograaf\Photo_Importer;
 use Profotograaf\Plugin;
 use Profotograaf\Sync_Panel;
 use Profotograaf\Sync_Actions_Rest;
+use Profotograaf\Sync_Resolve;
 use Profotograaf\Sync_Rest;
 
 defined( 'ABSPATH' ) || exit;
@@ -38,8 +40,9 @@ class Sync_Check implements Module {
 	 */
 	public function register( Plugin $plugin ): void {
 		$this->plugin = $plugin;
-		( new Sync_Rest( new Change_Poller( $plugin->api(), new Photo_Catalogue( $plugin->api(), $plugin->settings() ) ), $plugin->connection() ) )->register();
-		( new Sync_Actions_Rest() )->register();
+		$catalogue    = new Photo_Catalogue( $plugin->api(), $plugin->settings() );
+		( new Sync_Rest( new Change_Poller( $plugin->api(), $catalogue ), $plugin->connection() ) )->register();
+		( new Sync_Actions_Rest( new Sync_Resolve( array( new Photo_Importer( $plugin->settings(), null, $catalogue ), 'reimport' ), $catalogue ) ) )->register();
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 	}
 

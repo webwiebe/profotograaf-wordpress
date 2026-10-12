@@ -336,7 +336,13 @@ class Sync_Actions_Test extends Wp_Test_Case {
 		$this->assertSame( '', Sync_Field::message( Reconcile::STATE_SYNCED, '' ) );
 
 		$this->copy( 80, Reconcile::STATE_CONFLICT );
-		$this->assertStringContainsString( 'Keep my copy', Sync_Field::html( 80, true ) );
+		$html = Sync_Field::html( 80, true );
+		$this->assertStringContainsString( 'data-action="review"', $html );
+		$this->assertStringContainsString( 'Resolve conflict', $html );
+		$this->assertStringNotContainsString( 'Keep my copy', $html );
+		$this->copy( 82, Reconcile::STATE_CHANGED );
+		$this->assertStringContainsString( 'Review changes', Sync_Field::html( 82, true ) );
+		$this->assertStringContainsString( 'Keep my copy', Sync_Field::html( 82, true ) );
 		$this->assertStringContainsString( 'and on this site', Sync_Field::html( 80, false ) );
 		$this->assertSame( '', Sync_Field::html( 81, false ) );
 	}

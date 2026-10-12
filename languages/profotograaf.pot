@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-12T15:23:38+00:00\n"
+"POT-Creation-Date: 2026-10-12T16:23:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -26,8 +26,8 @@ msgstr ""
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
 #: includes/class-sync-attention.php:189
-#: includes/modules/class-media-import-screen.php:227
-#: includes/modules/class-media-import-screen.php:240
+#: includes/modules/class-media-import-screen.php:228
+#: includes/modules/class-media-import-screen.php:241
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -38,6 +38,8 @@ msgstr ""
 #: includes/modules/class-site-health.php:428
 #: includes/modules/class-sync-flags.php:66
 #: assets/admin/media-source.js:29
+#: assets/admin/sync-actions.js:170
+#: assets/admin/sync-actions.js:234
 #: build/inserter-category/index.js:1
 #: build/media-modal/index.js:3
 msgid "Profotograaf"
@@ -227,6 +229,7 @@ msgid "Retry failed sends these files again. A file whose copy is not confirmed 
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:213
+#: assets/admin/sync-actions.js:129
 msgid "File"
 msgstr ""
 
@@ -604,6 +607,7 @@ msgid "Create a gallery"
 msgstr ""
 
 #: includes/admin/class-upload-panel.php:214
+#: includes/class-sync-resolve.php:71
 msgid "Title"
 msgstr ""
 
@@ -1238,6 +1242,7 @@ msgid "This file was not imported from Profotograaf."
 msgstr ""
 
 #: includes/class-photo-importer.php:173
+#: includes/class-sync-resolve.php:294
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr ""
 
@@ -1656,7 +1661,15 @@ msgstr ""
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr ""
 
-#: includes/class-sync-actions-rest.php:162
+#: includes/class-sync-actions-rest.php:225
+msgid "Confirm replacing the file first."
+msgstr ""
+
+#: includes/class-sync-actions-rest.php:248
+msgid "This action is not available right now."
+msgstr ""
+
+#: includes/class-sync-actions-rest.php:268
 msgid "Confirm the removal first."
 msgstr ""
 
@@ -1665,6 +1678,7 @@ msgid "The photo could not be removed."
 msgstr ""
 
 #: includes/class-sync-actions.php:234
+#: includes/class-sync-resolve.php:305
 msgid "This file is not a copy imported from Profotograaf."
 msgstr ""
 
@@ -1755,34 +1769,44 @@ msgid "Remove"
 msgstr ""
 
 #: includes/class-sync-field.php:63
+#: assets/admin/sync-actions.js:225
+msgid "Review changes"
+msgstr ""
+
+#: includes/class-sync-field.php:64
 msgid "Keep my copy"
 msgstr ""
 
-#: includes/class-sync-field.php:66
+#: includes/class-sync-field.php:69
+#: assets/admin/sync-actions.js:225
+msgid "Resolve conflict"
+msgstr ""
+
+#: includes/class-sync-field.php:72
 msgid "Watch again"
 msgstr ""
 
-#: includes/class-sync-field.php:69
+#: includes/class-sync-field.php:75
 msgid "Stop watching"
 msgstr ""
 
-#: includes/class-sync-field.php:97
+#: includes/class-sync-field.php:103
 msgid "This photo was deleted on Profotograaf."
 msgstr ""
 
-#: includes/class-sync-field.php:99
+#: includes/class-sync-field.php:105
 msgid "This photo was taken out of its gallery on Profotograaf."
 msgstr ""
 
-#: includes/class-sync-field.php:101
+#: includes/class-sync-field.php:107
 msgid "The gallery of this photo was removed on Profotograaf."
 msgstr ""
 
-#: includes/class-sync-field.php:103
+#: includes/class-sync-field.php:109
 msgid "The gallery of this photo is not shared on Profotograaf at the moment."
 msgstr ""
 
-#: includes/class-sync-field.php:105
+#: includes/class-sync-field.php:111
 msgid "This photo is no longer listed on Profotograaf."
 msgstr ""
 
@@ -1798,6 +1822,27 @@ msgstr ""
 
 #: includes/class-sync-panel.php:50
 msgid "Check now"
+msgstr ""
+
+#: includes/class-sync-resolve.php:72
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+#: build/gallery/index.js:7
+msgid "Caption"
+msgstr ""
+
+#: includes/class-sync-resolve.php:73
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:4
+msgid "Alt text"
+msgstr ""
+
+#: includes/class-sync-resolve.php:309
+msgid "This photo has no change to resolve."
+msgstr ""
+
+#: includes/class-sync-resolve.php:418
+msgid "The copy of this file could not be made, so nothing was changed."
 msgstr ""
 
 #: includes/class-sync-rest.php:116
@@ -2180,29 +2225,29 @@ msgstr ""
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:224
-#: includes/modules/class-media-import-screen.php:237
+#: includes/modules/class-media-import-screen.php:225
+#: includes/modules/class-media-import-screen.php:238
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:232
+#: includes/modules/class-media-import-screen.php:233
 msgid "Open on Profotograaf"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:245
+#: includes/modules/class-media-import-screen.php:246
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:247
+#: includes/modules/class-media-import-screen.php:248
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:256
+#: includes/modules/class-media-import-screen.php:257
 msgid "Re-import"
 msgstr ""
 
-#: includes/modules/class-media-import-screen.php:263
+#: includes/modules/class-media-import-screen.php:264
 msgid "Source"
 msgstr ""
 
@@ -3102,6 +3147,7 @@ msgid "Re-importing…"
 msgstr ""
 
 #: assets/admin/reimport.js:50
+#: assets/admin/sync-actions.js:159
 msgid "The photo was replaced with the current version from Profotograaf."
 msgstr ""
 
@@ -3113,49 +3159,153 @@ msgstr ""
 msgid "Could not check the connection. Reload this page to try again."
 msgstr ""
 
-#: assets/admin/sync-actions.js:44
-#: assets/admin/sync-actions.js:145
+#: assets/admin/sync-actions.js:48
+#: assets/admin/sync-actions.js:123
+#: assets/admin/sync-actions.js:215
+#: assets/admin/sync-actions.js:325
 msgid "That did not work. Try again."
 msgstr ""
 
 #. translators: %d: number of posts that use the photo.
-#: assets/admin/sync-actions.js:53
+#: assets/admin/sync-actions.js:57
 #, js-format
 msgid "This photo is used in %d post."
 msgid_plural "This photo is used in %d posts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: assets/admin/sync-actions.js:55
+#: assets/admin/sync-actions.js:59
 msgid "There may be more."
 msgstr ""
 
-#: assets/admin/sync-actions.js:56
+#: assets/admin/sync-actions.js:60
 msgid "No post uses this photo."
 msgstr ""
 
-#: assets/admin/sync-actions.js:58
+#: assets/admin/sync-actions.js:62
 msgid "Move this copy to the trash?"
 msgstr ""
 
-#: assets/admin/sync-actions.js:59
+#: assets/admin/sync-actions.js:63
 msgid "Delete this copy from the Media Library? This cannot be undone."
 msgstr ""
 
-#: assets/admin/sync-actions.js:60
+#: assets/admin/sync-actions.js:64
 msgid "The photo on Profotograaf is not touched."
 msgstr ""
 
-#: assets/admin/sync-actions.js:76
+#: assets/admin/sync-actions.js:80
 msgid "The copy was moved to the trash."
 msgstr ""
 
-#: assets/admin/sync-actions.js:77
+#: assets/admin/sync-actions.js:81
 msgid "The copy was removed."
 msgstr ""
 
+#: assets/admin/sync-actions.js:114
+#: assets/admin/sync-actions.js:206
+msgid "Working…"
+msgstr ""
+
+#: assets/admin/sync-actions.js:130
+msgid "The photo on Profotograaf has a newer file."
+msgstr ""
+
+#: assets/admin/sync-actions.js:133
+msgid "You edited the file on this site. Using the version from Profotograaf replaces your edit and it cannot be brought back."
+msgstr ""
+
+#: assets/admin/sync-actions.js:135
+msgid "Download my version first"
+msgstr ""
+
+#: assets/admin/sync-actions.js:149
+msgid "Replace your edited file with the version from Profotograaf? Your edit is lost."
+msgstr ""
+
+#: assets/admin/sync-actions.js:158
+msgid "Keep mine"
+msgstr ""
+
+#: assets/admin/sync-actions.js:158
+msgid "Keeps the file on this site. Later changes on Profotograaf are flagged again."
+msgstr ""
+
+#: assets/admin/sync-actions.js:158
+msgid "Kept your version."
+msgstr ""
+
+#: assets/admin/sync-actions.js:159
+msgid "Use Profotograaf's version"
+msgstr ""
+
+#: assets/admin/sync-actions.js:159
+msgid "Replaces the file on this site."
+msgstr ""
+
+#: assets/admin/sync-actions.js:160
+msgid "Keep both"
+msgstr ""
+
+#: assets/admin/sync-actions.js:160
+msgid "Saves your version as a separate file, then replaces this one. Costs one extra file."
+msgstr ""
+
+#: assets/admin/sync-actions.js:160
+msgid "Your version was saved as a separate file and this photo was replaced."
+msgstr ""
+
+#: assets/admin/sync-actions.js:167
+#: build/client-galleries/index.js:3
+#: build/full-page-gallery/index.js:4
+msgid "Text"
+msgstr ""
+
+#: assets/admin/sync-actions.js:170
+msgid "Field"
+msgstr ""
+
+#: assets/admin/sync-actions.js:170
+#: assets/admin/sync-actions.js:233
+msgid "This site"
+msgstr ""
+
+#: assets/admin/sync-actions.js:170
+msgid "Use Profotograaf's"
+msgstr ""
+
+#: assets/admin/sync-actions.js:178
+#: assets/admin/sync-actions.js:179
+msgid "(empty)"
+msgstr ""
+
+#: assets/admin/sync-actions.js:191
+msgid "Kept: Profotograaf has no value"
+msgstr ""
+
+#: assets/admin/sync-actions.js:197
+msgid "Update text"
+msgstr ""
+
+#: assets/admin/sync-actions.js:213
+msgid "The text was updated."
+msgstr ""
+
+#: assets/admin/sync-actions.js:230
+msgid "This photo was changed on Profotograaf and on this site. Nothing changes until you choose."
+msgstr ""
+
+#: assets/admin/sync-actions.js:251
+msgid "No difference is left to resolve."
+msgstr ""
+
+#: assets/admin/sync-actions.js:254
+#: build/full-page-gallery/index.js:8
+msgid "Close"
+msgstr ""
+
 #. translators: %d: number of copies.
-#: assets/admin/sync-actions.js:93
+#: assets/admin/sync-actions.js:273
 #, js-format
 msgid "Remove %d copy that was removed on Profotograaf from the Media Library?"
 msgid_plural "Remove %d copies that were removed on Profotograaf from the Media Library?"
@@ -3163,38 +3313,38 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: file names.
-#: assets/admin/sync-actions.js:99
+#: assets/admin/sync-actions.js:279
 #, js-format
 msgid "For example: %s."
 msgstr ""
 
-#: assets/admin/sync-actions.js:103
+#: assets/admin/sync-actions.js:283
 msgid "The photos on Profotograaf are not touched."
 msgstr ""
 
 #. translators: %d: number of copies.
-#: assets/admin/sync-actions.js:123
+#: assets/admin/sync-actions.js:303
 #, js-format
 msgid "Stopped. %d removed."
 msgstr ""
 
 #. translators: %d: number of copies.
-#: assets/admin/sync-actions.js:132
+#: assets/admin/sync-actions.js:312
 #, js-format
 msgid "%d removed…"
 msgstr ""
 
 #. translators: %d: number of copies.
-#: assets/admin/sync-actions.js:141
+#: assets/admin/sync-actions.js:321
 #, js-format
 msgid "Done. %d removed. Reload the page to see what is left."
 msgstr ""
 
-#: assets/admin/sync-actions.js:180
+#: assets/admin/sync-actions.js:364
 msgid "Kept as this site's own file."
 msgstr ""
 
-#: assets/admin/sync-actions.js:180
+#: assets/admin/sync-actions.js:364
 msgid "Watching this photo again."
 msgstr ""
 
@@ -3338,11 +3488,6 @@ msgstr ""
 
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:4
-msgid "Text"
-msgstr ""
-
-#: build/client-galleries/index.js:3
-#: build/full-page-gallery/index.js:4
 msgid "Heading"
 msgstr ""
 
@@ -3431,17 +3576,6 @@ msgstr ""
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Photo ID"
-msgstr ""
-
-#: build/full-page-gallery/index.js:4
-#: build/gallery/index.js:4
-#: build/gallery/index.js:7
-msgid "Caption"
-msgstr ""
-
-#: build/full-page-gallery/index.js:4
-#: build/gallery/index.js:4
-msgid "Alt text"
 msgstr ""
 
 #: build/full-page-gallery/index.js:4
@@ -3660,10 +3794,6 @@ msgstr ""
 
 #: build/full-page-gallery/index.js:8
 msgid "picked"
-msgstr ""
-
-#: build/full-page-gallery/index.js:8
-msgid "Close"
 msgstr ""
 
 #: build/full-page-gallery/index.js:8
