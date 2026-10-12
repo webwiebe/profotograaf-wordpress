@@ -201,11 +201,11 @@ class Backup_Settings_Test extends Wp_Test_Case {
 	public function test_readme_has_an_external_services_entry_for_the_backup(): void {
 		$readme   = (string) file_get_contents( dirname( __DIR__, 2 ) . '/readme.txt' );
 		$services = explode( '== External services ==', $readme )[1];
-		$entry    = explode( '= Checking for changes', explode( '= Backup to Profotograaf (only if you opt in) =', $services )[1] )[0];
+		$entry    = explode( '= Checking for changes', explode( '= Copy to Profotograaf (only if you opt in) =', $services )[1] )[0];
 
 		foreach ( array( 'Nothing is sent before that.', 'POST https://profotograaf.nl/api/v1/embed/galleries`', 'POST https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos', 'the file, its file name and the access token', 'site title in the gallery name', 'leaves the copies in your Profotograaf account', 'anonymous usage data' ) as $needle ) {
 			$this->assertStringContainsString( $needle, $entry );
 		}
-		$this->assertStringContainsString( 'The copies the backup made stay in your Profotograaf account', $readme );
+		$this->assertStringContainsString( 'The copies stay in your Profotograaf account', $readme );
 	}
 }
