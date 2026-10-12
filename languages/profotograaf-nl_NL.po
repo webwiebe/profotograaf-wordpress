@@ -25,8 +25,9 @@ msgstr ""
 #: includes/class-cron-health.php:224
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
-#: includes/modules/class-media-import-screen.php:222
-#: includes/modules/class-media-import-screen.php:235
+#: includes/class-sync-attention.php:189
+#: includes/modules/class-media-import-screen.php:227
+#: includes/modules/class-media-import-screen.php:240
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -35,6 +36,7 @@ msgstr ""
 #: includes/modules/class-settings-page.php:279
 #: includes/modules/class-site-health.php:357
 #: includes/modules/class-site-health.php:428
+#: includes/modules/class-sync-flags.php:66
 #: assets/admin/media-source.js:29
 #: build/inserter-category/index.js:1
 #: build/media-modal/index.js:3
@@ -72,7 +74,7 @@ msgstr "Aanvraagformulieren"
 #: includes/admin/class-leads-settings.php:205
 #: includes/admin/class-leads-settings.php:486
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:245
+#: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
@@ -288,7 +290,7 @@ msgid "Profotograaf needs a new permission to switch galleries on for embedding.
 msgstr "Profotograaf heeft een nieuwe toestemming nodig om galerijen aan te zetten voor insluiten."
 
 #: includes/admin/class-backup-panel.php:93
-#: includes/modules/class-admin-notices.php:136
+#: includes/modules/class-admin-notices.php:138
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Koppel deze site opnieuw"
@@ -874,31 +876,31 @@ msgstr "Bekijk deze galerij op Profotograaf"
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr "Deze galerij is niet gevonden in je Profotograaf-account. Misschien is hij verwijderd. Kies een andere galerij."
 
-#: includes/modules/class-admin-notices.php:134
+#: includes/modules/class-admin-notices.php:136
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr "Profotograaf is niet meer verbonden. De verbinding is beëindigd in je Profotograaf-account."
 
-#: includes/modules/class-admin-notices.php:144
+#: includes/modules/class-admin-notices.php:146
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr "Profotograaf kon de verbinding niet vernieuwen. Galerijen en aanvragen werken niet meer als die afloopt."
 
-#: includes/modules/class-admin-notices.php:146
+#: includes/modules/class-admin-notices.php:148
 msgid "Check the connection"
 msgstr "Controleer de verbinding"
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:157
+#: includes/modules/class-admin-notices.php:159
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] "%d aanvraag kon niet bij Profotograaf worden bezorgd."
 msgstr[1] "%d aanvragen konden niet bij Profotograaf worden bezorgd."
 
-#: includes/modules/class-admin-notices.php:161
+#: includes/modules/class-admin-notices.php:163
 msgid "Retry or export the enquiries"
 msgstr "Probeer de aanvragen opnieuw of exporteer ze"
 
-#: includes/modules/class-admin-notices.php:234
+#: includes/modules/class-admin-notices.php:264
 msgid "Dismiss"
 msgstr "Negeren"
 
@@ -1927,24 +1929,25 @@ msgstr "Importeer maximaal %d foto's tegelijk."
 msgid "This photo is not in your Profotograaf library any more. Refresh the list and try again."
 msgstr "Deze foto staat niet meer in je Profotograaf-bibliotheek. Vernieuw de lijst en probeer het opnieuw."
 
-#: includes/modules/class-media-import-screen.php:81
 #: includes/modules/class-media-import-screen.php:82
-#: includes/modules/class-media-import-screen.php:98
+#: includes/modules/class-media-import-screen.php:83
+#: includes/modules/class-media-import-screen.php:99
 msgid "Import from Profotograaf"
 msgstr "Importeren uit Profotograaf"
 
-#: includes/modules/class-media-import-screen.php:258
+#: includes/modules/class-media-import-screen.php:263
 msgid "Source"
 msgstr "Bron"
 
 #. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:219
-#: includes/modules/class-media-import-screen.php:232
+#: includes/modules/class-media-import-screen.php:224
+#: includes/modules/class-media-import-screen.php:237
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr "Profotograaf, galerij %s"
 
+#: includes/modules/class-sync-flags.php:133
 #: assets/admin/media-source.js:24
 msgid "All sources"
 msgstr "Alle bronnen"
@@ -2072,11 +2075,11 @@ msgstr "Dit bestand is niet vanuit Profotograaf geïmporteerd."
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr "Deze foto is niet meer beschikbaar op Profotograaf. De kopie in je mediabibliotheek is ongewijzigd."
 
-#: includes/modules/class-media-import-screen.php:227
+#: includes/modules/class-media-import-screen.php:232
 msgid "Open on Profotograaf"
 msgstr "Openen op Profotograaf"
 
-#: includes/modules/class-media-import-screen.php:251
+#: includes/modules/class-media-import-screen.php:256
 msgid "Re-import"
 msgstr "Opnieuw importeren"
 
@@ -2458,7 +2461,7 @@ msgstr "Profotograaf kent de galerij niet waarvoor dit bestand bedoeld was. De k
 msgid "Profotograaf does not accept this kind of file."
 msgstr "Profotograaf accepteert dit soort bestand niet."
 
-#: includes/modules/class-media-import-screen.php:242
+#: includes/modules/class-media-import-screen.php:247
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr "Verstuurd vanaf deze site. Wijzigingen in de titel, het bijschrift en de alt-tekst worden ook naar Profotograaf gestuurd."
 
@@ -3123,7 +3126,7 @@ msgstr "Foto's op Profotograaf houden"
 msgid "Adds the choice \"Keep on Profotograaf\" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs \"Use Profotograaf photos in the editor\". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site."
 msgstr "Voegt op het scherm Importeren uit Profotograaf naast Importeren de keuze \"Op Profotograaf houden\" toe, voor redacteuren die bestanden mogen uploaden. Een foto die op Profotograaf blijft, wordt zonder download aan de mediabibliotheek toegevoegd. Deze site toont hem vanaf Profotograaf en slaat geen kopie op. Hiervoor moet \"Profotograaf-foto's gebruiken in de editor\" aan staan. Als je een galerij op Profotograaf depubliceert, laden de foto's ervan meteen niet meer vanaf Profotograaf, maar kopieën die al in edge-caches en in de browsers van bezoekers staan, kunnen tot een jaar zichtbaar blijven. Importeer de foto's die je later misschien wilt intrekken. Als je dit uitzet, worden de foto's die op Profotograaf zijn gehouden niet meer getoond op deze site."
 
-#: includes/modules/class-media-import-screen.php:240
+#: includes/modules/class-media-import-screen.php:245
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr "Op Profotograaf gehouden. Deze site toont de foto vanaf Profotograaf en slaat geen kopie op."
 
@@ -3477,7 +3480,7 @@ msgstr "Profotograaf antwoordde met fout %d."
 msgid "The upload failed (%s)."
 msgstr "Het uploaden is mislukt (%s)."
 
-#: includes/modules/class-admin-notices.php:199
+#: includes/modules/class-admin-notices.php:226
 msgid "See why and retry"
 msgstr "Bekijk waarom en probeer opnieuw"
 
@@ -3824,7 +3827,7 @@ msgid "The Profotograaf copy queue moves"
 msgstr "De wachtrij van de Profotograaf-kopie loopt"
 
 #: includes/class-backup-health.php:198
-#: includes/modules/class-admin-notices.php:185
+#: includes/modules/class-admin-notices.php:212
 msgid "Open the copy settings"
 msgstr "Open de kopieerinstellingen"
 
@@ -3893,12 +3896,12 @@ msgstr "Er loopt al een andere kopieerronde."
 msgid "Copying stopped early. Run the command again to send the rest."
 msgstr "Het kopiëren is eerder gestopt. Voer het commando opnieuw uit om de rest te versturen."
 
-#: includes/modules/class-admin-notices.php:183
+#: includes/modules/class-admin-notices.php:210
 msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now."
 msgstr "Je Profotograaf-opslag is vol, dus het kopiëren is gepauzeerd. Maak ruimte vrij of upgrade je abonnement en klik daarna op Nu kopiëren."
 
 #. translators: %d: number of files.
-#: includes/modules/class-admin-notices.php:195
+#: includes/modules/class-admin-notices.php:222
 #, php-format
 msgid "%d file could not be copied to Profotograaf."
 msgid_plural "%d files could not be copied to Profotograaf."
@@ -4024,6 +4027,7 @@ msgid "This photo is no longer listed on Profotograaf."
 msgstr "Deze foto staat niet meer in de lijst van Profotograaf."
 
 #: assets/admin/sync-actions.js:44
+#: assets/admin/sync-actions.js:145
 msgid "That did not work. Try again."
 msgstr "Dat is niet gelukt. Probeer het opnieuw."
 
@@ -4063,10 +4067,126 @@ msgstr "De kopie is naar de prullenbak verplaatst."
 msgid "The copy was removed."
 msgstr "De kopie is verwijderd."
 
-#: assets/admin/sync-actions.js:107
+#: assets/admin/sync-actions.js:180
 msgid "Kept as this site's own file."
 msgstr "Bewaard als eigen bestand van deze site."
 
-#: assets/admin/sync-actions.js:107
+#: assets/admin/sync-actions.js:180
 msgid "Watching this photo again."
 msgstr "Deze foto wordt weer gevolgd."
+
+#. translators: %d: number of imported photos.
+#: includes/class-sync-attention.php:55
+#, php-format
+msgid "Profotograaf: %d imported photo needs attention."
+msgid_plural "Profotograaf: %d imported photos need attention."
+msgstr[0] "Profotograaf: %d geïmporteerde foto heeft aandacht nodig."
+msgstr[1] "Profotograaf: %d geïmporteerde foto's hebben aandacht nodig."
+
+#: includes/class-sync-attention.php:95
+msgid "Removed on Profotograaf"
+msgstr "Verwijderd op Profotograaf"
+
+#: includes/class-sync-attention.php:97
+msgid "Changed on Profotograaf"
+msgstr "Gewijzigd op Profotograaf"
+
+#: includes/class-sync-attention.php:99
+msgid "Changed in both places"
+msgstr "Op beide plekken gewijzigd"
+
+#: includes/class-sync-attention.php:101
+msgid "Kept"
+msgstr "Bewaard"
+
+#: includes/class-sync-attention.php:103
+msgid "In sync"
+msgstr "Gelijk"
+
+#: includes/class-sync-attention.php:130
+msgid "(no title)"
+msgstr "(geen titel)"
+
+#. translators: 1: number of photos removed on Profotograaf, 2: number changed there, 3: number changed in both places.
+#: includes/class-sync-attention.php:139
+#, php-format
+msgid "Removed on Profotograaf: %1$d. Changed on Profotograaf: %2$d. Changed in both places: %3$d."
+msgstr "Verwijderd op Profotograaf: %1$d. Gewijzigd op Profotograaf: %2$d. Op beide plekken gewijzigd: %3$d."
+
+#: includes/class-sync-attention.php:144
+#: includes/class-sync-attention.php:201
+msgid "Show them in the Media Library"
+msgstr "Toon ze in de mediabibliotheek"
+
+#: includes/class-sync-attention.php:149
+msgid "Remove all copies removed on Profotograaf"
+msgstr "Alle op Profotograaf verwijderde kopieën verwijderen"
+
+#: includes/class-sync-attention.php:150
+msgid "Stop"
+msgstr "Stoppen"
+
+#: includes/class-sync-attention.php:186
+msgid "Imported Profotograaf photos are in sync"
+msgstr "Geïmporteerde Profotograaf-foto's lopen gelijk"
+
+#: includes/class-sync-attention.php:192
+msgid "No imported photo was removed or changed on Profotograaf."
+msgstr "Geen geïmporteerde foto is verwijderd of gewijzigd op Profotograaf."
+
+#: includes/class-sync-attention.php:200
+msgid "Photos removed or changed on Profotograaf stay on this site until you decide. Nothing is deleted for you."
+msgstr "Foto's die op Profotograaf zijn verwijderd of gewijzigd, blijven op deze site staan tot jij beslist. Er wordt niets voor je verwijderd."
+
+#: includes/modules/class-admin-notices.php:188
+msgid "Show them"
+msgstr "Toon ze"
+
+#: includes/modules/class-sync-flags.php:131
+msgid "Filter by Profotograaf state"
+msgstr "Filter op Profotograaf-status"
+
+#: includes/modules/class-sync-flags.php:136
+#: assets/admin/media-source.js:34
+msgid "Profotograaf: needs attention"
+msgstr "Profotograaf: aandacht nodig"
+
+#: includes/modules/class-sync-flags.php:151
+msgid "Imported Profotograaf photos"
+msgstr "Geïmporteerde Profotograaf-foto's"
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:93
+#, js-format
+msgid "Remove %d copy that was removed on Profotograaf from the Media Library?"
+msgid_plural "Remove %d copies that were removed on Profotograaf from the Media Library?"
+msgstr[0] "%d kopie die op Profotograaf is verwijderd uit de mediabibliotheek verwijderen?"
+msgstr[1] "%d kopieën die op Profotograaf zijn verwijderd uit de mediabibliotheek verwijderen?"
+
+#. translators: %s: file names.
+#: assets/admin/sync-actions.js:99
+#, js-format
+msgid "For example: %s."
+msgstr "Bijvoorbeeld: %s."
+
+#: assets/admin/sync-actions.js:103
+msgid "The photos on Profotograaf are not touched."
+msgstr "De foto's op Profotograaf blijven ongemoeid."
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:123
+#, js-format
+msgid "Stopped. %d removed."
+msgstr "Gestopt. %d verwijderd."
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:132
+#, js-format
+msgid "%d removed…"
+msgstr "%d verwijderd…"
+
+#. translators: %d: number of copies.
+#: assets/admin/sync-actions.js:141
+#, js-format
+msgid "Done. %d removed. Reload the page to see what is left."
+msgstr "Klaar. %d verwijderd. Laad de pagina opnieuw om te zien wat er over is."

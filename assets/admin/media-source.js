@@ -30,6 +30,11 @@
 					props: { profotograaf_source: 'profotograaf' },
 					priority: 20,
 				},
+				attention: {
+					text: __( 'Profotograaf: needs attention', 'profotograaf' ),
+					props: { profotograaf_source: 'attention' },
+					priority: 30,
+				},
 			};
 		},
 	} );

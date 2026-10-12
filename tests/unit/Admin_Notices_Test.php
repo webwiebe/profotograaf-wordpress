@@ -15,6 +15,7 @@ use Profotograaf\Settings;
 use Profotograaf\Connection;
 use Profotograaf\Modules\Admin_Notices;
 use Profotograaf\Plugin;
+use Profotograaf\Reconcile;
 
 /**
  * Admin_Notices with the queue, the screen and the redirect replaced.
@@ -170,6 +171,40 @@ class Admin_Notices_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( 'page=profotograaf-leads', $html );
 
 		$this->notices->failed = 0;
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_flagged_copies_show_a_notice_on_the_media_screens_only_and_return_for_a_new_problem(): void {
+		$this->options[ Settings::OPTION ]         = array( 'media_source' => true );
+		$this->options[ Reconcile::COUNTS_OPTION ] = array(
+			'changed'  => 1,
+			'missing'  => 2,
+			'conflict' => 0,
+		);
+		$this->notices->screen                     = 'dashboard';
+		$this->assertSame( '', $this->html() );
+
+		$this->notices->screen = 'upload';
+		$html                  = $this->html();
+		$this->assertStringContainsString( '3 imported photos need attention', $html );
+		$this->assertStringContainsString( 'profotograaf_source=attention', $html );
+
+		$this->notices->dismiss( Admin_Notices::SYNC, 'sync:2:1:0' );
+		$this->assertSame( '', $this->html() );
+
+		$this->options[ Reconcile::COUNTS_OPTION ]['conflict'] = 1;
+		$this->assertStringContainsString( '4 imported photos need attention', $this->html() );
+	}
+
+	public function test_no_flag_notice_while_the_media_source_is_off(): void {
+		$this->options[ Settings::OPTION ]         = array( 'media_source' => false );
+		$this->options[ Reconcile::COUNTS_OPTION ] = array(
+			'changed'  => 1,
+			'missing'  => 0,
+			'conflict' => 0,
+		);
+		$this->notices->screen                     = 'upload';
+
 		$this->assertSame( '', $this->html() );
 	}
 
