@@ -83,7 +83,7 @@ msgstr "Formularios de consulta"
 #: includes/modules/class-settings-page.php:244
 #: includes/modules/class-settings-page.php:271
 #: includes/modules/class-settings-page.php:480
-#: includes/modules/class-telemetry-consent.php:126
+#: includes/modules/class-telemetry-consent.php:127
 #: includes/modules/class-virtual-convert.php:203
 #: includes/modules/class-virtual-removal.php:83
 msgid "You do not have permission to do this."
@@ -498,7 +498,7 @@ msgid "Help improve Profotograaf by sharing anonymous usage and error data. This
 msgstr "Ayuda a mejorar Profotograaf compartiendo datos anónimos de uso y de errores. Es opcional y puedes desactivarlo en cualquier momento. No se recoge información personal. Al desactivarlo se detiene el envío de inmediato y se eliminan los datos pendientes de enviar."
 
 #: includes/class-settings-schema.php:197
-#: includes/modules/class-telemetry-consent.php:108
+#: includes/modules/class-telemetry-consent.php:109
 msgid "What is shared"
 msgstr "Qué se comparte"
 
@@ -1231,15 +1231,15 @@ msgstr "ninguno"
 msgid "Open the leads screen"
 msgstr "Abrir la pantalla de contactos"
 
-#: includes/modules/class-telemetry-consent.php:107
+#: includes/modules/class-telemetry-consent.php:108
 msgid "Help improve Profotograaf? You can share anonymous usage and error data: plugin, WordPress and PHP versions, locale, enabled modules and counts of successes and failures. Your site address, visitors, galleries and enquiries are never shared. You can turn it off at any time."
 msgstr "¿Quieres ayudar a mejorar Profotograaf? Puedes compartir datos anónimos de uso y de errores: versiones del plugin, de WordPress y de PHP, idioma, módulos activados y recuentos de éxitos y fallos. La dirección de tu sitio, tus visitantes, tus galerías y tus consultas nunca se comparten. Puedes desactivarlo en cualquier momento."
 
-#: includes/modules/class-telemetry-consent.php:113
+#: includes/modules/class-telemetry-consent.php:114
 msgid "Enable telemetry"
 msgstr "Activar telemetría"
 
-#: includes/modules/class-telemetry-consent.php:114
+#: includes/modules/class-telemetry-consent.php:115
 msgid "Not now"
 msgstr "Ahora no"
 
