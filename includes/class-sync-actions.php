@@ -55,7 +55,7 @@ final class Sync_Actions {
 		}
 		$from = self::state( $attachment_id );
 		if ( Reconcile::STATE_KEPT !== $from ) {
-			self::move_count( $from, '' );
+			self::lower_count( $from );
 			self::clear_flag( $attachment_id );
 			update_post_meta( $attachment_id, Reconcile::META_STATE, Reconcile::STATE_KEPT );
 			update_post_meta(
@@ -145,7 +145,7 @@ final class Sync_Actions {
 		if ( ! wp_delete_attachment( $attachment_id ) ) {
 			return new \WP_Error( 'profotograaf_remove_failed', __( 'The photo could not be removed.', 'profotograaf' ), array( 'status' => 500 ) );
 		}
-		self::move_count( $from, '' );
+		self::lower_count( $from );
 		return array(
 			'attachment_id' => $attachment_id,
 			'trashed'       => self::trashes(),
@@ -214,21 +214,17 @@ final class Sync_Actions {
 	}
 
 	/**
-	 * Takes one copy out of the stored count of the state it leaves. Kept and
-	 * in-sync copies have no count.
+	 * Takes one copy out of the stored count of the state it leaves. In-sync
+	 * and kept copies have no count.
 	 *
 	 * @param string $from State it leaves, empty for in sync.
-	 * @param string $to   State it enters, empty for none.
 	 */
-	private static function move_count( string $from, string $to ): void {
+	private static function lower_count( string $from ): void {
 		$counts = Reconcile::counts();
 		if ( isset( $counts[ $from ] ) ) {
 			$counts[ $from ] = max( 0, $counts[ $from ] - 1 );
+			update_option( Reconcile::COUNTS_OPTION, $counts, false );
 		}
-		if ( isset( $counts[ $to ] ) ) {
-			++$counts[ $to ];
-		}
-		update_option( Reconcile::COUNTS_OPTION, $counts, false );
 	}
 
 	/**

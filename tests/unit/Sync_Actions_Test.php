@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Tests;
 
+use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use Profotograaf\Media_Baseline;
 use Profotograaf\Photo_Importer;
@@ -272,5 +273,97 @@ class Sync_Actions_Test extends Wp_Test_Case {
 
 		$this->assertStringContainsString( 'Stop watching', Sync_Field::html( 51, true ) );
 		$this->assertStringContainsString( 'Watch again', Sync_Field::html( 52, true ) );
+	}
+
+	public function test_the_routes_register_on_rest_api_init_with_their_permission_checks(): void {
+		$rest = new Sync_Actions_Rest();
+		Actions\expectAdded( 'rest_api_init' )->once();
+		$rest->register();
+
+		$routes = array();
+		Functions\when( 'register_rest_route' )->alias(
+			function ( $space, $path, $args ) use ( &$routes ) {
+				$routes[ $path ] = $args;
+				return true;
+			}
+		);
+		$rest->register_routes();
+
+		$this->assertSame( array( '/sync/keep', '/sync/watch', '/sync/usage', '/sync/remove', '/sync/remove-missing' ), array_keys( $routes ) );
+		$this->assertSame( 'GET', $routes['/sync/usage']['methods'] );
+		$this->assertFalse( $routes['/sync/remove']['args']['confirm']['default'] );
+		$this->assertTrue( $rest->can_upload() );
+	}
+
+	public function test_the_route_callbacks_run_the_actions(): void {
+		$rest = new Sync_Actions_Rest();
+		$this->copy( 60, Reconcile::STATE_MISSING );
+		$this->copy( 61, Reconcile::STATE_MISSING );
+		Functions\when( 'get_posts' )->justReturn( array( 61 ) );
+		$GLOBALS['wpdb'] = $this->fake_wpdb( 2 ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- the usage search reads the global.
+
+		$this->assertSame( Reconcile::STATE_KEPT, $rest->keep( new Sync_Actions_Request( array( 'attachment_id' => 60 ) ) )['state'] );
+		$this->assertSame( Reconcile::STATE_SYNCED, $rest->watch( new Sync_Actions_Request( array( 'attachment_id' => 60 ) ) )['state'] );
+		$usage = $rest->usage( new Sync_Actions_Request( array( 'attachment_id' => 60 ) ) );
+		$this->assertSame( 2, $usage['count'] );
+		$this->assertFalse( $usage['capped'] );
+		$this->assertSame( 61, $rest->remove( new Sync_Actions_Request( array( 'attachment_id' => 61, 'confirm' => true ) ) )['attachment_id'] );
+		$this->editable = array( 61 );
+		$this->assertSame( 1, $rest->remove_missing( new Sync_Actions_Request( array( 'confirm' => true ) ) )['removed'] );
+		unset( $GLOBALS['wpdb'] );
+	}
+
+	public function test_watch_again_and_usage_refuse_a_file_that_is_no_copy(): void {
+		$this->meta[70] = array();
+
+		$this->assertInstanceOf( \WP_Error::class, Sync_Actions::watch_again( 70 ) );
+		$this->assertInstanceOf( \WP_Error::class, Sync_Actions::usage( 70 ) );
+	}
+
+	public function test_the_field_says_what_happened_for_every_state_and_reason(): void {
+		$expected = array(
+			array( Reconcile::STATE_MISSING, Reconcile::REASON_LEFT_GALLERY, 'taken out of its gallery' ),
+			array( Reconcile::STATE_MISSING, Reconcile::REASON_GALLERY_DELETED, 'gallery of this photo was removed' ),
+			array( Reconcile::STATE_MISSING, Reconcile::REASON_UNAVAILABLE, 'not shared on Profotograaf' ),
+			array( Reconcile::STATE_MISSING, Reconcile::REASON_UNKNOWN, 'no longer listed' ),
+			array( Reconcile::STATE_CHANGED, '', 'was changed on Profotograaf.' ),
+			array( Reconcile::STATE_CONFLICT, '', 'and on this site' ),
+			array( Reconcile::STATE_KEPT, '', 'Kept as this site' ),
+		);
+		foreach ( $expected as $i => $case ) {
+			$this->assertStringContainsString( $case[2], Sync_Field::message( $case[0], $case[1] ), $case[0] . ' ' . $case[1] );
+		}
+		$this->assertSame( '', Sync_Field::message( Reconcile::STATE_SYNCED, '' ) );
+
+		$this->copy( 80, Reconcile::STATE_CONFLICT );
+		$this->assertStringContainsString( 'Keep my copy', Sync_Field::html( 80, true ) );
+		$this->assertStringContainsString( 'and on this site', Sync_Field::html( 80, false ) );
+		$this->assertSame( '', Sync_Field::html( 81, false ) );
+	}
+
+	/**
+	 * A $wpdb whose usage query answers with the given number of post ids.
+	 *
+	 * @param int $found Number of posts.
+	 */
+	private function fake_wpdb( int $found ): object {
+		return new class( $found ) {
+			public string $posts    = 'wp_posts';
+			public string $postmeta = 'wp_postmeta';
+
+			public function __construct( private int $found ) {}
+
+			public function esc_like( string $text ): string {
+				return addcslashes( $text, '_%\\' );
+			}
+
+			public function prepare( string $sql, array $args ): string {
+				return $sql . '|' . implode( '|', $args );
+			}
+
+			public function get_col( string $query ): array {
+				return array_fill( 0, $this->found, '1' );
+			}
+		};
 	}
 }
