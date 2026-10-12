@@ -1871,10 +1871,6 @@ msgstr "Laat redacteuren die bestanden mogen uploaden je Profotograaf-foto's bek
 msgid "Photo library in the editor"
 msgstr "Fotobibliotheek in de editor"
 
-#: includes/modules/class-privacy.php:234
-msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. No visitor data is involved."
-msgstr "Alleen als de site-eigenaar de mediabron aanzet: redacteuren die bestanden mogen uploaden, kunnen de foto's van het verbonden Profotograaf-account bekijken in de blokeditor. De site vraagt profotograaf.nl om de fotolijst en haalt de foto's op die een redacteur kiest. De browser van de redacteur laadt de miniaturen van profotograaf.nl, dat daarbij het IP-adres en de browsergegevens van die redacteur ontvangt. Een foto die een redacteur gebruikt, wordt opgeslagen in de mediabibliotheek van deze site en blijft daar tot hij wordt verwijderd. Er worden geen gegevens van bezoekers gebruikt."
-
 #: includes/class-photo-importer.php:90
 #: includes/class-virtual-attachments.php:166
 msgid "You are not allowed to add files to the Media Library."
@@ -4320,3 +4316,7 @@ msgstr "Deze foto is gewijzigd op Profotograaf en op deze site. Er verandert nie
 #: assets/admin/sync-actions.js:251
 msgid "No difference is left to resolve."
 msgstr "Er is geen verschil meer om op te lossen."
+
+#: includes/modules/class-privacy.php:234
+msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. To flag changes made on Profotograaf, the copy keeps a sync state, hashes of the file and text as they were written, and the id of the user who kept it or stopped watching it, with the time. No visitor data is involved."
+msgstr "Alleen als de site-eigenaar de mediabron aanzet: redacteuren die bestanden mogen uploaden, kunnen de foto's van het verbonden Profotograaf-account bekijken in de blokeditor. De site vraagt profotograaf.nl om de fotolijst en haalt de foto's op die een redacteur kiest. De browser van de redacteur laadt de miniaturen van profotograaf.nl, dat daarbij het IP-adres en de browsergegevens van die redacteur ontvangt. Een foto die een redacteur gebruikt, wordt opgeslagen in de mediabibliotheek van deze site en blijft daar tot hij wordt verwijderd. Om wijzigingen op Profotograaf te kunnen melden, bewaart de kopie een synchronisatiestatus, hashes van het bestand en de tekst zoals ze zijn weggeschreven, en het id van de gebruiker die haar heeft behouden of niet meer volgt, met het tijdstip. Er worden geen gegevens van bezoekers gebruikt."

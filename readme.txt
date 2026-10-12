@@ -38,7 +38,7 @@ The plugin sets no cookies and does not track your visitors. See "External servi
 
 **Export and erase.** Tools, Export Personal Data includes the waiting and failed enquiries of an email address, and Tools, Erase Personal Data removes them. The email address is matched without regard to case. Enquiries that were already delivered are held by Profotograaf and covered by its privacy policy.
 
-**Photo library in the editor (only if you turn it on).** The "Use Profotograaf photos in the editor" setting is off by default. When it is on, your server keeps a list of your photos (id, size, title, caption, gallery and image links) in the options table. A photo an editor adds or imports is downloaded (the web size, at most 1600 px on the long side) and stored in your Media Library like any upload, with the photo and gallery identifiers as hidden fields. It stays on your site until you delete it. Deleting the plugin leaves those photos in place. Visitors are not involved.
+**Photo library in the editor (only if you turn it on).** The "Use Profotograaf photos in the editor" setting is off by default. When it is on, your server keeps a list of your photos (id, size, title, caption, gallery and image links) in the options table. A photo an editor adds or imports is downloaded (the web size, at most 1600 px on the long side) and stored in your Media Library like any upload, with the photo and gallery identifiers as hidden fields. It stays on your site until you delete it. Deleting the plugin leaves those photos in place. To flag changes made on Profotograaf, each copy also keeps a sync state, the reason, hashes of the file and text as the plugin wrote them, and the id of the user who chose Keep or Stop watching, with the time. These fields stay on the site until you delete the copy, like the identifiers, and the plugin never sends them to Profotograaf. Visitors are not involved.
 
 **Keeping photos on Profotograaf (only if you turn it on).** The "Keep photos on Profotograaf" setting is off by default. When it is on, an editor can add a photo to the Media Library without a download. Your site then stores only the photo's data and image links, and visitors' browsers load the photo from `https://profotograaf.nl`, so Profotograaf receives their IP address and browser details in the way any web server does. If you unpublish the gallery, copies already held by edge caches and visitors' browsers can keep showing the photo for up to a year.
 
@@ -99,7 +99,7 @@ What stays. The backup copies a file once. Editing or deleting a file in WordPre
 
 = Checking for changes to imported photos =
 
-While your site is connected, the plugin asks `https://profotograaf.nl/api/v1/embed/changes` once an hour in the background (WP-Cron, never while a page loads for a visitor) which photos and galleries changed on Profotograaf. The answer lists ids only. When a change names a photo you imported, or a gallery such a photo came from, the plugin also reads `https://profotograaf.nl/api/v1/embed/galleries` and `https://profotograaf.nl/api/v1/embed/photos`, and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a gallery whose photos it cannot account for, to see whether the photo is still listed. Nothing is sent from your site except the access token and the position in the change list. The plugin only records a state on the Media Library item. It never changes or deletes a file or a Media Library item by itself.
+While your site is connected, the plugin asks `https://profotograaf.nl/api/v1/embed/changes` once an hour in the background (WP-Cron, never while a page loads for a visitor) which photos and galleries changed on Profotograaf. The answer lists ids only. When a change names a photo you imported, or a gallery such a photo came from, the plugin also reads `https://profotograaf.nl/api/v1/embed/galleries` and `https://profotograaf.nl/api/v1/embed/photos`, and `https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos` for a gallery whose photos it cannot account for, to see whether the photo is still listed. Nothing is sent from your site except the access token and the position in the change list. The plugin only records a state on the Media Library item. It never changes or deletes a file or a Media Library item by itself. Keep, Stop watching, Remove, Update text and Resolve conflict make no request to Profotograaf. Re-import and Keep both use the existing `/share/img/` download described under Photo library in the editor.
 
 "Check now" under Settings, Profotograaf and on the Import screen runs the same check at once, and both screens show when photo changes were last checked. When the last check is more than six hours old, opening the Media Library, the Import screen or the settings page starts one check in the background, at most once every 15 minutes. These checks use the same request as the hourly one and run only for people who can upload files, never while a page loads for a visitor.
 
@@ -193,15 +193,30 @@ The photos of galleries that are available and have "Allow embedding on other we
 
 = What does the plugin store on my site? =
 
-A photo you use is downloaded once and stored in the Media Library as a normal attachment, with the hidden fields `_profotograaf_photo_id`, `_profotograaf_gallery_id` and `_profotograaf_version`. Using the same photo again reuses that copy. The plugin also keeps a list of your photos in the options table so the editor works when Profotograaf cannot be reached. The attachment details show the gallery the photo came from, with a link to it on Profotograaf. Deleting the plugin removes the list and leaves the photos in your Media Library.
+A photo you use is downloaded once and stored in the Media Library as a normal attachment, with the hidden fields `_profotograaf_photo_id`, `_profotograaf_gallery_id` and `_profotograaf_version`. Using the same photo again reuses that copy. To tell what changed later, each copy also keeps `_profotograaf_origin` (imported or sent from your site), `_profotograaf_file_hash` and `_profotograaf_text_hash` (hashes of the file and the text as the plugin wrote them), and the marks `_profotograaf_sync_state`, `_profotograaf_sync_reason`, `_profotograaf_sync_since`, `_profotograaf_remote_version`, `_profotograaf_sync_decision` (who chose Keep or Stop watching, and when) and `_profotograaf_accepted_text`. The option `profotograaf_sync_counts` holds the counts shown in the notice. These fields hold no personal data besides the id of the user who made a decision. The plugin also keeps a list of your photos in the options table so the editor works when Profotograaf cannot be reached. The attachment details show the gallery the photo came from, with a link to it on Profotograaf. Deleting the plugin removes the list and leaves the photos in your Media Library.
 
 = Can I import a photo again? =
 
-Yes. Open the photo in the Media Library and click Re-import in the attachment details. The file is replaced with the current web size, the Media Library item and its id stay the same, and the image sizes are rebuilt. If the photo is gone from Profotograaf you get a notice and the copy stays as it is.
+Yes. Open the photo in the Media Library and click Re-import in the attachment details. The file is replaced with the current web size, the Media Library item and its id stay the same, and the image sizes are rebuilt. If the photo is gone from Profotograaf you get a notice and the copy stays as it is. A copy changed in both places has a "Resolve conflict" button instead.
 
 = What happens when I remove a photo or gallery on Profotograaf? =
 
-Imported copies stay on your site and keep working, because they are files in your Media Library. The photo disappears from the library lists after the next refresh (twice a day), so it can no longer be imported, and Re-import tells you it is no longer available. The plugin does not remove or change the copies.
+Imported copies stay on your site and keep working, because they are files in your Media Library. The plugin marks the copy and leaves the decision to you. It never removes a file or changes a copy by itself.
+
+A copy gets one of these marks, shown in the "Profotograaf" column of the Media Library list and in the attachment details:
+
+* Removed on Profotograaf: the photo or its gallery is gone there.
+* Changed on Profotograaf: the file or the title, caption or alt text changed there.
+* Changed in both places: it changed there and you edited the copy here.
+* Kept: you chose to keep the copy as your own file.
+
+The "Needs attention" filter in the Media Library list, a notice on the Media Library and Import screens, a section on the Import screen and Site Health show how many copies need a look. Each can be dismissed. The mark stays until you act.
+
+For a copy removed on Profotograaf you can choose Keep, Stop watching (the plugin stops checking this copy, and "Watch again" starts it again) or Remove. Remove asks for confirmation and says how many posts use the file. The Import screen can remove all copies removed on Profotograaf in one go, after one confirmation. Removing a copy never deletes anything on Profotograaf.
+
+For a copy changed on Profotograaf, Re-import takes the new file and "Update text" takes the new title, caption and alt text, field by field. For a copy changed in both places, "Resolve conflict" shows both versions side by side and offers Keep mine, Use Profotograaf's version (asks first when you edited the file) and Keep both (saves your version as a separate file). A change on Profotograaf is never applied without your click.
+
+These actions use the photo list and the download the plugin already uses. They add no request to Profotograaf.
 
 = Does deleting a photo in WordPress delete it on Profotograaf? =
 
@@ -240,6 +255,10 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: a copy changed in both places has a Resolve conflict dialog with the two images side by side, the text fields compared, and Keep mine, Use Profotograaf's version and Keep both. Update text takes chosen title, caption and alt text fields only.
+* New: copies that need attention show in a Profotograaf column and a Needs attention filter in the Media Library, a dismissible notice, a section on the Import screen with a bulk Remove for copies removed on Profotograaf, and Site Health.
+* New: Keep, Stop watching, Watch again and Remove for a copy removed on Profotograaf. Remove asks first and names how many posts use the file.
+* New: the FAQ, the Privacy section and the suggested policy text describe the sync marks and the hidden fields behind them.
 * New: the backup runs. With it switched on, WP-Cron checks the existing Media Library 200 items at a time, queues new files under the chosen scope, and sends queued files every five minutes for up to 20 seconds, one file per request, into one private gallery per month. Full storage pauses the backup for a day. When Profotograaf asks to wait, the backup waits 5, 15 and then 60 minutes, or as long as Profotograaf says. An upload without a clear answer is not sent again on its own. A checksum record that survives uninstall stops a reinstall from copying a file twice. `wp profotograaf backup run` sends the queue in the foreground.
 * New: Backup tab in the settings, with "Back up the Media Library to Profotograaf" (off by default) and the scope: files used on the site, every file, or only the files you mark. The tab, readme.txt and the suggested privacy policy text say what is sent and where, and that the copies stay on Profotograaf after uninstall. Uninstall removes the backup fields on Media Library items.
 * New: "Keep photos on Profotograaf" setting, off by default. With it on, Media > Import from Profotograaf offers "Keep on Profotograaf" next to Import: the photo is added to the Media Library without a download and shown from Profotograaf. The screen and the setting explain that a photo you unpublish can keep showing from edge and browser caches. Only users who can upload files can use it.
