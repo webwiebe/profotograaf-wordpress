@@ -3971,7 +3971,7 @@ msgstr "Bevestig eerst de verwijdering."
 msgid "The photo could not be removed."
 msgstr "De foto kon niet worden verwijderd."
 
-#: includes/class-sync-actions.php:238
+#: includes/class-sync-actions.php:234
 msgid "This file is not a copy imported from Profotograaf."
 msgstr "Dit bestand is geen kopie die vanuit Profotograaf is geïmporteerd."
 

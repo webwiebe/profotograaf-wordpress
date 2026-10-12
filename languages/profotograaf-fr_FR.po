@@ -3971,7 +3971,7 @@ msgstr "Confirmez d'abord la suppression."
 msgid "The photo could not be removed."
 msgstr "La photo n'a pas pu être supprimée."
 
-#: includes/class-sync-actions.php:238
+#: includes/class-sync-actions.php:234
 msgid "This file is not a copy imported from Profotograaf."
 msgstr "Ce fichier n'est pas une copie importée depuis Profotograaf."
 
