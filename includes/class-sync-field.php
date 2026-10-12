@@ -59,15 +59,21 @@ final class Sync_Field {
 				);
 				break;
 			case Reconcile::STATE_CHANGED:
+				$buttons = array(
+					'review' => __( 'Review changes', 'profotograaf' ),
+					'keep'   => __( 'Keep my copy', 'profotograaf' ),
+				);
+				break;
 			case Reconcile::STATE_CONFLICT:
-				$buttons = array( 'keep' => __( 'Keep my copy', 'profotograaf' ) );
+				// The conflict dialog holds Keep mine, so no separate button.
+				$buttons = array( 'review' => __( 'Resolve conflict', 'profotograaf' ) );
 				break;
 			case Reconcile::STATE_KEPT:
 				$buttons = array( 'watch' => __( 'Watch again', 'profotograaf' ) );
 				break;
 			default:
 				$buttons = array( 'keep' => __( 'Stop watching', 'profotograaf' ) );
-		}
+		}//end switch
 		$out = '';
 		$msg = self::message( $state, (string) get_post_meta( $attachment_id, Reconcile::META_REASON, true ) );
 		if ( '' !== $msg ) {

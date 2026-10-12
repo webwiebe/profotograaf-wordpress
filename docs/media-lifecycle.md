@@ -139,7 +139,9 @@ The dialog shows the copy on the site next to the current platform `web` image (
 2. Use Profotograaf's version. Runs `Photo_Importer::reimport()`. The local edit of the file is lost, so the dialog says so and offers to download the current file first.
 3. Keep both. Duplicates the attachment (file copy and meta, without the `_profotograaf_*` link keys), then runs the re-import on the original attachment. The duplicate is an ordinary file with no link to the platform. This costs one extra file on disk, which the dialog states.
 
-Text fields resolve per field: a field edited on only one side takes that side without a dialog, only on the author's "Update text" click. A platform value of `''` never replaces a non-empty local value. This matters because the platform's `alt` is empty for every photo today (`embed-api.md`).
+Text fields resolve per field. The dialog lists the fields whose site and platform values differ, with a checkbox per field. A copy that only changed on the platform has them ticked, a conflict has them unticked. Only the author's "Update text" click applies a platform value, and only to the ticked fields. A platform value of `''` never replaces a non-empty local value, so the dialog offers no checkbox for it and the route skips it. This matters because the platform's `alt` is empty for every photo today (`embed-api.md`). The plugin stores hashes of the baseline text, not the values, so the dialog shows the site and platform values and no baseline column.
+
+Both Keep mine and Update text record the platform text as seen in `_profotograaf_accepted_text`. `Reconcile::text_changed()` skips a platform text whose hash equals it, so a field the author kept does not flag again until the platform changes it once more. Update text leaves a pending file change flagged (`changed`, or `conflict` while the file is edited). Re-import on a conflict copy is replaced by the "Resolve conflict" button that opens the dialog. Use Profotograaf's version and Keep both need `confirm: true` in the request, like removal.
 
 ### Upload direction
 

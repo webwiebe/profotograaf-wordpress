@@ -168,6 +168,7 @@ class Media_Import_Screen implements Module {
 		wp_set_script_translations( 'profotograaf-reimport', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
 		wp_enqueue_script( 'profotograaf-sync-actions', PROFOTOGRAAF_URL . 'assets/admin/sync-actions.js', array( 'wp-api-fetch', 'wp-i18n' ), PROFOTOGRAAF_VERSION, true );
 		wp_set_script_translations( 'profotograaf-sync-actions', 'profotograaf', PROFOTOGRAAF_DIR . 'languages' );
+		wp_enqueue_style( 'profotograaf-sync-resolve', PROFOTOGRAAF_URL . 'assets/admin/sync-resolve.css', array(), PROFOTOGRAAF_VERSION );
 	}
 
 	/**
@@ -248,8 +249,8 @@ class Media_Import_Screen implements Module {
 		} elseif ( $this->active() && current_user_can( 'edit_post', $id ) ) {
 			// The attachment edit screen does not load the media views, so the field asks for its own script.
 			$this->enqueue_reimport();
-			// Not offered for a copy the platform no longer lists: there is no file to fetch.
-			if ( Reconcile::STATE_MISSING !== (string) get_post_meta( $id, Reconcile::META_STATE, true ) ) {
+			// Not offered for a copy the platform no longer lists (no file to fetch), and a conflict opens its dialog instead.
+			if ( ! in_array( (string) get_post_meta( $id, Reconcile::META_STATE, true ), array( Reconcile::STATE_MISSING, Reconcile::STATE_CONFLICT ), true ) ) {
 				$html .= sprintf(
 					'<p class="profotograaf-reimport"><button type="button" class="button profotograaf-reimport__button" data-attachment-id="%1$d">%2$s</button> <span class="profotograaf-reimport__status" role="status" aria-live="polite" data-attachment-id="%1$d"></span></p>',
 					$id,

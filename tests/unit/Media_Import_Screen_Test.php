@@ -39,6 +39,7 @@ class Media_Import_Screen_Test extends Wp_Test_Case {
 		Functions\when( 'current_user_can' )->alias( fn( $cap ) => $cap === $this->capability || ( 'edit_post' === $cap && 'upload_files' === $this->capability ) );
 		Functions\when( 'wp_unslash' )->returnArg();
 		Functions\when( 'wp_enqueue_script' )->justReturn( true );
+		Functions\when( 'wp_enqueue_style' )->justReturn( true );
 		Functions\when( 'wp_set_script_translations' )->justReturn( true );
 		Functions\when( 'get_post_meta' )->alias( fn( $id, $key ) => $this->meta[ $id ][ $key ] ?? '' );
 		Functions\when( 'admin_url' )->alias( fn( $path = '' ) => 'https://photos.example.com/wp-admin/' . $path );

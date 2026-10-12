@@ -17,8 +17,30 @@ defined( 'ABSPATH' ) || exit;
  * /sync/remove-missing { confirm } removes the next batch of copies flagged
  * missing. Removal needs `confirm` set to true in the request, which only an
  * explicit click in the admin sends, and `edit_post` on the attachment.
+ *
+ * GET /sync/compare?attachment_id= returns what the conflict dialog shows.
+ * POST /sync/resolve { attachment_id, choice, confirm } runs Keep mine, Use
+ * Profotograaf's version or Keep both. The last two replace the local file and
+ * need `confirm`. POST /sync/update-text { attachment_id, fields } takes the
+ * platform text for the listed fields.
  */
 final class Sync_Actions_Rest {
+
+	/**
+	 * Resolver, null where the routes that need the catalogue are not served.
+	 *
+	 * @var Sync_Resolve|null
+	 */
+	private ?Sync_Resolve $resolve;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param Sync_Resolve|null $resolve Conflict resolution.
+	 */
+	public function __construct( ?Sync_Resolve $resolve = null ) {
+		$this->resolve = $resolve;
+	}
 
 	/**
 	 * Adds the hooks.
@@ -53,6 +75,37 @@ final class Sync_Actions_Rest {
 				),
 			),
 		);
+		if ( null !== $this->resolve ) {
+			$routes['/sync/compare']     = array( 'GET', 'compare', $id_arg );
+			$routes['/sync/resolve']     = array(
+				'POST',
+				'resolve',
+				$id_arg + array(
+					'choice'  => array(
+						'type'     => 'string',
+						'required' => true,
+						'enum'     => array( Sync_Resolve::CHOICE_KEEP_MINE, Sync_Resolve::CHOICE_USE_REMOTE, Sync_Resolve::CHOICE_KEEP_BOTH ),
+					),
+					'confirm' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+				),
+			);
+			$routes['/sync/update-text'] = array(
+				'POST',
+				'update_text',
+				$id_arg + array(
+					'fields' => array(
+						'type'  => 'array',
+						'items' => array(
+							'type' => 'string',
+							'enum' => Sync_Resolve::FIELDS,
+						),
+					),
+				),
+			);
+		}//end if
 		foreach ( $routes as $path => $route ) {
 			register_rest_route(
 				Gallery_Rest::NAMESPACE,
@@ -140,6 +193,59 @@ final class Sync_Actions_Rest {
 			return self::unconfirmed();
 		}
 		return Sync_Actions::remove( (int) $request->get_param( 'attachment_id' ) );
+	}
+
+	/**
+	 * GET /sync/compare.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return array<string,mixed>|\WP_Error
+	 */
+	public function compare( $request ) {
+		return null === $this->resolve ? self::unavailable() : $this->resolve->compare( (int) $request->get_param( 'attachment_id' ) );
+	}
+
+	/**
+	 * POST /sync/resolve. Using the platform's file replaces the local one,
+	 * so those two choices need the confirmation flag.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return array<string,mixed>|\WP_Error
+	 */
+	public function resolve( $request ) {
+		if ( null === $this->resolve ) {
+			return self::unavailable();
+		}
+		$id     = (int) $request->get_param( 'attachment_id' );
+		$choice = (string) $request->get_param( 'choice' );
+		if ( Sync_Resolve::CHOICE_KEEP_MINE === $choice ) {
+			return $this->resolve->keep_mine( $id );
+		}
+		if ( true !== (bool) $request->get_param( 'confirm' ) ) {
+			return new \WP_Error( 'profotograaf_confirm_required', __( 'Confirm replacing the file first.', 'profotograaf' ), array( 'status' => 400 ) );
+		}
+		return Sync_Resolve::CHOICE_KEEP_BOTH === $choice ? $this->resolve->keep_both( $id ) : $this->resolve->use_remote( $id );
+	}
+
+	/**
+	 * POST /sync/update-text.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return array<string,mixed>|\WP_Error
+	 */
+	public function update_text( $request ) {
+		if ( null === $this->resolve ) {
+			return self::unavailable();
+		}
+		$fields = $request->get_param( 'fields' );
+		return $this->resolve->update_text( (int) $request->get_param( 'attachment_id' ), is_array( $fields ) ? array_map( 'strval', $fields ) : array() );
+	}
+
+	/**
+	 * Error for a route served without the catalogue.
+	 */
+	private static function unavailable(): \WP_Error {
+		return new \WP_Error( 'profotograaf_unavailable', __( 'This action is not available right now.', 'profotograaf' ), array( 'status' => 503 ) );
 	}
 
 	/**
