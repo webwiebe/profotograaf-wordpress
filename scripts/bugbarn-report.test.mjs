@@ -37,6 +37,8 @@ function run(args, env = {}, input = "") {
     child.stdout.on("data", (d) => (out += d));
     child.stderr.on("data", (d) => (out += d));
     child.on("close", (code) => resolve({ code, out }));
+    // A script that exits without reading stdin (no BugBarn configuration) closes the pipe early.
+    child.stdin.on("error", () => {});
     child.stdin.end(input);
   });
 }
