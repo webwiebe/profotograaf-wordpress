@@ -73,7 +73,7 @@ Re-run `make plugin-check` after every change to a module, and after the rename.
 
 1. Replace the placeholder artwork in `assets/wporg/` (see the README there). Optional for the review, wanted before the plugin page is public.
 2. Do the open items above: rename the plugin (guideline 17), settle the Free plan credit (guideline 10), fix `Contributors`.
-3. Merge the rest of the epic, then tag a release: `git tag v0.1.0 && git push origin v0.1.0`. The release workflow attaches `profotograaf.zip` to the GitHub release. It skips the wordpress.org deploy because the secrets do not exist yet.
+3. Merge the rest of the epic, then tag a release: `git tag v0.1.0 && git push origin v0.1.0`. The release workflow attaches `profotograaf.zip` and `profotograaf-<version>.zip` (the same file) to the GitHub release; `https://github.com/webwiebe/profotograaf-wordpress/releases/latest/download/profotograaf.zip` always serves the latest one. CI installs the zip on a clean WordPress and activates it (`tests/e2e/zip-install.sh`). It skips the wordpress.org deploy because the secrets do not exist yet.
 4. Submit that zip at https://wordpress.org/plugins/developers/add/ from the account that will own the plugin. The review queue takes days to weeks and the review team replies by email. Answer within a few days, replies that come late close the request.
 5. When approved, wordpress.org creates the SVN repository at `https://plugins.svn.wordpress.org/profotograaf/`. Add the two repository secrets, `SVN_USERNAME` (the wordpress.org username) and `SVN_PASSWORD` (the wordpress.org password or an SVN password):
 

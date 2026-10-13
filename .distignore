@@ -42,4 +42,5 @@ Makefile
 CONTRIBUTING.md
 README.md
 /vendor
+/docs/review
 webpack.config.js

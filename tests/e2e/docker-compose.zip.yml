@@ -1,0 +1,52 @@
+# A clean WordPress for the release zip check (tests/e2e/zip-install.sh). The
+# plugin is not mounted: the check installs it from dist/profotograaf-<version>.zip
+# the way a site owner does.
+name: profotograaf-zip
+
+x-wordpress-env: &wordpress-env
+  WORDPRESS_DB_HOST: db
+  WORDPRESS_DB_USER: wordpress
+  WORDPRESS_DB_PASSWORD: wordpress
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DEBUG: "1"
+  WORDPRESS_CONFIG_EXTRA: |
+    define( 'WP_DEBUG_LOG', true );
+    define( 'WP_DEBUG_DISPLAY', false );
+
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+
+  wordpress:
+    image: wordpress:${WP_VERSION:-7.1}-php${PHP_VERSION:-8.3}-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *wordpress-env
+    volumes:
+      - wordpress:/var/www/html
+
+  cli:
+    image: wordpress:cli-php${PHP_VERSION:-8.3}
+    profiles: ["tools"]
+    user: "33:33"
+    depends_on:
+      - wordpress
+    environment: *wordpress-env
+    volumes:
+      - wordpress:/var/www/html
+      - ../../dist:/zips:ro
+    working_dir: /var/www/html
+
+volumes:
+  wordpress:

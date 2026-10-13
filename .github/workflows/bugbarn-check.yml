@@ -1,0 +1,20 @@
+name: BugBarn check
+
+# Posts one deliberate test error to BugBarn (#251), so the pipeline's reporting
+# can be proven: it must show up in `bb issues --project profotograaf-wordpress`.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deliberate-error:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Post a deliberate test error
+        env:
+          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
+          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
+        run: bin/bugbarn-report.sh event "Deliberate test error from the profotograaf-wordpress pipeline (ignore)"
