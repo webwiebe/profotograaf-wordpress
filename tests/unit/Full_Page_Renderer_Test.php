@@ -137,6 +137,65 @@ class Full_Page_Renderer_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( '<a class="pf-fp-open" href="https://profotograaf.nl/share/p/0" data-pf-index="0">', $html );
 	}
 
+	/**
+	 * The photo numbers in render order.
+	 *
+	 * @param string $html Rendered block.
+	 * @return string[]
+	 */
+	private static function order( string $html ): array {
+		preg_match_all( '#<img src="https://profotograaf.nl/i/web-(\d+)\.jpg"#', $html, $found );
+		return $found[1];
+	}
+
+	public function test_the_gallery_layout_uses_the_preset_and_picks_of_the_payload(): void {
+		$sections = array( 'preset' => 'calm', 'picks' => array( array( 'slot' => '0.1.0', 'photo_id' => 'p-5' ) ) );
+
+		$html = $this->render( 12, array( 'preset' => 'gallery' ), array( 'sections' => $sections ) );
+
+		$this->assertStringContainsString( 'data-preset="calm"', $html );
+		$this->assertSame( array( 'grid', 'feature' ), array_slice( array_map( fn( $tag ) => preg_replace( '/.*data-type="([a-z]+)".*/', '$1', $tag ), self::sections( $html ) ), 0, 2 ) );
+		// The grid takes six photos without p-5, then the feature opens with the pick.
+		$this->assertSame( '5', self::order( $html )[6] );
+	}
+
+	public function test_block_picks_win_over_the_picks_of_the_payload(): void {
+		$sections = array( 'preset' => 'calm', 'picks' => array( array( 'slot' => '0.1.0', 'photo_id' => 'p-5' ) ) );
+		$picks    = array( array( 'slot' => '0.1.0', 'photoId' => 'p-9' ) );
+
+		$html = $this->render( 12, array( 'preset' => 'gallery', 'picks' => $picks ), array( 'sections' => $sections ) );
+
+		$this->assertSame( '9', self::order( $html )[6] );
+	}
+
+	public function test_the_gallery_layout_of_a_custom_preset_uses_its_sequence_and_picks(): void {
+		$sections = array(
+			'preset' => 'custom',
+			'custom' => array( array( 'type' => 'hero' ), array( 'type' => 'grid', 'columns' => 2, 'rows' => 1 ) ),
+			'picks'  => array( array( 'slot' => '0.0.0', 'photo_id' => 'p-3' ) ),
+		);
+
+		$html = $this->render( 6, array( 'preset' => 'gallery' ), array( 'sections' => $sections ) );
+
+		$this->assertStringContainsString( 'data-preset="custom"', $html );
+		$this->assertSame( array( '3', '0', '1' ), array_slice( self::order( $html ), 0, 3 ) );
+	}
+
+	public function test_the_gallery_layout_without_a_preset_in_the_payload_uses_the_default(): void {
+		$this->assertStringContainsString( 'data-preset="editorial"', $this->render( 8, array( 'preset' => 'gallery' ) ) );
+		$this->assertStringContainsString(
+			'data-preset="editorial"',
+			$this->render( 8, array( 'preset' => 'gallery' ), array( 'sections' => array( 'preset' => 'unknown' ) ) )
+		);
+	}
+
+	public function test_a_payload_preset_is_ignored_unless_the_block_asks_for_the_gallery_layout(): void {
+		$sections = array( 'preset' => 'calm', 'picks' => array( array( 'slot' => '0.1.0', 'photo_id' => 'p-5' ) ) );
+
+		$this->assertStringContainsString( 'data-preset="editorial"', $this->render( 12, array(), array( 'sections' => $sections ) ) );
+		$this->assertStringContainsString( 'data-preset="playful"', $this->render( 12, array( 'preset' => 'playful' ), array( 'sections' => $sections ) ) );
+	}
+
 	public function test_every_section_type_writes_its_contract_markup(): void {
 		$custom = array(
 			array( 'type' => 'text', 'heading' => 'Ceremony', 'text' => 'At the old church.', 'align' => 'left' ),
