@@ -87,12 +87,13 @@ final class Full_Page_Renderer {
 		if ( is_wp_error( $gallery ) ) {
 			return $this->fallback( $id, $attributes, array(), false );
 		}
-		$preset   = Sections_Schema::preset_id( $attributes['preset'] ?? '' );
+		$layout   = Gallery_Layout::resolve( $gallery, $attributes['preset'] ?? '', (array) ( $attributes['sections'] ?? array() ), (array) ( $attributes['picks'] ?? array() ) );
+		$preset   = $layout['preset'];
 		$sections = Section_Sequencer::sequence(
 			array_values( array_filter( (array) ( $gallery['photos'] ?? array() ), 'is_array' ) ),
 			$preset,
-			(array) ( $attributes['sections'] ?? array() ),
-			(array) ( $attributes['picks'] ?? array() ),
+			$layout['custom'],
+			$layout['picks'],
 			Gallery_Renderer::clean_ids( $attributes['excludedPhotoIds'] ?? array() )
 		);
 		if ( array() === $sections ) {

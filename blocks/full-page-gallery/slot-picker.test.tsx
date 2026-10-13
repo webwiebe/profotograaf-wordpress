@@ -23,7 +23,7 @@ function picker( attributes: FullPageAttributes, answer = editorialAnswer() ) {
 
 describe( 'SlotPicker', () => {
 	it( 'draws nothing without pickable slots', () => {
-		const { view } = picker( blockAttributes(), { preset: 'calm', sections: [] } );
+		const { view } = picker( blockAttributes(), { preset: 'calm', galleryPreset: '', sections: [] } );
 		expect( view.container.innerHTML ).toBe( '' );
 	} );
 

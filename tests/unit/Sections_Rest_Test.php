@@ -125,6 +125,37 @@ class Sections_Rest_Test extends Gallery_Test_Case {
 		$this->assertSame( 'p-0', $picked['sections'][1]['photos'][0]['id'] );
 	}
 
+	public function test_it_reports_the_preset_of_the_gallery_and_sequences_it_on_request(): void {
+		$payload             = self::payload( 12 );
+		$payload['sections'] = array( 'preset' => 'calm', 'picks' => array( array( 'slot' => '0.1.0', 'photo_id' => 'p-5' ) ) );
+		$this->http->reply( 200, $payload );
+
+		$plain = $this->rest->sections( new Rest_Request_Stub( array( 'id' => 'g-1', 'preset' => 'playful' ) ) );
+		$this->assertSame( 'calm', $plain['galleryPreset'] );
+		$this->assertSame( 'playful', $plain['preset'] );
+
+		$this->http->reply( 200, $payload );
+		$own = $this->rest->sections( new Rest_Request_Stub( array( 'id' => 'g-1', 'preset' => 'gallery' ) ) );
+		$this->assertSame( 'calm', $own['preset'] );
+		$this->assertSame( array( 'grid', 'feature' ), array_slice( array_column( $own['sections'], 'type' ), 0, 2 ) );
+		$this->assertSame( 'p-5', $own['sections'][1]['photos'][0]['id'] );
+
+		$this->http->reply( 200, $payload );
+		$block = $this->rest->sections(
+			new Rest_Request_Stub( array( 'id' => 'g-1', 'preset' => 'gallery', 'picks' => array( array( 'slot' => '0.1.0', 'photoId' => 'p-9' ) ) ) )
+		);
+		$this->assertSame( 'p-9', $block['sections'][1]['photos'][0]['id'] );
+	}
+
+	public function test_a_gallery_without_a_preset_reports_none(): void {
+		$this->http->reply( 200, self::payload( 4 ) );
+
+		$result = $this->rest->sections( new Rest_Request_Stub( array( 'id' => 'g-1', 'preset' => 'gallery' ) ) );
+
+		$this->assertSame( '', $result['galleryPreset'] );
+		$this->assertSame( 'editorial', $result['preset'] );
+	}
+
 	public function test_an_empty_payload_gives_no_sections(): void {
 		$this->http->reply( 200, array( 'id' => 'g-1' ) );
 

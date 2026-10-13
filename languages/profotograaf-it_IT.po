@@ -438,14 +438,14 @@ msgid "Default gallery layout"
 msgstr "Layout predefinito della galleria"
 
 #: includes/class-settings-schema.php:133
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Grid"
 msgstr "Griglia"
 
 #: includes/class-settings-schema.php:134
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Masonry"
@@ -518,14 +518,14 @@ msgstr "Predefinito di Profotograaf"
 
 #: includes/class-settings-schema.php:221
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:8
 #: build/gallery/index.js:3
 msgid "On"
 msgstr "Attivo"
 
 #: includes/class-settings-schema.php:222
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:8
 #: build/gallery/index.js:3
 msgid "Off"
 msgstr "Disattivo"
@@ -537,6 +537,7 @@ msgstr "Un blocco o uno shortcode può impostare il proprio valore. Lascia vuoto
 
 #: includes/class-settings-schema.php:233
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Columns"
 msgstr "Colonne"
@@ -575,24 +576,28 @@ msgstr "Spazio tra le foto, da 0 a 96 pixel."
 
 #: includes/class-settings-schema.php:267
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Photo shape"
 msgstr "Forma delle foto"
 
 #: includes/class-settings-schema.php:270
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Original"
 msgstr "Originale"
 
 #: includes/class-settings-schema.php:271
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Square (1:1)"
 msgstr "Quadrata (1:1)"
 
 #: includes/class-settings-schema.php:283
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Captions"
 msgstr "Didascalie"
@@ -603,18 +608,21 @@ msgstr "Se mostrare le didascalie delle foto e dove."
 
 #: includes/class-settings-schema.php:286
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Hidden"
 msgstr "Nascoste"
 
 #: includes/class-settings-schema.php:287
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Below the photo"
 msgstr "Sotto la foto"
 
 #: includes/class-settings-schema.php:288
 #: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr "Sopra la foto"
@@ -1285,12 +1293,12 @@ msgstr "Apri in una nuova scheda"
 
 #: assets/admin/sync-actions.js:167
 #: build/client-galleries/index.js:3
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Text"
 msgstr "Testo"
 
 #: build/client-galleries/index.js:3
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Heading"
 msgstr "Titolo"
 
@@ -1450,20 +1458,20 @@ msgstr "layout: %s"
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
 #: build/client-galleries/index.js:3
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
 #: build/import-screen/index.js:2
 #: build/media-modal/index.js:1
 msgid "Gallery"
 msgstr "Galleria"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
 msgid "Layout"
 msgstr "Layout"
 
 #: build/client-galleries/index.js:3
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
 msgid "Choose another gallery"
 msgstr "Scegli un'altra galleria"
@@ -1472,7 +1480,7 @@ msgstr "Scegli un'altra galleria"
 msgid "This gallery was not found in your Profotograaf account. It may have been deleted. Choose another gallery."
 msgstr "Questa galleria non è stata trovata nel tuo account Profotograaf. Potrebbe essere stata eliminata. Scegli un'altra galleria."
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
 msgid "Choose one of your galleries."
 msgstr "Scegli una delle tue gallerie."
@@ -1738,7 +1746,7 @@ msgstr "Testo alternativo"
 
 #: includes/class-sync-field.php:58
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:4
 msgid "Remove"
 msgstr "Rimuovi"
@@ -2137,7 +2145,7 @@ msgid "This file is not a virtual Profotograaf attachment."
 msgstr "Questo file non è un allegato virtuale di Profotograaf."
 
 #: includes/class-empty-gallery.php:76
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:11
 msgid "This gallery has no photos that can be shown on your site."
 msgstr "Questa galleria non ha foto che possano essere mostrate sul tuo sito."
@@ -2152,7 +2160,7 @@ msgstr "Le foto potrebbero essere ancora in elaborazione, oppure la galleria con
 msgid "0 visible"
 msgstr "0 visibili"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:11
 msgid "Photos may still be processing, or the gallery holds videos or file types the site embed cannot show yet."
 msgstr "Le foto potrebbero essere ancora in elaborazione, oppure la galleria contiene video o tipi di file che l'incorporamento nel sito non può ancora mostrare."
@@ -2199,7 +2207,7 @@ msgstr "Diretto"
 msgid "Cinema"
 msgstr "Cinema"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Filmstrip"
 msgstr "Pellicola"
@@ -2682,7 +2690,7 @@ msgid "Checking…"
 msgstr "Controllo in corso…"
 
 #: includes/class-gallery-look.php:161
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Space between rows (pixels)"
 msgstr "Spazio tra le righe (pixel)"
@@ -2693,13 +2701,13 @@ msgid "From 0 to 96 pixels. Empty uses the gap between photos."
 msgstr "Da 0 a 96 pixel. Se vuoto, usa lo spazio tra le foto."
 
 #: includes/class-gallery-look.php:162
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Space between columns (pixels)"
 msgstr "Spazio tra le colonne (pixel)"
 
 #: includes/class-gallery-look.php:167
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Corners"
 msgstr "Angoli"
@@ -2709,7 +2717,7 @@ msgid "Rounded corners on every photo. Circle applies to square photos only; oth
 msgstr "Angoli arrotondati su ogni foto. Cerchio vale solo per le foto quadrate; le altre forme mantengono gli angoli predefiniti."
 
 #: includes/class-gallery-look.php:175
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Hover effect"
 msgstr "Effetto al passaggio"
@@ -2719,7 +2727,7 @@ msgid "What a photo does under the mouse or keyboard focus. Grow lifts the whole
 msgstr "Cosa fa una foto sotto il mouse o con il focus della tastiera. Ingrandisci solleva l'intera foto sopra quelle vicine; la presentazione non si ingrandisce. I visitatori che chiedono meno movimento non vedono alcun effetto."
 
 #: includes/class-gallery-look.php:183
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Hover strength"
 msgstr "Intensità dell'effetto"
@@ -2738,7 +2746,7 @@ msgid "Strong"
 msgstr "Forte"
 
 #: includes/class-gallery-look.php:194
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Frame colour"
 msgstr "Colore della cornice"
@@ -2748,7 +2756,7 @@ msgid "The colour of the frame around each photo, as a hex code such as #ffffff.
 msgstr "Il colore della cornice attorno a ogni foto, come codice esadecimale, ad esempio #ffffff. Bianco quando è impostata solo una larghezza."
 
 #: includes/class-gallery-look.php:204
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Frame width (pixels)"
 msgstr "Larghezza della cornice (pixel)"
@@ -2758,7 +2766,7 @@ msgid "A frame around each photo, from 1 to 24 pixels. 0 means no frame. Not dra
 msgstr "Una cornice attorno a ogni foto, da 1 a 24 pixel. 0 significa nessuna cornice. Non disegnata in una presentazione."
 
 #: includes/class-gallery-look.php:211
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Shadow"
 msgstr "Ombra"
@@ -2770,7 +2778,7 @@ msgstr "Un'ombra sotto ogni foto. Non disegnata in una presentazione."
 #: includes/class-gallery-look.php:214
 #: includes/class-gallery-look.php:245
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "None"
 msgstr "Nessuna"
@@ -2782,19 +2790,19 @@ msgid "Soft"
 msgstr "Morbida"
 
 #: includes/class-gallery-look.php:229
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Square corners"
 msgstr "Angoli squadrati"
 
 #: includes/class-gallery-look.php:230
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Subtle (4 pixels)"
 msgstr "Leggeri (4 pixel)"
 
 #: includes/class-gallery-look.php:231
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Rounded (12 pixels)"
 msgstr "Arrotondati (12 pixel)"
@@ -2804,59 +2812,59 @@ msgid "Circle (square photos only)"
 msgstr "Cerchio (solo foto quadrate)"
 
 #: includes/class-gallery-look.php:243
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Zoom inside the frame"
 msgstr "Zoom all'interno della cornice"
 
 #: includes/class-gallery-look.php:244
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Grow above the neighbours"
 msgstr "Ingrandisci sopra le foto vicine"
 
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Circle"
 msgstr "Cerchio"
 
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #: build/gallery/index.js:4
 msgid "Circle (square photos only, not drawn now)"
 msgstr "Cerchio (solo foto quadrate, ora non disegnato)"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:4
 msgid "Gap between photos"
 msgstr "Spazio tra le foto"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "None (0 pixels)"
 msgstr "Nessuno (0 pixel)"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "Small (4 pixels)"
 msgstr "Piccolo (4 pixel)"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "Medium (12 pixels)"
 msgstr "Medio (12 pixel)"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "Large (24 pixels)"
 msgstr "Grande (24 pixel)"
 
 #: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #: build/gallery/index.js:4
 msgid "Custom"
 msgstr "Personalizzato"
 
-#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:8
 #: build/gallery/index.js:4
 msgid "Custom gap (pixels)"
 msgstr "Spazio personalizzato (pixel)"
@@ -2865,7 +2873,7 @@ msgstr "Spazio personalizzato (pixel)"
 msgid "From 1 to 24 pixels; 0 means no frame. Leave empty for the site default."
 msgstr "Da 1 a 24 pixel; 0 significa nessuna cornice. Lascia vuoto per l'impostazione predefinita del sito."
 
-#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:8
 #: build/gallery/index.js:4
 msgid "White when only a width is set."
 msgstr "Bianco quando è impostata solo una larghezza."
@@ -2874,7 +2882,7 @@ msgstr "Bianco quando è impostata solo una larghezza."
 msgid "Leave empty to use the gap between photos."
 msgstr "Lascia vuoto per usare lo spazio tra le foto."
 
-#: build/full-page-gallery/index.js:7
+#: build/full-page-gallery/index.js:8
 #: build/gallery/index.js:4
 msgid "Spacing and shape"
 msgstr "Spaziatura e forma"
@@ -2883,7 +2891,7 @@ msgstr "Spaziatura e forma"
 msgid "Photo strip. Scroll sideways for more photos."
 msgstr "Striscia di foto. Scorri lateralmente per altre foto."
 
-#: includes/class-full-page-renderer.php:168
+#: includes/class-full-page-renderer.php:169
 msgid "Made with Profotograaf"
 msgstr "Realizzato con Profotograaf"
 
@@ -2947,148 +2955,148 @@ msgstr "Editoriale"
 msgid "Playful"
 msgstr "Giocoso"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Large photos in a row"
 msgstr "Foto grandi in fila"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Hero photo"
 msgstr "Foto in evidenza"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "One large and two small photos"
 msgstr "Una foto grande e due piccole"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Rows"
 msgstr "Righe"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Number of photos"
 msgstr "Numero di foto"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Height (% of the screen height)"
 msgstr "Altezza (% rispetto all'altezza dello schermo)"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Row height (px)"
 msgstr "Altezza delle righe (px)"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Side of the large photo"
 msgstr "Lato della foto grande"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Swap sides on every second pair"
 msgstr "Inverti i lati ogni due coppie"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Title over the photo"
 msgstr "Titolo sopra la foto"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Alignment"
 msgstr "Allineamento"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Left"
 msgstr "Sinistra"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Center"
 msgstr "Centro"
 
-#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
 msgid "Right"
 msgstr "Destra"
 
 #. translators: %s: the default value of a setting, such as 3:2 or Editorial.
-#: build/full-page-gallery/index.js:5
+#: build/full-page-gallery/index.js:6
 #, js-format
 msgid "Default (%s)"
 msgstr "Predefinito (%s)"
 
 #. translators: 1: lowest allowed number, 2: highest allowed number.
-#: build/full-page-gallery/index.js:7
 #: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:9
 #, js-format
 msgid "From %1$d to %2$d."
 msgstr "Da %1$d a %2$d."
 
-#: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:9
 msgid "picked"
 msgstr "scelta"
 
 #: assets/admin/sync-actions.js:254
-#: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:9
 msgid "Close"
 msgstr "Chiudi"
 
-#: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:9
 msgid "Choose photo"
 msgstr "Scegli la foto"
 
-#: build/full-page-gallery/index.js:8
+#: build/full-page-gallery/index.js:9
 msgid "Clear"
 msgstr "Cancella"
 
 #. translators: 1: section type such as Hero photo, 2: its number in the gallery.
-#: build/full-page-gallery/index.js:9
+#: build/full-page-gallery/index.js:10
 #, js-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
 
 #. translators: 1: section type such as Hero photo, 2: its number in the gallery, 3: photo position in it.
-#: build/full-page-gallery/index.js:10
+#: build/full-page-gallery/index.js:11
 #, js-format
 msgid "%1$s %2$d, photo %3$d"
 msgstr "%1$s %2$d, foto %3$d"
 
-#: build/full-page-gallery/index.js:10
+#: build/full-page-gallery/index.js:11
 msgid "Pick the photos for the large slots. A photo shows once, in the slot it was last picked for."
 msgstr "Scegli le foto per gli spazi grandi. Una foto compare una sola volta, nello spazio per cui è stata scelta per ultima."
 
 #. translators: 1: position of the section in the list, 2: section type such as Grid.
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 #, js-format
 msgid "Section %1$d: %2$s"
 msgstr "Sezione %1$d: %2$s"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Type"
 msgstr "Tipo"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Move up"
 msgstr "Sposta su"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Move down"
 msgstr "Sposta giù"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Add a section. Without a section that shows photos, the gallery uses the default preset."
 msgstr "Aggiungi una sezione. Senza una sezione che mostra foto, la galleria usa la preimpostazione predefinita."
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Add a section"
 msgstr "Aggiungi una sezione"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Preset"
 msgstr "Preimpostazione"
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "The pattern of sections repeats until every photo is shown."
 msgstr "La sequenza di sezioni si ripete finché tutte le foto non sono mostrate."
 
 #: build/client-galleries/index.js:3
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "No gallery chosen yet."
 msgstr "Nessuna galleria ancora scelta."
 
-#: build/full-page-gallery/index.js:11
+#: build/full-page-gallery/index.js:12
 msgid "Full-page gallery"
 msgstr "Galleria a pagina intera"
 
@@ -3109,12 +3117,12 @@ msgid "Profotograaf could not be reached after several attempts. The file may ex
 msgstr "Non è stato possibile raggiungere Profotograaf dopo diversi tentativi. Il file potrebbe esistere su Profotograaf. Guarda nella galleria e scegli Carica di nuovo se la foto non c'è."
 
 #. translators: %d: a number of pixels.
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 #, js-format
 msgid "%d pixels"
 msgstr "%d pixel"
 
-#: build/full-page-gallery/index.js:6
+#: build/full-page-gallery/index.js:7
 msgid "Same as the gap between photos"
 msgstr "Uguale allo spazio tra le foto"
 
@@ -4320,3 +4328,9 @@ msgstr "Non resta nessuna differenza da risolvere."
 #: includes/modules/class-privacy.php:234
 msgid "Only when the site owner turns on the media source: editors who can upload files can browse the photos of the connected Profotograaf account in the block editor. The site asks profotograaf.nl for the photo list and fetches the photos an editor picks. The editor's browser loads the thumbnails from profotograaf.nl, which receives that editor's IP address and browser details. A photo an editor uses is stored in the Media Library of this site and stays there until it is deleted. To flag changes made on Profotograaf, the copy keeps a sync state, hashes of the file and text as they were written, and the id of the user who kept it or stopped watching it, with the time. No visitor data is involved."
 msgstr "Solo quando il proprietario del sito attiva la sorgente media: gli editor che possono caricare file possono sfogliare le foto dell'account Profotograaf collegato nell'editor a blocchi. Il sito chiede a profotograaf.nl l'elenco delle foto e recupera le foto scelte da un editor. Il browser dell'editor carica le miniature da profotograaf.nl, che riceve l'indirizzo IP e i dati del browser di quell'editor. Una foto usata da un editor viene salvata nella Libreria media di questo sito e vi resta finché non viene eliminata. Per segnalare le modifiche fatte su Profotograaf, la copia conserva uno stato di sincronizzazione, hash del file e del testo come sono stati scritti, e l'id dell'utente che l'ha mantenuta o non la controlla più, con l'orario. Non sono coinvolti dati dei visitatori."
+
+#. translators: %s: the layout the gallery has on Profotograaf, such as Calm or Custom.
+#: build/full-page-gallery/index.js:5
+#, js-format
+msgid "Use the gallery's own layout (%s)"
+msgstr "Usa il layout proprio della galleria (%s)"
