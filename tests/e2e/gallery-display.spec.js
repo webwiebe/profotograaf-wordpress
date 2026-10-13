@@ -105,6 +105,17 @@ test.describe( 'gallery display with the mock platform', () => {
 		await context.close();
 	} );
 
+	test( 'the container widths the plugin reserves space for are the ones embed.js reports', async ( { browser } ) => {
+		const { context, page, host } = await openEmbed( browser, urls.grid, { width: 1280, height: 900 } );
+		await expectPhotos( host, 10 );
+		// embed.js: tiny caption, compact slideshow, phone, tablet (professionals#2487).
+		const [ , , phone, tablet ] = ( await host.getAttribute( 'data-pf-breakpoints' ) ).split( ',' ).map( Number );
+		const css = await page.evaluate( () => [ ...document.querySelectorAll( 'style' ) ].map( ( style ) => style.textContent ).join( '' ) );
+		expect( css ).toContain( `@container(max-width:${ tablet }px)` );
+		expect( css ).toContain( `@container(max-width:${ phone }px)` );
+		await context.close();
+	} );
+
 	test( 'a 4 column masonry gallery with no phone value draws 1 column at 390 px', async ( { browser } ) => {
 		const { context, host } = await openEmbed( browser, urls.masonryFour, { width: 390, height: 900 } );
 		await expectPhotos( host, 10 );
@@ -112,8 +123,7 @@ test.describe( 'gallery display with the mock platform', () => {
 		await context.close();
 	} );
 
-	// embed.js draws 2 columns here: the tablet step-down outranks data-columns-mobile on a grid (wiebe-xyz/professionals#2485).
-	test.fixme( 'an explicit phone value wins over the step down', async ( { browser } ) => {
+	test( 'an explicit phone value wins over the step down', async ( { browser } ) => {
 		const { context, host } = await openEmbed( browser, urls.phoneThree, { width: 390, height: 900 } );
 		await expectPhotos( host, 10 );
 		await expect.poll( () => columnsOf( host ) ).toBe( 3 );

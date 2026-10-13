@@ -51,8 +51,7 @@ test.describe( 'accessibility with the real script', () => {
 				await context.close();
 			} );
 
-			// The lightbox counter fails color-contrast in embed.js (wiebe-xyz/professionals#2486).
-			test.fixme( `${ layout } at ${ width }px has no axe violations with the lightbox open`, async ( { browser } ) => {
+			test( `${ layout } at ${ width }px has no axe violations with the lightbox open`, async ( { browser } ) => {
 				const { context, page, host } = await openEmbed( browser, urls[ layout ], { width, height: 900 } );
 				await expectTiles( host, PER_PAGE );
 				await host.locator( '.photos .tile' ).first().click();
