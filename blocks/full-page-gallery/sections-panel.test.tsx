@@ -2,18 +2,20 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { SectionsPanel } from './sections-panel';
 import { blockAttributes } from '../test-support/full-page';
-import type { FullPageAttributes } from './types';
+import type { FullPageAttributes, SectionsAnswer } from './types';
 
 vi.mock( '@wordpress/components', async () => import( '../test-support/wp-mocks' ) );
 vi.mock( '@wordpress/block-editor', async () => import( '../test-support/wp-mocks' ) );
 
 afterEach( cleanup );
 
-function panel( attributes: FullPageAttributes ) {
+function panel( attributes: FullPageAttributes, answer: SectionsAnswer | null = null ) {
 	const setAttributes = vi.fn();
-	render( <SectionsPanel attributes={ attributes } setAttributes={ setAttributes } answer={ null } photos={ null } /> );
+	render( <SectionsPanel attributes={ attributes } setAttributes={ setAttributes } answer={ answer } photos={ null } /> );
 	return setAttributes;
 }
+
+const presetValues = () => Array.from( screen.getByLabelText< HTMLSelectElement >( 'Preset' ).options ).map( ( o ) => o.value );
 
 describe( 'SectionsPanel preset', () => {
 	it( 'offers the default, the presets of sections.json and Custom', () => {
@@ -27,6 +29,22 @@ describe( 'SectionsPanel preset', () => {
 			[ 'custom', 'Custom' ],
 		] );
 		expect( screen.queryByText( 'Add a section' ) ).toBeNull();
+	} );
+
+	it( "offers the gallery's own layout only when the platform sends a preset", () => {
+		panel( blockAttributes(), { preset: 'editorial', galleryPreset: '', sections: [] } );
+		expect( presetValues() ).not.toContain( 'gallery' );
+		cleanup();
+
+		panel( blockAttributes(), { preset: 'editorial', galleryPreset: 'calm', sections: [] } );
+		const own = Array.from( screen.getByLabelText< HTMLSelectElement >( 'Preset' ).options ).find( ( o ) => o.value === 'gallery' );
+		expect( own?.text ).toBe( "Use the gallery's own layout (Calm)" );
+	} );
+
+	it( "stores the gallery's own layout", () => {
+		const setAttributes = panel( blockAttributes(), { preset: 'editorial', galleryPreset: 'custom', sections: [] } );
+		fireEvent.change( screen.getByLabelText( 'Preset' ), { target: { value: 'gallery' } } );
+		expect( setAttributes ).toHaveBeenCalledWith( { preset: 'gallery' } );
 	} );
 
 	it( 'stores a preset', () => {

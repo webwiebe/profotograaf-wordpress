@@ -44,6 +44,7 @@ export function previewSection( section: Omit< PreviewSection, 'photos' >, first
 export function editorialAnswer(): SectionsAnswer {
 	return {
 		preset: 'editorial',
+		galleryPreset: '',
 		sections: [
 			previewSection( { type: 'hero', height: 85, captions: 'off', title: 'Our day', slots: [ '0.0.0' ] }, 1 ),
 			previewSection( { type: 'text', heading: 'Ceremony', text: 'In the garden', align: 'left', slots: [] }, 0 ),

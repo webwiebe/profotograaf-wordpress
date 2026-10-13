@@ -11,7 +11,10 @@ shows them without JavaScript.
 1. Add the "Full-page gallery" block and choose a gallery.
 2. Choose a preset: Calm, Editorial or Playful. Each repeats its sequence of
    sections until every photo is shown. Custom lets you set the sections
-   yourself.
+   yourself. When the gallery has its own layout on Profotograaf, "Use the
+   gallery's own layout" appears as well and uses that preset and its picks.
+   Without that layout the choice is not offered, and a block that stored it
+   uses the default preset.
 3. Click a spot in a hero, feature or pair section to pick the photo for it.
    Clear the spot to let the sequence fill it again.
 4. In the page settings, under Template, choose "Profotograaf full page" to
@@ -98,13 +101,20 @@ side.
 The sequencer is `Section_Sequencer` (PHP). The editor previews it through
 `GET /wp-json/profotograaf/v1/galleries/{id}/sections` (`Sections_Rest`),
 which takes `preset`, `sections` and `picks` (JSON lists) and `exclude`
-(comma separated) and answers `{ preset, sections }`, every section with its
+(comma separated) and answers `{ preset, galleryPreset, sections }` (`galleryPreset` is the preset the
+gallery has on Profotograaf, empty when the payload carries none), every section with its
 fields, `slots` and `photos` (`id`, `thumb`, `width`, `height`, `alt`). A
 photo of the tail has the slot `''`.
 
 Picks in a preset are keyed by slot, `<cycle>.<section index>.<position>`
 (`0.0.0` is the first photo of the first section of the first cycle). In
 `custom`, each section keeps its own `photoIds`.
+
+The preset value `gallery` reads the `sections` object of the embed payload
+(`Gallery_Layout`): `preset`, `picks` (`slot`, `photo_id`) and, for `custom`,
+the `custom` sequence. Block picks win over the picks of the payload. For a
+custom layout the picks of the first cycle become the `photoIds` of its
+sections. A payload without a known preset gives the default preset.
 
 ## Markup contract
 

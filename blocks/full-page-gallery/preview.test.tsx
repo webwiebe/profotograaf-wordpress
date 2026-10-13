@@ -19,7 +19,7 @@ describe( 'SectionsPreview', () => {
 	} );
 
 	it( 'says so when the gallery has nothing to show', () => {
-		render( <SectionsPreview state={ { answer: { preset: 'editorial', sections: [] }, error: null } } /> );
+		render( <SectionsPreview state={ { answer: { preset: 'editorial', galleryPreset: '', sections: [] }, error: null } } /> );
 		expect( screen.getByRole( 'alert' ).textContent ).toContain( 'no photos that can be shown' );
 	} );
 
@@ -40,7 +40,7 @@ describe( 'SectionsPreview', () => {
 		const strip = previewSection( { type: 'filmstrip', count: 2, rowHeight: 240, gap: 4, slots: [ '', '' ] } );
 		const hero = { ...previewSection( { type: 'hero', slots: [ '0.0.0' ] } ), photos: [ previewPhoto( 'p-9', { width: 0, height: 0, thumb: '' } ) ] };
 		const masonry = { ...previewSection( { type: 'masonry', slots: [ '' ] } ), photos: [ previewPhoto( 'p-8', { width: 1000, height: 2000 } ) ] };
-		const { container } = render( <SectionsPreview state={ { answer: { preset: 'custom', sections: [ strip, hero, masonry ] }, error: null } } /> );
+		const { container } = render( <SectionsPreview state={ { answer: { preset: 'custom', galleryPreset: '', sections: [ strip, hero, masonry ] }, error: null } } /> );
 		expect( container.querySelectorAll( '.pf-fp-filmstrip > .pf-fp-track > figure' ) ).toHaveLength( 2 );
 		expect( container.querySelector( '.pf-fp-hero img' ) ).toBeNull();
 		expect( container.querySelector( '.pf-fp-hero figure' )?.getAttribute( 'style' ) ).toContain( '--pf-ar: 1.5' );

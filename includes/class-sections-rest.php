@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * - `picks`: the preset picks, as a JSON list of `{ slot, photoId }`.
  * - `exclude`: photo ids separated by commas.
  *
- * The answer is `{ preset, sections }`. Each section has its fields, `slots`
+ * The answer is `{ preset, galleryPreset, sections }`. `galleryPreset` is the preset the gallery has on Profotograaf, empty when the payload carries none, and the preset value `gallery` uses it. Each section has its fields, `slots`
  * and `photos`, every photo cut down to what the preview draws: `id`, `thumb`
  * (the URL of the smallest image), `width`, `height` and `alt`.
  */
@@ -83,7 +83,7 @@ class Sections_Rest {
 	 * GET /galleries/{id}/sections.
 	 *
 	 * @param \WP_REST_Request $request Request.
-	 * @return array{preset:string,sections:array<int,array<string,mixed>>}|\WP_Error|\WP_REST_Response
+	 * @return array{preset:string,galleryPreset:string,sections:array<int,array<string,mixed>>}|\WP_Error|\WP_REST_Response
 	 */
 	public function sections( $request ) {
 		$id = (string) $request->get_param( 'id' );
@@ -97,16 +97,23 @@ class Sections_Rest {
 		if ( $result['status'] >= 400 ) {
 			return Rest_Errors::from( Api_Errors::http( $result ) );
 		}
-		$photos   = is_array( $result['body']['photos'] ?? null ) ? array_values( array_filter( $result['body']['photos'], 'is_array' ) ) : array();
-		$preset   = Sections_Schema::preset_id( $request->get_param( 'preset' ) );
-		$sections = Section_Sequencer::sequence(
+		$body           = (array) $result['body'];
+		$photos         = is_array( $body['photos'] ?? null ) ? array_values( array_filter( $body['photos'], 'is_array' ) ) : array();
+		$layout         = Gallery_Layout::resolve( $body, $request->get_param( 'preset' ), self::json_list( $request->get_param( 'sections' ) ), self::json_list( $request->get_param( 'picks' ) ) );
+		$preset         = $layout['preset'];
+		$gallery_preset = Gallery_Layout::preset_of( $body );
+		$sections       = Section_Sequencer::sequence(
 			array_map( array( self::class, 'preview_photo' ), $photos ),
 			$preset,
-			self::json_list( $request->get_param( 'sections' ) ),
-			self::json_list( $request->get_param( 'picks' ) ),
+			$layout['custom'],
+			$layout['picks'],
 			self::id_list( $request->get_param( 'exclude' ) )
 		);
-		return compact( 'preset', 'sections' );
+		return array(
+			'preset'        => $preset,
+			'galleryPreset' => $gallery_preset,
+			'sections'      => $sections,
+		);
 	}
 
 	/**

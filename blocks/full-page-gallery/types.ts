@@ -40,5 +40,7 @@ export type PreviewSection = Section & {
 /** The answer of GET /profotograaf/v1/galleries/{id}/sections. */
 export interface SectionsAnswer {
 	preset: string;
+	/** The preset the gallery has on Profotograaf; empty when the platform sends none. */
+	galleryPreset: string;
 	sections: PreviewSection[];
 }

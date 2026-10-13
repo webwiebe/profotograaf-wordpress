@@ -115,7 +115,7 @@ export function SectionsPanel( { attributes, setAttributes, answer, photos }: Pa
 					label={ __( 'Preset', 'profotograaf' ) }
 					help={ __( 'The pattern of sections repeats until every photo is shown.', 'profotograaf' ) }
 					value={ attributes.preset }
-					options={ presetOptions() }
+					options={ presetOptions( answer?.galleryPreset ) }
 					onChange={ choosePreset }
 					__nextHasNoMarginBottom
 				/>

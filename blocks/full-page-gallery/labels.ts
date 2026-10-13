@@ -17,12 +17,25 @@ function presetLabel( preset: string ): string {
 
 /**
  * The preset choices: the default (stored as ''), every preset of
- * includes/sections.json and Custom.
+ * includes/sections.json, Custom and, when the platform sends a layout for
+ * the gallery (`galleryPreset`), that layout (stored as 'gallery', #216).
  */
-export function presetOptions(): Array< { label: string; value: string } > {
+export function presetOptions( galleryPreset = '' ): Array< { label: string; value: string } > {
 	return [
 		{ label: defaultLabel( presetLabel( DEFAULT_PRESET ) ), value: '' },
 		...[ ...PRESETS, 'custom' ].map( ( value ) => ( { label: presetLabel( value ), value } ) ),
+		...( galleryPreset
+			? [
+					{
+						label: sprintf(
+							/* translators: %s: the layout the gallery has on Profotograaf, such as Calm or Custom. */
+							__( "Use the gallery's own layout (%s)", 'profotograaf' ),
+							presetLabel( galleryPreset )
+						),
+						value: 'gallery',
+					},
+			  ]
+			: [] ),
 	];
 }
 
