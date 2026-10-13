@@ -23,11 +23,15 @@ jobs:
       - run: bin/check-version.sh "${GITHUB_REF_NAME}"
       - run: pnpm build
       - run: bin/build-release.sh --zip
+      - run: bin/check-release-zip.sh
+      # Two names for one file: profotograaf.zip serves
+      # releases/latest/download/profotograaf.zip, profotograaf-<version>.zip
+      # names its version.
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" dist/profotograaf.zip \
+          gh release create "${GITHUB_REF_NAME}" dist/profotograaf.zip "dist/profotograaf-${GITHUB_REF_NAME#v}.zip" \
             --title "${GITHUB_REF_NAME}" --generate-notes
       - name: Deploy to wordpress.org
         if: env.SVN_USERNAME != '' && env.SVN_PASSWORD != ''
@@ -39,3 +43,16 @@ jobs:
           BUILD_DIR: dist/profotograaf
           ASSETS_DIR: assets/wporg
           VERSION: ${{ github.ref_name }}
+
+  # The release marker (#251). It runs after the release and does nothing
+  # without the BugBarn variable and secret.
+  bugbarn-marker:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Post the release marker to BugBarn
+        env:
+          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
+          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
+        run: bin/bugbarn-report.sh release "${GITHUB_REF_NAME}"

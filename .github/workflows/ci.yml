@@ -155,6 +155,19 @@ jobs:
       - if: always()
         run: docker compose -f tests/e2e/docker-compose.yml down -v
 
+  zip-install:
+    name: Release zip (structure, install on a clean WordPress)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm build
+      - run: bin/build-release.sh --zip
+      # One folder, the built blocks, no development files, under 5 MB.
+      - run: bin/check-release-zip.sh
+      # `wp plugin install` of the versioned zip and activation, as a site owner does it.
+      - run: tests/e2e/zip-install.sh
+
   e2e:
     name: E2E (WordPress ${{ matrix.wp }})
     runs-on: ubuntu-latest
@@ -190,6 +203,20 @@ jobs:
           path: |
             playwright-report
             test-results
+      # BugBarn (#251): a failed run and the PHP errors of the test site. Both
+      # steps do nothing without the BugBarn variable and secret, as on forks.
+      - name: Report the failed run to BugBarn
+        if: failure()
+        env:
+          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
+          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
+        run: bin/bugbarn-report.sh event "E2E failed on WordPress ${{ matrix.wp }}"
+      - name: Report PHP errors of the test site to BugBarn
+        if: always()
+        env:
+          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
+          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
+        run: docker compose -f tests/e2e/docker-compose.yml exec -T wordpress sh -c 'cat /var/www/html/wp-content/debug.log 2>/dev/null || true' | bin/bugbarn-report.sh debug-log
       - if: always()
         run: docker compose -f tests/e2e/docker-compose.yml down -v
 
