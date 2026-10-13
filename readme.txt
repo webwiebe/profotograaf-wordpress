@@ -149,7 +149,7 @@ The plugin ships in English, Dutch, German, French, Spanish and Italian. The Ger
 
 == Installation ==
 
-1. Install the plugin from the Plugins screen, or upload the zip.
+1. Download the zip from the releases page at https://github.com/webwiebe/profotograaf-wordpress/releases and upload it under Plugins, Add New Plugin, Upload Plugin.
 2. Activate it.
 3. Open Settings > Profotograaf and click "Connect to Profotograaf".
 4. Confirm the code on the Profotograaf page that opens.
@@ -272,6 +272,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* Fix: the Dutch translation calls the Masonry layout "masonry" instead of "metselwerk", and the installation steps describe the zip upload, since the plugin is not in the plugin directory yet.
 * New: the FAQ and the README say what Copy to Profotograaf does and that it is a copy that does not follow later edits or deletions, and what the Find your gallery button opens for clients.
 * New: a copy changed in both places has a Resolve conflict dialog with the two images side by side, the text fields compared, and Keep mine, Use Profotograaf's version and Keep both. Update text takes chosen title, caption and alt text fields only.
 * New: copies that need attention show in a Profotograaf column and a Needs attention filter in the Media Library, a dismissible notice, a section on the Import screen with a bulk Remove for copies removed on Profotograaf, and Site Health.
