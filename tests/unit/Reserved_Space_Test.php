@@ -146,6 +146,19 @@ class Reserved_Space_Test extends TestCase {
 		$this->assertStringContainsString( '@media(max-width:600px){[data-profotograaf-gallery]{aspect-ratio:var(--pf-ar-m)}}', $rule );
 	}
 
+	public function test_the_rule_follows_the_container_width_like_embed_js(): void {
+		$rule = Reserved_Space::rule();
+
+		$this->assertSame( 900, Reserved_Space::TABLET_WIDTH );
+		$this->assertSame( 600, Reserved_Space::PHONE_WIDTH );
+		$this->assertStringContainsString( '@supports(container-type:inline-size){', $rule );
+		$this->assertStringContainsString( '[data-profotograaf-gallery]{aspect-ratio:auto;animation:none;container-type:inline-size}', $rule );
+		$this->assertStringContainsString( '@container(max-width:900px){[data-profotograaf-gallery]::before{aspect-ratio:var(--pf-ar-t)}}', $rule );
+		$this->assertStringContainsString( '@container(max-width:600px){[data-profotograaf-gallery]::before{aspect-ratio:var(--pf-ar-m)}}', $rule );
+		$this->assertStringContainsString( '[data-profotograaf-gallery][data-pf-state=drawn]{container-type:normal}', $rule );
+		$this->assertStringContainsString( '[data-profotograaf-gallery][data-pf-state=drawn]::before', $rule );
+	}
+
 	public function test_the_reservation_does_not_end_on_the_ready_attribute(): void {
 		$this->assertStringNotContainsString( 'data-pf-ready', Reserved_Space::rule() );
 	}
@@ -155,6 +168,6 @@ class Reserved_Space_Test extends TestCase {
 
 		$this->assertStringContainsString( 'animation:pf-release 1ms ' . Reserved_Space::RELEASE_AFTER . 's forwards', $rule );
 		$this->assertStringContainsString( '@keyframes pf-release{to{aspect-ratio:auto}}', $rule );
-		$this->assertStringContainsString( '<noscript><style>[data-profotograaf-gallery]{aspect-ratio:auto!important}</style></noscript>', $rule );
+		$this->assertStringContainsString( '<noscript><style>[data-profotograaf-gallery]{aspect-ratio:auto!important}[data-profotograaf-gallery]::before{display:none!important}</style></noscript>', $rule );
 	}
 }

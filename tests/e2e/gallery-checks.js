@@ -42,7 +42,8 @@ async function expectPhotos( host, min = 1 ) {
  */
 async function checkLightbox( page, host ) {
 	const tile = host.locator( '.tile' ).first();
-	const total = await host.evaluate( ( el ) => el.shadowRoot?.querySelectorAll( '.photos .tile, .dots .dot' ).length ?? 0 );
+	const tiles = await host.evaluate( ( el ) => el.shadowRoot?.querySelectorAll( '.photos .tile' ).length ?? 0 );
+	const total = tiles || ( await currentSlide( host ) ).total;
 	await tile.click();
 	const box = host.locator( '.lb' );
 	await expect( box ).toBeVisible();
@@ -72,16 +73,26 @@ async function checkLightbox( page, host ) {
 }
 
 /**
- * The index of the current slide, from the dot marked current.
+ * The current slide and the slide count. A gallery of up to twelve photos draws
+ * one dot per photo, a larger one a "3 / 20" counter.
  *
  * @param {import('@playwright/test').Locator} host
+ * @return {Promise<{index:number,total:number}>}
  */
 function currentSlide( host ) {
-	return host.evaluate( ( el ) => [ ...( el.shadowRoot?.querySelectorAll( '.dot' ) ?? [] ) ].findIndex( ( dot ) => dot.getAttribute( 'aria-current' ) === 'true' ) );
+	return host.evaluate( ( el ) => {
+		const root = el.shadowRoot;
+		const dots = [ ...( root?.querySelectorAll( '.dot' ) ?? [] ) ];
+		if ( dots.length ) {
+			return { index: dots.findIndex( ( dot ) => dot.getAttribute( 'aria-current' ) === 'true' ), total: dots.length };
+		}
+		const [ n, total ] = ( root?.querySelector( '.count' )?.textContent ?? '' ).split( '/' ).map( ( part ) => parseInt( part, 10 ) );
+		return { index: n - 1, total };
+	} );
 }
 
 /**
- * Steps a slideshow with its buttons, its dots and the arrow keys.
+ * Steps a slideshow with its buttons and the arrow keys.
  *
  * @param {import('@playwright/test').Page}    page
  * @param {import('@playwright/test').Locator} host
@@ -89,25 +100,25 @@ function currentSlide( host ) {
 async function checkSlideshow( page, host ) {
 	await expect( host.locator( '.slides' ) ).toHaveAttribute( 'aria-roledescription', 'carousel' );
 	await expect( host.locator( '.stage .tile' ) ).toHaveCount( 1 );
-	const dots = await host.locator( '.dot' ).count();
-	expect( dots, 'one dot per photo' ).toBeGreaterThan( 1 );
-	expect( await currentSlide( host ) ).toBe( 0 );
+	const { total } = await currentSlide( host );
+	expect( total, 'one slide per photo' ).toBeGreaterThan( 1 );
+	expect( ( await currentSlide( host ) ).index ).toBe( 0 );
 
 	await host.locator( 'button.next' ).click();
-	expect( await currentSlide( host ) ).toBe( 1 );
+	expect( ( await currentSlide( host ) ).index ).toBe( 1 );
 	await host.locator( 'button.prev' ).click();
-	expect( await currentSlide( host ) ).toBe( 0 );
+	expect( ( await currentSlide( host ) ).index ).toBe( 0 );
 	await host.locator( 'button.prev' ).click();
-	expect( await currentSlide( host ), 'prev on the first slide wraps to the last' ).toBe( dots - 1 );
-	await host.locator( '.dot' ).nth( 1 ).click();
-	expect( await currentSlide( host ) ).toBe( 1 );
+	expect( ( await currentSlide( host ) ).index, 'prev on the first slide wraps to the last' ).toBe( total - 1 );
+	await host.locator( 'button.next' ).click();
+	expect( ( await currentSlide( host ) ).index ).toBe( 0 );
 
 	await host.locator( 'button.next' ).focus();
 	await page.keyboard.press( 'ArrowRight' );
-	expect( await currentSlide( host ) ).toBe( 2 % dots );
+	expect( ( await currentSlide( host ) ).index ).toBe( 1 );
 	await page.keyboard.press( 'ArrowLeft' );
-	expect( await currentSlide( host ) ).toBe( 1 );
-	await expect.poll( () => host.locator( '.stage img' ).evaluate( ( img ) => /** @type {HTMLImageElement} */ ( img ).naturalWidth ) ).toBeGreaterThan( 0 );
+	expect( ( await currentSlide( host ) ).index ).toBe( 0 );
+	await expect.poll( () => host.locator( '.stage .tile img' ).evaluate( ( img ) => /** @type {HTMLImageElement} */ ( img ).naturalWidth ) ).toBeGreaterThan( 0 );
 }
 
 /**

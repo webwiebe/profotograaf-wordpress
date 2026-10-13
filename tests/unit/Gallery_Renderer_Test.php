@@ -889,7 +889,8 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 		$rule = Reserved_Space::rule();
 
 		$this->assertStringContainsString( '[data-pf-state=error]{aspect-ratio:auto!important;animation:none}', $rule );
-		$this->assertStringNotContainsString( 'data-pf-state=drawn', $rule );
+		// A drawn gallery hands the height to its content: the held ratio and the container go.
+		$this->assertStringContainsString( '[data-profotograaf-gallery][data-pf-state=drawn]::before', $rule );
 		// The timer stays for an embed.js that sets no state.
 		$this->assertStringContainsString( 'animation:pf-release 1ms ' . Reserved_Space::RELEASE_AFTER . 's forwards', $rule );
 	}

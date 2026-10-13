@@ -40,7 +40,9 @@ defined( 'ABSPATH' ) || exit;
  *   the drawn gallery taller than the estimate.
  *
  * Each breakpoint gets its own custom property on the host (--pf-ar,
- * --pf-ar-t, --pf-ar-m) and rule() picks one with a media query.
+ * --pf-ar-t, --pf-ar-m) and rule() picks one with a container query on the
+ * host, the same widths embed.js uses for its own container. Browsers without
+ * container queries pick by viewport width.
  *
  * The host sets no minimum height. The automatic minimum size of a box with an
  * aspect ratio is its content, so a gallery taller than the estimate (or one
@@ -57,7 +59,8 @@ defined( 'ABSPATH' ) || exit;
  * and the noscript rule releases it at once without JavaScript.
  *
  * An embed.js that reports its outcome sets data-pf-state on the host:
- * `empty` and `error` release the box at once, `drawn` keeps it. An older
+ * `empty` and `error` release the box at once. `drawn` ends the held ratio in
+ * the frame that shows the tiles, so the content sets the height. An older
  * embed.js sets no state and keeps the release animation.
  *
  * A gallery without photos the embed can show carries `data-pf-empty`
@@ -83,6 +86,19 @@ final class Reserved_Space {
 	 * Seconds after which an undrawn gallery gives its space back.
 	 */
 	public const RELEASE_AFTER = 8;
+
+	/**
+	 * Container widths, in pixels, at and below which embed.js uses its tablet
+	 * and phone column counts (`@container (max-width:900px)` and `600px` in
+	 * web/src/public/embed/_lib/css.ts of wiebe-xyz/professionals). Pinned here
+	 * until the platform exposes them: https://github.com/wiebe-xyz/professionals/issues/2487
+	 */
+	public const TABLET_WIDTH = 900;
+
+	/**
+	 * See TABLET_WIDTH.
+	 */
+	public const PHONE_WIDTH = 600;
 
 	/**
 	 * Tile shape of a masonry gallery whose photos keep their own shape.
@@ -188,9 +204,23 @@ final class Reserved_Space {
 		$host = '[data-profotograaf-gallery]';
 		return '<style>'
 			. $host . '{aspect-ratio:var(--pf-ar);animation:pf-release 1ms ' . self::RELEASE_AFTER . 's forwards}'
-			. '@media(max-width:900px){' . $host . '{aspect-ratio:var(--pf-ar-t)}}'
-			. '@media(max-width:600px){' . $host . '{aspect-ratio:var(--pf-ar-m)}}'
+			. '@media(max-width:' . self::TABLET_WIDTH . 'px){' . $host . '{aspect-ratio:var(--pf-ar-t)}}'
+			. '@media(max-width:' . self::PHONE_WIDTH . 'px){' . $host . '{aspect-ratio:var(--pf-ar-m)}}'
 			. '@keyframes pf-release{to{aspect-ratio:auto}}'
+			// embed.js picks its columns by the width of its own container, so the
+			// reservation follows the same widths: the host is a container and its
+			// ::before holds the ratio. The viewport rules above stay for browsers
+			// without container queries. The host stops being a container once
+			// drawn, because a container is the containing block of the fixed
+			// lightbox.
+			. '@supports(container-type:inline-size){'
+			. $host . '{aspect-ratio:auto;animation:none;container-type:inline-size}'
+			. $host . '::before{content:"";display:block;aspect-ratio:var(--pf-ar);animation:pf-release 1ms ' . self::RELEASE_AFTER . 's forwards}'
+			. '@container(max-width:' . self::TABLET_WIDTH . 'px){' . $host . '::before{aspect-ratio:var(--pf-ar-t)}}'
+			. '@container(max-width:' . self::PHONE_WIDTH . 'px){' . $host . '::before{aspect-ratio:var(--pf-ar-m)}}'
+			. $host . '[data-pf-state=drawn]{container-type:normal}'
+			. $host . '[data-pf-state=drawn]::before,' . $host . '[data-pf-state=empty]::before,' . $host . '[data-pf-state=error]::before{display:none}'
+			. '}'
 			. '[data-pf-empty],[data-pf-state=empty]{display:block;aspect-ratio:auto!important;animation:none}'
 			. '[data-pf-state=error]{aspect-ratio:auto!important;animation:none}'
 			. '[data-pf-empty],[data-pf-state=empty],[data-profotograaf-failed],[data-pf-state=error]{overflow:visible;text-indent:0;text-align:start}'
@@ -199,7 +229,7 @@ final class Reserved_Space {
 			// A grown tile draws a few pixels past the host's edge (#198).
 			. $host . '[data-hover=grow]{overflow:visible}'
 			. '</style>'
-			. '<noscript><style>' . $host . '{aspect-ratio:auto!important}</style></noscript>';
+			. '<noscript><style>' . $host . '{aspect-ratio:auto!important}' . $host . '::before{display:none!important}</style></noscript>';
 	}
 
 	/**
