@@ -8,6 +8,15 @@ const { login, mock } = require( './helpers' );
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 
 /**
+ * The aspect ratio the plugin reserves for an undrawn gallery. It sits on the
+ * host's ::before, so the host can be a container for the same widths embed.js
+ * uses (Reserved_Space).
+ *
+ * @param {import('@playwright/test').Locator} host
+ */
+const reservedRatio = ( host ) => host.evaluate( ( el ) => getComputedStyle( el, '::before' ).aspectRatio );
+
+/**
  * Runs wp-cli in the WordPress stack started by up.sh.
  *
  * @param {string[]} args
@@ -279,7 +288,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await expect( waitingPage.locator( 'link[rel="preconnect"]:not([crossorigin])' ) ).toHaveCount( 1 );
 		await expect( waitingPage.locator( 'link[rel="preconnect"][crossorigin]' ) ).toHaveCount( 1 );
 		const held = waitingPage.locator( shaped );
-		await expect( held ).not.toHaveCSS( 'aspect-ratio', 'auto' );
+		expect( await reservedRatio( held ), 'the host holds a ratio' ).not.toBe( 'auto' );
 		const box = await held.boundingBox();
 		expect( box.height ).toBeGreaterThan( 100 );
 		await waiting.close();
@@ -288,7 +297,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		const visitor = await browser.newContext( { javaScriptEnabled: false } );
 		const page = await visitor.newPage();
 		await page.goto( url );
-		await expect( page.locator( shaped ) ).toHaveCSS( 'aspect-ratio', 'auto' );
+		expect( await page.locator( shaped ).evaluate( ( el ) => getComputedStyle( el, '::before' ).display ) ).toBe( 'none' );
 		await visitor.close();
 	} );
 
@@ -310,7 +319,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 			root.append( tall );
 		} );
 
-		await expect( host ).not.toHaveCSS( 'aspect-ratio', 'auto' );
+		expect( await reservedRatio( host ), 'the host holds a ratio' ).not.toBe( 'auto' );
 		const sizes = await host.evaluate( ( el ) => ( {
 			box: el.getBoundingClientRect().height,
 			content: el.shadowRoot.firstElementChild.getBoundingClientRect().height,
