@@ -376,7 +376,7 @@ msgstr "Raster"
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
 msgid "Masonry"
-msgstr "Metselwerk"
+msgstr "Masonry"
 
 #: includes/class-settings-schema.php:135
 #: build/gallery/index.js:1
@@ -574,7 +574,7 @@ msgstr "Profotograaf-galerij"
 #: blocks/gallery/block.json
 msgctxt "block description"
 msgid "Show one of your Profotograaf galleries as a grid, masonry or slideshow."
-msgstr "Toon een van je Profotograaf-galerijen als raster, metselwerk of diavoorstelling."
+msgstr "Toon een van je Profotograaf-galerijen als raster, masonry of diavoorstelling."
 
 #: blocks/full-page-gallery/block.json
 #: blocks/gallery/block.json
@@ -1599,15 +1599,15 @@ msgstr "Een blik op mijn werk"
 
 #: patterns/masonry-showcase.php:13
 msgid "Masonry showcase"
-msgstr "Metselwerk-showcase"
+msgstr "Masonry-showcase"
 
 #: patterns/masonry-showcase.php:14
 msgid "A wide gallery in masonry layout that keeps every photo as shot."
-msgstr "Een brede galerij in metselwerkindeling die elke foto laat zoals hij is gemaakt."
+msgstr "Een brede galerij in masonry-indeling die elke foto laat zoals hij is gemaakt."
 
 #: patterns/masonry-showcase.php:15
 msgid "masonry"
-msgstr "metselwerk"
+msgstr "masonry"
 
 #: patterns/masonry-showcase.php:15
 msgid "showcase"
@@ -1664,17 +1664,17 @@ msgstr "raster"
 #: blocks/gallery/block.json
 msgctxt "block variation title"
 msgid "Profotograaf masonry gallery"
-msgstr "Profotograaf-metselwerkgalerij"
+msgstr "Profotograaf-masonrygalerij"
 
 #: blocks/gallery/block.json
 msgctxt "block variation description"
 msgid "Show a Profotograaf gallery in masonry layout, each photo at its own height."
-msgstr "Toon een Profotograaf-galerij in metselwerkindeling, met elke foto op zijn eigen hoogte."
+msgstr "Toon een Profotograaf-galerij in masonry-indeling, met elke foto op zijn eigen hoogte."
 
 #: blocks/gallery/block.json
 msgctxt "block variation keyword"
 msgid "masonry"
-msgstr "metselwerk"
+msgstr "masonry"
 
 #: blocks/gallery/block.json
 msgctxt "block variation title"
@@ -2164,16 +2164,16 @@ msgstr "Origineel (nog niet in een raster getekend)"
 
 #: includes/class-settings-schema.php:268
 msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
-msgstr "Snijd elke foto in een raster of diavoorstelling bij tot één beeldverhouding, of houd elke foto zoals hij is gemaakt. Metselwerk houdt altijd de eigen vorm van elke foto."
+msgstr "Snijd elke foto in een raster of diavoorstelling bij tot één beeldverhouding, of houd elke foto zoals hij is gemaakt. Masonry houdt altijd de eigen vorm van elke foto."
 
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Masonry keeps each photo's own shape."
-msgstr "Metselwerk houdt de eigen vorm van elke foto."
+msgstr "Masonry houdt de eigen vorm van elke foto."
 
 #: includes/class-settings-schema.php:130
 msgid "Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow."
-msgstr "Gebruikt als een galerijblok of shortcode geen indeling kiest. Profotograaf-standaard toont elke galerij in de dichtstbijzijnde indeling die je site kan tekenen: raster, metselwerk of diavoorstelling."
+msgstr "Gebruikt als een galerijblok of shortcode geen indeling kiest. Profotograaf-standaard toont elke galerij in de dichtstbijzijnde indeling die je site kan tekenen: raster, masonry of diavoorstelling."
 
 #: build/gallery/index.js:3
 msgid "Justified"

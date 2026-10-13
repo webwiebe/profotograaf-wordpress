@@ -2,9 +2,9 @@
 
 Show your [Profotograaf](https://profotograaf.nl) galleries on your own WordPress site, give clients a way in, and send form enquiries to your Profotograaf inbox.
 
-The plugin is GPL-2.0-or-later and is published in the WordPress plugin directory. This repository holds its code. The platform side lives elsewhere.
+The plugin is GPL-2.0-or-later and is not in the WordPress plugin directory yet (tracked in [#4](https://github.com/webwiebe/profotograaf-wordpress/issues/4)). This repository holds its code. The platform side lives elsewhere.
 
-- Install from the plugin directory, or download the zip from the [releases](https://github.com/webwiebe/profotograaf-wordpress/releases).
+- Download the zip from the [releases](https://github.com/webwiebe/profotograaf-wordpress/releases) and upload it under Plugins > Add New Plugin > Upload Plugin. The plugin directory listing is tracked in [#4](https://github.com/webwiebe/profotograaf-wordpress/issues/4).
 - Open Settings > Profotograaf and click "Connect to Profotograaf".
 - Requirements: WordPress 6.9 or later (current and previous two major versions), PHP 8.1 or later.
 
