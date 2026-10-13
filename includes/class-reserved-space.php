@@ -219,7 +219,7 @@ final class Reserved_Space {
 			. '@container(max-width:' . self::TABLET_WIDTH . 'px){' . $host . '::before{aspect-ratio:var(--pf-ar-t)}}'
 			. '@container(max-width:' . self::PHONE_WIDTH . 'px){' . $host . '::before{aspect-ratio:var(--pf-ar-m)}}'
 			. $host . '[data-pf-state=drawn]{container-type:normal}'
-			. $host . '[data-pf-state=drawn]::before,' . $host . '[data-pf-state=empty]::before,' . $host . '[data-pf-state=error]::before{display:none}'
+			. $host . '[data-pf-state=drawn]::before,' . $host . '[data-pf-state=empty]::before,' . $host . '[data-pf-state=error]::before,' . $host . '[data-pf-empty]::before{display:none}'
 			. '}'
 			. '[data-pf-empty],[data-pf-state=empty]{display:block;aspect-ratio:auto!important;animation:none}'
 			. '[data-pf-state=error]{aspect-ratio:auto!important;animation:none}'
