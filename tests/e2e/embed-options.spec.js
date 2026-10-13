@@ -268,6 +268,29 @@ test.describe( 'block markup and shortcode', () => {
 	} );
 } );
 
+test.describe( 'per-photo caption and alt text', () => {
+	// embed.js reads data-image-text (professionals#2459): the caption replaces
+	// the whole caption line of that photo and the alt replaces its alt text.
+	test( 'the block text of one photo shows in its caption and alt', async ( { browser } ) => {
+		const imageText = [ { id: 'p-2', caption: 'Our own caption', alt: 'Our own alt' }, { id: 'p-gone', caption: 'Nobody' } ];
+		const { context, host, problems } = await openEmbed(
+			browser,
+			publishPost( 'Image text', block( { captions: 'below', imageText } ) ),
+			{ width: 1440, height: 900 }
+		);
+		await expectTiles( host, TOTAL );
+
+		await expect( host ).toHaveAttribute( 'data-image-text', JSON.stringify( imageText ) );
+		const captions = await host.locator( 'figcaption' ).allTextContents();
+		expect( captions ).toContain( 'Our own caption' );
+		expect( captions.filter( ( text ) => text === 'Our own caption' ) ).toHaveLength( 1 );
+		expect( captions ).not.toContain( 'Nobody' );
+		await expect( host.locator( 'img[alt="Our own alt"]' ) ).toHaveCount( 1 );
+		expect( problems ).toEqual( [] );
+		await context.close();
+	} );
+} );
+
 test.describe( 'photos left out', () => {
 	// embed.js reads data-exclude (ids split on commas and spaces) and draws the
 	// other photos. Tiles are named after the photo title, Photo 1 to Photo 19.

@@ -81,7 +81,7 @@ does not send it.
 | `excludedPhotoIds` / `exclude` | photo ids, up to 500 | none | `data-exclude`, comma separated | none | photos filtered out before sort and paging |
 | `linkTo` / `link_to` | `none`, `page`, `site`, `file` | no link (inert tile) | `data-link-to` | none | used only with the lightbox off; tile becomes an `a` |
 | `linkNewTab` / `link_new_tab` | `on`, `off` | `on` | `data-link-new-tab` | none | `target="_blank"` on the tile link |
-| `imageText` / `image_text` | list of `{id, caption, alt}` | none | `data-image-text` JSON | none | not read by the embed.js release of the fixture commit |
+| `imageText` / `image_text` | list of `{id, caption, alt}` | none | `data-image-text` JSON | none | the caption replaces the whole caption line (title and caption) of that photo and the alt replaces its alt text; read from professionals#2459 on, so the fixture of an older commit ignores it |
 | site duotone / `duotone` | two hex colours | none | `data-duotone` | none | SVG filter `#pf-duo` on every tile image |
 | block duotone (`style.color.duotone`) | preset or two colours | none | `data-duotone`: the plugin resolves a preset through `wp_get_global_settings( array( 'color', 'duotone' ) )`; WordPress still writes its own filter rule for `.wp-block-profotograaf-gallery img`, which finds no photo in the light DOM | none | SVG filter `#pf-duo` on every tile image. A preset that is missing or not two hex colours leaves the site duotone in place; `unset` turns duotone off |
 | `align` | `wide`, `full` | `wide` for a new block (`block.json` default; a saved block without the attribute renders wide too). Shortcode: content width of the theme | `alignwide` / `alignfull` class | box width only | draws into whatever width the host has |
