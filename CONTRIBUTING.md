@@ -136,7 +136,7 @@ The WordPress container points the script at `http://mock-platform:8090`. The br
 
 #### Browsers
 
-A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, WebKit and a Pixel 7 profile (`mobile-chrome`). Those three projects run only `embed-layout.spec.js` and `embed-options.spec.js`. CI sets the variable in the WordPress 7.1 job, so the 6.9 and 7.0 jobs stay on chromium. Install the extra browsers once with `pnpm exec playwright install --with-deps firefox webkit`. `openEmbed` hands the project's touch and user agent settings to the context it creates, because contexts from the `browser` fixture do not inherit them.
+A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, WebKit and a Pixel 7 profile (`mobile-chrome`). Those three projects run only `embed-layout.spec.js` and `embed-options.spec.js`. The nightly E2E run sets the variable on WordPress 7.1, so the 6.9 and 7.0 runs stay on chromium. Install the extra browsers once with `pnpm exec playwright install --with-deps firefox webkit`. `openEmbed` hands the project's touch and user agent settings to the context it creates, because contexts from the `browser` fixture do not inherit them.
 
 #### Accessibility
 
@@ -148,7 +148,7 @@ A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, Web
 
 #### Pixel snapshots
 
-`embed-visual.spec.js` compares the gallery element, masonry and grid at 390 and 1440 px, with baselines in `tests/e2e/embed-visual.spec.js-snapshots/`. Baselines depend on the operating system's fonts, so only the Linux ones are committed, and the spec runs only when `E2E_VISUAL=1` on Linux (the CI job for WordPress 7.1). To update them after an intended change, add the label `update-e2e-snapshots` to the pull request or start the "Update E2E snapshots" workflow, download the `e2e-snapshots` artifact, copy the PNG files into the snapshot directory and commit them. Never commit baselines made on macOS.
+`embed-visual.spec.js` compares the gallery element, masonry and grid at 390 and 1440 px, with baselines in `tests/e2e/embed-visual.spec.js-snapshots/`. Baselines depend on the operating system's fonts, so only the Linux ones are committed, and the spec runs only when `E2E_VISUAL=1` on Linux (the nightly run on WordPress 7.1). To update them after an intended change, start the "Update E2E snapshots" workflow from the Actions tab, download the `e2e-snapshots` artifact, copy the PNG files into the snapshot directory and commit them. Never commit baselines made on macOS.
 
 #### Live canary
 
@@ -168,8 +168,9 @@ The script runs the platform's `pnpm build:public`, copies the bundle and record
 
 GitHub Actions on GitHub-hosted runners:
 
-- `ci.yml`: gate script tests first, then oxlint, tsc, knip, file length, workflow rules, vitest and `pnpm audit`; PHPCS, PHPStan and `composer audit`; PHPUnit on PHP 8.1 to 8.4; coverage gates; block build; Plugin Check; and the E2E tests on the current and previous two WordPress versions. It runs on pull requests, pushes to main, and as a reusable workflow.
-- `release.yml`: a `v*` tag runs `ci.yml` first, then builds the zip, attaches it to a GitHub release and deploys to the wordpress.org SVN when the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist.
+- `ci.yml`: gate script tests first, then oxlint, tsc, knip, file length, workflow rules, vitest and `pnpm audit`; PHPCS, PHPStan and `composer audit`; PHPUnit on PHP 8.1 to 8.4; coverage gates; block build; Plugin Check; and the release zip install. It runs on pull requests, pushes to main and as a reusable workflow, and skips changes that touch only Markdown or `docs/`.
+- `e2e.yml`: the browser suite. It never runs on pull requests. It runs nightly on the current WordPress (with Firefox, WebKit, the pixel snapshots and the multisite run), on Sundays on the two previous majors, on demand, and before a release with only the specs of the areas the release changed (`scripts/release-e2e-specs.mjs`).
+- `release.yml`: a `v*` tag runs `ci.yml` and the targeted E2E specs first, then builds the zip, attaches it to a GitHub release and deploys to the wordpress.org SVN when the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist.
 - `live-embed-canary.yml`: daily, runs the layout spec against the live `embed.js` and keeps one issue for failures.
 - `update-e2e-snapshots.yml`: manual or by label, regenerates the Linux snapshot baselines and uploads them as an artifact.
 - `wp-tested-up-to.yml`: weekly, installs a newer WordPress release, runs the tests and opens a pull request that raises "Tested up to".

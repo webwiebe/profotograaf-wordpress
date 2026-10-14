@@ -11,8 +11,40 @@ jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
+  # Pull requests run no E2E and the full suite runs nightly, so a release runs
+  # only the specs of the areas it changed since the previous tag. A release
+  # that touches only docs, translations or workflows runs none.
+  e2e-select:
+    name: Pick the E2E specs for this release
+    runs-on: ubuntu-latest
+    outputs:
+      specs: ${{ steps.pick.outputs.specs }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: pick
+        run: |
+          previous=$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          if [ -z "$previous" ]; then
+            # The first release has nothing to compare with: run the smoke set.
+            specs="tests/e2e/gallery.spec.js tests/e2e/plugin-compat.spec.js tests/e2e/settings.spec.js"
+          else
+            specs=$(git diff --name-only "$previous" "${GITHUB_REF_NAME}" | node scripts/release-e2e-specs.mjs)
+          fi
+          echo "specs=$specs" >> "$GITHUB_OUTPUT"
+
+  e2e:
+    needs: e2e-select
+    if: needs.e2e-select.outputs.specs != ''
+    uses: ./.github/workflows/e2e.yml
+    with:
+      specs: ${{ needs.e2e-select.outputs.specs }}
+
   release:
-    needs: ci
+    needs: [ci, e2e]
+    # A skipped e2e job (nothing to run) does not block the release.
+    if: ${{ !cancelled() && !failure() }}
     runs-on: ubuntu-latest
     env:
       SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

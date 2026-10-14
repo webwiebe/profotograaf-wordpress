@@ -1,15 +1,12 @@
 name: Update E2E snapshots
 
 # Regenerates the Linux baselines of tests/e2e/embed-visual.spec.js on the same
-# runner image the E2E job uses. Run it from the Actions tab, or add the label
-# "update-e2e-snapshots" to a pull request. The new images come back as the
+# runner image the E2E job uses. Run it from the Actions tab. The new images come back as the
 # artifact "e2e-snapshots": download it, copy the files into
 # tests/e2e/embed-visual.spec.js-snapshots/ and commit them.
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: [labeled]
 
 permissions:
   contents: read
@@ -17,7 +14,6 @@ permissions:
 jobs:
   snapshots:
     name: Regenerate the embed.js baselines (WordPress 7.1)
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-e2e-snapshots'
     runs-on: ubuntu-latest
     env:
       WP_VERSION: '7.1'

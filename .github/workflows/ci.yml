@@ -1,9 +1,14 @@
 name: CI
 
+# Pull requests and pushes run the quality gates and the unit tests. The E2E
+# suite is a browser run of about 75 runner minutes, so it lives in e2e.yml:
+# nightly, on demand, and before a release for the areas the release touched.
 on:
   push:
     branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
   pull_request:
+    paths-ignore: ['**.md', 'docs/**']
   workflow_call:
 
 concurrency:
@@ -167,80 +172,3 @@ jobs:
       - run: bin/check-release-zip.sh
       # `wp plugin install` of the versioned zip and activation, as a site owner does it.
       - run: tests/e2e/zip-install.sh
-
-  e2e:
-    name: E2E (WordPress ${{ matrix.wp }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        # Current release and the previous two majors.
-        wp: ['7.1', '7.0', '6.9']
-    env:
-      WP_VERSION: ${{ matrix.wp }}
-      # Firefox, WebKit, the phone profile and the pixel snapshots run on the
-      # current WordPress only, so the matrix does not triple the CI time.
-      E2E_BROWSER_MATRIX: ${{ matrix.wp == '7.1' && '1' || '' }}
-      E2E_VISUAL: ${{ matrix.wp == '7.1' && '1' || '' }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/setup-node-pnpm
-      - uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - run: pnpm exec playwright install --with-deps chromium
-      - if: matrix.wp == '7.1'
-        run: pnpm exec playwright install --with-deps firefox webkit
-      # The E2E site runs the release copy, which holds the built blocks.
-      - run: pnpm build
-      - run: tests/e2e/up.sh
-      - run: pnpm exec playwright test
-      - uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: e2e-${{ matrix.wp }}
-          path: |
-            playwright-report
-            test-results
-      # BugBarn (#251): a failed run and the PHP errors of the test site. Both
-      # steps do nothing without the BugBarn variable and secret, as on forks.
-      - name: Report the failed run to BugBarn
-        if: failure()
-        env:
-          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
-          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
-        run: bin/bugbarn-report.sh event "E2E failed on WordPress ${{ matrix.wp }}"
-      - name: Report PHP errors of the test site to BugBarn
-        if: always()
-        env:
-          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
-          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
-        run: docker compose -f tests/e2e/docker-compose.yml exec -T wordpress sh -c 'cat /var/www/html/wp-content/debug.log 2>/dev/null || true' | bin/bugbarn-report.sh debug-log
-      - if: always()
-        run: docker compose -f tests/e2e/docker-compose.yml down -v
-
-  e2e-multisite:
-    name: E2E multisite (WordPress 7.1)
-    runs-on: ubuntu-latest
-    env:
-      WP_VERSION: '7.1'
-      PROFOTOGRAAF_MULTISITE: '1'
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm build
-      - run: tests/e2e/up.sh
-      # Converts the site to a network, creates two subsites and network-activates the plugin.
-      - run: tests/e2e/multisite.sh
-      - run: pnpm exec playwright test tests/e2e/multisite.spec.js
-      - uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: e2e-multisite
-          path: |
-            playwright-report
-            test-results
-      - if: always()
-        run: docker compose -f tests/e2e/docker-compose.yml down -v

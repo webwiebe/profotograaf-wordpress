@@ -1,0 +1,149 @@
+name: E2E
+
+# The browser suite. It never runs on pull requests (a full run is about 75
+# runner minutes). It runs:
+#   - nightly on the current WordPress, with the browser matrix, the pixel
+#     snapshots and the multisite run;
+#   - on Sundays on the two previous WordPress majors as well;
+#   - on demand from the Actions tab;
+#   - before a release, for the specs of the areas the release touched
+#     (release.yml, scripts/release-e2e-specs.mjs).
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+    - cron: '47 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      wp:
+        description: WordPress version to test, or all
+        type: choice
+        options: ['7.1', '7.0', '6.9', all]
+        default: '7.1'
+  workflow_call:
+    inputs:
+      specs:
+        description: Space separated spec files to run on the current WordPress
+        type: string
+        required: true
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}-${{ inputs.specs || github.event.schedule || 'manual' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: Plan the WordPress versions
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      full: ${{ steps.plan.outputs.full }}
+    steps:
+      - id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          CHOICE: ${{ inputs.wp }}
+          SPECS: ${{ inputs.specs }}
+        run: |
+          full=true
+          if [ -n "$SPECS" ]; then
+            matrix='["7.1"]'; full=false
+          elif [ "$EVENT" = schedule ] && [ "$SCHEDULE" = '47 3 * * 0' ]; then
+            matrix='["7.0","6.9"]'
+          elif [ "$EVENT" = workflow_dispatch ] && [ "$CHOICE" = all ]; then
+            matrix='["7.1","7.0","6.9"]'
+          elif [ "$EVENT" = workflow_dispatch ]; then
+            matrix="[\"$CHOICE\"]"
+          else
+            matrix='["7.1"]'
+          fi
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "full=$full" >> "$GITHUB_OUTPUT"
+
+  e2e:
+    name: E2E (WordPress ${{ matrix.wp }})
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        wp: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      WP_VERSION: ${{ matrix.wp }}
+      # Firefox, WebKit, the phone profile and the pixel snapshots run on the
+      # current WordPress only, and not in a targeted pre-release run.
+      E2E_BROWSER_MATRIX: ${{ matrix.wp == '7.1' && needs.plan.outputs.full == 'true' && '1' || '' }}
+      E2E_VISUAL: ${{ matrix.wp == '7.1' && needs.plan.outputs.full == 'true' && '1' || '' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - if: env.E2E_BROWSER_MATRIX == '1'
+        run: pnpm exec playwright install --with-deps firefox webkit
+      # The E2E site runs the release copy, which holds the built blocks.
+      - run: pnpm build
+      - run: tests/e2e/up.sh
+      - name: Run the specs
+        env:
+          SPECS: ${{ inputs.specs }}
+        run: |
+          # shellcheck disable=SC2086
+          pnpm exec playwright test $SPECS
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: e2e-${{ matrix.wp }}
+          path: |
+            playwright-report
+            test-results
+      # BugBarn (#251): a failed run and the PHP errors of the test site. Both
+      # steps do nothing without the BugBarn variable and secret, as on forks.
+      - name: Report the failed run to BugBarn
+        if: failure()
+        env:
+          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
+          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
+        run: bin/bugbarn-report.sh event "E2E failed on WordPress ${{ matrix.wp }}"
+      - name: Report PHP errors of the test site to BugBarn
+        if: always()
+        env:
+          BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
+          BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
+        run: docker compose -f tests/e2e/docker-compose.yml exec -T wordpress sh -c 'cat /var/www/html/wp-content/debug.log 2>/dev/null || true' | bin/bugbarn-report.sh debug-log
+      - if: always()
+        run: docker compose -f tests/e2e/docker-compose.yml down -v
+
+  e2e-multisite:
+    name: E2E multisite (WordPress 7.1)
+    needs: plan
+    if: needs.plan.outputs.full == 'true' && (github.event_name != 'schedule' || github.event.schedule == '17 2 * * *')
+    runs-on: ubuntu-latest
+    env:
+      WP_VERSION: '7.1'
+      PROFOTOGRAAF_MULTISITE: '1'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - run: tests/e2e/up.sh
+      # Converts the site to a network, creates two subsites and network-activates the plugin.
+      - run: tests/e2e/multisite.sh
+      - run: pnpm exec playwright test tests/e2e/multisite.spec.js
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: e2e-multisite
+          path: |
+            playwright-report
+            test-results
+      - if: always()
+        run: docker compose -f tests/e2e/docker-compose.yml down -v
