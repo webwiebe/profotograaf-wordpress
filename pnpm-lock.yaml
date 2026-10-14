@@ -176,10 +176,10 @@ importers:
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0
-        version: 4.13.0(playwright-core@1.63.0)
+        version: 4.13.0(playwright-core@1.64.0)
       '@playwright/test':
-        specifier: ^1.49.0
-        version: 1.63.0
+        specifier: ^1.64.0
+        version: 1.64.0
       '@testing-library/dom':
         specifier: ^10.4.2
         version: 10.4.2
@@ -227,7 +227,7 @@ importers:
         version: 6.29.0
       '@wordpress/scripts':
         specifier: ^36.0.0
-        version: 36.0.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.63.0)(@types/node@26.6.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.3)(yauzl@2.10.0)
+        version: 36.0.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.3)(yauzl@2.10.0)
       jsdom:
         specifier: ^30.1.2
         version: 30.1.2(@noble/hashes@1.8.0)
@@ -918,13 +918,6 @@ packages:
     resolution: {integrity: sha512-grhRy3OKmniaAEKXMjua5z/EODX0MSqBGjunw8+j/3HQjOnahs2AGhvEOIYVUWcU6ScApbhLhVrQTX8XqrMrow==}
     engines: {node: '>=20.19.0'}
 
-  '@csstools/css-calc@3.4.1':
-    resolution: {integrity: sha512-EtC7SoN1j6J4E4DCwg5QgbO5TGxgxIA1RXqe+W+qUM+BUcezx9wT+/tiQ/WO2yCX4i5X+Cuf9ciJ22aP4UEwWw==}
-    engines: {node: '>=20.19.0'}
-    peerDependencies:
-      '@csstools/css-parser-algorithms': ^4.0.1
-      '@csstools/css-tokenizer': ^4.0.2
-
   '@csstools/css-calc@3.4.3':
     resolution: {integrity: sha512-iex20d8CHVkyvg6B7UKV7uHnI2Bqo9g+EFfT9E0y+GvTvhZ/DwONJ+9aKb1dlqm0ZiGsL5RXjp0fCoJYnkeDjA==}
     engines: {node: '>=20.19.0'}
@@ -950,14 +943,6 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@csstools/css-tokenizer': ^4.0.2
-
-  '@csstools/css-syntax-patches-for-csstree@1.1.14':
-    resolution: {integrity: sha512-HpbVXyrofRXpHpgkNIjU/3EWR4WJvOkO3emNK/L6X/mTJU7bGUI3AkkpoTNXznQLp0KRjLHELTGeKI5dIkI9JQ==}
-    peerDependencies:
-      css-tree: ^3.2.1
-    peerDependenciesMeta:
-      css-tree:
-        optional: true
 
   '@csstools/css-syntax-patches-for-csstree@1.1.15':
     resolution: {integrity: sha512-J0u7HkVl2nzSlhsiTOp4AmwcUQ3D+mGEEKfBy/7To5/y7F2OHwyLrXfrhR0SMgr4p5Lo+eaMVSeai24zUcBIxA==}
@@ -1935,8 +1920,8 @@ packages:
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
-  '@playwright/test@1.63.0':
-    resolution: {integrity: sha512-oxMK4vllB9RK5NQ2l1pq1IfOf2AvnEuj/vYGDj0H2nMtmtZpKtCwt/l00GEO6xjGfpBNAvjovvYdCm50dRQkpQ==}
+  '@playwright/test@1.64.0':
+    resolution: {integrity: sha512-oTN9FNYuN6bqQMwiho6jJKLCG2/QOYCixGXuCjRmzOq23eODeukuY2XiAVoVpAECbuezMt1MHQjAiQxK8F+Y+g==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -6201,13 +6186,13 @@ packages:
     resolution: {integrity: sha512-Oo/NZcSWccq8KyoG7gLE9fnltgHns+pNCjCAp/WmjsUySi+sX7y4z4Xqu4fVb42CDHzRPl33fjzT15V1wvcyhA==}
     engines: {node: '>=16.0.0'}
 
-  playwright-core@1.63.0:
-    resolution: {integrity: sha512-rYCsBF/M5HjUch52bbtVONEFjv6Xu8sm8h72dNlR5bzIE1fvC/bxgspzkjSfU+MweEMmPM8KJebG6nnyxo5mCg==}
+  playwright-core@1.64.0:
+    resolution: {integrity: sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==}
     engines: {node: '>=20'}
     hasBin: true
 
-  playwright@1.63.0:
-    resolution: {integrity: sha512-+7ziBLidS4NaNCdt57SUDT+wYmmd5fmiQejUic/kb+YsYSCPyOOE9sebzMjNmQrsnNpDJqd4WHvV/8lfKfUDUg==}
+  playwright@1.64.0:
+    resolution: {integrity: sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -7996,10 +7981,10 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.5.3
 
-  '@axe-core/playwright@4.13.0(playwright-core@1.63.0)':
+  '@axe-core/playwright@4.13.0(playwright-core@1.64.0)':
     dependencies:
       axe-core: 4.13.0
-      playwright-core: 1.63.0
+      playwright-core: 1.64.0
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -8799,11 +8784,6 @@ snapshots:
 
   '@csstools/color-helpers@6.1.2': {}
 
-  '@csstools/css-calc@3.4.1(@csstools/css-parser-algorithms@4.0.1(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)':
-    dependencies:
-      '@csstools/css-parser-algorithms': 4.0.1(@csstools/css-tokenizer@4.0.2)
-      '@csstools/css-tokenizer': 4.0.2
-
   '@csstools/css-calc@3.4.3(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.2(@csstools/css-tokenizer@4.0.2)
@@ -8824,10 +8804,6 @@ snapshots:
     dependencies:
       '@csstools/css-tokenizer': 4.0.2
 
-  '@csstools/css-syntax-patches-for-csstree@1.1.14(css-tree@3.2.1)':
-    optionalDependencies:
-      css-tree: 3.2.1
-
   '@csstools/css-syntax-patches-for-csstree@1.1.15(css-tree@3.2.1)':
     optionalDependencies:
       css-tree: 3.2.1
@@ -8837,6 +8813,11 @@ snapshots:
   '@csstools/media-query-list-parser@5.0.1(@csstools/css-parser-algorithms@4.0.1(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.1(@csstools/css-tokenizer@4.0.2)
+      '@csstools/css-tokenizer': 4.0.2
+
+  '@csstools/media-query-list-parser@5.0.1(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)':
+    dependencies:
+      '@csstools/css-parser-algorithms': 4.0.2(@csstools/css-tokenizer@4.0.2)
       '@csstools/css-tokenizer': 4.0.2
 
   '@csstools/selector-resolve-nested@4.0.2(postcss-selector-parser@7.1.6)':
@@ -9720,9 +9701,9 @@ snapshots:
 
   '@pkgr/core@0.3.6': {}
 
-  '@playwright/test@1.63.0':
+  '@playwright/test@1.64.0':
     dependencies:
-      playwright: 1.63.0
+      playwright: 1.64.0
 
   '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.6)(webpack@5.111.1)':
     dependencies:
@@ -11245,9 +11226,9 @@ snapshots:
     dependencies:
       '@wordpress/deprecated': 4.56.0
 
-  '@wordpress/e2e-test-utils-playwright@2.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.63.0)(@types/node@26.6.4)(supports-color@8.1.1)(yauzl@2.10.0)':
+  '@wordpress/e2e-test-utils-playwright@2.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.4)(supports-color@8.1.1)(yauzl@2.10.0)':
     dependencies:
-      '@playwright/test': 1.63.0
+      '@playwright/test': 1.64.0
       '@types/node': 26.6.4
       change-case: 4.1.2
       get-port: 5.1.1
@@ -11609,7 +11590,7 @@ snapshots:
       - '@types/react-dom'
       - react-dom
 
-  '@wordpress/scripts@36.0.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.63.0)(@types/node@26.6.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.3)(yauzl@2.10.0)':
+  '@wordpress/scripts@36.0.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.3)(yauzl@2.10.0)':
     dependencies:
       '@babel/core': 7.25.7(supports-color@8.1.1)
       '@pmmmwh/react-refresh-webpack-plugin': 0.5.17(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.6)(webpack@5.111.1)
@@ -11617,7 +11598,7 @@ snapshots:
       '@wordpress/babel-preset-default': 8.56.0(supports-color@8.1.1)
       '@wordpress/browserslist-config': 6.56.0
       '@wordpress/dependency-extraction-webpack-plugin': 6.56.0(webpack@5.111.1)
-      '@wordpress/e2e-test-utils-playwright': 2.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.63.0)(@types/node@26.6.4)(supports-color@8.1.1)(yauzl@2.10.0)
+      '@wordpress/e2e-test-utils-playwright': 2.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.4)(supports-color@8.1.1)(yauzl@2.10.0)
       '@wordpress/eslint-plugin': 27.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.3)(wp-prettier@3.9.6)
       '@wordpress/npm-package-json-lint-config': 5.56.0(npm-package-json-lint@6.4.0(supports-color@8.1.1)(typescript@7.0.2))
       '@wordpress/postcss-plugins-preset': 5.56.0(postcss@8.5.28)
@@ -11662,7 +11643,7 @@ snapshots:
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@5.2.6)(webpack@5.111.1)
       webpack-dev-server: 5.2.6(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)(webpack-cli@5.1.4)(webpack@5.111.1)
     optionalDependencies:
-      '@playwright/test': 1.63.0
+      '@playwright/test': 1.64.0
       vite: 8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1)
       vitest: 5.0.3(@opentelemetry/api@1.9.1)(@types/node@26.6.4)(@vitest/coverage-v8@5.0.3)(jsdom@30.1.2(@noble/hashes@1.8.0))(vite@8.3.1(@types/node@26.6.4)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
     transitivePeerDependencies:
@@ -14913,11 +14894,11 @@ snapshots:
       pvutils: 1.2.0
       tslib: 2.8.1
 
-  playwright-core@1.63.0: {}
+  playwright-core@1.64.0: {}
 
-  playwright@1.63.0:
+  playwright@1.64.0:
     dependencies:
-      playwright-core: 1.63.0
+      playwright-core: 1.64.0
 
   plur@4.0.0:
     dependencies:
@@ -15947,9 +15928,9 @@ snapshots:
 
   stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)):
     dependencies:
-      '@csstools/css-calc': 3.4.1(@csstools/css-parser-algorithms@4.0.1(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
-      '@csstools/css-parser-algorithms': 4.0.1(@csstools/css-tokenizer@4.0.2)
-      '@csstools/css-syntax-patches-for-csstree': 1.1.14(css-tree@3.2.1)
+      '@csstools/css-calc': 3.4.3(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
+      '@csstools/css-parser-algorithms': 4.0.2(@csstools/css-tokenizer@4.0.2)
+      '@csstools/css-syntax-patches-for-csstree': 1.1.15(css-tree@3.2.1)
       '@csstools/css-tokenizer': 4.0.2
       css-tree: 3.2.1
       is-plain-object: 5.1.0
@@ -15962,11 +15943,11 @@ snapshots:
 
   stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2):
     dependencies:
-      '@csstools/css-calc': 3.4.1(@csstools/css-parser-algorithms@4.0.1(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
-      '@csstools/css-parser-algorithms': 4.0.1(@csstools/css-tokenizer@4.0.2)
-      '@csstools/css-syntax-patches-for-csstree': 1.1.14(css-tree@3.2.1)
+      '@csstools/css-calc': 3.4.3(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
+      '@csstools/css-parser-algorithms': 4.0.2(@csstools/css-tokenizer@4.0.2)
+      '@csstools/css-syntax-patches-for-csstree': 1.1.15(css-tree@3.2.1)
       '@csstools/css-tokenizer': 4.0.2
-      '@csstools/media-query-list-parser': 5.0.1(@csstools/css-parser-algorithms@4.0.1(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
+      '@csstools/media-query-list-parser': 5.0.1(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
       '@csstools/selector-resolve-nested': 4.0.2(postcss-selector-parser@7.1.6)
       '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.6)
       colord: 2.10.0
