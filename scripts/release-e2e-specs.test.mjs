@@ -16,7 +16,7 @@ test("a gallery renderer change selects the gallery and embed specs", () => {
 
 test("the full-page block and the backup code select their own specs", () => {
   assert.deepEqual(specsFor(["includes/class-full-page-renderer.php"]), ["tests/e2e/full-page.spec.js"]);
-  assert.deepEqual(specsFor(["includes/class-backup-worker.php"]), ["tests/e2e/backup.spec.js", "tests/e2e/backup-status.spec.js"]);
+  assert.deepEqual(specsFor(["includes/class-backup-worker.php"]), ["tests/e2e/backup-status.spec.js", "tests/e2e/backup.spec.js"]);
 });
 
 test("source that no entry names falls back to the smoke set", () => {

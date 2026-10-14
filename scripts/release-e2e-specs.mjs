@@ -45,7 +45,7 @@ export function specsFor(files) {
     else if (SOURCE.test(file)) smoke.forEach((n) => names.add(n));
     else if (/^tests\/e2e\/(.+)\.spec\.js$/.test(file)) names.add(file.replace(/^tests\/e2e\/|\.spec\.js$/g, ""));
   }
-  return [...names].sort().map((n) => `tests/e2e/${n}.spec.js`);
+  return [...names].map((n) => `tests/e2e/${n}.spec.js`).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
