@@ -47,7 +47,18 @@ class Link_Consent_Prompt implements Module {
 	 * Prints the notice.
 	 */
 	public function render(): void {
-		if ( ! current_user_can( Settings_Page::CAPABILITY ) || ! $this->consent()->pending() ) {
+		if ( ! current_user_can( Settings_Page::CAPABILITY ) ) {
+			return;
+		}
+		if ( $this->consent()->plan_unknown() ) {
+			?>
+			<div class="notice notice-info profotograaf-notice profotograaf-notice--plan-unknown">
+				<p><?php esc_html_e( 'Profotograaf has not reported your plan yet. Your galleries keep showing. On the Free plan a small "Powered by Profotograaf" link appears under galleries, and you will be asked to accept it once your plan is known.', 'profotograaf' ); ?></p>
+			</div>
+			<?php
+			return;
+		}
+		if ( ! $this->consent()->pending() ) {
 			return;
 		}
 		?>

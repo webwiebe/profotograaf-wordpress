@@ -59,11 +59,13 @@ class Link_Consent_Test extends Gallery_Test_Case {
 		$this->assertTrue( $this->consent->pending() );
 	}
 
-	public function test_a_site_that_does_not_know_its_plan_yet_is_treated_like_free(): void {
+	public function test_a_site_that_does_not_know_its_plan_yet_keeps_rendering(): void {
 		$this->connect();
 
-		$this->assertTrue( $this->consent->required() );
-		$this->assertFalse( $this->consent->allows_render() );
+		$this->assertFalse( $this->consent->required() );
+		$this->assertFalse( $this->consent->pending() );
+		$this->assertTrue( $this->consent->allows_render() );
+		$this->assertTrue( $this->consent->plan_unknown() );
 	}
 
 	public function test_a_paid_plan_without_the_link_needs_no_consent(): void {

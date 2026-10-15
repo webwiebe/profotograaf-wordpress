@@ -16,7 +16,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * - The link applies while the plan answer of the platform says `badge`. A paid
  *   plan without the link needs no consent. A site that does not know the plan
- *   yet is treated like a Free one.
+ *   yet renders as before and shows the admin a notice, so a paid site never goes
+ *   blank when the status call fails or the platform predates the plan field.
  * - The consent is stored per site with the value, the time and the plan it was
  *   given on.
  * - While the platform reports no link, the stored consent is dropped. A later
@@ -72,7 +73,15 @@ class Link_Consent {
 			return false;
 		}
 		$plan = $this->status->stored()['plan'];
-		return null === $plan || $plan['badge'];
+		return null !== $plan && $plan['badge'];
+	}
+
+	/**
+	 * Whether the site is connected but the platform has not told its plan. The
+	 * site renders as before and the owner gets a notice only.
+	 */
+	public function plan_unknown(): bool {
+		return $this->connection->is_connected() && null === $this->status->stored()['plan'];
 	}
 
 	/**

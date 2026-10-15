@@ -284,7 +284,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
-* New: on the Free plan the owner accepts the "Powered by Profotograaf" link once, with a required checkbox. The gallery block, the full-page gallery block and the shortcode show nothing to visitors until then. The acceptance is stored with its time and plan, dropped when the account moves to a paid plan, and asked again after a downgrade. The status call now carries the account plan.
+* New: on the Free plan the owner accepts the "Powered by Profotograaf" link once, with a required checkbox. The gallery block, the full-page gallery block and the shortcode show nothing to visitors until then. The acceptance is stored with its time and plan, dropped when the account moves to a paid plan, and asked again after a downgrade. Galleries keep showing while the plan is unknown, and the admin sees a notice. The status call now carries the account plan.
 * Fix: the Dutch translation calls the Masonry layout "masonry" instead of "metselwerk", and the installation steps describe the zip upload, since the plugin is not in the plugin directory yet.
 * New: the FAQ and the README say what Copy to Profotograaf does and that it is a copy that does not follow later edits or deletions, and what the Find your gallery button opens for clients.
 * New: a copy changed in both places has a Resolve conflict dialog with the two images side by side, the text fields compared, and Keep mine, Use Profotograaf's version and Keep both. Update text takes chosen title, caption and alt text fields only.

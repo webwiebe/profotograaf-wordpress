@@ -37,6 +37,7 @@ class Link_Consent_Flow_Test extends Gallery_Test_Case {
 		Functions\when( 'wp_clear_scheduled_hook' )->justReturn( 0 );
 		Functions\when( 'add_shortcode' )->justReturn( true );
 		$this->connect();
+		$this->options[ Platform_Status::OPTION ] = array( 'plan' => $this->answer( 'free', true )['plan'] );
 	}
 
 	protected function tearDown(): void {
@@ -146,6 +147,29 @@ class Link_Consent_Flow_Test extends Gallery_Test_Case {
 
 		$this->assertStringContainsString( 'Powered by Profotograaf', $html );
 		$this->assertStringNotContainsString( 'data-profotograaf-gallery', $html );
+	}
+
+	public function test_a_status_call_without_a_plan_field_never_blanks_the_galleries(): void {
+		unset( $this->options[ Platform_Status::OPTION ] );
+		$this->http->reply( 200, array( 'device_id' => 'device-1' ) );
+		( new Platform_Status( $this->api, $this->clock() ) )->refresh();
+		$shortcode = new Shortcode( $this->renderer, $this->plugin->link_consent() );
+
+		$this->assertStringContainsString( 'data-profotograaf-gallery="g-1"', $shortcode->render( array( 'id' => 'g-1' ) ) );
+	}
+
+	public function test_the_prompt_for_an_unknown_plan_is_a_notice_without_a_checkbox(): void {
+		unset( $this->options[ Platform_Status::OPTION ] );
+		Functions\when( 'current_user_can' )->justReturn( true );
+		$module = new Link_Consent_Prompt();
+		$module->register( $this->plugin );
+
+		ob_start();
+		$module->render();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringContainsString( 'has not reported your plan yet', $html );
+		$this->assertStringNotContainsString( 'name="accept"', $html );
 	}
 
 	public function test_a_paid_plan_renders_the_shortcode_without_asking(): void {
