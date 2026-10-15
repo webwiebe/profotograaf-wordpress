@@ -124,6 +124,16 @@ class Gallery_Renderer {
 	/** Longest caption or alt text kept, in characters. */
 	public const IMAGE_TEXT_LENGTH = 500;
 
+	/** Prefix of the transient that remembers a failed payload request; the gallery id follows. */
+	private const FAILED_PREFIX = 'profotograaf_decl_failed_';
+
+	/**
+	 * Payload source for the server-drawn markup; null draws nothing on the server.
+	 *
+	 * @var Full_Page_Payload|null
+	 */
+	private ?Full_Page_Payload $payloads;
+
 	/**
 	 * Script handling.
 	 *
@@ -155,15 +165,43 @@ class Gallery_Renderer {
 	/**
 	 * Constructor.
 	 *
-	 * @param Embed_Script  $script   Script handling.
-	 * @param Gallery_Index $index    Gallery details.
-	 * @param Settings      $settings Settings.
+	 * @param Embed_Script           $script   Script handling.
+	 * @param Gallery_Index          $index    Gallery details.
+	 * @param Settings               $settings Settings.
+	 * @param Full_Page_Payload|null $payloads Payload source for server-drawn markup.
 	 */
-	public function __construct( Embed_Script $script, Gallery_Index $index, Settings $settings ) {
+	public function __construct( Embed_Script $script, Gallery_Index $index, Settings $settings, ?Full_Page_Payload $payloads = null ) {
 		$this->script   = $script;
 		$this->index    = $index;
 		$this->settings = $settings;
 		$this->options  = new Option_Resolver( $settings );
+		$this->payloads = $payloads;
+	}
+
+	/**
+	 * The declarative shadow root of a gallery, written next to the host div's
+	 * fallback link: the gallery shows without a request from the visitor, and
+	 * embed.js adopts it. Empty when the gallery cannot be drawn on the server.
+	 *
+	 * The payload comes from the five minute cache of Full_Page_Payload. A failed
+	 * request is remembered for a minute, so a platform that is down does not
+	 * slow every page view.
+	 *
+	 * @param string               $id     Gallery id.
+	 * @param array<string,string> $data   Display option data attributes.
+	 * @param string               $layout Resolved layout.
+	 */
+	private function shadow_root( string $id, array $data, string $layout ): string {
+		if ( null === $this->payloads || false !== get_transient( self::FAILED_PREFIX . $id ) ) {
+			return '';
+		}
+		$payload = $this->payloads->get( $id );
+		if ( is_wp_error( $payload ) ) {
+			set_transient( self::FAILED_PREFIX . $id, 1, MINUTE_IN_SECONDS );
+			return '';
+		}
+		$badge = 0 === strpos( strtolower( get_locale() ), 'nl' ) ? 'Gemaakt met Profotograaf' : 'Made with Profotograaf';
+		return (string) Declarative_Renderer::render( $payload, array( 'data-layout' => $layout ) + $data, $badge );
 	}
 
 	/**
@@ -360,8 +398,9 @@ class Gallery_Renderer {
 		}
 
 		return $notice . $this->script->preconnect() . Reserved_Space::rule() . sprintf(
-			'<div %1$s>%2$s%3$s<noscript>%4$s</noscript></div>',
+			'<div %1$s>%2$s%3$s%4$s<noscript>%5$s</noscript></div>',
 			$this->wrapper_attributes( $args, $classes, $id, $layout, $data ),
+			$this->shadow_root( $id, $data, $layout ),
 			$this->fallback_link( $id, $args ),
 			Empty_Gallery::hint( false ),
 			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
