@@ -110,6 +110,8 @@ A page that contains a Profotograaf gallery makes the visitor's browser load the
 
 Once a day, in the background, the plugin asks `https://profotograaf.nl/api/v1/embed/script` which version of the embed script is current, so pages load the script under its versioned address. The request carries no token and no data about your site or its visitors. When it fails, the plugin keeps the version it knew and tries again the next day.
 
+When a page with a gallery is rendered and no copy of the gallery is stored yet, your server asks `GET https://profotograaf.nl/api/v1/embed/galleries/<gallery id>` for the public gallery data (title, layout, photo sizes, captions and image links) and writes the gallery's markup into the page, so browsers that support declarative shadow DOM show it without waiting for the script. The request comes from your site's server, carries no token and holds no data about your site or its visitors. The plugin keeps the answer as a WordPress transient for 5 minutes, so at most one request per gallery is made in that time. After a failed request the plugin waits 1 minute before it asks again, and the page shows the gallery as before in the meantime. Terms of service: https://profotograaf.nl/terms. Privacy policy: https://profotograaf.nl/privacy.
+
 Pasting a gallery link into the editor makes WordPress ask `https://profotograaf.nl/oembed` for the embed code of that gallery.
 
 = Full-page gallery block =
