@@ -60,6 +60,13 @@ final class Plugin {
 	private ?Review_Prompt $review_prompt = null;
 
 	/**
+	 * Consent to the Free plan link.
+	 *
+	 * @var Link_Consent|null
+	 */
+	private ?Link_Consent $link_consent = null;
+
+	/**
 	 * Linked galleries for the Media Library upload.
 	 *
 	 * @var Upload_Links|null
@@ -176,6 +183,16 @@ final class Plugin {
 			$this->platform_status = new Platform_Status( $this->api(), $this->clock );
 		}
 		return $this->platform_status;
+	}
+
+	/**
+	 * The owner's consent to the "Powered by Profotograaf" link of the Free plan.
+	 */
+	public function link_consent(): Link_Consent {
+		if ( null === $this->link_consent ) {
+			$this->link_consent = new Link_Consent( $this->connection(), $this->platform_status(), $this->clock );
+		}
+		return $this->link_consent;
 	}
 
 	/**

@@ -25,6 +25,8 @@ Profotograaf connects your WordPress site to your [Profotograaf](https://profoto
 
 You need a Profotograaf account. The plugin does nothing until you connect it.
 
+**The Free plan shows a link.** On the Free plan a small "Powered by Profotograaf" link appears under your galleries. It cannot be switched off. Paid plans show no link. You accept this once, with a required checkbox in your WordPress admin, and your galleries stay hidden from visitors until you do. If your account moves to a paid plan the plugin forgets the acceptance, and it asks again if the account returns to the Free plan. See the plans at https://profotograaf.nl/pricing.
+
 The block editor scripts are built from the source in the `blocks` folder of the public repository: https://github.com/webwiebe/profotograaf-wordpress. Run `npm ci && npm run build` to build them.
 
 = Privacy =
@@ -64,7 +66,7 @@ When you click "Connect to Profotograaf" on the settings page, the plugin sends 
 
 = Plugin status =
 
-While your site is connected, the plugin sends `POST https://profotograaf.nl/api/v1/auth/devices/status` once a day in the background, and shortly after you open the settings page (at most once an hour). The request carries the access token, the plugin version, the WordPress version, the PHP version and the site address. Profotograaf answers with whether it may ask you for a review and with the settings for sending error reports. When you answer the review notice on your dashboard or the settings page (it was shown, you chose Leave a review, Later or Don't ask again), the plugin adds that choice to the next request, one choice per request. Nothing else about the notice is sent. The plugin keeps the answer in the WordPress options table. When the request fails, the plugin keeps the last answer and tries again later. Opening the settings page never waits for this request.
+While your site is connected, the plugin sends `POST https://profotograaf.nl/api/v1/auth/devices/status` once a day in the background, and shortly after you open the settings page (at most once an hour). The request carries the access token, the plugin version, the WordPress version, the PHP version and the site address. Profotograaf answers with whether it may ask you for a review, with the settings for sending error reports and with the plan of your account (its name, and whether the "Powered by Profotograaf" link applies). The plugin keeps the plan in the WordPress options table. When you answer the review notice on your dashboard or the settings page (it was shown, you chose Leave a review, Later or Don't ask again), the plugin adds that choice to the next request, one choice per request. Nothing else about the notice is sent. The plugin keeps the answer in the WordPress options table. When the request fails, the plugin keeps the last answer and tries again later. Opening the settings page never waits for this request.
 
 = Your galleries =
 
@@ -174,6 +176,14 @@ Add the "Full-page gallery" block, choose a gallery and a preset (Calm, Editoria
 
 Yes. Create one at https://profotograaf.nl.
 
+= Why are my galleries hidden? =
+
+Your account is on the Free plan, which shows a small "Powered by Profotograaf" link under galleries, and you have not accepted that yet. Tick the required checkbox in the notice in your WordPress admin and the galleries show. Visitors see nothing in the meantime. On a paid plan the link does not appear and nothing needs accepting.
+
+= Can I remove the "Powered by Profotograaf" link? =
+
+Not on the Free plan. A paid plan shows no link. The plugin stores your acceptance with the time and the plan, and drops it when your account moves to a paid plan.
+
 = Does the plugin store my Profotograaf password? =
 
 No. You approve the connection on profotograaf.nl. The plugin stores an access token and a refresh token in the WordPress options table and removes them when you disconnect or delete the plugin.
@@ -274,6 +284,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 == Changelog ==
 
 = 0.1.0 =
+* New: on the Free plan the owner accepts the "Powered by Profotograaf" link once, with a required checkbox. The gallery block, the full-page gallery block and the shortcode show nothing to visitors until then. The acceptance is stored with its time and plan, dropped when the account moves to a paid plan, and asked again after a downgrade. The status call now carries the account plan.
 * Fix: the Dutch translation calls the Masonry layout "masonry" instead of "metselwerk", and the installation steps describe the zip upload, since the plugin is not in the plugin directory yet.
 * New: the FAQ and the README say what Copy to Profotograaf does and that it is a copy that does not follow later edits or deletions, and what the Find your gallery button opens for clients.
 * New: a copy changed in both places has a Resolve conflict dialog with the two images side by side, the text fields compared, and Keep mine, Use Profotograaf's version and Keep both. Update text takes chosen title, caption and alt text fields only.

@@ -86,20 +86,25 @@ class Platform_Status {
 		}
 
 		$answer = is_array( $result ) ? $result : array();
-		$this->save(
-			array(
-				'fetched_at'      => $this->now(),
-				'review_prompt'   => $this->review_prompt( $answer['review_prompt'] ?? null ),
-				'error_reporting' => self::error_reporting( $answer['error_reporting'] ?? null ),
-			)
+		$values = array(
+			'fetched_at'      => $this->now(),
+			'review_prompt'   => $this->review_prompt( $answer['review_prompt'] ?? null ),
+			'error_reporting' => self::error_reporting( $answer['error_reporting'] ?? null ),
 		);
+		// An answer without a plan block (the platform could not resolve it)
+		// keeps the plan the site already knew.
+		$plan = self::plan( $answer['plan'] ?? null );
+		if ( null !== $plan ) {
+			$values['plan'] = $plan;
+		}
+		$this->save( $values );
 		return true;
 	}
 
 	/**
 	 * The stored answer, with defaults before the first successful call.
 	 *
-	 * @return array{fetched_at:int,attempted_at:int,review_prompt:array{eligible:bool,reason:string,at:string},error_reporting:array{endpoint:string,project:string,key:string,environment:string}|null}
+	 * @return array{fetched_at:int,attempted_at:int,review_prompt:array{eligible:bool,reason:string,at:string},error_reporting:array{endpoint:string,project:string,key:string,environment:string}|null,plan:array{slug:string,name:string,badge:bool,prominent:bool}|null}
 	 */
 	public function stored(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -110,6 +115,7 @@ class Platform_Status {
 			'attempted_at'    => (int) ( $stored['attempted_at'] ?? 0 ),
 			'review_prompt'   => $this->review_prompt( $stored['review_prompt'] ?? null ),
 			'error_reporting' => self::error_reporting( $stored['error_reporting'] ?? null ),
+			'plan'            => self::plan( $stored['plan'] ?? null ),
 		);
 	}
 
@@ -190,6 +196,26 @@ class Platform_Status {
 			return null;
 		}
 		return $block;
+	}
+
+	/**
+	 * Reads the plan block: the plan of the account and whether the platform
+	 * shows its "Powered by Profotograaf" link under galleries. Null when it is
+	 * missing or incomplete, which means the plan is not known.
+	 *
+	 * @param mixed $block Block from the platform or the option.
+	 * @return array{slug:string,name:string,badge:bool,prominent:bool}|null
+	 */
+	public static function plan( $block ): ?array {
+		if ( ! is_array( $block ) || ! is_bool( $block['badge'] ?? null ) ) {
+			return null;
+		}
+		return array(
+			'slug'      => is_string( $block['slug'] ?? null ) ? trim( $block['slug'] ) : '',
+			'name'      => is_string( $block['name'] ?? null ) ? trim( $block['name'] ) : '',
+			'badge'     => $block['badge'],
+			'prominent' => true === ( $block['prominent'] ?? false ),
+		);
 	}
 
 	/**

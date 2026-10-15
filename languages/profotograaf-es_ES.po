@@ -78,6 +78,7 @@ msgstr "Formularios de consulta"
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
+#: includes/modules/class-link-consent-prompt.php:79
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -4334,3 +4335,31 @@ msgstr "Solo cuando el propietario del sitio activa la fuente de medios: los edi
 #, js-format
 msgid "Use the gallery's own layout (%s)"
 msgstr "Usar el diseño propio de la galería (%s)"
+
+#: includes/class-link-consent.php:155
+msgid "This Profotograaf gallery is hidden until you accept the Free plan condition (a small \"Powered by Profotograaf\" link under galleries)."
+msgstr "Esta galería de Profotograaf permanece oculta hasta que aceptes la condición del plan Free (un pequeño enlace «Powered by Profotograaf» bajo las galerías)."
+
+#: includes/class-link-consent.php:157
+msgid "Review the condition"
+msgstr "Revisar la condición"
+
+#: includes/modules/class-link-consent-prompt.php:55
+msgid "Galleries are hidden until you accept the Free plan condition."
+msgstr "Las galerías permanecen ocultas hasta que aceptes la condición del plan Free."
+
+#: includes/modules/class-link-consent-prompt.php:56
+msgid "On the Free plan a small \"Powered by Profotograaf\" link appears under your galleries. It cannot be switched off. Paid plans show no link."
+msgstr "En el plan Free aparece un pequeño enlace «Powered by Profotograaf» bajo tus galerías. No se puede desactivar. Los planes de pago no muestran ningún enlace."
+
+#: includes/modules/class-link-consent-prompt.php:57
+msgid "See the paid plans"
+msgstr "Ver los planes de pago"
+
+#: includes/modules/class-link-consent-prompt.php:64
+msgid "Free plan: a small \"Powered by Profotograaf\" link appears under galleries"
+msgstr "Plan Free: bajo las galerías aparece un pequeño enlace «Powered by Profotograaf»"
+
+#: includes/modules/class-link-consent-prompt.php:67
+msgid "Accept and show my galleries"
+msgstr "Aceptar y mostrar mis galerías"

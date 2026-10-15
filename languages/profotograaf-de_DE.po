@@ -78,6 +78,7 @@ msgstr "Anfrageformulare"
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
+#: includes/modules/class-link-consent-prompt.php:79
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -4334,3 +4335,31 @@ msgstr "Nur wenn der Website-Betreiber die Medienquelle einschaltet: Redakteure,
 #, js-format
 msgid "Use the gallery's own layout (%s)"
 msgstr "Eigenes Layout der Galerie verwenden (%s)"
+
+#: includes/class-link-consent.php:155
+msgid "This Profotograaf gallery is hidden until you accept the Free plan condition (a small \"Powered by Profotograaf\" link under galleries)."
+msgstr "Diese Profotograaf-Galerie bleibt verborgen, bis du die Bedingung des Free-Tarifs akzeptierst (ein kleiner Link „Powered by Profotograaf“ unter den Galerien)."
+
+#: includes/class-link-consent.php:157
+msgid "Review the condition"
+msgstr "Bedingung ansehen"
+
+#: includes/modules/class-link-consent-prompt.php:55
+msgid "Galleries are hidden until you accept the Free plan condition."
+msgstr "Galerien bleiben verborgen, bis du die Bedingung des Free-Tarifs akzeptierst."
+
+#: includes/modules/class-link-consent-prompt.php:56
+msgid "On the Free plan a small \"Powered by Profotograaf\" link appears under your galleries. It cannot be switched off. Paid plans show no link."
+msgstr "Im Free-Tarif erscheint unter deinen Galerien ein kleiner Link „Powered by Profotograaf“. Er lässt sich nicht abschalten. Bezahlte Tarife zeigen keinen Link."
+
+#: includes/modules/class-link-consent-prompt.php:57
+msgid "See the paid plans"
+msgstr "Bezahlte Tarife ansehen"
+
+#: includes/modules/class-link-consent-prompt.php:64
+msgid "Free plan: a small \"Powered by Profotograaf\" link appears under galleries"
+msgstr "Free-Tarif: Unter Galerien erscheint ein kleiner Link „Powered by Profotograaf“"
+
+#: includes/modules/class-link-consent-prompt.php:67
+msgid "Accept and show my galleries"
+msgstr "Akzeptieren und meine Galerien anzeigen"

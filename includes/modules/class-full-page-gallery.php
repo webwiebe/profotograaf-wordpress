@@ -9,6 +9,7 @@ namespace Profotograaf\Modules;
 
 use Profotograaf\Full_Page_Payload;
 use Profotograaf\Full_Page_Renderer;
+use Profotograaf\Link_Consent;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
@@ -32,11 +33,19 @@ class Full_Page_Gallery implements Module {
 	private ?Full_Page_Renderer $renderer = null;
 
 	/**
+	 * Consent to the Free plan link. The block renders nothing without it.
+	 *
+	 * @var Link_Consent|null
+	 */
+	private ?Link_Consent $consent = null;
+
+	/**
 	 * Adds the hooks.
 	 *
 	 * @param Plugin $plugin Service container.
 	 */
 	public function register( Plugin $plugin ): void {
+		$this->consent  = $plugin->link_consent();
 		$this->renderer = new Full_Page_Renderer(
 			new Full_Page_Payload( $plugin->api() ),
 			new Gallery_Index( $plugin->api() ),
@@ -67,7 +76,13 @@ class Full_Page_Gallery implements Module {
 	 * @return string HTML.
 	 */
 	public function render_block( array $attributes ): string {
-		return null === $this->renderer ? '' : $this->renderer->render( $attributes );
+		if ( null === $this->renderer ) {
+			return '';
+		}
+		if ( null !== $this->consent && ! $this->consent->allows_render() ) {
+			return $this->consent->refusal( Settings_Page::url() );
+		}
+		return $this->renderer->render( $attributes );
 	}
 
 	/**
