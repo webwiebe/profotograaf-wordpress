@@ -82,7 +82,7 @@ msgstr "Moduli di richiesta"
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
 #: includes/modules/class-settings-page.php:271
-#: includes/modules/class-settings-page.php:480
+#: includes/modules/class-settings-page.php:481
 #: includes/modules/class-telemetry-consent.php:127
 #: includes/modules/class-virtual-convert.php:203
 #: includes/modules/class-virtual-removal.php:83
@@ -392,15 +392,15 @@ msgstr "Questa galleria richiede JavaScript per essere mostrata qui."
 msgid "View this gallery on Profotograaf"
 msgstr "Guarda questa galleria su Profotograaf"
 
-#: includes/class-pairing.php:106
+#: includes/class-pairing.php:119
 msgid "Profotograaf did not start the connection. Try again in a moment."
 msgstr "Profotograaf non ha avviato la connessione. Riprova tra un momento."
 
-#: includes/class-pairing.php:233
+#: includes/class-pairing.php:261
 msgid "Could not check the connection. Trying again."
 msgstr "Non è stato possibile controllare la connessione. Nuovo tentativo in corso."
 
-#: includes/class-pairing.php:255
+#: includes/class-pairing.php:283
 msgid "Profotograaf approved the connection but sent no tokens. Start again."
 msgstr "Profotograaf ha approvato la connessione ma non ha inviato token. Ricomincia."
 

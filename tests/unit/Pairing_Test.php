@@ -74,7 +74,7 @@ class Pairing_Test extends Wp_Test_Case {
 		$result = $this->pairing->start();
 
 		$this->assertSame( 'ABCD-EFGH', $result['user_code'] );
-		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH', $result['verification_uri'] );
+		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin', $result['verification_uri'] );
 		$this->assertSame( 3, $result['interval'] );
 		$this->assertSame( $this->now + 600, $result['expires_at'] );
 
@@ -101,6 +101,45 @@ class Pairing_Test extends Wp_Test_Case {
 		);
 		$this->assertSame( 'secret-device-code', $this->connection->pairing()['device_code'] );
 		$this->assertFalse( $this->autoload['profotograaf_pairing'], 'the pairing must not autoload' );
+	}
+
+	/**
+	 * @return array<string,array{0:string,1:string}>
+	 */
+	public static function surfaces(): array {
+		return array(
+			'settings'          => array( 'settings', 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin&surface=settings' ),
+			'reconnect'         => array( 'reconnect', 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin&surface=reconnect' ),
+			'none'              => array( '', 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin' ),
+			'unknown'           => array( 'dashboard', 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin' ),
+			'free text dropped' => array( 'a b&c=d', 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin' ),
+		);
+	}
+
+	/**
+	 * @dataProvider surfaces
+	 */
+	public function test_the_approval_link_names_the_plugin_and_a_known_surface( string $surface, string $expected ): void {
+		$this->http->reply(
+			201,
+			array(
+				'device_code'               => 'secret-device-code',
+				'user_code'                 => 'ABCD-EFGH',
+				'verification_uri'          => 'https://profotograaf.nl/app/devices/approve',
+				'verification_uri_complete' => 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH',
+				'expires_in'                => 600,
+				'interval'                  => 3,
+			)
+		);
+
+		$result = $this->pairing->start( array(), $surface );
+
+		$this->assertSame( $expected, $result['verification_uri'] );
+		$this->assertSame( $expected, $this->connection->pairing()['verification_uri'] );
+	}
+
+	public function test_a_link_without_a_query_gets_a_question_mark(): void {
+		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?ref=wordpress-plugin&surface=settings', Pairing::attributed( 'https://profotograaf.nl/app/devices/approve', 'settings' ) );
 	}
 
 	/**
