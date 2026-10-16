@@ -31,8 +31,10 @@ on:
         type: string
         required: true
 
+# One stack at a time per runner host: the compose project uses the fixed ports
+# 8080 and 8090, and the browser maps the mock platform by name.
 concurrency:
-  group: e2e-${{ github.workflow }}-${{ github.ref }}-${{ inputs.specs || github.event.schedule || 'manual' }}
+  group: profotograaf-e2e-stack
   cancel-in-progress: false
 
 permissions:
@@ -41,7 +43,7 @@ permissions:
 jobs:
   plan:
     name: Plan the WordPress versions
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
       full: ${{ steps.plan.outputs.full }}
@@ -71,9 +73,11 @@ jobs:
   e2e:
     name: E2E (WordPress ${{ matrix.wp }})
     needs: plan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
+    timeout-minutes: 120
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         wp: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env:
@@ -84,14 +88,18 @@ jobs:
       E2E_VISUAL: ${{ matrix.wp == '7.1' && needs.plan.outputs.full == 'true' && '1' || '' }}
     steps:
       - uses: actions/checkout@v7
+      # The runner's login keychain is not reachable from a job, and docker's
+      # credential helper reads it even for public images. A config without a
+      # credsStore pulls them anonymously.
+      - name: Docker without the keychain helper
+        run: |
+          mkdir -p "$RUNNER_TEMP/docker-config"
+          echo '{}' > "$RUNNER_TEMP/docker-config/config.json"
+          echo "DOCKER_CONFIG=$RUNNER_TEMP/docker-config" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-node-pnpm
-      - uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install chromium
       - if: env.E2E_BROWSER_MATRIX == '1'
-        run: pnpm exec playwright install --with-deps firefox webkit
+        run: pnpm exec playwright install firefox webkit
       # The E2E site runs the release copy, which holds the built blocks.
       - run: pnpm build
       - run: tests/e2e/up.sh
@@ -127,16 +135,25 @@ jobs:
 
   e2e-multisite:
     name: E2E multisite (WordPress 7.1)
-    needs: plan
-    if: needs.plan.outputs.full == 'true' && (github.event_name != 'schedule' || github.event.schedule == '17 2 * * *')
-    runs-on: ubuntu-latest
+    needs: [plan, e2e]
+    if: ${{ !cancelled() && needs.plan.outputs.full == 'true' && (github.event_name != 'schedule' || github.event.schedule == '17 2 * * *') }}
+    runs-on: [self-hosted, build]
+    timeout-minutes: 30
     env:
       WP_VERSION: '7.1'
       PROFOTOGRAAF_MULTISITE: '1'
     steps:
       - uses: actions/checkout@v7
+      # The runner's login keychain is not reachable from a job, and docker's
+      # credential helper reads it even for public images. A config without a
+      # credsStore pulls them anonymously.
+      - name: Docker without the keychain helper
+        run: |
+          mkdir -p "$RUNNER_TEMP/docker-config"
+          echo '{}' > "$RUNNER_TEMP/docker-config/config.json"
+          echo "DOCKER_CONFIG=$RUNNER_TEMP/docker-config" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install chromium
       - run: pnpm build
       - run: tests/e2e/up.sh
       # Converts the site to a network, creates two subsites and network-activates the plugin.
