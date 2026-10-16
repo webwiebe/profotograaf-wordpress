@@ -8,6 +8,7 @@
 namespace Profotograaf\Modules;
 
 use Profotograaf\Embed_Script;
+use Profotograaf\Full_Page_Payload;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Gallery_Renderer;
 use Profotograaf\Gallery_Rest;
@@ -61,7 +62,7 @@ class Gallery_Embed implements Module {
 	public function register( Plugin $plugin ): void {
 		$script         = new Embed_Script();
 		$index          = new Gallery_Index( $plugin->api() );
-		$renderer       = new Gallery_Renderer( $script, $index, $plugin->settings() );
+		$renderer       = new Gallery_Renderer( $script, $index, $plugin->settings(), new Full_Page_Payload( $plugin->api() ) );
 		$this->renderer = $renderer;
 		$this->settings = $plugin->settings();
 

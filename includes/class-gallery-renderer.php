@@ -119,10 +119,17 @@ class Gallery_Renderer {
 	public const MAX_EXCLUDED = 500;
 
 	/** Most per-image entries kept. */
-	public const IMAGE_TEXT_LIMIT = 200;
+	public const IMAGE_TEXT_LIMIT = Image_Text::LIMIT;
 
 	/** Longest caption or alt text kept, in characters. */
-	public const IMAGE_TEXT_LENGTH = 500;
+	public const IMAGE_TEXT_LENGTH = Image_Text::LENGTH;
+
+	/**
+	 * Server-drawn markup source.
+	 *
+	 * @var Server_Gallery
+	 */
+	private Server_Gallery $server;
 
 	/**
 	 * Script handling.
@@ -155,15 +162,17 @@ class Gallery_Renderer {
 	/**
 	 * Constructor.
 	 *
-	 * @param Embed_Script  $script   Script handling.
-	 * @param Gallery_Index $index    Gallery details.
-	 * @param Settings      $settings Settings.
+	 * @param Embed_Script           $script   Script handling.
+	 * @param Gallery_Index          $index    Gallery details.
+	 * @param Settings               $settings Settings.
+	 * @param Full_Page_Payload|null $payloads Payload source for server-drawn markup.
 	 */
-	public function __construct( Embed_Script $script, Gallery_Index $index, Settings $settings ) {
+	public function __construct( Embed_Script $script, Gallery_Index $index, Settings $settings, ?Full_Page_Payload $payloads = null ) {
 		$this->script   = $script;
 		$this->index    = $index;
 		$this->settings = $settings;
 		$this->options  = new Option_Resolver( $settings );
+		$this->server   = new Server_Gallery( $payloads );
 	}
 
 	/**
@@ -259,47 +268,7 @@ class Gallery_Renderer {
 	 * @return string JSON, or an empty string when nothing usable is left.
 	 */
 	public static function clean_image_text( $raw ): string {
-		if ( is_string( $raw ) ) {
-			$raw = '' === trim( $raw ) ? array() : json_decode( $raw, true );
-		}
-		if ( ! is_array( $raw ) ) {
-			return '';
-		}
-		$clean = array();
-		foreach ( $raw as $item ) {
-			$entry = self::clean_image_entry( $item );
-			if ( null !== $entry ) {
-				$clean[] = $entry;
-			}
-			if ( count( $clean ) >= self::IMAGE_TEXT_LIMIT ) {
-				break;
-			}
-		}
-		return array() === $clean ? '' : (string) wp_json_encode( $clean );
-	}
-
-	/**
-	 * Cleans one per-image entry.
-	 *
-	 * @param mixed $item Raw entry.
-	 * @return array<string,string>|null The entry, or null without a valid id or any text.
-	 */
-	private static function clean_image_entry( $item ): ?array {
-		if ( ! is_array( $item ) || ! isset( $item['id'] ) || ! is_scalar( $item['id'] ) ) {
-			return null;
-		}
-		$id = trim( (string) $item['id'] );
-		if ( ! self::valid_id( $id ) ) {
-			return null;
-		}
-		$entry = array( 'id' => $id );
-		foreach ( array( 'caption', 'alt' ) as $field ) {
-			$text = isset( $item[ $field ] ) && is_scalar( $item[ $field ] ) ? trim( sanitize_text_field( (string) $item[ $field ] ) ) : '';
-			if ( '' !== $text ) {
-				$entry[ $field ] = mb_substr( $text, 0, self::IMAGE_TEXT_LENGTH );
-			}
-		}
-		return count( $entry ) > 1 ? $entry : null;
+		return Image_Text::clean( $raw );
 	}
 
 	/**
@@ -360,8 +329,9 @@ class Gallery_Renderer {
 		}
 
 		return $notice . $this->script->preconnect() . Reserved_Space::rule() . sprintf(
-			'<div %1$s>%2$s%3$s<noscript>%4$s</noscript></div>',
+			'<div %1$s>%2$s%3$s%4$s<noscript>%5$s</noscript></div>',
 			$this->wrapper_attributes( $args, $classes, $id, $layout, $data ),
+			$this->server->shadow_root( $id, $data, $layout ),
 			$this->fallback_link( $id, $args ),
 			Empty_Gallery::hint( false ),
 			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
