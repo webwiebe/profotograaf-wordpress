@@ -859,15 +859,15 @@ msgstr "WP-Cron bezorgt geen aanvragen. Voer `wp profotograaf leads flush` uit v
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Deze galerij kon niet worden geladen. Probeer het later opnieuw."
 
-#: includes/class-gallery-renderer.php:331
+#: includes/class-gallery-renderer.php:300
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr "De Profotograaf-galerij kan niet worden getoond omdat de galerij-ID ontbreekt of niet geldig is. Kies de galerij opnieuw."
 
-#: includes/class-gallery-renderer.php:346
+#: includes/class-gallery-renderer.php:315
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Deze Profotograaf-galerij is niet gevonden in je account. Misschien is hij verwijderd. Kies een andere galerij."
 
-#: includes/class-gallery-renderer.php:367
+#: includes/class-gallery-renderer.php:337
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Deze galerij heeft JavaScript nodig om hier te worden getoond."
 
