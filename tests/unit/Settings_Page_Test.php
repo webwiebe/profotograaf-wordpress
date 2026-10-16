@@ -45,6 +45,9 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->plugin = new Plugin( $connection, new Api_Client( $connection, $this->http, $this->clock() ), $this->clock() );
 		$this->page   = new Recording_Settings_Page();
 		Functions\when( 'get_current_user_id' )->justReturn( 7 );
+		Functions\when( 'wp_unslash' )->returnArg();
+		Functions\when( 'sanitize_key' )->alias( fn( $key ) => preg_replace( '/[^a-z0-9_\\-]/', '', strtolower( (string) $key ) ) );
+		$_POST = array();
 		Functions\when( 'plugin_basename' )->justReturn( 'profotograaf/profotograaf.php' );
 		$this->page->register( $this->plugin );
 	}
@@ -190,6 +193,29 @@ class Settings_Page_Test extends Wp_Test_Case {
 
 		$this->assertSame( 1, $this->page->finished );
 		$this->assertSame( 'ABCD-EFGH', $this->plugin->connection()->pairing()['user_code'] );
+	}
+
+	public function test_connect_passes_the_screen_that_started_it_into_the_approval_link(): void {
+		$this->allow( true );
+		$_POST['surface'] = 'reconnect';
+		$this->http->reply(
+			201,
+			array(
+				'device_code'               => 'code',
+				'user_code'                 => 'ABCD-EFGH',
+				'verification_uri_complete' => 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH',
+				'expires_in'                => 600,
+				'interval'                  => 3,
+			)
+		);
+
+		$this->page->handle_connect();
+		unset( $_POST['surface'] );
+
+		$this->assertSame(
+			'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin&surface=reconnect',
+			$this->plugin->connection()->pairing()['verification_uri']
+		);
 	}
 
 	public function test_connect_leaves_an_error_notice_when_the_platform_is_down(): void {
