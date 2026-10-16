@@ -193,9 +193,7 @@ class Settings_Page implements Module {
 	 */
 	public function handle_connect(): void {
 		$this->authorize( 'profotograaf_connect' );
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- authorize() checked the nonce.
-		$surface = isset( $_POST['surface'] ) ? sanitize_key( wp_unslash( $_POST['surface'] ) ) : '';
-		$result  = $this->plugin()->pairing()->start( array(), $surface );
+		$result = $this->plugin()->pairing()->start( array(), isset( $_POST['surface'] ) ? sanitize_key( wp_unslash( $_POST['surface'] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- authorize() checked the nonce.
 		if ( is_wp_error( $result ) ) {
 			$this->notice( 'error', $result->get_error_message() );
 		}
@@ -419,15 +417,12 @@ class Settings_Page implements Module {
 	 * @param string $action Action name, also the nonce action.
 	 * @param string $label  Button label.
 	 * @param string $type   Button type: primary or secondary.
-	 * @param string $surface Screen name sent with a connect request (Pairing::SURFACES).
+	 * @param string $surface Connect forms only: one of Pairing::SURFACES.
 	 */
 	private function render_action_form( string $action, string $label, string $type, string $surface = '' ): void {
 		?>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="profotograaf-action">
-			<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>" />
-			<?php if ( '' !== $surface ) : ?>
-				<input type="hidden" name="surface" value="<?php echo esc_attr( $surface ); ?>" />
-			<?php endif; ?>
+			<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>" /><?php echo '' === $surface ? '' : '<input type="hidden" name="surface" value="' . esc_attr( $surface ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() above. ?>
 			<?php wp_nonce_field( $action ); ?>
 			<?php submit_button( $label, $type, 'submit', false ); ?>
 		</form>
