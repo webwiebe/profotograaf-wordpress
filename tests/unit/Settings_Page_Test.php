@@ -192,11 +192,24 @@ class Settings_Page_Test extends Wp_Test_Case {
 		$this->assertSame( 'ABCD-EFGH', $this->plugin->connection()->pairing()['user_code'] );
 	}
 
-	public function test_connect_passes_the_screen_that_started_it_to_the_approval_link(): void {
+	/**
+	 * @return array<string,array{bool,string}>
+	 */
+	public static function connect_screens(): array {
+		return array(
+			'first connection' => array( false, 'surface=settings' ),
+			'connect again'    => array( true, 'surface=reconnect' ),
+		);
+	}
+
+	/**
+	 * @dataProvider connect_screens
+	 */
+	public function test_connect_tells_the_approval_link_which_screen_started_it( bool $connected, string $expected ): void {
 		$this->allow( true );
-		Functions\when( 'sanitize_key' )->alias( fn( $key ) => strtolower( preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $key ) ) );
-		Functions\when( 'wp_unslash' )->returnArg();
-		$_POST['surface'] = 'reconnect';
+		if ( $connected ) {
+			$this->connect();
+		}
 		$this->http->reply(
 			201,
 			array(
@@ -209,9 +222,8 @@ class Settings_Page_Test extends Wp_Test_Case {
 		);
 
 		$this->page->handle_connect();
-		unset( $_POST['surface'] );
 
-		$this->assertStringContainsString( 'ref=wordpress-plugin&surface=reconnect', $this->plugin->connection()->pairing()['verification_uri'] );
+		$this->assertStringContainsString( 'ref=wordpress-plugin&' . $expected, $this->plugin->connection()->pairing()['verification_uri'] );
 	}
 
 	public function test_connect_leaves_an_error_notice_when_the_platform_is_down(): void {
