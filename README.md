@@ -4,7 +4,7 @@ Show your [Profotograaf](https://profotograaf.nl) galleries on your own WordPres
 
 The plugin is GPL-2.0-or-later and is not in the WordPress plugin directory yet (tracked in [#4](https://github.com/webwiebe/profotograaf-wordpress/issues/4)). This repository holds its code. The platform side lives elsewhere.
 
-- Download the zip from the [releases](https://github.com/webwiebe/profotograaf-wordpress/releases) and upload it under Plugins > Add New Plugin > Upload Plugin. The plugin directory listing is tracked in [#4](https://github.com/webwiebe/profotograaf-wordpress/issues/4).
+- Sign in at [profotograaf.nl](https://profotograaf.nl), open [Plugins](https://profotograaf.nl/app/plugins) in the app and download the WordPress plugin zip, then upload it under Plugins > Add New Plugin > Upload Plugin. The plugin directory listing is tracked in [#4](https://github.com/webwiebe/profotograaf-wordpress/issues/4).
 - Open Settings > Profotograaf and click "Connect to Profotograaf".
 - Requirements: WordPress 6.9 or later (current and previous two major versions), PHP 8.1 or later.
 
