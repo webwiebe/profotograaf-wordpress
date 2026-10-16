@@ -1,0 +1,16 @@
+{
+  "note": "No photos: the embed draws nothing and keeps the fallback link.",
+  "attrs": {},
+  "gallery": {
+    "id": "g1",
+    "title": "Spring wedding",
+    "layout": "masonry",
+    "url": "https://profotograaf.test/share/g/spring",
+    "badge": {
+      "show": true,
+      "prominent": false,
+      "url": "https://profotograaf.test/made-with?ref=embed-badge"
+    },
+    "photos": []
+  }
+}
