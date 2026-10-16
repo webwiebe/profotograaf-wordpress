@@ -218,6 +218,7 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( 500, $body['attributes']['http_status'] );
 		$this->assertSame( '0.1.0', $body['attributes']['plugin_version'] );
 		$this->assertSame( 'profotograaf-wordpress@0.1.0', $body['attributes']['release'] );
+		$this->assertSame( 'wordpress', $body['attributes']['surface'] );
 		$second = json_decode( (string) $errors[1]['args']['body'], true );
 		$this->assertSame( array(), $second['exception']['stacktrace'] );
 		$this->assertArrayNotHasKey( 'timestamp', $second );

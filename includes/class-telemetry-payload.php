@@ -162,6 +162,8 @@ final class Telemetry_Payload {
 				'plugin_version'    => $error['plugin_version'],
 				'wordpress_version' => $error['wordpress_version'],
 				'php_version'       => $error['php_version'],
+				// BugBarn counts issues per surface.
+				'surface'           => 'wordpress',
 			),
 		);
 		if ( '' !== $error['plugin_version'] ) {
