@@ -217,11 +217,25 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( '11111111-2222-4333-8444-555555555555', $body['attributes']['install_id'] );
 		$this->assertSame( 500, $body['attributes']['http_status'] );
 		$this->assertSame( '0.1.0', $body['attributes']['plugin_version'] );
+		$this->assertSame( 'profotograaf-wordpress@0.1.0', $body['attributes']['release'] );
+		$this->assertSame( 'wordpress', $body['attributes']['surface'] );
 		$second = json_decode( (string) $errors[1]['args']['body'], true );
 		$this->assertSame( array(), $second['exception']['stacktrace'] );
 		$this->assertArrayNotHasKey( 'timestamp', $second );
 		$this->assertSame( array(), $sender->pending_errors() );
 		$this->assertSame( array(), $sender->queue() );
+	}
+
+	public function test_the_error_release_is_the_plugin_version_and_left_out_without_one(): void {
+		$item = array(
+			'install_id'     => '11111111-2222-4333-8444-555555555555',
+			'error_code'     => 'a_code',
+			'plugin_version' => '1.2.3',
+		);
+		$this->assertSame( 'profotograaf-wordpress@1.2.3', Telemetry_Payload::bugbarn_event( $item )['attributes']['release'] );
+
+		$item['plugin_version'] = '';
+		$this->assertArrayNotHasKey( 'release', Telemetry_Payload::bugbarn_event( $item )['attributes'] );
 	}
 
 	public function test_free_text_in_module_and_error_fields_is_stripped(): void {
