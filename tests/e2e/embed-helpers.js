@@ -146,4 +146,23 @@ function measure( host ) {
 	} );
 }
 
-module.exports = { HOST, PAGE_URL, wp, publishPost, shortcode, block, openEmbed, expectTiles, measure };
+/**
+ * Makes the browser behave like one without declarative shadow DOM: the server
+ * markup arrives with its <template> left inert, so the light-DOM fallback
+ * link is what a visitor sees (#260). Call it on a context before it loads a
+ * page.
+ *
+ * @param {import('@playwright/test').BrowserContext} context
+ */
+function withoutDeclarativeShadowDom( context ) {
+	return context.route( ( target ) => target.hostname === 'localhost', async ( route ) => {
+		if ( route.request().resourceType() !== 'document' ) {
+			return route.fallback();
+		}
+		const response = await route.fetch();
+		const body = ( await response.text() ).replace( /<template shadowrootmode=/g, '<template data-shadowrootmode=' );
+		return route.fulfill( { response, body } );
+	} );
+}
+
+module.exports = { HOST, PAGE_URL, wp, publishPost, shortcode, block, openEmbed, expectTiles, measure, withoutDeclarativeShadowDom };

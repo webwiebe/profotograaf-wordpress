@@ -4,6 +4,7 @@ const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
 const AxeBuilder = require( '@axe-core/playwright' ).default;
 const { login, mock } = require( './helpers' );
+const { withoutDeclarativeShadowDom } = require( './embed-helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 
@@ -102,7 +103,9 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const embed = anonymous.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed ).toHaveAttribute( 'data-layout', 'masonry' );
-		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toHaveAttribute( 'href', /\/share\/g\/spring-wedding$/ );
+		// The server drew the gallery, so the light-DOM fallback link is not rendered; it stays in the markup.
+		await expect( embed.locator( '.photos .tile' ).first() ).toBeVisible();
+		await expect( embed.locator( ':scope > a' ) ).toHaveAttribute( 'href', /\/share\/g\/spring-wedding$/ );
 		const scripts = anonymous.locator( 'script[src*="/share/embed/embed"]' );
 		await expect( scripts ).toHaveCount( 1 );
 		await expect( scripts.first() ).toHaveAttribute( 'async', '' );
@@ -195,7 +198,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await visitor.close();
 	} );
 
-	test( 'a blocked embed.js leaves the fallback link and logs what to check', async ( { browser } ) => {
+	test( 'a blocked embed.js leaves the server-drawn gallery and logs what to check', async ( { browser } ) => {
 		const url = publishPost( 'Blocked script E2E', '[profotograaf_gallery id="g-e2e"]' );
 
 		const visitor = await browser.newContext();
@@ -211,16 +214,46 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed ).toHaveAttribute( 'data-profotograaf-failed', '' );
-		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
+		await expect( embed.locator( '.photos .tile' ).first() ).toBeVisible();
 		expect( ( await embed.boundingBox() ).height ).toBeGreaterThan( 100 );
 		expect( errors.some( ( text ) => text.includes( 'Profotograaf: the gallery script could not be loaded' ) ) ).toBe( true );
 		await visitor.close();
 	} );
 
-	test( 'with JavaScript off a visitor sees the link and no list or disclosure markup', async ( { browser } ) => {
+	test( 'without declarative shadow DOM a blocked embed.js leaves the fallback link', async ( { browser } ) => {
+		const url = publishPost( 'Blocked script no DSD E2E', '[profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext();
+		await withoutDeclarativeShadowDom( visitor );
+		const page = await visitor.newPage();
+		await page.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js/, ( route ) => route.abort() );
+		await page.goto( url );
+
+		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		await expect( embed ).toHaveAttribute( 'data-profotograaf-failed', '' );
+		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
+		expect( ( await embed.boundingBox() ).height ).toBeGreaterThan( 100 );
+		await visitor.close();
+	} );
+
+	test( 'with JavaScript off a visitor sees the server-drawn gallery and no list or disclosure markup', async ( { browser } ) => {
 		const url = publishPost( 'No script E2E', '[profotograaf_gallery id="g-e2e"]' );
 
 		const visitor = await browser.newContext( { javaScriptEnabled: false } );
+		const page = await visitor.newPage();
+		await page.goto( url );
+
+		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		await expect( embed.locator( '.photos .tile img' ).first() ).toBeVisible();
+		await expect( embed.locator( 'details, summary, ul, li' ) ).toHaveCount( 0 );
+		await visitor.close();
+	} );
+
+	test( 'with JavaScript off and no declarative shadow DOM a visitor sees the link and no list, disclosure or image markup', async ( { browser } ) => {
+		const url = publishPost( 'No script no DSD E2E', '[profotograaf_gallery id="g-e2e"]' );
+
+		const visitor = await browser.newContext( { javaScriptEnabled: false } );
+		await withoutDeclarativeShadowDom( visitor );
 		const page = await visitor.newPage();
 		await page.goto( url );
 
