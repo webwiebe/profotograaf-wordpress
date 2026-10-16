@@ -867,7 +867,7 @@ msgstr "De Profotograaf-galerij kan niet worden getoond omdat de galerij-ID ontb
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Deze Profotograaf-galerij is niet gevonden in je account. Misschien is hij verwijderd. Kies een andere galerij."
 
-#: includes/class-gallery-renderer.php:337
+#: includes/class-gallery-renderer.php:340
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Deze galerij heeft JavaScript nodig om hier te worden getoond."
 

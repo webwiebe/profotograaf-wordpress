@@ -328,10 +328,13 @@ class Gallery_Renderer {
 			);
 		}
 
+		// A gallery the server drew holds its own height, so it reserves no space.
+		$shadow = $this->server->shadow_root( $id, $data, $layout );
+
 		return $notice . $this->script->preconnect() . Reserved_Space::rule() . sprintf(
 			'<div %1$s>%2$s%3$s%4$s<noscript>%5$s</noscript></div>',
-			$this->wrapper_attributes( $args, $classes, $id, $layout, $data ),
-			$this->server->shadow_root( $id, $data, $layout ),
+			$this->wrapper_attributes( $args, $classes, $id, $layout, $data, '' === $shadow ),
+			$shadow,
 			$this->fallback_link( $id, $args ),
 			Empty_Gallery::hint( false ),
 			esc_html__( 'This gallery needs JavaScript to be shown here.', 'profotograaf' )
@@ -392,8 +395,9 @@ class Gallery_Renderer {
 	 * @param string               $id      Gallery id.
 	 * @param string               $layout  Layout.
 	 * @param array<string,string> $data    Display option data attributes.
+	 * @param bool                 $reserve Whether to hold space until embed.js draws.
 	 */
-	private function wrapper_attributes( array $args, string $classes, string $id, string $layout, array $data ): string {
+	private function wrapper_attributes( array $args, string $classes, string $id, string $layout, array $data, bool $reserve = true ): string {
 		$wrapper = $args['wrapper'] ?? null;
 		if ( is_callable( $wrapper ) ) {
 			return (string) $wrapper(
@@ -401,7 +405,7 @@ class Gallery_Renderer {
 					'class'                     => 'profotograaf-gallery',
 					'data-profotograaf-gallery' => $id,
 					'data-layout'               => $layout,
-				) + $data + ( isset( $data['data-pf-empty'] ) ? array() : array( 'style' => Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) ) )
+				) + $data + ( isset( $data['data-pf-empty'] ) || ! $reserve ? array() : array( 'style' => Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) ) )
 			);
 		}
 		$html = sprintf(
@@ -413,7 +417,7 @@ class Gallery_Renderer {
 		foreach ( $data as $name => $value ) {
 			$html .= sprintf( ' %1$s="%2$s"', $name, esc_attr( $value ) );
 		}
-		if ( isset( $data['data-pf-empty'] ) ) {
+		if ( isset( $data['data-pf-empty'] ) || ! $reserve ) {
 			return $html;
 		}
 		return $html . sprintf( ' style="%s"', esc_attr( Reserved_Space::style( $layout, $data, $this->index->count( $id ) ) ) );

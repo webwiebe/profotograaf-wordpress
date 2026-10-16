@@ -384,7 +384,7 @@ msgstr "La galerie Profotograaf ne peut pas être affichée car son identifiant 
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Cette galerie Profotograaf est introuvable dans votre compte. Elle a peut-être été supprimée. Choisissez une autre galerie."
 
-#: includes/class-gallery-renderer.php:337
+#: includes/class-gallery-renderer.php:340
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Cette galerie nécessite JavaScript pour s'afficher ici."
 

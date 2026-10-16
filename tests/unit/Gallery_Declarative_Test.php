@@ -11,6 +11,7 @@ use Brain\Monkey\Functions;
 use Profotograaf\Full_Page_Payload;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Gallery_Renderer;
+use Profotograaf\Reserved_Space;
 use Profotograaf\Settings;
 
 class Gallery_Declarative_Test extends Gallery_Test_Case {
@@ -71,6 +72,23 @@ class Gallery_Declarative_Test extends Gallery_Test_Case {
 		$this->assertStringContainsString( 'data-profotograaf-gallery="g-1"', $html );
 		$this->assertStringContainsString( 'This gallery needs JavaScript', $html );
 		$this->assertCount( 1, $this->http->requests );
+	}
+
+	public function test_a_gallery_the_server_drew_holds_no_reserved_space(): void {
+		$this->http->reply( 200, $this->payload() );
+
+		$html = $this->server->render( array( 'id' => 'g-1', 'layout' => 'masonry' ) );
+
+		$this->assertStringContainsString( '<template shadowrootmode="open">', $html );
+		$this->assertStringNotContainsString( '--pf-ar', str_replace( Reserved_Space::rule(), '', $html ) );
+	}
+
+	public function test_a_gallery_the_server_cannot_draw_still_reserves_its_space(): void {
+		$this->http->reply( 200, $this->payload() );
+
+		$html = $this->server->render( array( 'id' => 'g-1', 'layout' => 'slideshow' ) );
+
+		$this->assertStringContainsString( 'style="--pf-ar:', $html );
 	}
 
 	public function test_the_badge_is_written_in_the_site_language(): void {

@@ -20,6 +20,10 @@ on:
         type: choice
         options: ['7.1', '7.0', '6.9', all]
         default: '7.1'
+      specs:
+        description: Space separated spec files to run on the current WordPress, empty for the full suite
+        type: string
+        default: ''
   workflow_call:
     inputs:
       specs:
