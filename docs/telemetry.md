@@ -143,11 +143,14 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
     "http_status": 0,
     "error_location": "includes/leads/class-lead-sender.php:87",
     "plugin_version": "0.2.0",
+    "release": "profotograaf-wordpress@0.2.0",
     "wordpress_version": "6.9",
     "php_version": "8.3"
   }
 }
 ```
+
+`release` is `profotograaf-wordpress@` and the plugin version, so BugBarn can show which version an error occurs in. It adds no data: it repeats `plugin_version`. An event without a plugin version carries no `release`.
 
 ## Error Collection
 

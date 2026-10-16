@@ -22,6 +22,9 @@ final class Telemetry_Payload {
 	public const TYPE        = 'usage';
 	public const USAGE_EVENT = 'daily_usage';
 
+	/** The release of an error event is this prefix and the plugin version. */
+	public const RELEASE_PREFIX = 'profotograaf-wordpress@';
+
 	public const COUNTERS = array(
 		'refresh_success',
 		'refresh_failed',
@@ -161,6 +164,10 @@ final class Telemetry_Payload {
 				'php_version'       => $error['php_version'],
 			),
 		);
+		if ( '' !== $error['plugin_version'] ) {
+			// BugBarn reads the release from attributes.release.
+			$event['attributes']['release'] = self::RELEASE_PREFIX . $error['plugin_version'];
+		}
 		if ( '' !== $error['timestamp'] ) {
 			$event['timestamp'] = $error['timestamp'];
 		}
