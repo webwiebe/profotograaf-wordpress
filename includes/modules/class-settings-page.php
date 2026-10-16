@@ -193,7 +193,8 @@ class Settings_Page implements Module {
 	 */
 	public function handle_connect(): void {
 		$this->authorize( 'profotograaf_connect' );
-		$result = $this->plugin()->pairing()->start();
+		$surface = isset( $_POST['surface'] ) ? sanitize_key( wp_unslash( $_POST['surface'] ) ) : 'settings'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in authorize().
+		$result  = $this->plugin()->pairing()->start( array(), $surface );
 		if ( is_wp_error( $result ) ) {
 			$this->notice( 'error', $result->get_error_message() );
 		}
@@ -298,13 +299,13 @@ class Settings_Page implements Module {
 					<div class="notice notice-warning inline">
 						<p><?php esc_html_e( 'This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are.', 'profotograaf' ); ?></p>
 					</div>
-					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary' ); ?>
+					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary', 'reconnect' ); ?>
 				<?php endif; ?>
 				<?php if ( ! $connection->needs_reconnect() && $connection->needs_write_reconnect( $this->plugin()->settings()->writes_to_platform() ) ) : ?>
 					<div class="notice notice-warning inline">
 						<p><?php echo esc_html( Backup_Intro::reconnect_text( $this->plugin()->settings(), true ) ); ?></p>
 					</div>
-					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary' ); ?>
+					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary', 'reconnect' ); ?>
 				<?php endif; ?>
 				<?php $this->render_action_form( 'profotograaf_disconnect', __( 'Disconnect', 'profotograaf' ), 'secondary' ); ?>
 			<?php else : ?>
@@ -316,7 +317,7 @@ class Settings_Page implements Module {
 				</p>
 				<p><?php esc_html_e( 'Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site.', 'profotograaf' ); ?></p>
 				<p class="description"><?php esc_html_e( 'Connecting shares this site\'s name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account.', 'profotograaf' ); ?></p>
-				<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect to Profotograaf', 'profotograaf' ), 'primary' ); ?>
+				<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect to Profotograaf', 'profotograaf' ), 'primary', 'settings' ); ?>
 			<?php endif; ?>
 			<?php endif; ?>
 
@@ -416,12 +417,16 @@ class Settings_Page implements Module {
 	 *
 	 * @param string $action Action name, also the nonce action.
 	 * @param string $label  Button label.
-	 * @param string $type   Button type: primary or secondary.
+	 * @param string $type    Button type: primary or secondary.
+	 * @param string $surface Screen name a connect form sends along, empty for other forms.
 	 */
-	private function render_action_form( string $action, string $label, string $type ): void {
+	private function render_action_form( string $action, string $label, string $type, string $surface = '' ): void {
 		?>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="profotograaf-action">
 			<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>" />
+			<?php if ( '' !== $surface ) : ?>
+				<input type="hidden" name="surface" value="<?php echo esc_attr( $surface ); ?>" />
+			<?php endif; ?>
 			<?php wp_nonce_field( $action ); ?>
 			<?php submit_button( $label, $type, 'submit', false ); ?>
 		</form>

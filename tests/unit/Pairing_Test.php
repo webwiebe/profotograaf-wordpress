@@ -74,7 +74,7 @@ class Pairing_Test extends Wp_Test_Case {
 		$result = $this->pairing->start();
 
 		$this->assertSame( 'ABCD-EFGH', $result['user_code'] );
-		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH', $result['verification_uri'] );
+		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin&surface=settings', $result['verification_uri'] );
 		$this->assertSame( 3, $result['interval'] );
 		$this->assertSame( $this->now + 600, $result['expires_at'] );
 
@@ -101,6 +101,36 @@ class Pairing_Test extends Wp_Test_Case {
 		);
 		$this->assertSame( 'secret-device-code', $this->connection->pairing()['device_code'] );
 		$this->assertFalse( $this->autoload['profotograaf_pairing'], 'the pairing must not autoload' );
+	}
+
+	private function reply_with_link( string $link ): void {
+		$this->http->reply(
+			201,
+			array(
+				'device_code'               => 'secret-device-code',
+				'user_code'                 => 'ABCD-EFGH',
+				'verification_uri_complete' => $link,
+				'expires_in'                => 600,
+				'interval'                  => 3,
+			)
+		);
+	}
+
+	public function test_the_approval_link_carries_the_ref_and_the_screen_that_started_it(): void {
+		$this->reply_with_link( 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH' );
+
+		$result = $this->pairing->start( array(), 'reconnect' );
+
+		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?code=ABCD-EFGH&ref=wordpress-plugin&surface=reconnect', $result['verification_uri'] );
+		$this->assertSame( $result['verification_uri'], $this->connection->pairing()['verification_uri'] );
+	}
+
+	public function test_a_surface_outside_the_list_is_dropped_and_the_ref_stays(): void {
+		$this->reply_with_link( 'https://profotograaf.nl/app/devices/approve' );
+
+		$result = $this->pairing->start( array(), 'evil&ref=x' );
+
+		$this->assertSame( 'https://profotograaf.nl/app/devices/approve?ref=wordpress-plugin', $result['verification_uri'] );
 	}
 
 	/**

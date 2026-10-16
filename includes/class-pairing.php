@@ -33,6 +33,18 @@ class Pairing {
 	private const SITE_URL_MAX_LENGTH = 300;
 
 	/**
+	 * The attribution the platform reads from the approval link.
+	 */
+	public const REF = 'wordpress-plugin';
+
+	/**
+	 * The screens that can start a connection. The link carries one of these as
+	 * `surface`, so sign-ups can be told apart per screen. Add a value here for
+	 * a new entry point.
+	 */
+	public const SURFACES = array( 'settings', 'reconnect' );
+
+	/**
 	 * Languages the platform's sign-up form is available in.
 	 */
 	private const PREFILL_LANGUAGES = array( 'en', 'nl', 'de', 'fr' );
@@ -72,12 +84,28 @@ class Pairing {
 	}
 
 	/**
+	 * Adds the attribution to the approval link: `ref` for the plugin as a whole
+	 * and `surface` for the screen. A surface outside the list is dropped.
+	 *
+	 * @param string $uri     Approval link from the platform.
+	 * @param string $surface Screen that started the connection.
+	 */
+	private function attributed( string $uri, string $surface ): string {
+		$args = array( 'ref' => self::REF );
+		if ( in_array( $surface, self::SURFACES, true ) ) {
+			$args['surface'] = $surface;
+		}
+		return $uri . ( str_contains( $uri, '?' ) ? '&' : '?' ) . http_build_query( $args );
+	}
+
+	/**
 	 * Starts a pairing and remembers it.
 	 *
 	 * @param array<int,string> $extra_scopes Scopes to request on top of Config::SCOPES.
+	 * @param string            $surface      The screen that started the connection, one of self::SURFACES.
 	 * @return array{user_code:string,verification_uri:string,expires_at:int,interval:int}|WP_Error
 	 */
-	public function start( array $extra_scopes = array() ) {
+	public function start( array $extra_scopes = array(), string $surface = 'settings' ) {
 		$host = (string) wp_parse_url( home_url(), PHP_URL_HOST );
 
 		$result = $this->api->public_request(
@@ -115,6 +143,7 @@ class Pairing {
 		if ( '' === $uri ) {
 			$uri = Config::platform_endpoint( '/app/devices/approve' );
 		}
+		$uri     = $this->attributed( $uri, $surface );
 		$pairing = array(
 			'device_code'      => (string) $body['device_code'],
 			'user_code'        => (string) $body['user_code'],
