@@ -8,14 +8,14 @@ There is no `continue-on-error` anywhere and no skip flag. `scripts/check-workfl
 
 ## The ratchet rule
 
-Baseline-backed gates (oxlint, file length, PHPStan) share four properties:
+Baseline-backed gates (oxlint, file length, PHPStan, dead PHP code, boundaries) share four properties:
 
 1. A new violation fails.
 2. A violation that got worse fails.
 3. A violation that is gone but still listed in the baseline fails (the baseline must shrink with the code).
 4. The only way to change a baseline is its refresh command, which shows up as a diff a reviewer can argue with.
 
-All three baselines are at zero except PHPStan (46 errors, all in `phpstan-baseline.neon`).
+The baselines are at zero except PHPStan (31 errors, all in `phpstan-baseline.neon`) and the boundaries gate (21 entries in `scripts/boundaries-baseline.txt`).
 
 ## Gates
 
@@ -26,6 +26,8 @@ All three baselines are at zero except PHPStan (46 errors, all in `phpstan-basel
 | oxlint type-aware | `node scripts/oxlint-ratchet.mjs --type-aware` | type-aware rules (oxlint-tsgolint), same ratchet | `oxlint-type-aware-baseline.json`, refresh with `--type-aware --write` |
 | knip | `pnpm knip` | no unused files, exports or dependencies | none, config in `knip.json` |
 | File length | `pnpm check:file-length` | 500 lines, TS and PHP sources (tests, vendor and generated output are exempt) | `scripts/file-length-baseline.txt`, refresh with `node scripts/check-file-length.mjs --update-baseline` |
+| Dead PHP code | `node scripts/check-dead-php.mjs` | no function, constant or class in `includes/` that nothing in `includes/`, `blocks/` or `tests/unit/` refers to | `scripts/dead-php-baseline.txt` (empty), refresh with `--update-baseline` |
+| Layer boundaries (report only) | `node scripts/check-boundaries.mjs --report` | core does not use the Admin, Cli, Leads or Modules namespaces; Leads, Admin and Cli do not use the modules or each other. Runs with `--report` until it is made blocking | `scripts/boundaries-baseline.txt`, refresh with `--update-baseline` |
 | Workflow rules | `node scripts/check-workflows.mjs` | no `continue-on-error`, every action pinned to a version tag or SHA, release jobs have a `needs:` path to a test job and a quality job (through the reusable `ci.yml`) | none |
 | vitest | `pnpm test` | all tests pass | none |
 | Diff coverage (TS and PHP) | `node scripts/diff-coverage.mjs --base <sha> ...` | 80% of changed executable lines; diffs under 10 changed executable lines are exempt; a changed file missing from the report counts as uncovered | none |
