@@ -2470,20 +2470,20 @@ msgstr "Nur JPEG-, PNG-, WebP- und GIF-Bilder können an Profotograaf gesendet w
 msgid "This file is on Profotograaf already."
 msgstr "Diese Datei ist bereits auf Profotograaf."
 
-#: includes/class-upload-queue.php:386
+#: includes/class-upload-queue.php:427
 msgid "The gallery this file was meant for is no longer linked. Choose a linked gallery to send it again."
 msgstr "Die Galerie, für die diese Datei bestimmt war, ist nicht mehr verknüpft. Wähle eine verknüpfte Galerie, um sie erneut zu senden."
 
-#: includes/class-upload-queue.php:392
-#: includes/class-upload-queue.php:429
+#: includes/class-upload-queue.php:430
+#: includes/class-upload-queue.php:477
 msgid "The file could not be read from this site."
 msgstr "Die Datei konnte auf dieser Website nicht gelesen werden."
 
-#: includes/class-upload-queue.php:397
+#: includes/class-upload-queue.php:432
 msgid "The file is too large for this site to send. Resize it and send it again."
 msgstr "Die Datei ist zu groß, um von dieser Website gesendet zu werden. Verkleinere sie und sende sie erneut."
 
-#: includes/class-upload-queue.php:434
+#: includes/class-upload-queue.php:481
 msgid "The file could not be prepared for sending."
 msgstr "Die Datei konnte nicht für den Versand vorbereitet werden."
 
@@ -2605,7 +2605,7 @@ msgid "Only when the site owner turns on sending Media Library files: a person w
 msgstr "Nur wenn der Website-Betreiber das Senden von Dateien aus der Mediathek einschaltet: Eine Person, die Dateien hochladen darf, wählt für ein Bild eine verknüpfte Profotograaf-Galerie, und diese Website sendet das Bild dann im Hintergrund an profotograaf.nl. Die Galerie kann eine Kundengalerie sein. Bevor ein Bild gesendet wird, entfernt das Plugin die GPS-Position daraus. Die übrigen Metadaten bleiben in der Datei, etwa Kamera, Objektiv und Datum. Spätere Änderungen an Titel, Bildunterschrift und Alternativtext eines gesendeten Bildes werden ebenfalls gesendet. HEIC-, Video- und RAW-Dateien werden nicht gesendet. Fotos von Personen sind personenbezogene Daten, daher braucht der Website-Betreiber eine Rechtsgrundlage, um sie zu senden. Wenn hier eine Datei gelöscht wird, wird auf Profotograaf nichts gelöscht. Die Mediathek speichert pro gesendeter Datei einige versteckte Felder (die Kennungen von Foto und Galerie, den Versandstatus und die Uhrzeit), bis die Datei gelöscht wird."
 
 #: includes/class-change-poller.php:394
-#: includes/class-virtual-sync.php:276
+#: includes/class-virtual-sync.php:294
 msgid "The photo list could not be refreshed."
 msgstr "Die Fotoliste konnte nicht aktualisiert werden."
 
@@ -3103,7 +3103,7 @@ msgstr "Ganzseitige Galerie"
 msgid "This file is not waiting for a new upload."
 msgstr "Diese Datei wartet nicht auf einen neuen Upload."
 
-#: includes/class-upload-queue.php:418
+#: includes/class-upload-queue.php:460
 msgid "The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there."
 msgstr "Die Datei existiert möglicherweise bereits auf Profotograaf, weil ein früherer Versuch keine Antwort erhalten hat und die Galerie nicht geprüft werden konnte. Sieh in der Galerie nach und wähle Erneut hochladen, wenn das Foto nicht dort ist."
 

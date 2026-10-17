@@ -221,23 +221,10 @@ final class Virtual_Sync {
 			}
 		}
 		$closed = array_merge( $page['galleries']['deleted'], array_column( $page['galleries']['unavailable'], 'id' ) );
-		foreach ( $closed as $gallery_id ) {
-			foreach ( $by_gallery[ $gallery_id ] ?? array() as $id ) {
-				$gone[ $id ] = true;
-			}
-		}
+		$gone  += self::ids_in( $closed, $by_gallery );
 
-		$refresh = array();
-		foreach ( array_merge( $page['photos']['created'], $page['photos']['updated'] ) as $entry ) {
-			foreach ( $by_photo[ $entry['id'] ] ?? array() as $id ) {
-				$refresh[ $id ] = true;
-			}
-		}
-		foreach ( array_merge( $page['galleries']['created'], $page['galleries']['updated'], $page['galleries']['available'] ) as $gallery_id ) {
-			foreach ( $by_gallery[ $gallery_id ] ?? array() as $id ) {
-				$refresh[ $id ] = true;
-			}
-		}
+		$refresh = self::ids_in( array_column( array_merge( $page['photos']['created'], $page['photos']['updated'] ), 'id' ), $by_photo )
+			+ self::ids_in( array_merge( $page['galleries']['created'], $page['galleries']['updated'], $page['galleries']['available'] ), $by_gallery );
 
 		$result = array(
 			'updated' => 0,
@@ -248,13 +235,7 @@ final class Virtual_Sync {
 			if ( is_wp_error( $catalogue ) ) {
 				return $catalogue;
 			}
-			foreach ( array_keys( $refresh ) as $id ) {
-				$photo = $this->listed[ $attachments[ $id ]['photo_id'] ] ?? null;
-				if ( null !== $photo && $this->virtual->refresh_from( $id, $photo ) ) {
-					++$result['updated'];
-					unset( $gone[ $id ] );
-				}
-			}
+			$result['updated'] = $this->refresh_all( array_keys( $refresh ), $attachments, $gone );
 		}
 		foreach ( array_keys( $gone ) as $id ) {
 			if ( self::mark_gone( $id ) ) {
@@ -262,6 +243,43 @@ final class Virtual_Sync {
 			}
 		}
 		return $result;
+	}
+
+	/**
+	 * Attachment ids behind the given keys of an index.
+	 *
+	 * @param array<int,string>   $keys  Photo or gallery ids.
+	 * @param array<string,int[]> $index Attachment ids by photo or gallery id.
+	 * @return array<int,true> Attachment ids as keys.
+	 */
+	private static function ids_in( array $keys, array $index ): array {
+		$found = array();
+		foreach ( $keys as $key ) {
+			foreach ( $index[ $key ] ?? array() as $id ) {
+				$found[ $id ] = true;
+			}
+		}
+		return $found;
+	}
+
+	/**
+	 * Refreshes attachments from the listed photos. A refreshed one is no longer gone.
+	 *
+	 * @param int[]                                               $ids         Attachment ids.
+	 * @param array<int,array{photo_id:string,gallery_id:string}> $attachments Virtual attachments by id.
+	 * @param array<int,true>                                     $gone        Ids marked gone, cleared of refreshed ones.
+	 * @return int Number refreshed.
+	 */
+	private function refresh_all( array $ids, array $attachments, array &$gone ): int {
+		$updated = 0;
+		foreach ( $ids as $id ) {
+			$photo = $this->listed[ $attachments[ $id ]['photo_id'] ] ?? null;
+			if ( null !== $photo && $this->virtual->refresh_from( $id, $photo ) ) {
+				++$updated;
+				unset( $gone[ $id ] );
+			}
+		}
+		return $updated;
 	}
 
 	/**

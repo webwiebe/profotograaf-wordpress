@@ -114,14 +114,9 @@ test("--update-baseline writes the findings and the next check passes", () => {
 });
 
 // The real run needs phpcs, which only the PHP quality job installs; this part
-// stays offline: every baseline entry names a function that exists in its file.
-test("every committed baseline entry names a function in a file that exists", () => {
+// stays offline: the baseline is empty, so no function may be added to it.
+test("the committed baseline is empty", () => {
   const root = path.resolve(path.dirname(script), "..");
   const baseline = parseBaseline(fs.readFileSync(path.join(root, "scripts/php-complexity-baseline.txt"), "utf8"));
-  assert.ok(Object.keys(baseline).length > 0);
-  for (const key of Object.keys(baseline)) {
-    const [kind, name, file] = key.split(" ");
-    assert.ok(["complexity", "nesting"].includes(kind), key);
-    assert.match(fs.readFileSync(path.join(root, file), "utf8"), new RegExp(`function\\s+&?\\s*${name}\\s*\\(`), key);
-  }
+  assert.deepEqual(Object.keys(baseline), []);
 });
