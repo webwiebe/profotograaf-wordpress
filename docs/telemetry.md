@@ -182,7 +182,7 @@ The telemetry destination (server) retains:
 - **Usage telemetry**: 13 months
 - **Error events**: 13 months
 
-Older data is deleted automatically. The plugin owner can delete all telemetry for a specific install ID via the `profotograaf_clear_telemetry` filter and the plugin settings page.
+Older data is deleted automatically. The plugin has no way to delete telemetry that was already sent (see "Does not delete already-sent telemetry" below). Whether the platform should offer a deletion request is open in #313.
 
 The plugin itself keeps in `wp_options`:
 
@@ -268,7 +268,7 @@ Add the following section to the External services section in `readme.txt`:
 ```
 = Telemetry =
 
-When you opt in to telemetry, Profotograaf sends anonymous usage and error data daily to https://f.profotograaf.nl (usage) and https://bb.profotograaf.nl (errors), or to the endpoints you configure. The data includes plugin, WordPress and PHP versions, locale, active modules, counts of successes and failures, and anonymized error codes. The site URL, user data, and gallery or lead content are never sent. The data is retained for 13 months. You can revoke consent or delete all telemetry by disconnecting from Profotograaf or toggling the telemetry setting off. See the telemetry design document for full details.
+When you opt in to telemetry, Profotograaf sends anonymous usage and error data daily to https://f.profotograaf.nl (usage) and https://bb.profotograaf.nl (errors), or to the endpoints you configure. The data includes plugin, WordPress and PHP versions, locale, active modules, counts of successes and failures, and anonymized error codes. The site URL, user data, and gallery or lead content are never sent. The data is retained for 13 months. You can revoke consent by disconnecting from Profotograaf or toggling the telemetry setting off. That stops sending and deletes what is still waiting to be sent. Data that was already sent is deleted after 13 months. See the telemetry design document for full details.
 ```
 
 For the default configuration, also add:
