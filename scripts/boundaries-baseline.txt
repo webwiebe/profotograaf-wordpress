@@ -1,0 +1,26 @@
+# Layer violations in includes/ (see scripts/check-boundaries.mjs for the rules).
+# This list may only SHRINK. Regenerate with:
+#   node scripts/check-boundaries.mjs --update-baseline
+#
+# <from> -> <to> <path> <class>
+Admin -> Modules includes/admin/class-backup-panel.php Backup
+Admin -> Modules includes/admin/class-backup-panel.php Settings_Page
+Admin -> Modules includes/admin/class-leads-settings.php Settings_Page
+Admin -> Modules includes/admin/class-upload-panel.php Settings_Page
+core -> Admin includes/class-backup-health.php Backup_Intro
+core -> Admin includes/class-backup-health.php Backup_Panel
+core -> Admin includes/class-multisite.php Network_Page
+core -> Leads includes/class-cron-health.php Delivery
+core -> Leads includes/class-cron-health.php Option_Job_Store
+core -> Leads includes/class-cron-health.php Queue
+core -> Leads includes/class-multisite.php Delivery
+core -> Leads includes/class-multisite.php Job_Store
+core -> Leads includes/class-multisite.php Option_Job_Store
+core -> Leads includes/class-upload-queue.php Queue
+core -> Leads includes/trait-upload-queue-outcome.php Queue
+core -> Modules includes/class-backup-health.php Settings_Page
+core -> Modules includes/class-cron-health.php Change_Poll
+core -> Modules includes/class-multisite.php Token_Refresh
+core -> Modules includes/class-settings-schema.php Client_Galleries
+core -> Modules includes/class-sync-attention.php Media_Import_Screen
+core -> Modules includes/class-virtual-bulk-convert.php Virtual_Convert
