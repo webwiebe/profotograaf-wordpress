@@ -105,7 +105,7 @@ trait Api_Client_Writes {
 	 * @param string $contents  File contents.
 	 * @param string $filename  File name to send.
 	 * @param string $mime_type Media type, application/octet-stream when empty.
-	 * @return array<string,mixed>
+	 * @return array{body:string,content_type:string,timeout:int}
 	 */
 	private static function multipart( string $contents, string $filename, string $mime_type ): array {
 		$mime_type = '' === $mime_type ? 'application/octet-stream' : $mime_type;
