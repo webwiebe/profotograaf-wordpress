@@ -247,16 +247,16 @@ msgstr "Le richieste esportate sono state rimosse."
 #: includes/class-photo-list.php:56
 #: includes/class-sections-rest.php:91
 #: includes/trait-api-client-writes.php:72
-#: includes/trait-api-client-writes.php:211
+#: includes/trait-api-client-writes.php:231
 msgid "A gallery id is required."
 msgstr "Serve un ID galleria."
 
-#: includes/trait-api-client-writes.php:216
-#: includes/trait-api-client-writes.php:233
+#: includes/trait-api-client-writes.php:236
+#: includes/trait-api-client-writes.php:253
 msgid "The request to switch embedding on is not valid."
 msgstr "La richiesta di attivare l'incorporamento non è valida."
 
-#: includes/trait-api-client-writes.php:243
+#: includes/trait-api-client-writes.php:263
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Questa connessione non può ancora attivare le gallerie. Ricollega questo sito in Impostazioni > Profotograaf per concedere il nuovo permesso."
 
@@ -2294,20 +2294,20 @@ msgstr "Profotograaf non ha restituito la nuova galleria."
 msgid "The file could not be read."
 msgstr "Non è stato possibile leggere il file."
 
-#: includes/trait-api-client-writes.php:106
+#: includes/trait-api-client-writes.php:136
 #: includes/trait-upload-queue-outcome.php:42
 msgid "Your Profotograaf storage is full. Free up space or upgrade your plan to send more files."
 msgstr "Il tuo spazio di archiviazione Profotograaf è pieno. Libera spazio o passa a un piano superiore per inviare altri file."
 
-#: includes/trait-api-client-writes.php:115
+#: includes/trait-api-client-writes.php:93
 msgid "Profotograaf did not return the new photo."
 msgstr "Profotograaf non ha restituito la nuova foto."
 
-#: includes/trait-api-client-writes.php:175
+#: includes/trait-api-client-writes.php:195
 msgid "A photo id is required."
 msgstr "Serve un ID foto."
 
-#: includes/trait-api-client-writes.php:184
+#: includes/trait-api-client-writes.php:204
 msgid "Nothing to update: give a title, caption or alt text."
 msgstr "Niente da aggiornare: indica un titolo, una didascalia o un testo alternativo."
 
@@ -2588,7 +2588,7 @@ msgstr[1] "Non è stato possibile inviare %d file a Profotograaf."
 msgid "Open the file in the Media Library to read why, and send it again."
 msgstr "Apri il file nella Libreria media per leggerne il motivo e invialo di nuovo."
 
-#: includes/trait-api-client-writes.php:139
+#: includes/trait-api-client-writes.php:159
 msgid "A gallery id and a file name are required."
 msgstr "Servono un ID galleria e un nome file."
 
