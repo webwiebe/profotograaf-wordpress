@@ -405,24 +405,44 @@ final class Settings_Schema {
 		if ( isset( $entry['sanitize'] ) ) {
 			return ( $entry['sanitize'] )( $value );
 		}
-		if ( 'int_or_empty' === $entry['type'] && ( '' === $value || null === $value ) ) {
-			return '';
-		}
 		switch ( $entry['type'] ) {
 			case 'enum':
-				$choice = is_scalar( $value ) ? sanitize_key( (string) $value ) : '';
-				return array_key_exists( $choice, $entry['choices'] ?? array() ) ? $choice : null;
+				return self::parse_enum( $entry, $value );
 			case 'int_or_empty':
+				return '' === $value || null === $value ? '' : self::parse_int( $entry, $value );
 			case 'int':
-				if ( ! is_scalar( $value ) || ! is_numeric( $value ) ) {
-					return null;
-				}
-				return max( (int) ( $entry['min'] ?? PHP_INT_MIN ), min( (int) ( $entry['max'] ?? PHP_INT_MAX ), (int) $value ) );
+				return self::parse_int( $entry, $value );
 			case 'bool':
 				return filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 			default:
 				return is_scalar( $value ) ? trim( sanitize_text_field( (string) $value ) ) : null;
 		}
+	}
+
+	/**
+	 * Cleans an enum option.
+	 *
+	 * @param array<string,mixed> $entry Schema entry.
+	 * @param mixed               $value Raw value.
+	 * @return string|null One of the choices, or null.
+	 */
+	private static function parse_enum( array $entry, $value ): ?string {
+		$choice = is_scalar( $value ) ? sanitize_key( (string) $value ) : '';
+		return array_key_exists( $choice, $entry['choices'] ?? array() ) ? $choice : null;
+	}
+
+	/**
+	 * Cleans an integer option and clamps it to its bounds.
+	 *
+	 * @param array<string,mixed> $entry Schema entry.
+	 * @param mixed               $value Raw value.
+	 * @return int|null The clamped number, or null when the value is not numeric.
+	 */
+	private static function parse_int( array $entry, $value ): ?int {
+		if ( ! is_scalar( $value ) || ! is_numeric( $value ) ) {
+			return null;
+		}
+		return max( (int) ( $entry['min'] ?? PHP_INT_MIN ), min( (int) ( $entry['max'] ?? PHP_INT_MAX ), (int) $value ) );
 	}
 
 	/**

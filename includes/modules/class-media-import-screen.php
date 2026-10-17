@@ -218,28 +218,7 @@ class Media_Import_Screen implements Module {
 		$title      = (string) ( $gallery['gallery_title'] ?? '' );
 		$url        = $this->gallery_url( $gallery_id, $gallery );
 
-		if ( '' === $url ) {
-			$html = '' !== $title
-				? sprintf(
-					/* translators: %s: gallery title. */
-					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
-					esc_html( $title )
-				)
-				: esc_html__( 'Profotograaf', 'profotograaf' );
-		} else {
-			$link = sprintf(
-				'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
-				esc_url( $url ),
-				'' !== $title ? esc_html( $title ) : esc_html__( 'Open on Profotograaf', 'profotograaf' )
-			);
-			$html = '' !== $title
-				? sprintf(
-					/* translators: %s: link to the gallery on Profotograaf, titled with the gallery name. */
-					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
-					$link
-				)
-				: esc_html__( 'Profotograaf', 'profotograaf' ) . ', ' . $link;
-		}//end if
+		$html = self::source_label( $title, $url );
 
 		if ( Virtual_Attachments::is_marked( $id ) ) {
 			// No Re-import: it would leave the virtual marks. Virtual_Convert adds Convert to local, also while the setting is off.
@@ -247,17 +226,7 @@ class Media_Import_Screen implements Module {
 		} elseif ( Media_Baseline::is_upload( $id ) ) {
 			$html .= '<p class="description">' . esc_html__( 'Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too.', 'profotograaf' ) . '</p>';
 		} elseif ( $this->active() && current_user_can( 'edit_post', $id ) ) {
-			// The attachment edit screen does not load the media views, so the field asks for its own script.
-			$this->enqueue_reimport();
-			// Not offered for a copy the platform no longer lists (no file to fetch), and a conflict opens its dialog instead.
-			if ( ! in_array( (string) get_post_meta( $id, Reconcile::META_STATE, true ), array( Reconcile::STATE_MISSING, Reconcile::STATE_CONFLICT ), true ) ) {
-				$html .= sprintf(
-					'<p class="profotograaf-reimport"><button type="button" class="button profotograaf-reimport__button" data-attachment-id="%1$d">%2$s</button> <span class="profotograaf-reimport__status" role="status" aria-live="polite" data-attachment-id="%1$d"></span></p>',
-					$id,
-					esc_html__( 'Re-import', 'profotograaf' )
-				);
-			}
-			$html .= Sync_Field::html( $id, true );
+			$html .= $this->reimport_controls( $id );
 		}
 
 		$fields['profotograaf_source'] = array(
@@ -266,6 +235,56 @@ class Media_Import_Screen implements Module {
 			'html'  => $html,
 		);
 		return $fields;
+	}
+
+	/**
+	 * The first line of the Source field: the gallery, linked when its address is known.
+	 *
+	 * @param string $title Gallery title, may be empty.
+	 * @param string $url   Gallery address on Profotograaf, may be empty.
+	 */
+	private static function source_label( string $title, string $url ): string {
+		if ( '' === $url ) {
+			return '' !== $title
+				? sprintf(
+					/* translators: %s: gallery title. */
+					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
+					esc_html( $title )
+				)
+				: esc_html__( 'Profotograaf', 'profotograaf' );
+		}
+		$link = sprintf(
+			'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+			esc_url( $url ),
+			'' !== $title ? esc_html( $title ) : esc_html__( 'Open on Profotograaf', 'profotograaf' )
+		);
+		return '' !== $title
+			? sprintf(
+				/* translators: %s: link to the gallery on Profotograaf, titled with the gallery name. */
+				esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
+				$link
+			)
+			: esc_html__( 'Profotograaf', 'profotograaf' ) . ', ' . $link;
+	}
+
+	/**
+	 * The Re-import button and the sync field of an imported photo.
+	 *
+	 * @param int $id Attachment id.
+	 */
+	private function reimport_controls( int $id ): string {
+		// The attachment edit screen does not load the media views, so the field asks for its own script.
+		$this->enqueue_reimport();
+		$html = '';
+		// Not offered for a copy the platform no longer lists (no file to fetch), and a conflict opens its dialog instead.
+		if ( ! in_array( (string) get_post_meta( $id, Reconcile::META_STATE, true ), array( Reconcile::STATE_MISSING, Reconcile::STATE_CONFLICT ), true ) ) {
+			$html .= sprintf(
+				'<p class="profotograaf-reimport"><button type="button" class="button profotograaf-reimport__button" data-attachment-id="%1$d">%2$s</button> <span class="profotograaf-reimport__status" role="status" aria-live="polite" data-attachment-id="%1$d"></span></p>',
+				$id,
+				esc_html__( 'Re-import', 'profotograaf' )
+			);
+		}
+		return $html . Sync_Field::html( $id, true );
 	}
 
 	/**
