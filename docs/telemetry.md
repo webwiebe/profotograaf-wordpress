@@ -159,6 +159,8 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
 
 Errors are collected from these hooks and processes:
 
+- `profotograaf_refresh_succeeded`: triggered when a token refresh stored a new pair (counted as `refresh_success`)
+- `profotograaf_refresh_retried`: triggered when a request is sent again with a refreshed token after a 401 (counted as `refresh_retried`)
 - `profotograaf_refresh_failed`: triggered when token refresh fails
 - `profotograaf_lead_failed`: triggered when lead delivery fails
 - `profotograaf_lead_delivered`: triggered when a lead is sent successfully
