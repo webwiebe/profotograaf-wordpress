@@ -12,6 +12,8 @@ x-wordpress-env: &wordpress-env
   WORDPRESS_CONFIG_EXTRA: |
     define( 'WP_DEBUG_LOG', true );
     define( 'WP_DEBUG_DISPLAY', false );
+    define( 'WP_HTTP_BLOCK_EXTERNAL', true );
+    define( 'AUTOMATIC_UPDATER_DISABLED', true );
 
 services:
   db:
