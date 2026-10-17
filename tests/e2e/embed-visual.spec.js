@@ -2,9 +2,9 @@
 // Pixel snapshots of the gallery element the real embed.js draws, with the
 // deterministic SVG photos of the mock platform. Fonts and anti-aliasing differ
 // per operating system, so the baselines in embed-visual.spec.js-snapshots/ are
-// the Linux ones from CI, and the spec runs only where E2E_VISUAL is set (the
-// WordPress 7.1 job and the snapshot update workflow). The Linux check also
-// keeps a macOS run from writing baselines CI would reject.
+// the darwin ones of the self-hosted macOS arm64 runner, and the spec runs only
+// where E2E_VISUAL is set (the WordPress 7.1 job and the snapshot update
+// workflow). A run on another platform finds no baseline and fails.
 //
 // Update the baselines with the "Update E2E snapshots" workflow, see
 // CONTRIBUTING.md.
@@ -16,7 +16,6 @@ const SIZES = { mobile: 390, desktop: 1440 };
 
 test.describe( 'gallery snapshots with the real script', () => {
 	test.skip( ! process.env.E2E_VISUAL, 'E2E_VISUAL is not set' );
-	test.skip( process.platform !== 'linux', 'baselines are Linux only' );
 	test.skip( ( { browserName } ) => browserName !== 'chromium', 'baselines are chromium only' );
 
 	/** @type {Record<string,string>} */
