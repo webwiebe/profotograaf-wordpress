@@ -74,7 +74,7 @@ The code is the fact. Where a document and the code disagree, a row goes into th
 | Block build, Plugin Check and E2E run on WordPress 6.9, 7.0 and 7.1 (L41) | quality.md | Only E2E has the version matrix (`.github/workflows/e2e.yml:58-66`) |
 | Two pins live outside the manifests (L69) | quality.md | `pnpm-workspace.yaml` also sets `auditConfig.ignoreGhsas` for GHSA-vfj7-8cjw-p6xm |
 
-`full-page-gallery.md` has no drift. Where the tree cannot answer, the row says `not established`. The rows describe the documents as they stand; the documents themselves are corrected in follow-up PRs.
+`full-page-gallery.md` has no drift. Where the tree cannot answer, the row says `not established`. The rows describe the documents as they stand. The documents are corrected under [#309](https://github.com/webwiebe/profotograaf-wordpress/issues/309), and the rows where the code may be wrong are tracked in [#308](https://github.com/webwiebe/profotograaf-wordpress/issues/308).
 
 ## Related
 
