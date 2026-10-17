@@ -11,6 +11,7 @@ use Brain\Monkey\Functions;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Gallery_Look;
 use Profotograaf\Gallery_Renderer;
+use Profotograaf\Image_Text;
 use Profotograaf\Reserved_Space;
 
 class Gallery_Renderer_Test extends Gallery_Test_Case {
@@ -767,16 +768,16 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 	public function test_per_image_text_is_limited_in_count_and_length(): void {
 		$items = array();
-		for ( $i = 0; $i < Gallery_Renderer::IMAGE_TEXT_LIMIT + 5; $i++ ) {
+		for ( $i = 0; $i < Image_Text::LIMIT + 5; $i++ ) {
 			$items[] = array(
 				'id'      => 'p' . $i,
-				'caption' => str_repeat( 'x', Gallery_Renderer::IMAGE_TEXT_LENGTH + 50 ),
+				'caption' => str_repeat( 'x', Image_Text::LENGTH + 50 ),
 			);
 		}
 		$decoded = json_decode( Gallery_Renderer::clean_image_text( $items ), true );
 
-		$this->assertCount( Gallery_Renderer::IMAGE_TEXT_LIMIT, $decoded );
-		$this->assertSame( Gallery_Renderer::IMAGE_TEXT_LENGTH, strlen( $decoded[0]['caption'] ) );
+		$this->assertCount( Image_Text::LIMIT, $decoded );
+		$this->assertSame( Image_Text::LENGTH, strlen( $decoded[0]['caption'] ) );
 	}
 
 	public function test_crop_is_the_ratio_and_the_radius_is_a_look_option(): void {

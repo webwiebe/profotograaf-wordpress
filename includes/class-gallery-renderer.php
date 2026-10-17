@@ -118,12 +118,6 @@ class Gallery_Renderer {
 	/** Most photo ids one gallery block can leave out. */
 	public const MAX_EXCLUDED = 500;
 
-	/** Most per-image entries kept. */
-	public const IMAGE_TEXT_LIMIT = Image_Text::LIMIT;
-
-	/** Longest caption or alt text kept, in characters. */
-	public const IMAGE_TEXT_LENGTH = Image_Text::LENGTH;
-
 	/**
 	 * Server-drawn markup source.
 	 *

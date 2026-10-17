@@ -50,6 +50,14 @@ test("a comment mention does not keep a symbol alive", () => {
   assert.deepEqual(findDead(root), ["function ghost includes/class-a.php"]);
 });
 
+test("a symbol only a unit test uses is alive", () => {
+  const root = repo({
+    "includes/class-a.php": "<?php class A { public static function seam() {} } new A();",
+    "tests/unit/A_Test.php": "<?php A::seam();",
+  });
+  assert.deepEqual(findDead(root), []);
+});
+
 test("module classes are discovered by directory and never reported", () => {
   const root = repo({ "includes/modules/class-thing.php": "<?php class Thing {}" });
   assert.deepEqual(findDead(root), []);

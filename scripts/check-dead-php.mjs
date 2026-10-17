@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Dead PHP code: a function, method, constant or class in the plugin source
-// whose name appears nowhere else in the plugin source.
+// whose name appears nowhere else in the plugin source or its unit tests.
 //
 // The estate standard asks for "no new dead code". knip covers the TypeScript;
 // this covers the PHP, with no dependency and no network. It matches names as
@@ -20,9 +20,8 @@
 //   node scripts/check-dead-php.mjs --report           # same output, exit 0
 //   node scripts/check-dead-php.mjs --update-baseline  # rewrite the baseline
 //
-// CI runs it with --report until the baseline has been burned down (the
-// owner's rollout of the dead-code dimension). The strict mode is covered by
-// scripts/check-dead-php.test.mjs. Run from the repo root.
+// CI runs it strict; --report is for looking without failing. The gate is
+// covered by scripts/check-dead-php.test.mjs. Run from the repo root.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -30,6 +29,9 @@ import { fileURLToPath } from "node:url";
 
 export const BASELINE_PATH = "scripts/dead-php-baseline.txt";
 export const SOURCE_ROOTS = ["includes", "profotograaf.php", "uninstall.php"];
+// Like knip, a symbol that a test uses counts as used: documented test seams
+// such as Logger::configure stay, and only names nothing refers to are reported.
+export const USE_ROOTS = [...SOURCE_ROOTS, "tests/unit", "blocks"];
 
 // Module_Loader finds every includes/modules/class-*.php by directory, so those
 // classes are used without their name appearing anywhere else.
@@ -70,9 +72,9 @@ export function definitions(src) {
   return found.filter((d) => !d.name.startsWith("__") && !d.name.endsWith("_") && !IMPLICIT.has(d.name));
 }
 
-export function findDead(root, entries = SOURCE_ROOTS) {
+export function findDead(root, entries = SOURCE_ROOTS, useEntries = USE_ROOTS) {
   const files = phpFiles(root, entries);
-  const code = new Map(files.map((f) => [f, stripComments(fs.readFileSync(path.join(root, f), "utf8"))]));
+  const code = new Map(phpFiles(root, useEntries).map((f) => [f, stripComments(fs.readFileSync(path.join(root, f), "utf8"))]));
   const dead = [];
   for (const file of files) {
     const seen = new Set();
