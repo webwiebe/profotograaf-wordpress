@@ -228,9 +228,11 @@ class Error_Reporter_Test extends Wp_Test_Case {
 	}
 
 	public function test_the_module_subscribes_the_consumers(): void {
-		foreach ( array( 'profotograaf_refresh_failed', 'profotograaf_lead_failed', 'profotograaf_lead_delivered', 'profotograaf_lead_skipped', 'profotograaf_lead_not_queued', 'profotograaf_disconnected', 'profotograaf_log' ) as $hook ) {
+		foreach ( array( 'profotograaf_refresh_failed', 'profotograaf_lead_failed', 'profotograaf_lead_delivered', 'profotograaf_lead_skipped', 'profotograaf_lead_not_queued', 'profotograaf_log' ) as $hook ) {
 			Actions\expectAdded( $hook )->once();
 		}
+		// Before the consent module clears the queue (priority 10), so a disconnect never leaves the site.
+		Actions\expectAdded( 'profotograaf_disconnected' )->once()->with( \Mockery::type( 'array' ), 5 );
 		( new Error_Reporting() )->register( new Plugin() );
 	}
 }

@@ -33,8 +33,9 @@ class Error_Reporting implements Module {
 		add_action( 'profotograaf_lead_delivered', array( $reporter, 'on_lead_delivered' ), 10, 2 );
 		add_action( 'profotograaf_lead_skipped', array( $reporter, 'on_lead_skipped' ) );
 		add_action( 'profotograaf_lead_not_queued', array( $reporter, 'on_lead_not_queued' ), 10, 2 );
-		// After the consent module cleared the queue, so the disconnect itself is still reported.
-		add_action( 'profotograaf_disconnected', array( $reporter, 'on_disconnected' ), 20 );
+		// Before the consent module clears the queue (priority 10), so the disconnect event is dropped
+		// with the rest and nothing leaves the site after the owner disconnected.
+		add_action( 'profotograaf_disconnected', array( $reporter, 'on_disconnected' ), 5 );
 		add_action( 'profotograaf_log', array( $reporter, 'on_log' ), 10, 3 );
 	}
 }

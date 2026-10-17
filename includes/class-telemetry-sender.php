@@ -29,7 +29,7 @@ class Telemetry_Sender {
 	public const RETRY_HOOK     = 'profotograaf_retry_telemetry_batch';
 	public const MAX_ATTEMPTS   = 3;
 	public const MAX_QUEUED     = 100;
-	public const BACKOFF        = array( 5, 10, 30 );
+	public const BACKOFF        = array( 5, 10 );
 
 	/**
 	 * Settings.
@@ -274,9 +274,9 @@ class Telemetry_Sender {
 	}
 
 	/**
-	 * Sends the queued batches. A failure keeps the batch, schedules a retry
-	 * after 5, 10 and then 30 seconds, and drops the queue after the third
-	 * failed attempt.
+	 * Sends the queued batches. A failure keeps the batch and schedules a retry
+	 * after 5 and then 10 seconds. The queue is dropped after the third failed
+	 * attempt.
 	 *
 	 * @return int Number of batches sent. Always 0 without consent, with
 	 *             Do Not Track or Global Privacy Control, or without an endpoint.
