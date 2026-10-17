@@ -36,6 +36,7 @@ oxlint-type-aware-baseline.json
 phpstan.neon.dist
 phpstan-baseline.neon
 phpcs.xml.dist
+phpcs-complexity.xml.dist
 phpunit.xml.dist
 playwright.config.js
 Makefile
