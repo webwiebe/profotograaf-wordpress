@@ -33,31 +33,46 @@ final class Failed_Export {
 	public static function build( array $jobs ): string {
 		$out = "\xEF\xBB\xBF" . self::line( self::columns() );
 		foreach ( $jobs as $job ) {
-			$payload = (array) ( $job['payload'] ?? array() );
-			$extra   = array();
-			foreach ( (array) ( $payload['extra_fields'] ?? array() ) as $field ) {
-				if ( is_array( $field ) ) {
-					$extra[] = (string) ( $field['label'] ?? '' ) . ': ' . (string) ( $field['value'] ?? '' );
-				}
-			}
-			$out .= self::line(
-				array(
-					self::date( (int) ( $job['created_at'] ?? 0 ) ),
-					self::date( (int) ( $job['failed_at'] ?? 0 ) ),
-					(string) ( $payload['source_form'] ?? '' ),
-					(string) ( $payload['name'] ?? '' ),
-					(string) ( $payload['email'] ?? '' ),
-					(string) ( $payload['phone'] ?? '' ),
-					(string) ( $payload['event_date'] ?? '' ),
-					(string) ( $payload['message'] ?? '' ),
-					implode( "\n", $extra ),
-					(string) ( $job['last_error'] ?? '' ),
-					(string) (int) ( $job['last_status'] ?? 0 ),
-					(string) (int) ( $job['attempts'] ?? 0 ),
-				)
-			);
-		}//end foreach
+			$out .= self::line( self::cells( $job ) );
+		}
 		return $out;
+	}
+
+	/**
+	 * The cells of one failed job, in the order of columns().
+	 *
+	 * @param array<string,mixed> $job Failed job.
+	 * @return string[]
+	 */
+	private static function cells( array $job ): array {
+		$payload = (array) ( $job['payload'] ?? array() );
+		$cells   = array(
+			self::date( (int) ( $job['created_at'] ?? 0 ) ),
+			self::date( (int) ( $job['failed_at'] ?? 0 ) ),
+		);
+		foreach ( array( 'source_form', 'name', 'email', 'phone', 'event_date', 'message' ) as $key ) {
+			$cells[] = (string) ( $payload[ $key ] ?? '' );
+		}
+		$cells[] = self::other_fields( $payload );
+		$cells[] = (string) ( $job['last_error'] ?? '' );
+		$cells[] = (string) (int) ( $job['last_status'] ?? 0 );
+		$cells[] = (string) (int) ( $job['attempts'] ?? 0 );
+		return $cells;
+	}
+
+	/**
+	 * The extra form fields as "label: value" lines.
+	 *
+	 * @param array<string,mixed> $payload Enquiry payload.
+	 */
+	private static function other_fields( array $payload ): string {
+		$extra = array();
+		foreach ( (array) ( $payload['extra_fields'] ?? array() ) as $field ) {
+			if ( is_array( $field ) ) {
+				$extra[] = (string) ( $field['label'] ?? '' ) . ': ' . (string) ( $field['value'] ?? '' );
+			}
+		}
+		return implode( "\n", $extra );
 	}
 
 	/**

@@ -64,8 +64,8 @@ jobs:
           node-version: '22'
       - run: composer install --no-interaction --no-progress
       - run: vendor/bin/phpcs
-      - name: PHP complexity (report only)
-        run: node scripts/check-php-complexity.mjs --report
+      - name: PHP complexity
+        run: node scripts/check-php-complexity.mjs
       - run: bin/check-version.sh
       - name: PHPStan config guard
         run: node --test scripts/phpstan-config.test.mjs

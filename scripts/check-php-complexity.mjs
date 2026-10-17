@@ -14,8 +14,8 @@
 //   node scripts/check-php-complexity.mjs --update-baseline  # rewrite the baseline
 //   node scripts/check-php-complexity.mjs --from-json FILE   # read a phpcs JSON report
 //
-// CI runs it with --report until the baseline has been burned down. The strict
-// mode is covered by scripts/check-php-complexity.test.mjs. Run from the repo root.
+// The baseline is empty and CI runs the strict mode. The gate is covered by
+// scripts/check-php-complexity.test.mjs. Run from the repo root.
 
 import fs from "node:fs";
 import path from "node:path";

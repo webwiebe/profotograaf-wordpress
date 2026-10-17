@@ -77,27 +77,12 @@ final class Wpforms implements Bridge {
 				return;
 			}
 
-			$list = array();
-			foreach ( $fields as $field ) {
-				if ( ! is_array( $field ) || in_array( (string) ( $field['type'] ?? '' ), self::SKIP, true ) ) {
-					continue;
-				}
-				$id     = (string) ( $field['id'] ?? '' );
-				$label  = trim( (string) ( $field['name'] ?? '' ) );
-				$list[] = array(
-					'id'    => $id,
-					'label' => '' !== $label ? $label : 'Field ' . $id,
-					'type'  => self::type( (string) ( $field['type'] ?? 'text' ) ),
-					'value' => Submission::text( $field['value'] ?? '' ),
-				);
-			}
-
 			$title = trim( (string) ( $form_data['settings']['form_title'] ?? '' ) );
 			$this->dispatcher->submit(
 				new Submission(
 					'wpforms:' . (int) $form_data['id'],
 					'WPForms: ' . $title,
-					$list,
+					self::field_list( $fields ),
 					self::page_url( $entry ),
 					(int) $entry_id > 0 ? (string) (int) $entry_id : ''
 				)
@@ -105,6 +90,30 @@ final class Wpforms implements Bridge {
 		} catch ( \Throwable $e ) {
 			return;
 		}//end try
+	}
+
+	/**
+	 * The submitted fields as the dispatcher takes them, without the layout fields.
+	 *
+	 * @param array<mixed> $fields Submitted fields by id.
+	 * @return array<int,array{id:string,label:string,type:string,value:string}>
+	 */
+	private static function field_list( array $fields ): array {
+		$list = array();
+		foreach ( $fields as $field ) {
+			if ( ! is_array( $field ) || in_array( (string) ( $field['type'] ?? '' ), self::SKIP, true ) ) {
+				continue;
+			}
+			$id     = (string) ( $field['id'] ?? '' );
+			$label  = trim( (string) ( $field['name'] ?? '' ) );
+			$list[] = array(
+				'id'    => $id,
+				'label' => '' !== $label ? $label : 'Field ' . $id,
+				'type'  => self::type( (string) ( $field['type'] ?? 'text' ) ),
+				'value' => Submission::text( $field['value'] ?? '' ),
+			);
+		}
+		return $list;
 	}
 
 	/**

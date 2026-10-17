@@ -3,9 +3,3 @@
 #   node scripts/check-php-complexity.mjs --update-baseline
 #
 # <kind> <function> <path> <value>
-complexity apply includes/class-virtual-sync.php 24
-complexity build includes/leads/class-failed-export.php 19
-complexity image includes/class-declarative-renderer.php 18
-complexity on_complete includes/leads/class-wpforms.php 13
-complexity payload includes/leads/class-mapping.php 16
-complexity process_upload includes/class-upload-queue.php 13
