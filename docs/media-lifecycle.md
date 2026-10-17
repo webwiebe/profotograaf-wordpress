@@ -192,14 +192,14 @@ Photos created through this route are private to the photographer until the phot
 ### What is sent
 
 - The original image (`wp_get_original_image_path()`, so the pre-scaled file) as the `file` part, with the file name. It carries any EXIF data in it, GPS position included. The settings text and External services entry say so. Whether the platform strips EXIF: not found.
-- Only `image/jpeg`, `image/png`, `image/webp`, `image/gif` and `image/heic` files by plugin rule. The platform accepts image, video and RAW (`embed-api.md`). The plugin leaves video and RAW out of the first version because `Transport::send()` takes the body as one string and so needs the whole multipart body in memory. A child issue sets a size cap derived from `wp_convert_hr_to_bytes( WP_MEMORY_LIMIT )` and tests a large file on the matrix.
+- Only `image/jpeg`, `image/png`, `image/webp` and `image/gif` files by plugin rule. HEIC is left out because its metadata cannot be cleaned. The platform accepts image, video and RAW (`embed-api.md`). The plugin leaves video and RAW out of the first version because `Transport::send()` takes the body as one string and so needs the whole multipart body in memory. A child issue sets a size cap derived from `wp_convert_hr_to_bytes( WP_MEMORY_LIMIT )` and tests a large file on the matrix.
 - Nothing else leaves the site: no post content, user data or site data. The gallery title is sent for a created gallery.
 
 ### Queue and state
 
 - Per attachment: `_profotograaf_upload_gallery` (target gallery id), `_profotograaf_upload_state` (`queued`, `uploading`, `uploaded`, `failed`, `skipped`), `_profotograaf_upload_error` (a translated message), `_profotograaf_upload_attempts`, `_profotograaf_uploaded_at`.
 - Success stores the answer's `id` in `_profotograaf_photo_id` and `gallery_id` in `_profotograaf_gallery_id`, and sets `_profotograaf_origin` to `upload`. `Photo_Importer::find()` then returns this attachment when the photo shows up in the catalogue, so the catalogue never creates a second attachment for a photo this site uploaded. Imports set `_profotograaf_origin` to `import`. A missing value means `import`.
-- A worker event (`profotograaf_upload_queue`) takes one file per run and schedules the next single event, with the backoff shape of `Leads\Queue` (`BASE_DELAY` 60 seconds up to `MAX_DELAY`, `MAX_ATTEMPTS`). Whether to reuse `Leads\Queue` with a new job store or write a small meta-backed queue is decided in the child issue after reading that class. No upload happens inside an admin request.
+- A worker event (`profotograaf_upload_queue`) takes one file per run and schedules the next single event, and keeps its state in post meta. A failed file waits `Leads\Queue::backoff()` (`BASE_DELAY` 60 seconds, doubled per attempt, up to `MAX_DELAY`), or the `Retry-After` time when that is longer. `Upload_Queue::MAX_ATTEMPTS` is 8 and two runs are at least `RUN_GAP` (5 seconds) apart. No upload happens inside an admin request.
 - 413 (quota) is final for that file: state `failed`, message "Your Profotograaf storage is full." and a link to the account. 404 (gallery gone or foreign) disables that link and shows a notice. 400 (type) is final for that file. 403 is the scope problem below. 5xx, 429 and network errors retry.
 
 ### Scope and the reconnect flow
