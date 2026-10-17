@@ -4,7 +4,7 @@ Tags: photography, gallery, client gallery, portfolio, contact form
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -283,6 +283,11 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 == Changelog ==
 
+= 0.2.0 =
+* New: galleries are drawn on the server, so they show before the embed script loads and keep a fallback link without it.
+* New: the approval link carries the connect surface and ref.
+* New: release markers are sent on error events.
+
 = 0.1.0 =
 * New: on the Free plan the owner accepts the "Powered by Profotograaf" link once, with a required checkbox. The gallery block, the full-page gallery block and the shortcode show nothing to visitors until then. The acceptance is stored with its time and plan, dropped when the account moves to a paid plan, and asked again after a downgrade. Galleries keep showing while the plan is unknown, and the admin sees a notice. The status call now carries the account plan.
 * Fix: the Dutch translation calls the Masonry layout "masonry" instead of "metselwerk", and the installation steps describe the zip upload, since the plugin is not in the plugin directory yet.
@@ -342,6 +347,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the embed script version is read from a public platform route.
 
 == Upgrade Notice ==
+
+= 0.2.0 =
+Galleries are drawn on the server. Free accounts accept the Powered by link once before galleries show to visitors.
 
 = 0.1.0 =
 First release.
