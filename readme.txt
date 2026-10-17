@@ -4,7 +4,7 @@ Tags: photography, gallery, client gallery, portfolio, contact form
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -283,6 +283,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 == Changelog ==
 
+= 0.2.1 =
+* Fix: the release workflow could not start its browser tests, so 0.2.0 was never published. 0.2.1 carries the same plugin code.
+
 = 0.2.0 =
 * New: galleries are drawn on the server, so they show before the embed script loads and keep a fallback link without it.
 * New: the approval link carries the connect surface and ref.
@@ -347,6 +350,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the embed script version is read from a public platform route.
 
 == Upgrade Notice ==
+
+= 0.2.1 =
+Same plugin as 0.2.0, which was never published.
 
 = 0.2.0 =
 Galleries are drawn on the server. Free accounts accept the Powered by link once before galleries show to visitors.
