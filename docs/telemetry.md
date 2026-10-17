@@ -17,7 +17,7 @@ Every 24 hours, one batch contains:
 - **WordPress version**: the major and minor version (not micro)
 - **PHP version**: the major and minor version (not micro)
 - **Site locale**: the WordPress locale, for example `nl_NL` or `en_US`
-- **Active modules**: a list of enabled Profotograaf modules (for example: `gallery_block`, `lead_forms`, `client_gallery`)
+- **Active modules**: a list of enabled Profotograaf modules (for example: `gallery_embed`, `leads`, `client_galleries`, `full_page_gallery`)
 - **Refresh outcomes**: count of successful, failed and retried token refresh attempts in the last 24 hours
 - **Delivery outcomes**: count of successful and failed lead deliveries in the last 24 hours
 - **Error codes**: a count of each distinct error code encountered during token refresh or lead delivery
@@ -38,7 +38,7 @@ When a plugin error is reported (see "Error collection" below), the event contai
 
 Additional context is removed: no access tokens, no API responses, no request bodies, no stack traces containing variables, no file paths outside the plugin directory.
 
-Error events are rate-limited and deduplicated by (error_code, error_location, http_status). A fingerprint that appears more than once per minute is only sent once per 24-hour batch.
+Error events are rate-limited and deduplicated by (error_code, error_location, http_status). A fingerprint is reported once per 24 hours, and at most 10 new fingerprints are reported per hour.
 
 ## What We Never Collect
 
@@ -109,7 +109,7 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
     "wordpress_version": "6.9",
     "php_version": "8.3",
     "locale": "en_US",
-    "active_modules": "client_gallery,gallery_embed,lead_forms",
+    "active_modules": "client_galleries,gallery_embed,leads",
     "refresh_success": 24,
     "refresh_failed": 0,
     "refresh_retried": 0,
@@ -123,7 +123,7 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
 ### Error events (BugBarn)
 
 - **Timing**: queued with the daily job
-- **Rate limiting**: one per (error_code, error_location, http_status) per 24-hour batch, deduplicated by earliest timestamp
+- **Rate limiting**: one per (error_code, error_location, http_status) per 24 hours, and at most 10 new fingerprints per hour
 - **Format**: one BugBarn event per error, at most 50 per day (the newest are kept). The plugin stores them in `profotograaf_telemetry_queued_errors` until the daily job runs. The error code is the `body`, the exception type and the message. The stack trace has one frame, the plugin file and line.
 
 ```json
@@ -210,8 +210,8 @@ The setting `profotograaf_telemetry_enabled` in WordPress options controls telem
 
 - **Default**: false (off)
 - **Translatable name**: "Share anonymous usage data"
-- **Description**: "Help improve Profotograaf by sharing anonymous usage and error data. This is completely optional and can be disabled at any time. No personal information is collected. See the telemetry design for details."
-- **Link**: renders a link to `docs/telemetry.md` in the setting description
+- **Description**: "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
+- **Link**: a link labelled "What is shared" to `docs/telemetry.md` (`Settings_Schema::TELEMETRY_DOC_URL`)
 
 The setting is visible in the WordPress settings screen under Settings > Profotograaf.
 
@@ -254,7 +254,7 @@ A new install ID means the old telemetry is no longer associated with this WordP
 
 ### Uninstalling the plugin
 
-When the plugin is uninstalled:
+When the plugin is uninstalled and `keep_data_on_uninstall` is off (the default):
 
 - All telemetry options are removed (`profotograaf_install_id`, `profotograaf_telemetry_enabled`, `profotograaf_telemetry_queued_*`)
 - Already-sent telemetry remains on the server (cannot be deleted by the plugin)
@@ -291,5 +291,5 @@ The default destinations are https://bb.profotograaf.nl (BugBarn, errors, handed
 | **Revoke** | Toggle off in settings, or disconnect (rotates install ID) |
 | **Retention** | 13 months on server, removed when plugin uninstalls locally |
 | **Identifier** | Random install UUID, rotated on disconnect |
-| **Rate limiting** | One error per fingerprint per 24-hour batch |
+| **Rate limiting** | One error per fingerprint per 24 hours, at most 10 new fingerprints per hour |
 | **Respects** | Do Not Track, Global Privacy Control, WordPress preferences |
