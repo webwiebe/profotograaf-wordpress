@@ -39,6 +39,7 @@ quality-js:
 	$(PNPM) pnpm check:file-length
 	$(PNPM) node scripts/check-workflows.mjs
 	$(PNPM) node scripts/check-dead-php.mjs
+	$(PNPM) node scripts/check-boundaries.mjs --report
 	$(PNPM) pnpm test:coverage
 
 # composer audit exits non-zero on any advisory; the gate script decides what blocks.
