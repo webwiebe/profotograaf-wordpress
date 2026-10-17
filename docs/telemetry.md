@@ -92,7 +92,7 @@ Common rules:
 - **Frequency**: once every 24 hours, via WP-Cron scheduled job `profotograaf_send_telemetry_batch`. The job queues one usage event and one event per error, then sends the queue.
 - **Format**: JSON POST, content-type `application/json`. A service answers 202 when it accepts an event.
 - **Timeout**: 10 seconds (respects the `profotograaf_http_timeout` filter)
-- **Retry**: a failed event is retried up to 3 times, with exponential backoff (5 seconds, 10 seconds, 30 seconds), then the queue is dropped
+- **Retry**: a failed send is attempted up to 3 times in total. The first retry waits 5 seconds and the second 10 seconds. After the third failed attempt the queue is dropped.
 - **Throttling**: on a 429 or 503 answer the plugin stops sending until the time in the `Retry-After` header (five minutes without one, at most one day) and keeps the queue. These answers do not count towards the 3 attempts.
 
 ### Usage event (FunnelBarn)
