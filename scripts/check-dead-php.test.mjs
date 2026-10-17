@@ -31,7 +31,7 @@ class Box {
 	public function open() {}
 	public function __construct() {}
 }`);
-  assert.deepEqual(found.map((d) => `${d.kind} ${d.name}`).sort(), ["class Box", "const SIZE", "function open"]);
+  assert.deepEqual(found.map((d) => `${d.kind} ${d.name}`).sort((a, b) => a.localeCompare(b)), ["class Box", "const SIZE", "function open"]);
 });
 
 test("a symbol used from another file or from a hook string is alive", () => {

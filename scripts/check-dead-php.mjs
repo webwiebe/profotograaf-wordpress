@@ -50,7 +50,7 @@ export function phpFiles(root, entries = SOURCE_ROOTS) {
     }
   };
   entries.forEach(walk);
-  return out.sort();
+  return out.sort((a, b) => a.localeCompare(b));
 }
 
 // Only comments are removed: the 'method' strings that hooks use stay searchable.
@@ -89,7 +89,7 @@ export function findDead(root, entries = SOURCE_ROOTS) {
       if (count <= 1) dead.push(`${kind} ${name} ${file}`);
     }
   }
-  return dead.sort();
+  return dead.sort((a, b) => a.localeCompare(b));
 }
 
 export function readBaseline(file) {
