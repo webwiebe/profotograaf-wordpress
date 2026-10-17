@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - name: Find the latest WordPress release
@@ -25,6 +25,8 @@ jobs:
           echo "tested=$tested" >> "$GITHUB_OUTPUT"
           if [ "$major" != "$tested" ]; then echo "newer=true" >> "$GITHUB_OUTPUT"; fi
       - uses: shivammathur/setup-php@v2
+        env:
+          runner: self-hosted
         if: steps.wp.outputs.newer == 'true'
         with:
           php-version: '8.3'
@@ -50,7 +52,8 @@ jobs:
           MAJOR: ${{ steps.wp.outputs.major }}
         run: |
           branch="tested-up-to-${MAJOR}"
-          sed -i "s/^Tested up to:.*/Tested up to: ${MAJOR}/" readme.txt
+          sed -i.bak "s/^Tested up to:.*/Tested up to: ${MAJOR}/" readme.txt
+          rm readme.txt.bak
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"

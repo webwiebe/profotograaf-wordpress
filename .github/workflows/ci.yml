@@ -21,7 +21,7 @@ permissions:
 jobs:
   js-quality:
     name: JS quality (gate tests, oxlint, tsc, knip, file length, workflows, vitest, audit)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
@@ -52,10 +52,12 @@ jobs:
 
   php-quality:
     name: PHP quality (PHPCS, PHPStan, composer audit)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
+        env:
+          runner: self-hosted
         with:
           php-version: '8.3'
           tools: composer:2.9
@@ -78,7 +80,7 @@ jobs:
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }})
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     strategy:
       fail-fast: false
       matrix:
@@ -86,6 +88,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: shivammathur/setup-php@v2
+        env:
+          runner: self-hosted
         with:
           php-version: ${{ matrix.php }}
           tools: composer:2.9
@@ -95,12 +99,14 @@ jobs:
   coverage:
     name: Coverage (diff gate, cliff guard)
     needs: js-quality
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: shivammathur/setup-php@v2
+        env:
+          runner: self-hosted
         with:
           php-version: '8.3'
           tools: composer:2.9
@@ -134,7 +140,7 @@ jobs:
 
   i18n:
     name: Translations (stale .pot, hardcoded strings, untranslated locales)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
@@ -147,7 +153,7 @@ jobs:
 
   blocks:
     name: Block build
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
@@ -155,7 +161,7 @@ jobs:
 
   plugin-check:
     name: Plugin Check
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
@@ -168,7 +174,7 @@ jobs:
 
   zip-install:
     name: Release zip (structure, install on a clean WordPress)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm

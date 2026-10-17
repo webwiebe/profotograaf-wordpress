@@ -14,7 +14,7 @@ permissions:
 jobs:
   snapshots:
     name: Regenerate the embed.js baselines (WordPress 7.1)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     env:
       WP_VERSION: '7.1'
       E2E_VISUAL: '1'

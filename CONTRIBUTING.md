@@ -166,13 +166,13 @@ The script runs the platform's `pnpm build:public`, copies the bundle and record
 
 ## Continuous integration
 
-GitHub Actions on GitHub-hosted runners:
+GitHub Actions on the self-hosted macOS arm64 runners (`runs-on: [self-hosted, build]`; there are no GitHub-hosted runners). Jobs use Docker for WordPress and PHP tooling and need `jq`, `rsync`, `unzip` and `svn` on the host.
 
 - `ci.yml`: gate script tests first, then oxlint, tsc, knip, file length, workflow rules, vitest and `pnpm audit`; PHPCS, PHPStan and `composer audit`; PHPUnit on PHP 8.1 to 8.4; coverage gates; block build; Plugin Check; and the release zip install. It runs on pull requests, pushes to main and as a reusable workflow, and skips changes that touch only Markdown or `docs/`.
 - `e2e.yml`: the browser suite. It never runs on pull requests. It runs nightly on the current WordPress (with Firefox, WebKit, the pixel snapshots and the multisite run), on Sundays on the two previous majors, on demand, and before a release with only the specs of the areas the release changed (`scripts/release-e2e-specs.mjs`).
 - `release.yml`: a `v*` tag runs `ci.yml` and the targeted E2E specs first, then builds the zip, attaches it to a GitHub release and deploys to the wordpress.org SVN when the `SVN_USERNAME` and `SVN_PASSWORD` secrets exist.
 - `live-embed-canary.yml`: daily, runs the layout spec against the live `embed.js` and keeps one issue for failures.
-- `update-e2e-snapshots.yml`: manual or by label, regenerates the Linux snapshot baselines and uploads them as an artifact.
+- `update-e2e-snapshots.yml`: manual or by label, regenerates the snapshot baselines of the runner's platform and uploads them as an artifact.
 - `wp-tested-up-to.yml`: weekly, installs a newer WordPress release, runs the tests and opens a pull request that raises "Tested up to".
 - `dependabot.yml`: weekly, grouped updates for actions, npm and composer.
 
