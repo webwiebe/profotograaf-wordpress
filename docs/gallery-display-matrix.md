@@ -33,6 +33,12 @@ site default on the Galleries settings tab. An empty value means "not set
 here" and falls through. When nothing sets it, no `data-*` attribute is written
 and embed.js uses its own default.
 
+The value `auto` (the "Profotograaf default" choice in the block editor, allowed
+for `layout` in `block.json`) stops the chain at that point. The setting below it
+is skipped and the option renders as if nothing were set: the gallery's own
+layout and order, all photos and automatic columns. A saved block can hold it, so
+it stays valid. For duotone the same stop is the value `none`.
+
 ## Platform layouts
 
 A gallery on Profotograaf can use any of 13 layouts, and embed.js draws three.
