@@ -78,6 +78,7 @@ msgstr "Moduli di richiesta"
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
+#: includes/modules/class-link-consent-prompt.php:90
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -4334,3 +4335,35 @@ msgstr "Solo quando il proprietario del sito attiva la sorgente media: gli edito
 #, js-format
 msgid "Use the gallery's own layout (%s)"
 msgstr "Usa il layout proprio della galleria (%s)"
+
+#: includes/class-link-consent.php:164
+msgid "This Profotograaf gallery is hidden until you accept the Free plan condition (a small \"Powered by Profotograaf\" link under galleries)."
+msgstr "Questa galleria Profotograaf resta nascosta finché non accetti la condizione del piano Free (un piccolo link «Powered by Profotograaf» sotto le gallerie)."
+
+#: includes/class-link-consent.php:166
+msgid "Review the condition"
+msgstr "Rivedi la condizione"
+
+#: includes/modules/class-link-consent-prompt.php:66
+msgid "Galleries are hidden until you accept the Free plan condition."
+msgstr "Le gallerie restano nascoste finché non accetti la condizione del piano Free."
+
+#: includes/modules/class-link-consent-prompt.php:67
+msgid "On the Free plan a small \"Powered by Profotograaf\" link appears under your galleries. It cannot be switched off. Paid plans show no link."
+msgstr "Nel piano Free compare un piccolo link «Powered by Profotograaf» sotto le tue gallerie. Non si può disattivare. I piani a pagamento non mostrano nessun link."
+
+#: includes/modules/class-link-consent-prompt.php:68
+msgid "See the paid plans"
+msgstr "Vedi i piani a pagamento"
+
+#: includes/modules/class-link-consent-prompt.php:75
+msgid "Free plan: a small \"Powered by Profotograaf\" link appears under galleries"
+msgstr "Piano Free: sotto le gallerie compare un piccolo link «Powered by Profotograaf»"
+
+#: includes/modules/class-link-consent-prompt.php:78
+msgid "Accept and show my galleries"
+msgstr "Accetta e mostra le mie gallerie"
+
+#: includes/modules/class-link-consent-prompt.php:56
+msgid "Profotograaf has not reported your plan yet. Your galleries keep showing. On the Free plan a small \"Powered by Profotograaf\" link appears under galleries, and you will be asked to accept it once your plan is known."
+msgstr "Profotograaf non ha ancora comunicato il tuo piano. Le tue gallerie restano visibili. Nel piano Free compare un piccolo link «Powered by Profotograaf» sotto le gallerie, e ti verrà chiesto di accettarlo quando il piano sarà noto."

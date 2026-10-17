@@ -12,6 +12,7 @@ use Profotograaf\Full_Page_Payload;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Gallery_Renderer;
 use Profotograaf\Gallery_Rest;
+use Profotograaf\Link_Consent;
 use Profotograaf\Module;
 use Profotograaf\Oembed;
 use Profotograaf\Plugin;
@@ -50,6 +51,13 @@ class Gallery_Embed implements Module {
 	private ?Settings $settings = null;
 
 	/**
+	 * Consent to the Free plan link. The block renders nothing without it.
+	 *
+	 * @var Link_Consent|null
+	 */
+	private ?Link_Consent $consent = null;
+
+	/**
 	 * Name of the JavaScript global that carries the site defaults.
 	 */
 	public const EDITOR_GLOBAL = 'profotograafGalleryDefaults';
@@ -65,8 +73,9 @@ class Gallery_Embed implements Module {
 		$renderer       = new Gallery_Renderer( $script, $index, $plugin->settings(), new Full_Page_Payload( $plugin->api() ) );
 		$this->renderer = $renderer;
 		$this->settings = $plugin->settings();
+		$this->consent  = $plugin->link_consent();
 
-		( new Shortcode( $renderer ) )->register();
+		( new Shortcode( $renderer, $this->consent ) )->register();
 		( new Oembed( $script ) )->register();
 		( new Gallery_Rest( $plugin->api(), $index ) )->register();
 		( new Sections_Rest( $plugin->api() ) )->register();
@@ -102,6 +111,9 @@ class Gallery_Embed implements Module {
 	public function render_block( array $attributes ): string {
 		if ( null === $this->renderer ) {
 			return '';
+		}
+		if ( null !== $this->consent && ! $this->consent->allows_render() ) {
+			return $this->consent->refusal( Settings_Page::url() );
 		}
 		$class = 'wp-block-profotograaf-gallery';
 		if ( ! empty( $attributes['align'] ) ) {
