@@ -1,0 +1,29 @@
+#!/bin/sh
+# Runs the embed parity test and the contract lint when a commit touches what
+# they guard: the PHP gallery renderers, the embed package pin or its fixtures.
+# CI stays the gate; this catches it before the push.
+# Enabled by `pnpm install` or `composer install` (core.hooksPath, see
+# scripts/install-hooks.sh). Skip once with `git commit --no-verify`.
+#
+# PF_HOOK_FILES replaces the staged file list and PF_HOOK_DRY=1 prints the
+# commands instead of running them (scripts/pre-commit-hook.test.mjs).
+
+files="${PF_HOOK_FILES:-$(git diff --cached --name-only --diff-filter=ACMR)}"
+
+guarded=$(printf '%s\n' "$files" | grep -E '^(includes/(class-declarative-renderer|class-gallery-renderer|class-full-page-renderer|class-embed-script)\.php|tests/fixtures/embed/|embed-package/|package\.json$|pnpm-lock\.yaml$)' || true)
+
+if [ -z "$guarded" ]; then
+	exit 0
+fi
+
+run() {
+	if [ "${PF_HOOK_DRY:-}" = "1" ]; then
+		echo "$*"
+		return 0
+	fi
+	echo "pre-commit: $*"
+	"$@"
+}
+
+run node --test scripts/embed-package.test.mjs || exit 1
+run vendor/bin/phpunit --filter 'Declarative|Gallery_Renderer|Full_Page_Renderer|Embed_Script' || exit 1

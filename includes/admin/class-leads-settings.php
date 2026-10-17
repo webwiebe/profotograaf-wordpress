@@ -87,7 +87,6 @@ class Leads_Settings {
 		add_action( 'admin_post_profotograaf_leads_dismiss', array( $this, 'handle_dismiss' ) );
 		add_action( 'admin_post_profotograaf_sync_galleries', array( $this, 'handle_sync_galleries' ) );
 		add_action( 'admin_post_profotograaf_clear_gallery_index', array( $this, 'handle_clear_gallery_index' ) );
-		add_action( 'admin_post_profotograaf_check_embed_version', array( $this, 'handle_check_embed_version' ) );
 	}
 
 	/**
@@ -190,14 +189,6 @@ class Leads_Settings {
 	}
 
 	/**
-	 * Reads the current embed script version from the platform now.
-	 */
-	public function handle_check_embed_version(): void {
-		$this->authorize( 'profotograaf_check_embed_version' );
-		$this->finish_tool( $this->tools()->check_embed_version() );
-	}
-
-	/**
 	 * Renders the page.
 	 */
 	public function render(): void {
@@ -254,12 +245,11 @@ class Leads_Settings {
 			</p>
 			<?php $this->render_failures( $counts['failed'] ); ?>
 
-			<h2><?php esc_html_e( 'Galleries and embed script', 'profotograaf' ); ?></h2>
+			<h2><?php esc_html_e( 'Galleries', 'profotograaf' ); ?></h2>
 			<div class="profotograaf-leads-actions">
 				<?php
 				$this->render_action( 'profotograaf_sync_galleries', __( 'Sync galleries now', 'profotograaf' ) );
 				$this->render_action( 'profotograaf_clear_gallery_index', __( 'Clear the gallery index', 'profotograaf' ) );
-				$this->render_action( 'profotograaf_check_embed_version', __( 'Re-check the embed version', 'profotograaf' ) );
 				?>
 			</div>
 		</div>
@@ -442,7 +432,7 @@ class Leads_Settings {
 	 * The maintenance actions.
 	 */
 	private function tools(): Site_Tools {
-		return new Site_Tools( $this->plugin->api(), new Embed_Script() );
+		return new Site_Tools( $this->plugin->api() );
 	}
 
 	/**

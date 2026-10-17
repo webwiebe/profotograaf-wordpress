@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-17T04:00:00+00:00\n"
+"POT-Creation-Date: 2026-10-17T12:57:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -34,8 +34,8 @@ msgstr ""
 #: includes/modules/class-settings-page.php:78
 #: includes/modules/class-settings-page.php:79
 #: includes/modules/class-settings-page.php:279
-#: includes/modules/class-site-health.php:357
-#: includes/modules/class-site-health.php:428
+#: includes/modules/class-site-health.php:331
+#: includes/modules/class-site-health.php:401
 #: includes/modules/class-sync-flags.php:66
 #: assets/admin/media-source.js:29
 #: assets/admin/sync-actions.js:170
@@ -113,7 +113,7 @@ msgid "Nothing is copied while this site is not connected to Profotograaf."
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:84
-#: includes/admin/class-leads-settings.php:220
+#: includes/admin/class-leads-settings.php:211
 msgid "Connect this site"
 msgstr ""
 
@@ -304,21 +304,21 @@ msgstr ""
 msgid "QR code with the share link of %s"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:105
-#: includes/admin/class-leads-settings.php:211
+#: includes/admin/class-leads-settings.php:104
+#: includes/admin/class-leads-settings.php:202
 #: includes/modules/class-privacy.php:79
 #: includes/modules/class-privacy.php:96
 #: includes/modules/class-privacy.php:117
 msgid "Profotograaf enquiries"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:106
+#: includes/admin/class-leads-settings.php:105
 #: includes/class-settings-schema.php:63
 msgid "Enquiry forms"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:205
-#: includes/admin/class-leads-settings.php:486
+#: includes/admin/class-leads-settings.php:196
+#: includes/admin/class-leads-settings.php:476
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
@@ -334,125 +334,123 @@ msgstr ""
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:214
+#: includes/admin/class-leads-settings.php:205
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:219
+#: includes/admin/class-leads-settings.php:210
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:225
+#: includes/admin/class-leads-settings.php:216
 msgid "Site defaults"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:226
+#: includes/admin/class-leads-settings.php:217
 msgid "Save defaults"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:228
+#: includes/admin/class-leads-settings.php:219
 msgid "Forms"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:230
+#: includes/admin/class-leads-settings.php:221
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:238
+#: includes/admin/class-leads-settings.php:229
 msgid "Save changes"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:242
+#: includes/admin/class-leads-settings.php:233
 msgid "Delivery"
 msgstr ""
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
-#: includes/admin/class-leads-settings.php:248
+#: includes/admin/class-leads-settings.php:239
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:257
-msgid "Galleries and embed script"
+#: includes/admin/class-leads-settings.php:248
+#: includes/class-settings-schema.php:62
+#: includes/modules/class-privacy.php:229
+msgid "Galleries"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:260
+#: includes/admin/class-leads-settings.php:251
 msgid "Sync galleries now"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:261
+#: includes/admin/class-leads-settings.php:252
 msgid "Clear the gallery index"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:262
-msgid "Re-check the embed version"
-msgstr ""
-
-#: includes/admin/class-leads-settings.php:282
+#: includes/admin/class-leads-settings.php:272
 #: includes/modules/class-privacy.php:187
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:283
+#: includes/admin/class-leads-settings.php:273
 msgid "Email address"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:284
+#: includes/admin/class-leads-settings.php:274
 #: includes/modules/class-privacy.php:189
 msgid "Phone"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:285
+#: includes/admin/class-leads-settings.php:275
 msgid "Event date"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:286
+#: includes/admin/class-leads-settings.php:276
 #: includes/modules/class-privacy.php:191
 msgid "Message"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:296
+#: includes/admin/class-leads-settings.php:286
 msgid "Send submissions of this form to Profotograaf"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:300
+#: includes/admin/class-leads-settings.php:290
 msgid "Source tag"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:303
+#: includes/admin/class-leads-settings.php:293
 msgid "Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name."
 msgstr ""
 
 #. translators: %s: name of the form field that is picked automatically.
-#: includes/admin/class-leads-settings.php:320
+#: includes/admin/class-leads-settings.php:310
 #, php-format
 msgid "Automatic (%s)"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:321
+#: includes/admin/class-leads-settings.php:311
 msgid "Automatic (no field found)"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:325
+#: includes/admin/class-leads-settings.php:315
 #: includes/modules/class-media-upload.php:171
 msgid "Do not send"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:334
+#: includes/admin/class-leads-settings.php:324
 msgid "Every other field is sent along as a label and value."
 msgstr ""
 
 #. translators: 1: form name, 2: error message.
-#: includes/admin/class-leads-settings.php:356
+#: includes/admin/class-leads-settings.php:346
 #, php-format
 msgid "%1$s: %2$s"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:365
+#: includes/admin/class-leads-settings.php:355
 msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:368
+#: includes/admin/class-leads-settings.php:358
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
@@ -460,23 +458,23 @@ msgstr ""
 msgid "Try again"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:369
+#: includes/admin/class-leads-settings.php:359
 msgid "Download as CSV"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:371
+#: includes/admin/class-leads-settings.php:361
 msgid "Remove exported enquiries"
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:421
+#: includes/admin/class-leads-settings.php:411
 msgid "Changes saved."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:423
+#: includes/admin/class-leads-settings.php:413
 msgid "The enquiries are queued again."
 msgstr ""
 
-#: includes/admin/class-leads-settings.php:425
+#: includes/admin/class-leads-settings.php:415
 msgid "The exported enquiries were removed."
 msgstr ""
 
@@ -512,7 +510,7 @@ msgstr ""
 
 #: includes/admin/class-network-page.php:98
 #: includes/modules/class-settings-page.php:284
-#: includes/modules/class-site-health.php:362
+#: includes/modules/class-site-health.php:336
 msgid "Connection"
 msgstr ""
 
@@ -820,7 +818,7 @@ msgid "Files are sent as planned, or nothing waits."
 msgstr ""
 
 #: includes/class-backup-health.php:191
-#: includes/modules/class-site-health.php:196
+#: includes/modules/class-site-health.php:178
 msgid "Open the Profotograaf settings"
 msgstr ""
 
@@ -971,7 +969,7 @@ msgstr ""
 msgid "Photo changes on Profotograaf have not been checked for more than three hours."
 msgstr ""
 
-#: includes/class-embed-script.php:206
+#: includes/class-embed-script.php:159
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
 
@@ -1287,11 +1285,6 @@ msgstr ""
 
 #: includes/class-settings-schema.php:61
 msgid "General"
-msgstr ""
-
-#: includes/class-settings-schema.php:62
-#: includes/modules/class-privacy.php:229
-msgid "Galleries"
 msgstr ""
 
 #: includes/class-settings-schema.php:65
@@ -2063,31 +2056,21 @@ msgid "Enquiry that could not be delivered"
 msgstr ""
 
 #. translators: %s: reason the galleries could not be loaded.
-#: includes/leads/class-site-tools.php:62
+#: includes/leads/class-site-tools.php:53
 #, php-format
 msgid "The galleries could not be synced: %s"
 msgstr ""
 
 #. translators: %s: number of galleries.
-#: includes/leads/class-site-tools.php:72
+#: includes/leads/class-site-tools.php:63
 #, php-format
 msgid "Synced %s gallery."
 msgid_plural "Synced %s galleries."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/leads/class-site-tools.php:86
+#: includes/leads/class-site-tools.php:77
 msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
-msgstr ""
-
-#: includes/leads/class-site-tools.php:99
-msgid "The embed script version could not be read. Galleries keep using the address without a version. Try again later."
-msgstr ""
-
-#. translators: %s: version of the embed script, 12 characters.
-#: includes/leads/class-site-tools.php:105
-#, php-format
-msgid "The embed script is at version %s."
 msgstr ""
 
 #: includes/modules/class-admin-notices.php:136
@@ -2575,253 +2558,243 @@ msgstr ""
 msgid "Check again"
 msgstr ""
 
-#: includes/modules/class-site-health.php:136
+#: includes/modules/class-site-health.php:118
 msgid "Profotograaf connection"
 msgstr ""
 
-#: includes/modules/class-site-health.php:140
+#: includes/modules/class-site-health.php:122
 msgid "Profotograaf token refresh"
 msgstr ""
 
-#: includes/modules/class-site-health.php:144
+#: includes/modules/class-site-health.php:126
 msgid "Profotograaf lead queue"
 msgstr ""
 
-#: includes/modules/class-site-health.php:148
+#: includes/modules/class-site-health.php:130
 msgid "Profotograaf failed leads"
 msgstr ""
 
-#: includes/modules/class-site-health.php:153
+#: includes/modules/class-site-health.php:135
 msgid "Profotograaf file uploads"
 msgstr ""
 
-#: includes/modules/class-site-health.php:158
+#: includes/modules/class-site-health.php:140
 msgid "Profotograaf gallery script"
 msgstr ""
 
-#: includes/modules/class-site-health.php:199
+#: includes/modules/class-site-health.php:181
 msgid "Profotograaf is connected"
 msgstr ""
 
-#: includes/modules/class-site-health.php:199
+#: includes/modules/class-site-health.php:181
 msgid "This site is linked to a Profotograaf account."
 msgstr ""
 
-#: includes/modules/class-site-health.php:202
+#: includes/modules/class-site-health.php:184
 msgid "Profotograaf needs to be connected again"
 msgstr ""
 
-#: includes/modules/class-site-health.php:202
+#: includes/modules/class-site-health.php:184
 msgid "The stored connection lacks a permission the plugin needs to switch galleries on for embedding."
 msgstr ""
 
-#: includes/modules/class-site-health.php:202
+#: includes/modules/class-site-health.php:184
 msgid "Disconnect and connect again on the settings page."
 msgstr ""
 
-#: includes/modules/class-site-health.php:205
+#: includes/modules/class-site-health.php:187
 msgid "Profotograaf ended the connection"
 msgstr ""
 
-#: includes/modules/class-site-health.php:205
+#: includes/modules/class-site-health.php:187
 msgid "The account ended the connection, so galleries and lead delivery stopped working."
 msgstr ""
 
-#: includes/modules/class-site-health.php:205
+#: includes/modules/class-site-health.php:187
 msgid "Connect the site again on the settings page."
 msgstr ""
 
-#: includes/modules/class-site-health.php:207
+#: includes/modules/class-site-health.php:189
 msgid "Profotograaf is not connected"
 msgstr ""
 
-#: includes/modules/class-site-health.php:207
+#: includes/modules/class-site-health.php:189
 msgid "Connect this site to a Profotograaf account to show galleries and deliver leads."
 msgstr ""
 
-#: includes/modules/class-site-health.php:220
+#: includes/modules/class-site-health.php:202
 msgid "Profotograaf tokens are refreshed"
 msgstr ""
 
-#: includes/modules/class-site-health.php:220
+#: includes/modules/class-site-health.php:202
 msgid "The connection token is current, or nothing needs refreshing yet."
 msgstr ""
 
-#: includes/modules/class-site-health.php:225
+#: includes/modules/class-site-health.php:207
 msgid "Profotograaf tokens are not refreshed"
 msgstr ""
 
-#: includes/modules/class-site-health.php:226
+#: includes/modules/class-site-health.php:208
 msgid "The access token expired more than three hours ago, so the hourly background refresh did not run. WP-Cron may be disabled or blocked. The 60 day refresh token lapses when nothing refreshes it."
 msgstr ""
 
-#: includes/modules/class-site-health.php:227
+#: includes/modules/class-site-health.php:209
 msgid "Check the WP-Cron test on this page and fix it first. A visit to a gallery page refreshes the token on demand."
 msgstr ""
 
-#: includes/modules/class-site-health.php:242
-msgid "The Profotograaf gallery script is reachable"
+#: includes/modules/class-site-health.php:221
+msgid "The Profotograaf gallery script is installed"
 msgstr ""
 
-#: includes/modules/class-site-health.php:242
-msgid "This server can load embed.js from the platform."
+#: includes/modules/class-site-health.php:221
+msgid "The plugin folder holds the gallery script."
 msgstr ""
 
-#: includes/modules/class-site-health.php:247
-msgid "The Profotograaf gallery script cannot be reached"
+#: includes/modules/class-site-health.php:226
+msgid "The Profotograaf gallery script is missing"
 msgstr ""
 
-#. translators: %s: address of embed.js.
-#: includes/modules/class-site-health.php:250
-#, php-format
-msgid "Galleries only show their fallback link while %s cannot be loaded."
+#: includes/modules/class-site-health.php:227
+msgid "Galleries only show their fallback link while the gallery script is missing from the plugin folder."
 msgstr ""
 
-#: includes/modules/class-site-health.php:253
-msgid "Check that the platform is online and that no firewall, proxy or Content-Security-Policy script-src rule blocks the address."
+#: includes/modules/class-site-health.php:228
+msgid "Install the plugin again from the release zip. A copy made from the source needs pnpm install and pnpm build first."
 msgstr ""
 
-#: includes/modules/class-site-health.php:268
+#: includes/modules/class-site-health.php:243
 msgid "Profotograaf leads are delivered on time"
 msgstr ""
 
-#: includes/modules/class-site-health.php:268
+#: includes/modules/class-site-health.php:243
 msgid "No lead is waiting longer than expected."
 msgstr ""
 
-#: includes/modules/class-site-health.php:273
+#: includes/modules/class-site-health.php:248
 msgid "Profotograaf leads are waiting for delivery"
 msgstr ""
 
 #. translators: %d: number of leads waiting for delivery.
-#: includes/modules/class-site-health.php:276
+#: includes/modules/class-site-health.php:251
 #, php-format
 msgid "%d lead is overdue for delivery."
 msgid_plural "%d leads are overdue for delivery."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-site-health.php:279
+#: includes/modules/class-site-health.php:254
 msgid "Check the WP-Cron test and the gallery script test on this page."
 msgstr ""
 
-#: includes/modules/class-site-health.php:292
+#: includes/modules/class-site-health.php:267
 msgid "No Profotograaf leads failed"
 msgstr ""
 
-#: includes/modules/class-site-health.php:292
+#: includes/modules/class-site-health.php:267
 msgid "Every lead was delivered or is still being retried."
 msgstr ""
 
-#: includes/modules/class-site-health.php:297
+#: includes/modules/class-site-health.php:272
 msgid "Profotograaf leads failed to deliver"
 msgstr ""
 
 #. translators: %d: number of failed leads.
-#: includes/modules/class-site-health.php:300
+#: includes/modules/class-site-health.php:275
 #, php-format
 msgid "%d lead could not be delivered."
 msgid_plural "%d leads could not be delivered."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-site-health.php:303
+#: includes/modules/class-site-health.php:278
 msgid "Open the leads screen to retry them or export them before they are removed."
 msgstr ""
 
-#: includes/modules/class-site-health.php:317
+#: includes/modules/class-site-health.php:292
 msgid "No Profotograaf file uploads failed"
 msgstr ""
 
-#: includes/modules/class-site-health.php:317
+#: includes/modules/class-site-health.php:292
 msgid "Every file was sent or is still waiting."
 msgstr ""
 
-#: includes/modules/class-site-health.php:322
+#: includes/modules/class-site-health.php:297
 msgid "Profotograaf file uploads failed"
 msgstr ""
 
 #. translators: %d: number of files that could not be sent.
-#: includes/modules/class-site-health.php:325
+#: includes/modules/class-site-health.php:300
 #, php-format
 msgid "%d file could not be sent to Profotograaf."
 msgid_plural "%d files could not be sent to Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-site-health.php:328
+#: includes/modules/class-site-health.php:303
 msgid "Open the file in the Media Library to read why, and send it again."
 msgstr ""
 
-#: includes/modules/class-site-health.php:353
+#: includes/modules/class-site-health.php:327
 msgid "never"
 msgstr ""
 
-#: includes/modules/class-site-health.php:359
+#: includes/modules/class-site-health.php:333
 msgid "Plugin version"
 msgstr ""
 
-#: includes/modules/class-site-health.php:360
+#: includes/modules/class-site-health.php:334
 msgid "WordPress version"
 msgstr ""
 
-#: includes/modules/class-site-health.php:361
+#: includes/modules/class-site-health.php:335
 msgid "PHP version"
 msgstr ""
 
-#: includes/modules/class-site-health.php:363
+#: includes/modules/class-site-health.php:337
 msgid "Connected since"
 msgstr ""
 
-#: includes/modules/class-site-health.php:364
+#: includes/modules/class-site-health.php:338
 msgid "Active modules"
 msgstr ""
 
-#: includes/modules/class-site-health.php:365
+#: includes/modules/class-site-health.php:339
 msgid "Leads waiting"
 msgstr ""
 
-#: includes/modules/class-site-health.php:366
+#: includes/modules/class-site-health.php:340
 msgid "Leads failed"
 msgstr ""
 
-#: includes/modules/class-site-health.php:367
-msgid "Embed script version"
-msgstr ""
-
-#: includes/modules/class-site-health.php:367
-msgid "unknown"
-msgstr ""
-
-#: includes/modules/class-site-health.php:369
+#: includes/modules/class-site-health.php:342
 msgid "WP-Cron"
 msgstr ""
 
-#: includes/modules/class-site-health.php:370
+#: includes/modules/class-site-health.php:343
 msgid "disabled"
 msgstr ""
 
-#: includes/modules/class-site-health.php:370
+#: includes/modules/class-site-health.php:343
 msgid "enabled"
 msgstr ""
 
-#: includes/modules/class-site-health.php:371
+#: includes/modules/class-site-health.php:344
 msgid "last delivery run"
 msgstr ""
 
-#: includes/modules/class-site-health.php:373
+#: includes/modules/class-site-health.php:346
 msgid "Photo changes last checked"
 msgstr ""
 
-#: includes/modules/class-site-health.php:374
+#: includes/modules/class-site-health.php:347
 msgid "Recent errors"
 msgstr ""
 
-#: includes/modules/class-site-health.php:374
+#: includes/modules/class-site-health.php:347
 msgid "none"
 msgstr ""
 
-#: includes/modules/class-site-health.php:441
+#: includes/modules/class-site-health.php:414
 msgid "Open the leads screen"
 msgstr ""
 

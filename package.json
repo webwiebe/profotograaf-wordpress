@@ -8,6 +8,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "prepare": "sh scripts/install-hooks.sh",
     "build": "node bin/blocks.mjs build",
     "start": "node bin/blocks.mjs start",
     "typecheck": "tsc --noEmit",
@@ -52,6 +53,7 @@
   },
   "packageManager": "pnpm@12.4.2",
   "dependencies": {
+    "@profotograaf/embed": "file:embed-package/profotograaf-embed-0.1.1.tgz",
     "qrcode-generator": "2.0.4"
   }
 }

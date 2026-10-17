@@ -107,8 +107,6 @@ class Oembed {
 		if ( ! is_string( $html ) || ! $this->is_ours( (string) $url ) ) {
 			return $html;
 		}
-		$this->script->learn_from_html( $html );
-
 		$stripped = preg_replace( '#<script\b[^>]*\bsrc="[^"]*/share/embed/embed(?:\.[a-f0-9]{12})?\.js"[^>]*>\s*</script>#i', '', $html );
 		if ( ! is_string( $stripped ) || $stripped === $html ) {
 			return $html;

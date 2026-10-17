@@ -270,8 +270,8 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 
 		$this->assertCount( 1, $this->enqueued );
 		$script = $this->enqueued['profotograaf-embed'];
-		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.js', $script['src'] );
-		$this->assertNull( $script['ver'] );
+		$this->assertSame( 'https://example.test/wp-content/plugins/profotograaf/build/embed/embed.js', $script['src'] );
+		$this->assertSame( PROFOTOGRAAF_VERSION, $script['ver'] );
 		$this->assertSame(
 			array(
 				'in_footer' => true,
@@ -279,23 +279,6 @@ class Gallery_Renderer_Test extends Gallery_Test_Case {
 			),
 			$script['args']
 		);
-	}
-
-	public function test_the_versioned_script_url_is_used_once_the_version_is_known(): void {
-		$this->options['profotograaf_embed_version'] = array(
-			'version'    => '0123456789ab',
-			'checked_at' => time(),
-		);
-
-		$this->renderer->render( array( 'id' => 'g-1' ) );
-
-		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.0123456789ab.js', $this->enqueued['profotograaf-embed']['src'] );
-	}
-
-	public function test_a_stored_version_that_is_not_12_hex_characters_is_ignored(): void {
-		$this->options['profotograaf_embed_version'] = array( 'version' => '../evil.js' );
-
-		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.js', $this->script->url() );
 	}
 
 	/**
