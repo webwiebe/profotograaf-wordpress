@@ -113,8 +113,15 @@ test("--update-baseline writes the findings and the next check passes", () => {
   assert.equal(run(root, json).status, 0);
 });
 
-test("the committed baseline matches the repo", () => {
+// The real run needs phpcs, which only the PHP quality job installs; this part
+// stays offline: every baseline entry names a function that exists in its file.
+test("every committed baseline entry names a function in a file that exists", () => {
   const root = path.resolve(path.dirname(script), "..");
-  const result = spawnSync("node", [script], { cwd: root, encoding: "utf8" });
-  assert.equal(result.status, 0, result.stdout + result.stderr);
+  const baseline = parseBaseline(fs.readFileSync(path.join(root, "scripts/php-complexity-baseline.txt"), "utf8"));
+  assert.ok(Object.keys(baseline).length > 0);
+  for (const key of Object.keys(baseline)) {
+    const [kind, name, file] = key.split(" ");
+    assert.ok(["complexity", "nesting"].includes(kind), key);
+    assert.match(fs.readFileSync(path.join(root, file), "utf8"), new RegExp(`function\\s+&?\\s*${name}\\s*\\(`), key);
+  }
 });
