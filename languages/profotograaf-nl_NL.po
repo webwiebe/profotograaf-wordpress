@@ -2447,20 +2447,20 @@ msgstr "Alleen JPEG-, PNG-, WebP- en GIF-afbeeldingen kunnen naar Profotograaf w
 msgid "This file is on Profotograaf already."
 msgstr "Dit bestand staat al op Profotograaf."
 
-#: includes/class-upload-queue.php:386
+#: includes/class-upload-queue.php:427
 msgid "The gallery this file was meant for is no longer linked. Choose a linked gallery to send it again."
 msgstr "De galerij waarvoor dit bestand bedoeld was, is niet meer gekoppeld. Kies een gekoppelde galerij om het opnieuw te versturen."
 
-#: includes/class-upload-queue.php:392
-#: includes/class-upload-queue.php:429
+#: includes/class-upload-queue.php:430
+#: includes/class-upload-queue.php:477
 msgid "The file could not be read from this site."
 msgstr "Het bestand kon niet van deze site worden gelezen."
 
-#: includes/class-upload-queue.php:397
+#: includes/class-upload-queue.php:432
 msgid "The file is too large for this site to send. Resize it and send it again."
 msgstr "Het bestand is te groot om vanaf deze site te versturen. Verklein het en verstuur het opnieuw."
 
-#: includes/class-upload-queue.php:434
+#: includes/class-upload-queue.php:481
 msgid "The file could not be prepared for sending."
 msgstr "Het bestand kon niet worden voorbereid voor verzending."
 
@@ -2605,7 +2605,7 @@ msgid "Only when the site owner turns on sending Media Library files: a person w
 msgstr "Alleen als de site-eigenaar het versturen van bestanden uit de mediabibliotheek aanzet: iemand die bestanden mag uploaden, kiest een gekoppelde Profotograaf-galerij voor een afbeelding, waarna deze site die afbeelding op de achtergrond naar profotograaf.nl stuurt. De galerij kan een klantgalerij zijn. Voordat een afbeelding wordt verstuurd, verwijdert de plugin de GPS-positie eruit. De overige metadata blijven in het bestand, zoals camera, lens en datum. Latere wijzigingen in de titel, het bijschrift en de alt-tekst van een verstuurde afbeelding worden ook verstuurd. HEIC-, video- en RAW-bestanden worden niet verstuurd. Foto's van mensen zijn persoonsgegevens, dus de site-eigenaar heeft een grondslag nodig om ze te versturen. Een bestand hier verwijderen verwijdert niets op Profotograaf. De mediabibliotheek bewaart per verstuurd bestand een paar verborgen velden (de identificaties van de foto en de galerij, de verzendstatus en het tijdstip) tot het bestand wordt verwijderd."
 
 #: includes/class-change-poller.php:394
-#: includes/class-virtual-sync.php:276
+#: includes/class-virtual-sync.php:294
 msgid "The photo list could not be refreshed."
 msgstr "De fotolijst kon niet worden vernieuwd."
 
@@ -3103,7 +3103,7 @@ msgstr "Paginagrote galerij"
 msgid "This file is not waiting for a new upload."
 msgstr "Dit bestand wacht niet op een nieuwe upload."
 
-#: includes/class-upload-queue.php:418
+#: includes/class-upload-queue.php:460
 msgid "The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there."
 msgstr "Het bestand staat mogelijk al op Profotograaf, omdat een eerdere poging geen antwoord kreeg en de galerij niet kon worden gecontroleerd. Kijk in de galerij en kies Opnieuw uploaden als de foto er niet staat."
 

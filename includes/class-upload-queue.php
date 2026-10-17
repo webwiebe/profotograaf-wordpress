@@ -375,76 +375,116 @@ class Upload_Queue {
 	 */
 	private function process_upload( int $id ): void {
 		$gallery_id = (string) get_post_meta( $id, self::META_GALLERY, true );
-		$link       = $this->links->find( $gallery_id );
-
 		if ( '' !== (string) get_post_meta( $id, Photo_Importer::META_PHOTO_ID, true ) ) {
 			// An imported photo that an automatic assignment caught, or a file that was sent already.
 			$this->clear_upload_state( $id );
 			return;
 		}
-		if ( null === $link || $link['disabled'] ) {
-			$this->fail( $id, __( 'The gallery this file was meant for is no longer linked. Choose a linked gallery to send it again.', 'profotograaf' ) );
+		$path   = self::source_path( $id );
+		$reason = $this->unsendable( $this->links->find( $gallery_id ), $path );
+		if ( null !== $reason ) {
+			$this->fail( $id, $reason );
 			return;
 		}
-		$path = wp_get_original_image_path( $id );
-		$path = is_string( $path ) && '' !== $path ? $path : (string) get_attached_file( $id );
-		if ( '' === $path || ! is_file( $path ) || ! is_readable( $path ) ) {
-			$this->fail( $id, __( 'The file could not be read from this site.', 'profotograaf' ) );
-			return;
-		}
-		$size = (int) filesize( $path );
-		if ( $size > $this->max_bytes() ) {
-			$this->fail( $id, __( 'The file is too large for this site to send. Resize it and send it again.', 'profotograaf' ) );
-			return;
-		}
-
 		$attempts = (int) get_post_meta( $id, self::META_ATTEMPTS, true ) + 1;
-		$mime     = (string) get_post_mime_type( $id );
 		$name     = wp_basename( $path );
-
-		if ( '' !== (string) get_post_meta( $id, self::META_CHECK, true ) || self::STATE_UPLOADING === $this->state( $id ) ) {
-			// An earlier attempt may have saved the file. Look before sending it again.
-			$found = $this->api->find_photo_by_name( $gallery_id, $name );
-			if ( is_string( $found ) ) {
-				$this->succeed( $id, $gallery_id, $found );
-				return;
-			}
-			if ( is_wp_error( $found ) ) {
-				$data = $found->get_error_data();
-				if ( is_array( $data ) && ! empty( $data['retryable'] ) && $attempts < self::MAX_ATTEMPTS ) {
-					$this->retry( $id, $attempts, $found );
-					return;
-				}
-				$this->fail( $id, __( 'The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there.', 'profotograaf' ), true );
-				return;
-			}
+		if ( $this->settled_earlier( $id, $gallery_id, $name, $attempts ) ) {
+			return;
 		}
 
 		update_post_meta( $id, self::META_ATTEMPTS, $attempts );
 		update_post_meta( $id, self::META_STATE, self::STATE_UPLOADING );
 		update_post_meta( $id, self::META_STARTED, $this->now() );
 
+		$result = $this->send( $gallery_id, $path, $name, (string) get_post_mime_type( $id ) );
+		if ( is_string( $result ) ) {
+			$this->fail( $id, $result );
+		} elseif ( is_wp_error( $result ) ) {
+			$this->handle_failure( $id, $gallery_id, $attempts, $result );
+		} else {
+			$this->succeed( $id, $gallery_id, $result['id'] );
+		}
+	}
+
+	/**
+	 * The file to send: the original of an image, else the attached file.
+	 *
+	 * @param int $id Attachment id.
+	 */
+	private static function source_path( int $id ): string {
+		$path = wp_get_original_image_path( $id );
+		return is_string( $path ) && '' !== $path ? $path : (string) get_attached_file( $id );
+	}
+
+	/**
+	 * Why a file cannot be sent, or null when it can.
+	 *
+	 * @param array<string,mixed>|null $link Link of the gallery.
+	 * @param string                   $path File path.
+	 */
+	private function unsendable( ?array $link, string $path ): ?string {
+		if ( null === $link || $link['disabled'] ) {
+			return __( 'The gallery this file was meant for is no longer linked. Choose a linked gallery to send it again.', 'profotograaf' );
+		}
+		if ( '' === $path || ! is_file( $path ) || ! is_readable( $path ) ) {
+			return __( 'The file could not be read from this site.', 'profotograaf' );
+		}
+		return (int) filesize( $path ) > $this->max_bytes() ? __( 'The file is too large for this site to send. Resize it and send it again.', 'profotograaf' ) : null;
+	}
+
+	/**
+	 * Looks for a file an earlier attempt may have saved, before sending it again.
+	 *
+	 * @param int    $id         Attachment id.
+	 * @param string $gallery_id Gallery id.
+	 * @param string $name       File name.
+	 * @param int    $attempts   Attempt number of this run.
+	 * @return bool True when the file is settled and nothing is left to send.
+	 */
+	private function settled_earlier( int $id, string $gallery_id, string $name, int $attempts ): bool {
+		if ( '' === (string) get_post_meta( $id, self::META_CHECK, true ) && self::STATE_UPLOADING !== $this->state( $id ) ) {
+			return false;
+		}
+		$found = $this->api->find_photo_by_name( $gallery_id, $name );
+		if ( is_string( $found ) ) {
+			$this->succeed( $id, $gallery_id, $found );
+			return true;
+		}
+		if ( ! is_wp_error( $found ) ) {
+			return false;
+		}
+		$data = $found->get_error_data();
+		if ( is_array( $data ) && ! empty( $data['retryable'] ) && $attempts < self::MAX_ATTEMPTS ) {
+			$this->retry( $id, $attempts, $found );
+		} else {
+			$this->fail( $id, __( 'The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there.', 'profotograaf' ), true );
+		}
+		return true;
+	}
+
+	/**
+	 * Strips the location from a copy of the file and uploads it.
+	 *
+	 * @param string $gallery_id Gallery id.
+	 * @param string $path       File path.
+	 * @param string $name       File name.
+	 * @param string $mime       Mime type.
+	 * @return array{id:string}|WP_Error|string The uploaded photo, the error, or a failure message when the copy could not be made.
+	 */
+	private function send( string $gallery_id, string $path, string $name, string $mime ) {
 		$contents = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local file.
 		if ( false === $contents ) {
-			$this->fail( $id, __( 'The file could not be read from this site.', 'profotograaf' ) );
-			return;
+			return __( 'The file could not be read from this site.', 'profotograaf' );
 		}
 		$temp = $this->temp_file();
 		if ( '' === $temp || false === file_put_contents( $temp, Location_Stripper::strip( $contents ) ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Temp file.
-			$this->fail( $id, __( 'The file could not be prepared for sending.', 'profotograaf' ) );
-			return;
+			return __( 'The file could not be prepared for sending.', 'profotograaf' );
 		}
 		unset( $contents );
 		try {
-			$result = $this->api->upload_photo( $gallery_id, $temp, $name, $mime );
+			return $this->api->upload_photo( $gallery_id, $temp, $name, $mime );
 		} finally {
 			wp_delete_file( $temp );
 		}
-
-		if ( is_wp_error( $result ) ) {
-			$this->handle_failure( $id, $gallery_id, $attempts, $result );
-			return;
-		}
-		$this->succeed( $id, $gallery_id, $result['id'] );
 	}
 }

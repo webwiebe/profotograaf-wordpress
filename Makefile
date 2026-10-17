@@ -52,7 +52,7 @@ composer-audit:
 complexity-php:
 	mkdir -p coverage
 	$(DOCKER_RUN) $(PHP_IMAGE) vendor/bin/phpcs --standard=phpcs-complexity.xml.dist --report=json -q > coverage/complexity.json || true
-	$(PNPM) node scripts/check-php-complexity.mjs --report --from-json coverage/complexity.json
+	$(PNPM) node scripts/check-php-complexity.mjs --from-json coverage/complexity.json
 
 quality-php: lint phpstan coverage-php composer-audit complexity-php
 
