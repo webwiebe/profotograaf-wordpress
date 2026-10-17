@@ -26,8 +26,8 @@ msgstr ""
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
 #: includes/class-sync-attention.php:189
-#: includes/modules/class-media-import-screen.php:254
-#: includes/modules/class-media-import-screen.php:267
+#: includes/modules/class-media-import-screen.php:249
+#: includes/modules/class-media-import-screen.php:262
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -1949,10 +1949,8 @@ msgstr "Aus Profotograaf importieren"
 msgid "Source"
 msgstr "Quelle"
 
-#. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:251
-#: includes/modules/class-media-import-screen.php:264
+#: includes/modules/class-media-import-screen.php:259
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr "Profotograaf, Galerie %s"
@@ -2077,7 +2075,6 @@ msgstr "Profotograaf-Fotos durchsuchen"
 msgid "You are not allowed to replace this file."
 msgstr "Du darfst diese Datei nicht ersetzen."
 
-#: includes/class-photo-importer.php:147
 #: includes/class-photo-importer.php:205
 msgid "This file was not imported from Profotograaf."
 msgstr "Diese Datei wurde nicht aus Profotograaf importiert."
@@ -2087,11 +2084,11 @@ msgstr "Diese Datei wurde nicht aus Profotograaf importiert."
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr "Dieses Foto ist auf Profotograaf nicht mehr verfügbar. Die Kopie in deiner Mediathek bleibt unverändert."
 
-#: includes/modules/class-media-import-screen.php:259
+#: includes/modules/class-media-import-screen.php:254
 msgid "Open on Profotograaf"
 msgstr "Auf Profotograaf öffnen"
 
-#: includes/modules/class-media-import-screen.php:284
+#: includes/modules/class-media-import-screen.php:279
 msgid "Re-import"
 msgstr "Erneut importieren"
 
