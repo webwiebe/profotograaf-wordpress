@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { openLightbox } from './lightbox';
 
 vi.mock( './style.css', () => ( {} ) );
 vi.mock( '@wordpress/i18n', () => ( { __: ( text: string ) => text } ) );
@@ -162,6 +163,61 @@ describe( 'lightbox', () => {
 		expect( document.activeElement ).toBe( close );
 	} );
 
+	it( 'leaves clicks alone when the data script is not valid JSON', async () => {
+		build( true );
+		document.querySelector( 'script.pf-fp-data' )!.textContent = 'not json';
+		await load();
+		const { event } = open( 0 );
+		expect( event.defaultPrevented ).toBe( false );
+		expect( shown() ).toBeNull();
+	} );
+
+	it( 'leaves clicks alone when the index names no photo', async () => {
+		build( true );
+		document.querySelector( 'a.pf-fp-open' )!.setAttribute( 'data-pf-index', '9' );
+		await load();
+		const { event } = open( 0 );
+		expect( event.defaultPrevented ).toBe( false );
+		expect( shown() ).toBeNull();
+	} );
+
+	it( 'steps back with the previous button', async () => {
+		build( true );
+		await load();
+		open( 1 );
+		document.querySelector< HTMLButtonElement >( '.pf-fp-lb-prev' )!.click();
+		expect( shown() ).toBe( 'p0.jpg' );
+	} );
+
+	it( 'pulls focus into the dialog when Tab is pressed outside it', async () => {
+		build( true );
+		await load();
+		open( 1 );
+		const outside = document.createElement( 'button' );
+		document.body.append( outside );
+		outside.focus();
+		expect( press( 'Tab' ).defaultPrevented ).toBe( true );
+		expect( document.activeElement ).toBe( document.querySelector( '.pf-fp-lb-prev' ) );
+	} );
+
+	it( 'keeps focus on the dialog when no button can take it', async () => {
+		build( true );
+		await load();
+		open( 1 );
+		document.querySelectorAll< HTMLButtonElement >( '.pf-fp-lightbox button' ).forEach( ( button ) => {
+			button.disabled = true;
+		} );
+		expect( press( 'Tab' ).defaultPrevented ).toBe( true );
+		expect( document.activeElement ).toBe( document.querySelector( '.pf-fp-lightbox' ) );
+	} );
+
+	it( 'opens an empty list without a photo', () => {
+		const opener = document.createElement( 'button' );
+		document.body.append( opener );
+		openLightbox( [], 0, opener );
+		expect( shown() ).toBeNull();
+	} );
+
 	it( 'steps on a horizontal swipe of 40px or more', async () => {
 		build( true );
 		await load();
@@ -233,6 +289,22 @@ describe( 'filmstrip', () => {
 		expect( stub.scrollBy ).toHaveBeenLastCalledWith( expect.objectContaining( { left: -360 } ) );
 	} );
 
+	it( 'leaves a section without a track alone', async () => {
+		build( true );
+		document.querySelector( '.pf-fp-track' )!.className = '';
+		await load();
+		expect( document.querySelector( '.pf-fp-strip-prev' ) ).toBeNull();
+	} );
+
+	it( 'ignores arrow keys that do not come from the section itself', async () => {
+		build( true );
+		const stub = stubTrack();
+		await load();
+		const link = document.querySelectorAll< HTMLElement >( 'section.pf-fp-filmstrip a.pf-fp-open' )[ 0 ]!;
+		link.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'ArrowRight', bubbles: true } ) );
+		expect( stub.scrollBy ).not.toHaveBeenCalled();
+	} );
+
 	it( 'scrolls without animation when the visitor asks for reduced motion', async () => {
 		build( true );
 		const stub = stubTrack();
@@ -293,6 +365,17 @@ describe( 'view beacon', () => {
 		vi.stubGlobal( 'navigator', Object.assign( Object.create( navigator ), { sendBeacon: send, doNotTrack: '0', globalPrivacyControl: true } ) );
 		await load();
 		expect( send ).not.toHaveBeenCalled();
+	} );
+
+	it( 'swallows a failed fetch', async () => {
+		const fetchMock = vi.fn( () => Promise.reject( new Error( 'offline' ) ) );
+		vi.stubGlobal( 'fetch', fetchMock );
+		vi.stubGlobal( 'IntersectionObserver', undefined );
+		vi.stubGlobal( 'navigator', Object.assign( Object.create( navigator ), { sendBeacon: () => false } ) );
+		build( true );
+		await load();
+		await Promise.resolve();
+		expect( fetchMock ).toHaveBeenCalledTimes( 1 );
 	} );
 
 	it( 'falls back to fetch with keepalive', async () => {
