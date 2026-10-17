@@ -42,8 +42,8 @@ Read from `docs/embed-api.md` and `docs/public-image-urls.md` in `wiebe-xyz/prof
 - `Photo_Importer` stores `_profotograaf_photo_id`, `_profotograaf_gallery_id` and `_profotograaf_version` on an attachment. `find()` and `find_many()` look photos up by id. `reimport()` replaces the file with the current `web` variant under a per-photo lock, keeps the attachment id, title, caption and alt, and answers `profotograaf_photo_gone` when the catalogue no longer lists the photo.
 - `Photo_Catalogue` stores the list in the option `profotograaf_photo_catalogue` (`photos`, `stale`, `fetched_at`, `dropped`), fills it from `GET /api/v1/embed/photos` in pages of 200, caps it at 2000 photos (`MAX_PHOTOS`) and keeps the stored copy, flagged stale, when a refresh fails. `Photo_Catalogue_Refresh` runs it twice a day while `media_source` is on and the site is connected.
 - `Media_Import_Screen` adds the grid filter (`filter_query()` with a `meta_query` on `_profotograaf_photo_id`) and the Source field with the Re-import button (`source_field()`).
-- `Connection` stores `scope_revision` and `embed_denied`. `needs_reconnect()` compares `scope_revision` with `Config::SCOPE_REVISION` (2). It stores no scope list, and nothing reads `scope` from the token responses yet.
-- `Cron_Health` records a heartbeat when a lead delivery event runs (`Delivery::SWEEP` and `Delivery::HOOK`), judges cron stale after three hours (`STALE_AFTER`), and reports through Site Health and a settings page notice that shows only while leads are waiting. It also builds the crontab line (`cron_line()`).
+- `Connection` stores `scope_revision` and `embed_denied`. `needs_reconnect()` compares `scope_revision` with `Config::SCOPE_REVISION` (2). It also stores `scopes`, the list the pairing and refresh responses report (`has_scope()`, `scopes_known()`), and a `write_denied` flag. A connection paired before the list was kept fills it with one refresh.
+- `Cron_Health` records a heartbeat when a lead delivery event runs (`Delivery::SWEEP` and `Delivery::HOOK`), judges cron stale after three hours (`STALE_AFTER`), and reports through Site Health and a settings page notice that shows only while leads are waiting. It also builds the crontab line (`cron_line()`) and has a second Site Health test for the change-feed poll (`POLL_TEST`, `profotograaf_poll`).
 - `Admin_Notices` has notice kinds with a per-episode signature that a user can dismiss.
 
 ## Rule 1: removal and change on the platform
@@ -145,7 +145,7 @@ Both Keep mine and Update text record the platform text as seen in `_profotograa
 
 ### Upload direction
 
-The upload sends a file once and creates a platform photo. After the upload nothing sends later edits, because the token has no update route (not found in the platform docs). The copy and the platform photo then diverge. This note treats it as expected, and the details show "Uploaded to Profotograaf on <date>. Later edits stay on this site." The Re-import action is not offered for a file with origin `upload`, because the platform only serves a 1600 px `web` variant and re-importing would replace the full-size original on the site with it.
+The upload sends a file once and creates a platform photo. After the upload, a change of the title, caption or alt text is sent to the platform photo (`_profotograaf_text_push`, sent with PATCH by `Upload_Queue`). Other edits, such as a new file from the image editor, stay on this site, so the copy and the platform photo can diverge. The details show "Uploaded to Profotograaf on <date>." The Re-import action is not offered for a file with origin `upload`, because the platform only serves a 1600 px `web` variant and re-importing would replace the full-size original on the site with it.
 
 ## Rule 3: polling the change feed from WP-Cron
 
@@ -191,30 +191,30 @@ Photos created through this route are private to the photographer until the phot
 
 ### What is sent
 
-- The original image (`wp_get_original_image_path()`, so the pre-scaled file) as the `file` part, with the file name. It carries any EXIF data in it, GPS position included. The settings text and External services entry say so. Whether the platform strips EXIF: not found.
+- The original image (`wp_get_original_image_path()`, so the pre-scaled file) as the `file` part, with the file name. The GPS position is removed from a copy before the bytes leave (`Location_Stripper`); the rest of the EXIF data stays in the file. The settings text and External services entry say so.
 - Only `image/jpeg`, `image/png`, `image/webp` and `image/gif` files by plugin rule. HEIC is left out because its metadata cannot be cleaned. The platform accepts image, video and RAW (`embed-api.md`). The plugin leaves video and RAW out of the first version because `Transport::send()` takes the body as one string and so needs the whole multipart body in memory. A child issue sets a size cap derived from `wp_convert_hr_to_bytes( WP_MEMORY_LIMIT )` and tests a large file on the matrix.
 - Nothing else leaves the site: no post content, user data or site data. The gallery title is sent for a created gallery.
 
 ### Queue and state
 
-- Per attachment: `_profotograaf_upload_gallery` (target gallery id), `_profotograaf_upload_state` (`queued`, `uploading`, `uploaded`, `failed`, `skipped`), `_profotograaf_upload_error` (a translated message), `_profotograaf_upload_attempts`, `_profotograaf_uploaded_at`.
+- Per attachment: `_profotograaf_upload_gallery` (target gallery id), `_profotograaf_upload_state` (`queued`, `uploading`, `uploaded`, `failed`), `_profotograaf_upload_error` (a translated message), `_profotograaf_upload_attempts`, `_profotograaf_uploaded_at`.
 - Success stores the answer's `id` in `_profotograaf_photo_id` and `gallery_id` in `_profotograaf_gallery_id`, and sets `_profotograaf_origin` to `upload`. `Photo_Importer::find()` then returns this attachment when the photo shows up in the catalogue, so the catalogue never creates a second attachment for a photo this site uploaded. Imports set `_profotograaf_origin` to `import`. A missing value means `import`.
 - A worker event (`profotograaf_upload_queue`) takes one file per run and schedules the next single event, and keeps its state in post meta. A failed file waits `Leads\Queue::backoff()` (`BASE_DELAY` 60 seconds, doubled per attempt, up to `MAX_DELAY`), or the `Retry-After` time when that is longer. `Upload_Queue::MAX_ATTEMPTS` is 8 and two runs are at least `RUN_GAP` (5 seconds) apart. No upload happens inside an admin request.
 - 413 (quota) is final for that file: state `failed`, message "Your Profotograaf storage is full." and a link to the account. 404 (gallery gone or foreign) disables that link and shows a notice. 400 (type) is final for that file. 403 is the scope problem below. 5xx, 429 and network errors retry.
 
 ### Scope and the reconnect flow
 
-Today `Config::SCOPES` is `galleries:read leads:write galleries:embed`. `Pairing::start()` sends it as `scope`. The comment in `Config` says the platform grants the scopes registered for the client id, so the request is what the approval page shows. `Connection::needs_reconnect()` compares `scope_revision` with `Config::SCOPE_REVISION` and shows the prompt to every site below it.
+Today `Config::SCOPES` is `galleries:read leads:write galleries:embed galleries:write`. `Pairing::start()` sends it as `scope`. The comment in `Config` says the platform grants the scopes registered for the client id, so the request is what the approval page shows. `Connection::needs_reconnect()` compares `scope_revision` with `Config::SCOPE_REVISION` and shows the prompt to every site below it.
 
 Two things follow:
 
 - Raising `SCOPE_REVISION` for `galleries:write` would show a reconnect prompt to every connected site, including those that never upload. The design leaves `SCOPE_REVISION` at 2.
-- The decision needs the scope list the token really holds. `docs/embed-api.md` says the `scope` field of the token and refresh responses is that list, and that the plugin should read it. The plugin does not store it yet.
+- The decision needs the scope list the token really holds. `docs/embed-api.md` says the `scope` field of the token and refresh responses is that list. `Connection` stores it as `scopes`.
 
 Design:
 
-1. `Connection::save_tokens()` stores `scope` (the string, from pairing and from every refresh). `Connection::has_scope( string $scope )` answers from it. A connection with no stored scope (paired before this change) refreshes once, which fills it. The first refresh after the update fills the value without a prompt.
-2. `Config::UPLOAD_SCOPE = 'galleries:write'`. The pairing request adds it only when started from the upload panel: `Pairing::start( array $extra_scopes = array() )`. Whether the platform grants fewer scopes when fewer are requested: not found. The panel therefore does not promise that other sites keep a narrower token.
+1. `Connection::save_tokens()` stores `scopes` (a list, from pairing and from every refresh). `Connection::has_scope( string $scope )` answers from it and `scopes_known()` says whether the list is stored. A connection with no stored list (paired before this change) refreshes once, which fills it. The first refresh after the update fills the value without a prompt.
+2. `Config::UPLOAD_SCOPE = 'galleries:write'`. It is part of `Config::SCOPES`, so every pairing requests it. `Pairing::start( array $extra_scopes = array(), string $surface = '' )` can add scopes on top. The platform grants the whole list registered for the client id whatever the request names, so a narrower request would not give a narrower token.
 3. The upload panel shows one of three states: connected with the scope (controls), connected without it ("Sending files needs a new permission. Connect this site again." with the existing pairing UI), not connected (the normal connect flow).
 4. A 403 from a write route sets a `write_denied` flag next to `embed_denied`, the way `Api_Client::mark_embeddable()` handles `galleries:embed`, and the panel shows the same reconnect state. A successful pairing with the scope in the response clears the flag.
 5. After the reconnect the queue resumes. Files in `queued` stay queued while the scope is missing, and the panel says how many wait.
@@ -257,7 +257,7 @@ All start with `profotograaf_`, so `uninstall.php` already removes them. Every o
 | `profotograaf_sync_counts` | `{ changed, missing, conflict }`, kept up to date at every state change, so the notice and the Import screen read one option and never count meta on a page load. |
 | `profotograaf_changes_lock` | Run lock with TTL. |
 | `profotograaf_upload_links` | Linked galleries (Rule 4). |
-| `profotograaf_connection` (existing) | New `scope` string and `write_denied` flag. |
+| `profotograaf_connection` (existing) | New `scopes` list and `write_denied` flag. |
 
 Events: `profotograaf_poll_changes` (hourly), `profotograaf_upload_queue` (single events).
 
@@ -282,7 +282,7 @@ New outbound calls. All come from the server, carry the access token and happen 
 | `GET /api/v1/embed/changes` | Hourly while `media_source` is on, and on "Check now" | The cursor | Ids of changed galleries and photos |
 | `GET /api/v1/embed/galleries` and `/photos?updated_since=` | Same runs | Query parameters | Gallery and photo rows already listed in the media source entry |
 | `POST /api/v1/embed/galleries` | When the owner creates a linked gallery | The gallery title | The new gallery row |
-| `POST /api/v1/embed/galleries/{id}/photos` | For each file a person sent while `media_upload` is on | The original image file with its file name (and its EXIF data) | The photo id |
+| `POST /api/v1/embed/galleries/{id}/photos` | For each file a person sent while `media_upload` is on | The original image file with its file name (EXIF data except the GPS position) | The photo id |
 
 Required in the same PRs that add the calls:
 

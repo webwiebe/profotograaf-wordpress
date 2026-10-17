@@ -25,7 +25,7 @@ All of it sat behind a hidden flag that was off by default and had no UI. Issue 
 | `includes/trait-virtual-attachment-filters.php` | The filter callbacks, split out to keep the class under the file length limit. |
 | `includes/modules/class-virtual-attachments.php` | Module that returns at once when the flag is off, otherwise builds the prototype and registers its hooks. |
 | `includes/class-photo-importer.php` | `is_platform_url()` changed from private to public. No other change. |
-| `tests/unit/Virtual_Attachments_Test.php` | 30 unit tests. |
+| `tests/unit/Virtual_Attachments_Test.php` | 57 unit tests. |
 | `tests/e2e/virtual-attachments.spec.js` | 9 browser tests against a real WordPress and the mock platform. |
 | `tests/e2e/mock-platform.mjs` | Modes `up`, `down`, `unpublished` and `unlisted` (issue #152: the library lists nothing while the images still answer), and a record of API calls. |
 | `includes/modules/class-virtual-convert.php` | Issue #152: the "Convert to local" row action, bulk action, details field and notices. |

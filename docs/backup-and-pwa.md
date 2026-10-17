@@ -20,7 +20,7 @@ Read from `docs/embed-api.md`, `docs/uploads.md`, `docs/decisions.md` and `docs/
 | --- | --- | --- |
 | `POST /api/v1/embed/galleries` creates a private gallery from `{"title"}` (1 to 200 characters) and answers 201 with `id`, `slug`, `title`, `url`, `embeddable`, `available`, `photo_count`, `updated_at`. | embed-api.md, "POST /api/v1/embed/galleries" | The plugin can create backup galleries without opening a browser. Sharing and the embed switch stay off. |
 | `POST /api/v1/embed/galleries/{id}/photos` takes `multipart/form-data` with one `file` part. Answers 202 `{id, gallery_id, filename, status: "uploaded"}`, 404 for a gallery the account does not own, 400 for a type other than image, video or RAW, 413 when the file would pass the plan's storage quota. The photo appears in listings once processed. | embed-api.md | One file per request. A 413 is the quota signal. Processing is asynchronous. |
-| Both POST routes need scope `galleries:write`, held by the `wordpress` client. A `galleries:read` token gets 403. A site paired earlier keeps its old scopes, the plugin reads `scope` from the token response and shows a reconnect prompt when `galleries:write` is missing. | embed-api.md, "galleries:write, the token's scope report and the reconnect prompt (#1869)" | This plugin requests `galleries:read`, `leads:write` and `galleries:embed` only (`Config::SCOPES`), and a search for `galleries:write` under `includes/` finds nothing. Every connected site needs a re-pair before the backup can run. |
+| Both POST routes need scope `galleries:write`, held by the `wordpress` client. A `galleries:read` token gets 403. A site paired earlier keeps its old scopes, the plugin reads `scope` from the token response and shows a reconnect prompt when `galleries:write` is missing. | embed-api.md, "galleries:write, the token's scope report and the reconnect prompt (#1869)" | This plugin requests `galleries:read`, `leads:write`, `galleries:embed` and `galleries:write` at every pairing (`Config::SCOPES`, `Config::UPLOAD_SCOPE`). A site paired before `Config::SCOPE_REVISION` 2 needs a re-pair before the backup can run. |
 | Deleting is not covered by `galleries:write`. | embed-api.md, same section | The backup cannot remove anything on the platform. That suits a backup. |
 | Upload size cap is 100 MB for the app's presigned flow. The embed upload route says its checks are "the app's own", so the same cap probably applies. | uploads.md, "Size cap"; embed-api.md | Not confirmed for the embed route. Treat 100 MB as the plan and handle a 400 or 413 per file. |
 | The processing worker handles one asset per 3 second tick. | uploads.md, "Process" | The doc describes one worker on the writer pod. Whether that is per account or shared by all accounts is not found. A large backfill queues behind everyone else's uploads. |
@@ -54,7 +54,7 @@ A "chosen folder" has no WordPress equivalent. Uploads live in `wp-content/uploa
 
 Rules for every scope:
 
-- Image MIME types only: `image/jpeg`, `image/png`, `image/webp`, `image/gif`, `image/avif`, `image/heic`. Video, audio, PDF and documents stay out. The platform accepts video and RAW, but a WordPress backup of those is a separate decision (open question 4).
+- Types (`Backup_Eligibility::supported_type()`): the image types `image/jpeg`, `image/png`, `image/webp`, `image/gif`, `image/avif`, `image/heic`, `image/heif` and `image/tiff` (`IMAGE_TYPES`), about fifteen RAW types that upload plugins register (`RAW_TYPES`), and any `video/*` type. SVG, audio, PDF and documents stay out.
 - Skip attachments imported from Profotograaf (they carry `_profotograaf_photo_id`). Backing them up would send each photo back to the platform it came from and double its storage.
 - The file sent is the original upload. Since WordPress 5.3 a large upload is scaled to 2560 px and the original is kept next to it, found with `wp_get_original_image_path()`. When none exists the file at `get_attached_file()` is the original. Generated sizes are never sent.
 - Skip files above the cap with a recorded reason `too_large`. Skip files that no longer exist on disk with `missing_file`.
@@ -74,7 +74,7 @@ One queue, two producers:
 
 ### Where the backup lands on Profotograaf
 
-- Per year, one private gallery titled `{site title} backup {year}` (the year of the attachment's post date). A photo-count limit per gallery is not found, so one gallery for everything would work on paper. Per year keeps each gallery browsable and gives a rule that is easy to explain. Open question 3 asks the owner to choose.
+- Per month, one private gallery titled `{site title} copy {YYYY-MM}` (the month of the attachment's upload date, `Backup_Galleries::month_of()` and `title()`). Per month keeps each gallery browsable and gives a rule that is easy to explain.
 - The plugin stores the gallery ids in an option and creates a gallery on first need.
 - The plugin never calls `PUT .../embeddable` on a backup gallery. The `Photo_Catalogue` reads embeddable galleries only, so backup galleries stay out of the media tab and out of gallery pickers. A guard test locks that in.
 - Per photo the plugin stores meta `_profotograaf_backup_state` (`queued`, `done`, `skipped`, `failed`), `_profotograaf_backup_photo_id`, `_profotograaf_backup_gallery_id`, `_profotograaf_backup_sha256` and a failure reason and count. `uninstall.php` removes them. The backed-up media stays on both sides.
@@ -90,12 +90,12 @@ The embed upload route documents no idempotency key and no duplicate detection. 
 
 In WordPress:
 
-- Settings > Profotograaf > Backup: switch, scope, a status line ("1,240 of 3,810 images backed up, 12 waiting for you, last run 4 minutes ago"), a "Back up now" button, a "Retry failed" button, the failure list with reasons, and the total bytes sent. A banner when the quota is reached, with the upgrade link.
+- Settings > Profotograaf > Backup: switch, scope, a status line ("1,240 of 3,810 images backed up, 12 waiting for you, last run 4 minutes ago"), a "Copy now" button, a "Retry failed" button, the failure list with reasons, and the total bytes sent. A banner when the quota is reached, with the upgrade link.
 - Media Library list view: a "Backup" column (backed up, queued, failed, skipped with reason). Grid view: a line in attachment details with the gallery link.
-- Site Health: a test "Profotograaf backup is running" that reports a stuck queue, missing `galleries:write`, or no cron.
+- Site Health: three tests while the backup is on, "Profotograaf copy permission" (missing `galleries:write`), "Profotograaf copy schedule" (no cron) and "Profotograaf copy queue" (a stuck or full queue).
 - An admin notice only for conditions that need an action: reconnect required, quota reached, repeated failures (reusing #16's rules).
 
-On Profotograaf: private galleries named `{site title} backup {year}`. They look like any private gallery. The app needs no change for the first release. A badge or "Source: WordPress" label would need a platform change (P3, optional).
+On Profotograaf: private galleries named `{site title} copy {YYYY-MM}`. They look like any private gallery. The app needs no change for the first release. A badge or "Source: WordPress" label would need a platform change (P3, optional).
 
 ## Question 2: where the client PWA link appears
 
@@ -149,7 +149,7 @@ From ADR-025, ADR-030 and professionals#1703:
 - The photographer's clients. Photos in the Media Library may show clients and their children. The photographer is the controller and the site owner already holds these files. Sending a copy to Profotograaf makes Profotograaf a processor of those files. The plugin text asks the photographer to check that their privacy policy and client contracts allow this. The platform's data processing terms are not covered by anything I read (not found), so the owner should confirm that the existing terms cover it before release.
 - EXIF. Originals can carry GPS coordinates. The plugin sends the file as stored. Whether the platform strips location data is not found (open question 7). The settings text states that metadata is sent too, and a later option can strip GPS before upload with the image editor.
 - Multisite. The setting is per site, the token is per site, and the network admin cannot switch it on for all sites.
-- Scope and token. `galleries:write` gives the plugin the ability to create galleries and upload photos. It cannot delete (embed-api.md). The token already lives in the connection storage. The write scope is requested only when the photographer switches the backup on, in a re-pair step that explains why. Requesting it for every site at connect time would widen every token for a feature most sites will not use. Whether the platform grants scopes per request is not found (`Config::SCOPES` is a fixed list today), so P4 asks for it.
+- Scope and token. `galleries:write` gives the plugin the ability to create galleries and upload photos. It cannot delete (embed-api.md). The token already lives in the connection storage. The write scope is requested at every pairing (`Config::SCOPES`). The platform grants the whole list registered for the client id whatever the request names, so a narrower request would not give a narrower token (`Config::UPLOAD_SCOPE`). P4 (a scope per request) is not built.
 
 ## Failure handling
 
@@ -200,13 +200,13 @@ Platform issues to open in `wiebe-xyz/professionals` (proposed, not created):
 
 1. Is `used` the right default scope, or should "all images" be the default for a true backup? The first costs less storage and covers the portfolio. The second protects images that were never published.
 2. Is the feature allowed to be called a backup without a restore path? Today the photographer can find the originals in the app, and the plugin cannot pull them back (P6). The alternative name is "copy to Profotograaf".
-3. One gallery per year, one gallery for everything, or one gallery per month?
-4. Should video and RAW files in the Media Library ever go to the platform? The platform accepts them. They are large and eat the Free allowance quickly.
+3. One gallery per year, one gallery for everything, or one gallery per month? Decided: one per month.
+4. Should video and RAW files in the Media Library ever go to the platform? Decided: yes, see "Types" above.
 5. On multi-author sites, whose uploads are included? The note includes everything an administrator's scope selects. An alternative is only the connected user's own uploads.
 6. Is the extra processing load acceptable (one asset per 3 seconds on a shared worker, for a large library)? A rate cap per account, set by the platform, may be needed.
 7. Does the platform strip location metadata from stored originals, and does its data processing agreement cover photos of the photographer's clients that arrive through a backup? Both must be answered before the first release.
 8. Should free accounts get the backup at all, given the 1 GiB cap? Free accounts could be limited to scope `marked`. The alternative is to leave the cap to do its job (ADR-025 says storage is where a photographer upgrades).
-9. Is requesting `galleries:write` at pairing for everyone acceptable (simpler, wider token), or should it wait for P4 (a re-pair step only for sites that switch the backup on)?
+9. Is requesting `galleries:write` at pairing for everyone acceptable (simpler, wider token), or should it wait for P4 (a re-pair step only for sites that switch the backup on)? Decided: at every pairing.
 10. Where does the client PWA link belong first, the settings list (photographer sends the link) or the block (visitor finds the gallery)? This note recommends the list first, then the block.
 11. Should a future platform change make the client portal itself installable? It is not found today, and it would let the existing block carry the install prompt for all of a client's galleries.
 

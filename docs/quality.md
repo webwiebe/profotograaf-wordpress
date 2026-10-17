@@ -1,6 +1,6 @@
 # Quality gates
 
-Everything below runs in `ci.yml` on every pull request and push to main, and `release.yml` calls `ci.yml` before it releases anything. `make quality` runs the same checks locally (the Docker E2E and Plugin Check stay in `make e2e` and `make plugin-check`).
+Everything below runs in `ci.yml` on every pull request and push to main, except changes that touch only Markdown or `docs/` (`paths-ignore`). `release.yml` calls `ci.yml` before it releases anything. `make quality` runs most of the checks locally. CI also runs `pnpm audit`, `bin/check-version.sh`, `make i18n-check` and the zip install job, which `make quality` does not, and the Docker E2E and Plugin Check stay in `make e2e` and `make plugin-check`.
 
 Every gate script in `scripts/` has a `*.test.mjs` next to it. CI runs `pnpm test:gates` (all of them) before the gates themselves, because a gate that quietly stopped failing looks exactly like a clean repo.
 
@@ -15,7 +15,7 @@ Baseline-backed gates (oxlint, file length, PHPStan, dead PHP code, boundaries) 
 3. A violation that is gone but still listed in the baseline fails (the baseline must shrink with the code).
 4. The only way to change a baseline is its refresh command, which shows up as a diff a reviewer can argue with.
 
-The baselines are at zero except PHPStan (31 errors, all in `phpstan-baseline.neon`) and the boundaries gate (21 entries in `scripts/boundaries-baseline.txt`).
+The baselines are at zero except PHPStan (31 entries covering 45 errors, all in `phpstan-baseline.neon`) and the boundaries gate (21 entries in `scripts/boundaries-baseline.txt`).
 
 ## Gates
 
@@ -25,20 +25,20 @@ The baselines are at zero except PHPStan (31 errors, all in `phpstan-baseline.ne
 | oxlint | `node scripts/oxlint-ratchet.mjs` | complexity 12, max-depth 4, max-params 4, max-lines-per-function 60, plus correctness and a set of recommended rules | `oxlint-baseline.json`, refresh with `node scripts/oxlint-ratchet.mjs --write` |
 | oxlint type-aware | `node scripts/oxlint-ratchet.mjs --type-aware` | type-aware rules (oxlint-tsgolint), same ratchet | `oxlint-type-aware-baseline.json`, refresh with `--type-aware --write` |
 | knip | `pnpm knip` | no unused files, exports or dependencies | none, config in `knip.json` |
-| File length | `pnpm check:file-length` | 500 lines, TS and PHP sources (tests, vendor and generated output are exempt) | `scripts/file-length-baseline.txt`, refresh with `node scripts/check-file-length.mjs --update-baseline` |
+| File length | `pnpm check:file-length` | 500 lines, TS, PHP and `.mjs` sources (tests, vendor and generated output are exempt) | `scripts/file-length-baseline.txt`, refresh with `node scripts/check-file-length.mjs --update-baseline` |
 | Dead PHP code | `node scripts/check-dead-php.mjs` | no function, constant or class in `includes/` that nothing in `includes/`, `blocks/` or `tests/unit/` refers to | `scripts/dead-php-baseline.txt` (empty), refresh with `--update-baseline` |
 | PHP complexity | `node scripts/check-php-complexity.mjs` (`make complexity-php`) | cyclomatic complexity 12 and nesting depth 4 per function, the limits oxlint applies to TypeScript | `scripts/php-complexity-baseline.txt` (empty); any function over a limit fails. `--report` prints the findings and exits 0 |
-| Layer boundaries (report only) | `node scripts/check-boundaries.mjs --report` | core does not use the Admin, Cli, Leads or Modules namespaces; Leads, Admin and Cli do not use the modules or each other. Runs with `--report` until it is made blocking | `scripts/boundaries-baseline.txt`, refresh with `--update-baseline` |
+| Layer boundaries (report only) | `node scripts/check-boundaries.mjs --report` | core does not use the Admin, Cli, Leads or Modules namespaces; Leads does not use Admin, Cli or Modules; Admin and Cli use neither Modules nor each other, and may use Leads. Runs with `--report` until it is made blocking | `scripts/boundaries-baseline.txt`, refresh with `--update-baseline` |
 | Workflow rules | `node scripts/check-workflows.mjs` | no `continue-on-error`, every action pinned to a version tag or SHA, release jobs have a `needs:` path to a test job and a quality job (through the reusable `ci.yml`) | none |
 | vitest | `pnpm test` | all tests pass | none |
 | Diff coverage (TS and PHP) | `node scripts/diff-coverage.mjs --base <sha> ...` | 80% of changed executable lines; diffs under 10 changed executable lines are exempt; a changed file missing from the report counts as uncovered | none |
 | Coverage cliff guard | `node scripts/coverage-floor.mjs` | non-blocking: warns when total coverage falls below the floor | floors in `scripts/coverage-floors.json`, keep each at least 1pp below measured |
 | PHPCS | `vendor/bin/phpcs` | WordPress Coding Standards | none |
-| PHPStan | `vendor/bin/phpstan analyse --memory-limit=1G` | level 8 (`szepeviktor/phpstan-wordpress`) | `phpstan-baseline.neon`; `reportUnmatchedIgnoredErrors: true` gives properties 2 and 3. Refresh with `vendor/bin/phpstan analyse --generate-baseline phpstan-baseline.neon --allow-empty-baseline` |
+| PHPStan | `vendor/bin/phpstan analyse --memory-limit=2G` | level 8 (`szepeviktor/phpstan-wordpress`) | `phpstan-baseline.neon`; `reportUnmatchedIgnoredErrors: true` gives properties 2 and 3. Refresh with `vendor/bin/phpstan analyse --generate-baseline phpstan-baseline.neon --allow-empty-baseline` |
 | PHPUnit | `vendor/bin/phpunit` | all tests pass on PHP 8.1 to 8.4 | none |
 | pnpm audit | `pnpm audit --audit-level high` | no high or critical advisory | none |
 | composer audit | `composer audit --format=json --locked \| node scripts/composer-audit-gate.mjs` | no high, critical or unrated advisory; lower severities are warnings | none |
-| Block build, Plugin Check, E2E | `pnpm build`, `make plugin-check`, `make e2e` | must pass on WordPress 6.9, 7.0, 7.1 | none |
+| Block build, Plugin Check, E2E | `pnpm build`, `make plugin-check`, `make e2e` | must pass; E2E runs on WordPress 6.9, 7.0 and 7.1, the block build and Plugin Check run once | none |
 
 ## Diff coverage
 
@@ -66,9 +66,9 @@ node scripts/diff-coverage.mjs --base origin/main --format clover \
 
 `.github/dependabot.yml` opens weekly, grouped pull requests for GitHub Actions, npm (pnpm) and Composer: TypeScript with oxlint and knip, `@wordpress/*`, the test tooling, and PHPCS/WPCS and PHPStan each have a group, and remaining dev dependencies share one. Dependabot waits three days after a release before proposing it.
 
-Two pins live outside the manifests: `pnpm-workspace.yaml` overrides `serialize-javascript` to a patched release (a high advisory in a transitive dependency of `@wordpress/scripts`), and `allowBuilds` there lists the packages whose install scripts stay off.
+Three settings live outside the manifests, all in `pnpm-workspace.yaml`: an override of `serialize-javascript` to a patched release (a high advisory in a transitive dependency of `@wordpress/scripts`), `allowBuilds`, which lists the packages whose install scripts stay off, and `auditConfig.ignoreGhsas`, which skips GHSA-vfj7-8cjw-p6xm.
 
 ## Known limits
 
-- `assets/admin/*.js` (about 80 lines of plain JS the plugin ships as is) and the Playwright specs under `tests/e2e/` are JavaScript. They are oxlinted but not type-checked. Converting them to TypeScript is future work.
+- `assets/admin/*.js` (5 files, about 640 lines of plain JS the plugin ships as is) and the Playwright specs under `tests/e2e/` are JavaScript. They are oxlinted but not type-checked. Converting them to TypeScript is future work.
 - `pnpm audit --audit-level high` does not block on moderate or low advisories.
