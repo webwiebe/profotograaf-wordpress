@@ -164,7 +164,6 @@ Errors are collected from these hooks and processes:
 - `profotograaf_lead_delivered`: triggered when a lead is sent successfully
 - `profotograaf_lead_skipped`: triggered when a lead is skipped
 - `profotograaf_lead_not_queued`: triggered when a lead cannot be queued
-- `profotograaf_disconnected`: triggered when the connection ends
 
 Additionally, errors logged to the WordPress error log (via `WP_Error` with a plugin-specific error code) are scraped and included.
 
