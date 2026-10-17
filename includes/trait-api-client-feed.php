@@ -45,24 +45,44 @@ trait Api_Client_Feed {
 		if ( ! is_array( $body ) || ! isset( $body['cursor'] ) || ! is_scalar( $body['cursor'] ) || '' === (string) $body['cursor'] ) {
 			return Api_Errors::make( 'profotograaf_bad_response', __( 'Profotograaf sent an answer this plugin cannot read.', 'profotograaf' ), 0, true );
 		}
+		return self::feed_page( $body );
+	}
+
+	/**
+	 * One page of the change feed, cleaned.
+	 *
+	 * @param array<string,mixed> $body Answer of the changes endpoint, with a cursor.
+	 * @return array{cursor:string,has_more:bool,resync:bool,galleries:array{created:array<int,string>,updated:array<int,string>,deleted:array<int,string>,unavailable:array<int,array{id:string,reason:string}>,available:array<int,string>},photos:array{created:array<int,array{id:string,gallery_id:string}>,updated:array<int,array{id:string,gallery_id:string}>,deleted:array<int,array{id:string,gallery_id:string}>}}
+	 */
+	private static function feed_page( array $body ): array {
 		$galleries = is_array( $body['galleries'] ?? null ) ? $body['galleries'] : array();
 		$photos    = is_array( $body['photos'] ?? null ) ? $body['photos'] : array();
 		return array(
 			'cursor'    => (string) $body['cursor'],
 			'has_more'  => ! empty( $body['has_more'] ),
 			'resync'    => ! empty( $body['resync'] ),
-			'galleries' => array(
-				'created'     => self::feed_ids( $galleries['created'] ?? null ),
-				'updated'     => self::feed_ids( $galleries['updated'] ?? null ),
-				'deleted'     => self::feed_ids( $galleries['deleted'] ?? null ),
-				'unavailable' => self::feed_unavailable( $galleries['unavailable'] ?? null ),
-				'available'   => self::feed_ids( $galleries['available'] ?? null ),
-			),
+			'galleries' => self::feed_galleries( $galleries ),
 			'photos'    => array(
 				'created' => self::feed_photos( $photos['created'] ?? null ),
 				'updated' => self::feed_photos( $photos['updated'] ?? null ),
 				'deleted' => self::feed_photos( $photos['deleted'] ?? null ),
 			),
+		);
+	}
+
+	/**
+	 * The gallery part of a feed page, cleaned.
+	 *
+	 * @param array<string,mixed> $galleries Gallery lists of the page.
+	 * @return array{created:array<int,string>,updated:array<int,string>,deleted:array<int,string>,unavailable:array<int,array{id:string,reason:string}>,available:array<int,string>}
+	 */
+	private static function feed_galleries( array $galleries ): array {
+		return array(
+			'created'     => self::feed_ids( $galleries['created'] ?? null ),
+			'updated'     => self::feed_ids( $galleries['updated'] ?? null ),
+			'deleted'     => self::feed_ids( $galleries['deleted'] ?? null ),
+			'unavailable' => self::feed_unavailable( $galleries['unavailable'] ?? null ),
+			'available'   => self::feed_ids( $galleries['available'] ?? null ),
 		);
 	}
 

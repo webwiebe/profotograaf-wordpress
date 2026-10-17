@@ -2890,7 +2890,7 @@ msgstr "Espacement et forme"
 msgid "Photo strip. Scroll sideways for more photos."
 msgstr "Bande de photos. Faites défiler latéralement pour voir plus de photos."
 
-#: includes/class-full-page-renderer.php:169
+#: includes/class-full-page-renderer.php:192
 msgid "Made with Profotograaf"
 msgstr "Réalisé avec Profotograaf"
 
