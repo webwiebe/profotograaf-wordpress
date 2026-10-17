@@ -123,6 +123,21 @@ class Sections_Rest {
 	 * @return array{id:string,thumb:string,width:int,height:int,alt:string}
 	 */
 	private static function preview_photo( array $photo ): array {
+		return array(
+			'id'     => is_scalar( $photo['id'] ?? null ) ? (string) $photo['id'] : '',
+			'thumb'  => esc_url_raw( self::smallest_image_url( $photo ) ),
+			'width'  => (int) ( $photo['width'] ?? 0 ),
+			'height' => (int) ( $photo['height'] ?? 0 ),
+			'alt'    => is_string( $photo['alt'] ?? null ) ? sanitize_text_field( $photo['alt'] ) : '',
+		);
+	}
+
+	/**
+	 * The URL of the narrowest sized image of a payload photo, else the first one.
+	 *
+	 * @param array<string,mixed> $photo Payload photo.
+	 */
+	private static function smallest_image_url( array $photo ): string {
 		$thumb = '';
 		$width = PHP_INT_MAX;
 		foreach ( is_array( $photo['images'] ?? null ) ? $photo['images'] : array() as $image ) {
@@ -133,13 +148,7 @@ class Sections_Rest {
 				$width = $w > 0 ? $w : $width;
 			}
 		}
-		return array(
-			'id'     => is_scalar( $photo['id'] ?? null ) ? (string) $photo['id'] : '',
-			'thumb'  => esc_url_raw( $thumb ),
-			'width'  => (int) ( $photo['width'] ?? 0 ),
-			'height' => (int) ( $photo['height'] ?? 0 ),
-			'alt'    => is_string( $photo['alt'] ?? null ) ? sanitize_text_field( $photo['alt'] ) : '',
-		);
+		return $thumb;
 	}
 
 	/**
