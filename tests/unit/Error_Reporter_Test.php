@@ -73,7 +73,6 @@ class Error_Reporter_Test extends Wp_Test_Case {
 		$this->reporter->on_lead_delivered( array( 'email' => 'jane@example.com' ), array( 'id' => '1' ) );
 		$this->reporter->on_lead_skipped( new \stdClass() );
 		$this->reporter->on_lead_not_queued( 'full', new \stdClass() );
-		$this->reporter->on_disconnected( 'revoked' );
 	}
 
 	public function test_nothing_is_queued_without_opt_in(): void {
@@ -97,7 +96,7 @@ class Error_Reporter_Test extends Wp_Test_Case {
 		$this->fire_all();
 
 		$this->assertSame(
-			array( 'refresh_a', 'lead_b', 'lead_delivered', 'lead_skipped', 'lead_not_queued_full', 'disconnected_revoked' ),
+			array( 'refresh_a', 'lead_b', 'lead_delivered', 'lead_skipped', 'lead_not_queued_full' ),
 			array_column( $this->events(), 'error_code' )
 		);
 	}
@@ -228,9 +227,11 @@ class Error_Reporter_Test extends Wp_Test_Case {
 	}
 
 	public function test_the_module_subscribes_the_consumers(): void {
-		foreach ( array( 'profotograaf_refresh_failed', 'profotograaf_lead_failed', 'profotograaf_lead_delivered', 'profotograaf_lead_skipped', 'profotograaf_lead_not_queued', 'profotograaf_disconnected', 'profotograaf_log' ) as $hook ) {
+		foreach ( array( 'profotograaf_refresh_failed', 'profotograaf_lead_failed', 'profotograaf_lead_delivered', 'profotograaf_lead_skipped', 'profotograaf_lead_not_queued', 'profotograaf_log' ) as $hook ) {
 			Actions\expectAdded( $hook )->once();
 		}
 		( new Error_Reporting() )->register( new Plugin() );
+		// A disconnect drops the queue, so nothing reports it.
+		$this->assertFalse( has_action( 'profotograaf_disconnected' ) );
 	}
 }
