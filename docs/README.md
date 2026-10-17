@@ -15,7 +15,7 @@ The code is the fact. Where a document and the code disagree, a row goes into th
 | [full-page-gallery.md](full-page-gallery.md) | Shipped | The full-page gallery block: presets, section vocabulary, sequencer rules, REST preview, markup contract and view beacon. |
 | [gallery-display-matrix.md](gallery-display-matrix.md) | Shipped | Every gallery block and shortcode display option, the layer that applies it, states and E2E coverage. |
 | [media-lifecycle.md](media-lifecycle.md) | Shipped | Syncing imported photo copies with Profotograaf: removals, changes, conflicts, change-feed polling and opt-in upload. |
-| [media-source.md](media-source.md) | Historical | The design note for offering Profotograaf photos as a WordPress media source. |
+| [media-source.md](media-source.md) | Superseded | The design note for offering Profotograaf photos as a WordPress media source. |
 | [quality.md](quality.md) | Shipped | Every CI quality gate, its threshold, baseline and refresh command. |
 | [telemetry.md](telemetry.md) | Shipped | Opt-in usage and error telemetry: data, destinations, batching, consent and retention. |
 | [virtual-attachments.md](virtual-attachments.md) | Shipped | Virtual attachments: what was built, the WordPress compatibility matrix, limits, conversion and removal. |

@@ -1,6 +1,6 @@
 # Profotograaf as a media source in WordPress
 
-Design note for issue #44 (spike, part of epic #48). This note is historical: the import, the inserter category, the media modal, the signed file route and the virtual attachments it describes now ship, and [virtual-attachments.md](virtual-attachments.md) records the virtual attachments as built. Where this note and the code differ, the code is right.
+Design note for issue #44 (spike, part of epic #48). Status: Superseded by [virtual-attachments.md](virtual-attachments.md). The import, the inserter category, the media modal, the signed file route and the virtual attachments it describes now ship, and virtual-attachments.md records the virtual attachments as built. Where this note and the code differ, the code is right.
 
 ## Recommendation
 
@@ -144,7 +144,7 @@ The modal feeds the Gallery block ("Add media"), the classic editor and the feat
 
 ## Proposed child issues
 
-Historical list, now built. Order is the dependency order. "Platform" names the dependency on the platform repository.
+Superseded list, now built. Order is the dependency order. "Platform" names the dependency on the platform repository.
 
 | # | Title | Scope | Platform dependency |
 | --- | --- | --- | --- |
