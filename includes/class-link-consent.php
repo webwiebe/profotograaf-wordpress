@@ -93,14 +93,6 @@ class Link_Consent {
 	}
 
 	/**
-	 * When the owner accepted it, as a unix time, or 0.
-	 */
-	public function given_at(): int {
-		$stored = get_option( self::OPTION, array() );
-		return is_array( $stored ) ? (int) ( $stored['at'] ?? 0 ) : 0;
-	}
-
-	/**
 	 * Whether galleries may render.
 	 */
 	public function allows_render(): bool {

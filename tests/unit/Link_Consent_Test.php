@@ -97,7 +97,6 @@ class Link_Consent_Test extends Gallery_Test_Case {
 		$this->assertTrue( $stored['given'] );
 		$this->assertSame( 'free', $stored['plan'] );
 		$this->assertGreaterThan( 0, $stored['at'] );
-		$this->assertSame( $stored['at'], $this->consent->given_at() );
 	}
 
 	public function test_the_consent_is_kept_while_the_link_still_applies(): void {
