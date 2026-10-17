@@ -28,7 +28,7 @@ for ( const file of [
 	'tests/fixtures/embed/one-photo.json',
 	'package.json',
 	'pnpm-lock.yaml',
-	'embed-package/profotograaf-embed-0.1.0.tgz',
+	'embed-package/profotograaf-embed-0.1.1.tgz',
 ] ) {
 	test( `${ file } runs the contract lint and the parity tests`, () => {
 		const result = run( [ file ] );

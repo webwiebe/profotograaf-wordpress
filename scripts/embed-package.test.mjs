@@ -34,3 +34,11 @@ test( 'the renderer writes only data attributes the contract lists', () => {
 	const unknown = [ ...used ].filter( ( name ) => ! listed.has( name ) && ! own.has( name ) && ! name.endsWith( '-' ) );
 	assert.deepEqual( unknown, [], 'data attributes missing from contract/markup.json' );
 } );
+
+test( 'the script tag writes only data attributes the contract lists, and sets data-platform', () => {
+	const source = readFileSync( new URL( '../includes/class-embed-script.php', import.meta.url ), 'utf8' );
+	const listed = new Set( Object.keys( contract.script.attributes ) );
+	const used = new Set( source.split( '\n' ).filter( ( line ) => line.includes( '<script' ) ).flatMap( ( line ) => line.match( /data-[a-z][a-z0-9-]*/g ) ?? [] ) );
+	assert.ok( used.has( 'data-platform' ), 'the script tag sets data-platform' );
+	assert.deepEqual( [ ...used ].filter( ( name ) => ! listed.has( name ) ), [], 'script attributes missing from contract/markup.json' );
+} );
