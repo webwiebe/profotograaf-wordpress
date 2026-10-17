@@ -32,7 +32,7 @@ on:
         required: true
 
 concurrency:
-  group: e2e-${{ github.workflow }}-${{ github.ref }}-${{ inputs.specs || github.event.schedule || 'manual' }}
+  group: e2e-${{ github.workflow }}-${{ github.ref }}-${{ inputs.specs && 'targeted' || github.event.schedule || 'manual' }}
   cancel-in-progress: false
 
 permissions:

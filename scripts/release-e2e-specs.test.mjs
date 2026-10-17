@@ -37,3 +37,9 @@ test("every selected spec exists", () => {
     assert.ok(fs.existsSync(spec), `${spec} does not exist`);
   }
 });
+
+test("the E2E concurrency group stays short for a release run with many specs", () => {
+  const workflow = fs.readFileSync(".github/workflows/e2e.yml", "utf8");
+  const group = /^ {2}group: (.*)$/m.exec(workflow)?.[1] ?? "";
+  assert.ok(!/inputs\.specs\s*\|\|/.test(group), "the group must not hold the spec list, a long list makes the run fail at startup");
+});
