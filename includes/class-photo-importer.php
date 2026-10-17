@@ -142,9 +142,9 @@ final class Photo_Importer {
 			return $denied;
 		}
 		$photo_id  = (string) get_post_meta( $attachment_id, self::META_PHOTO_ID, true );
-		$catalogue = $this->catalogue?->get();
-		if ( ! is_array( $catalogue ) ) {
-			return $catalogue ?? Api_Errors::make( 'profotograaf_reimport_not_imported', __( 'This file was not imported from Profotograaf.', 'profotograaf' ), 400, false );
+		$catalogue = $this->catalogue instanceof Photo_Catalogue ? $this->catalogue->get() : new WP_Error( 'profotograaf_reimport_not_imported' );
+		if ( is_wp_error( $catalogue ) ) {
+			return $catalogue;
 		}
 		$photo = $fallback;
 		foreach ( $catalogue['photos'] as $row ) {

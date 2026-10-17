@@ -245,13 +245,8 @@ class Media_Import_Screen implements Module {
 	 */
 	private static function source_label( string $title, string $url ): string {
 		if ( '' === $url ) {
-			return '' !== $title
-				? sprintf(
-					/* translators: %s: gallery title. */
-					esc_html__( 'Profotograaf, gallery %s', 'profotograaf' ),
-					esc_html( $title )
-				)
-				: esc_html__( 'Profotograaf', 'profotograaf' );
+			// A title comes with a gallery id, and a gallery id always has an address.
+			return esc_html__( 'Profotograaf', 'profotograaf' );
 		}
 		$link = sprintf(
 			'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
