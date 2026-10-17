@@ -8,6 +8,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "prepare": "sh scripts/install-hooks.sh",
     "build": "node bin/blocks.mjs build",
     "start": "node bin/blocks.mjs start",
     "typecheck": "tsc --noEmit",

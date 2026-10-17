@@ -34,6 +34,8 @@
 		}
 	},
 	"scripts": {
+		"post-install-cmd": "sh scripts/install-hooks.sh",
+		"post-update-cmd": "sh scripts/install-hooks.sh",
 		"lint": "phpcs",
 		"lint:fix": "phpcbf",
 		"test": "phpunit"
