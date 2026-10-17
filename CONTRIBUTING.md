@@ -148,7 +148,7 @@ A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, Web
 
 #### Pixel snapshots
 
-`embed-visual.spec.js` compares the gallery element, masonry and grid at 390 and 1440 px, with baselines in `tests/e2e/embed-visual.spec.js-snapshots/`. Baselines depend on the operating system's fonts, so only the Linux ones are committed, and the spec runs only when `E2E_VISUAL=1` on Linux (the nightly run on WordPress 7.1). To update them after an intended change, start the "Update E2E snapshots" workflow from the Actions tab, download the `e2e-snapshots` artifact, copy the PNG files into the snapshot directory and commit them. Never commit baselines made on macOS.
+`embed-visual.spec.js` compares the gallery element, masonry and grid at 390 and 1440 px, with baselines in `tests/e2e/embed-visual.spec.js-snapshots/`. Baselines depend on the operating system's fonts, so only the darwin ones of the self-hosted macOS arm64 runner are committed, and the spec runs only when `E2E_VISUAL=1` (the nightly run on WordPress 7.1). To update them after an intended change, start the "Update E2E snapshots" workflow from the Actions tab, download the `e2e-snapshots` artifact, copy the PNG files into the snapshot directory and commit them. A run on another platform has no baseline and fails.
 
 #### Live canary
 
