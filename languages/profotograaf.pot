@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-16T23:42:11+00:00\n"
+"POT-Creation-Date: 2026-10-17T00:04:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -322,6 +322,7 @@ msgstr ""
 #: includes/admin/class-upload-panel.php:303
 #: includes/modules/class-admin-notices.php:275
 #: includes/modules/class-backup.php:202
+#: includes/modules/class-link-consent-prompt.php:90
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:244
@@ -1165,6 +1166,14 @@ msgstr ""
 #: includes/trait-api-client-writes.php:72
 #: includes/trait-api-client-writes.php:211
 msgid "A gallery id is required."
+msgstr ""
+
+#: includes/class-link-consent.php:164
+msgid "This Profotograaf gallery is hidden until you accept the Free plan condition (a small \"Powered by Profotograaf\" link under galleries)."
+msgstr ""
+
+#: includes/class-link-consent.php:166
+msgid "Review the condition"
 msgstr ""
 
 #: includes/class-pairing.php:119
@@ -2223,6 +2232,30 @@ msgstr ""
 #: patterns/client-portal-cta.php:23
 #: build/client-galleries/index.js:3
 msgid "Open my gallery"
+msgstr ""
+
+#: includes/modules/class-link-consent-prompt.php:56
+msgid "Profotograaf has not reported your plan yet. Your galleries keep showing. On the Free plan a small \"Powered by Profotograaf\" link appears under galleries, and you will be asked to accept it once your plan is known."
+msgstr ""
+
+#: includes/modules/class-link-consent-prompt.php:66
+msgid "Galleries are hidden until you accept the Free plan condition."
+msgstr ""
+
+#: includes/modules/class-link-consent-prompt.php:67
+msgid "On the Free plan a small \"Powered by Profotograaf\" link appears under your galleries. It cannot be switched off. Paid plans show no link."
+msgstr ""
+
+#: includes/modules/class-link-consent-prompt.php:68
+msgid "See the paid plans"
+msgstr ""
+
+#: includes/modules/class-link-consent-prompt.php:75
+msgid "Free plan: a small \"Powered by Profotograaf\" link appears under galleries"
+msgstr ""
+
+#: includes/modules/class-link-consent-prompt.php:78
+msgid "Accept and show my galleries"
 msgstr ""
 
 #: includes/modules/class-media-import-screen.php:82
