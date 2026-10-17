@@ -41,6 +41,8 @@ jobs:
         run: pnpm check:file-length
       - name: Workflow rules and deploy graph
         run: node scripts/check-workflows.mjs
+      - name: Dead PHP code (report only)
+        run: node scripts/check-dead-php.mjs --report
       - name: vitest
         run: pnpm test
       - name: pnpm audit (high and critical block)

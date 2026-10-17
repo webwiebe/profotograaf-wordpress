@@ -1,0 +1,14 @@
+# PHP symbols that nothing else in the plugin source refers to.
+# This list may only SHRINK. Regenerate with:
+#   node scripts/check-dead-php.mjs --update-baseline
+#
+# <kind> <name> <path>
+const BLOCK_EDITING_FILTER includes/class-virtual-attachments.php
+const EVENT_FIELDS includes/class-telemetry-payload.php
+const IMAGE_TEXT_LENGTH includes/class-gallery-renderer.php
+const IMAGE_TEXT_LIMIT includes/class-gallery-renderer.php
+const LAYOUTS includes/class-settings.php
+const POST_TYPES_FILTER includes/class-backup-usage.php
+function configure includes/class-logger.php
+function given_at includes/class-link-consent.php
+function known_codes includes/class-api-errors.php
