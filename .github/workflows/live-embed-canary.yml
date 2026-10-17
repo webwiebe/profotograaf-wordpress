@@ -36,6 +36,7 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       - name: Layout spec against the live script
         run: pnpm exec playwright test tests/e2e/embed-layout.spec.js

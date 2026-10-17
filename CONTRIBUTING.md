@@ -128,6 +128,8 @@ Do not run `phpcbf` and commit the result unread. It rewrites string values it c
 
 `WP_VERSION` and `PHP_VERSION` pick the WordPress and PHP image for `make e2e`.
 
+`WP_PORT` (default 8080) and `MOCK_PORT` (default 8090) are the ports the stack publishes on the host. In CI, `tests/e2e/ci-env.sh` gives each job a free pair and its own `COMPOSE_PROJECT_NAME`, so two jobs can run on one host. The mock platform builds its public URLs from `MOCK_PUBLIC_ORIGIN`, which the compose file sets from `MOCK_PORT`. The `mock-platform:8090` name inside the compose network stays the same.
+
 ### The embed.js fixture
 
 The E2E tests run the platform's real `embed.js`, so layout bugs between the plugin's host div and the gallery the script draws show up here. `tests/e2e/fixtures/embed.js` is a pinned copy of the platform build. `tests/e2e/fixtures/embed.js.commit` holds the platform commit it came from. The mock platform (`tests/e2e/mock-platform.mjs`) serves it at `/share/embed/embed.js` and at the versioned `embed.<12 hex>.js` name, answers `GET /api/v1/embed/galleries/g-e2e` with 19 photos of mixed ratios drawn as SVG, and accepts `POST /share/embed/view`.

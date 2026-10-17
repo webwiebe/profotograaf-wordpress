@@ -94,6 +94,7 @@ jobs:
         run: pnpm exec playwright install --with-deps firefox webkit
       # The E2E site runs the release copy, which holds the built blocks.
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       - name: Run the specs
         env:
@@ -138,6 +139,7 @@ jobs:
       - uses: ./.github/actions/setup-node-pnpm
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       # Converts the site to a network, creates two subsites and network-activates the plugin.
       - run: tests/e2e/multisite.sh
