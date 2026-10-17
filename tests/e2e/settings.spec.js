@@ -16,6 +16,14 @@ function wp( ...args ) {
 	return execFileSync( 'docker', [ 'compose', '-f', compose, 'run', '--rm', '-T', 'cli', 'wp', ...args ], { encoding: 'utf8', timeout: 180_000 } );
 }
 
+/**
+ * Drops a pairing left by an earlier test or a retry, which the mock reset does not reach.
+ */
+function resetPairing() {
+	wp( 'option', 'delete', 'profotograaf_pairing' );
+	wp( 'option', 'delete', 'profotograaf_connection' );
+}
+
 test.describe( 'Settings > Profotograaf', () => {
 	test.beforeEach( async ( { page } ) => {
 		await mock( '/__reset' );
@@ -120,6 +128,7 @@ test.describe( 'Settings > Profotograaf', () => {
 
 
 	test( 'connect shows the code, approval connects the site and disconnect clears it', async ( { page } ) => {
+		resetPairing();
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
 		await expect( page.getByText( 'Connecting shares this site\'s name and the administrator email address' ) ).toBeVisible();
 		await page.getByRole( 'button', { name: 'Connect to Profotograaf' } ).click();
@@ -134,7 +143,7 @@ test.describe( 'Settings > Profotograaf', () => {
 			locale: 'en',
 		} );
 		const approve = page.getByRole( 'link', { name: 'Open the approval page' } );
-		await expect( approve ).toHaveAttribute( 'href', /\/app\/devices\/approve\?code=WXYZ-2346$/ );
+		await expect( approve ).toHaveAttribute( 'href', /\/app\/devices\/approve\?code=WXYZ-2346(&ref=wordpress-plugin&surface=settings)?$/ );
 		await expect( page.getByRole( 'status' ) ).toContainText( 'Waiting for you to approve' );
 
 		// The photographer approves in the platform. The page polls and reloads.
@@ -149,6 +158,7 @@ test.describe( 'Settings > Profotograaf', () => {
 	} );
 
 	test( 'cancel abandons a pairing', async ( { page } ) => {
+		resetPairing();
 		await page.goto( '/wp-admin/options-general.php?page=profotograaf' );
 		await page.getByRole( 'button', { name: 'Connect to Profotograaf' } ).click();
 		await expect( page.locator( '.profotograaf-code' ) ).toBeVisible();

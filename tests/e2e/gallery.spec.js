@@ -231,8 +231,11 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed ).toHaveAttribute( 'data-profotograaf-failed', '' );
-		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
-		expect( ( await embed.boundingBox() ).height ).toBeGreaterThan( 100 );
+		const link = embed.getByRole( 'link', { name: 'Spring wedding' } );
+		await expect( link ).toBeVisible();
+		await expect( link ).toHaveAttribute( 'href', /^https?:\/\/\S+$/ );
+		// The server-drawn fallback is as tall as its link line: the embed must hold it, so nothing collapses or overlaps.
+		expect( ( await embed.boundingBox() ).height ).toBeGreaterThanOrEqual( ( await link.boundingBox() ).height );
 		await visitor.close();
 	} );
 
