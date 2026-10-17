@@ -860,15 +860,15 @@ msgstr "WP-Cron bezorgt geen aanvragen. Voer `wp profotograaf leads flush` uit v
 msgid "This gallery could not be loaded. Please try again later."
 msgstr "Deze galerij kon niet worden geladen. Probeer het later opnieuw."
 
-#: includes/class-gallery-renderer.php:300
+#: includes/class-gallery-renderer.php:294
 msgid "The Profotograaf gallery cannot be shown because its gallery ID is missing or not valid. Choose the gallery again."
 msgstr "De Profotograaf-galerij kan niet worden getoond omdat de galerij-ID ontbreekt of niet geldig is. Kies de galerij opnieuw."
 
-#: includes/class-gallery-renderer.php:315
+#: includes/class-gallery-renderer.php:309
 msgid "This Profotograaf gallery was not found in your account. It may have been deleted. Choose another gallery."
 msgstr "Deze Profotograaf-galerij is niet gevonden in je account. Misschien is hij verwijderd. Kies een andere galerij."
 
-#: includes/class-gallery-renderer.php:340
+#: includes/class-gallery-renderer.php:334
 msgid "This gallery needs JavaScript to be shown here."
 msgstr "Deze galerij heeft JavaScript nodig om hier te worden getoond."
 
@@ -4336,11 +4336,11 @@ msgstr "Alleen als de site-eigenaar de mediabron aanzet: redacteuren die bestand
 msgid "Use the gallery's own layout (%s)"
 msgstr "De eigen indeling van de galerij gebruiken (%s)"
 
-#: includes/class-link-consent.php:164
+#: includes/class-link-consent.php:156
 msgid "This Profotograaf gallery is hidden until you accept the Free plan condition (a small \"Powered by Profotograaf\" link under galleries)."
 msgstr "Deze Profotograaf-galerij is verborgen tot je de voorwaarde van het Free-abonnement accepteert (een kleine \"Powered by Profotograaf\"-link onder galerijen)."
 
-#: includes/class-link-consent.php:166
+#: includes/class-link-consent.php:158
 msgid "Review the condition"
 msgstr "Bekijk de voorwaarde"
 
