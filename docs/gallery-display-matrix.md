@@ -24,8 +24,8 @@ to and which E2E case covers it.
    has drawn the gallery, and is released after 8 seconds when nothing is
    drawn. A gallery the server drew already holds its own height and reserves
    no space (`includes/class-gallery-renderer.php`).
-3. **embed.js.** `https://profotograaf.nl/share/embed/embed.js` (source:
-   `web/src/public/embed/` in wiebe-xyz/professionals, vendored for the E2E
+3. **embed.js.** `build/embed/embed.js` in the plugin, from the `@profotograaf/embed` package (source:
+   `packages/embed` in wiebe-xyz/professionals, vendored for the E2E
    run in `tests/e2e/fixtures/embed.js`) fetches
    `/api/v1/embed/galleries/{id}`, reads the `data-*` attributes and draws the
    gallery in an open shadow root where the server did not. Its CSS lives inside that root, so neither

@@ -15,7 +15,7 @@ use Profotograaf\Logger;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Refreshes the gallery index and the embed script version on request, and
+ * Refreshes the gallery index on request, and
  * keeps the translated result for the next page load. Each action returns a
  * result with a `type` (success or error) and a `message`.
  */
@@ -29,21 +29,12 @@ final class Site_Tools {
 	private Api_Client $api;
 
 	/**
-	 * Embed script.
-	 *
-	 * @var Embed_Script
-	 */
-	private Embed_Script $embed;
-
-	/**
 	 * Constructor.
 	 *
-	 * @param Api_Client   $api   API client.
-	 * @param Embed_Script $embed Embed script.
+	 * @param Api_Client $api API client.
 	 */
-	public function __construct( Api_Client $api, Embed_Script $embed ) {
-		$this->api   = $api;
-		$this->embed = $embed;
+	public function __construct( Api_Client $api ) {
+		$this->api = $api;
 	}
 
 	/**
@@ -84,28 +75,6 @@ final class Site_Tools {
 		delete_option( Gallery_Index::OPTION );
 		delete_transient( Gallery_Index::LOOKUP_GUARD );
 		return $this->result( 'success', __( 'The gallery index was cleared. It fills again when a gallery is shown or synced.', 'profotograaf' ) );
-	}
-
-	/**
-	 * Reads the current embed script version from the platform now.
-	 *
-	 * @return array{type:string,message:string}
-	 */
-	public function check_embed_version(): array {
-		$this->embed->refresh();
-		$version = $this->embed->version();
-		if ( '' === $version ) {
-			Logger::warning( 'The embed script version could not be read from the settings screen.' );
-			return $this->result( 'error', __( 'The embed script version could not be read. Galleries keep using the address without a version. Try again later.', 'profotograaf' ) );
-		}
-		return $this->result(
-			'success',
-			sprintf(
-				/* translators: %s: version of the embed script, 12 characters. */
-				__( 'The embed script is at version %s.', 'profotograaf' ),
-				$version
-			)
-		);
 	}
 
 	/**

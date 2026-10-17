@@ -10,7 +10,6 @@ namespace Profotograaf\Tests\Leads;
 use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
-use Profotograaf\Embed_Script;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Tests\Fake_Transport;
@@ -26,7 +25,7 @@ class Site_Tools_Test extends Wp_Test_Case {
 		parent::setUp();
 		$this->connect( 100000 );
 		$this->http  = new Fake_Transport();
-		$this->tools = new Site_Tools( new Api_Client( new Connection(), $this->http, $this->clock() ), new Embed_Script( $this->http ) );
+		$this->tools = new Site_Tools( new Api_Client( new Connection(), $this->http, $this->clock() ) );
 
 		Functions\when( 'number_format_i18n' )->returnArg();
 		Functions\when( 'get_current_user_id' )->justReturn( 7 );
@@ -78,23 +77,6 @@ class Site_Tools_Test extends Wp_Test_Case {
 		$this->assertSame( 'success', $result['type'] );
 		$this->assertArrayNotHasKey( Gallery_Index::OPTION, $this->options );
 		$this->assertArrayNotHasKey( Gallery_Index::LOOKUP_GUARD, $this->transients );
-	}
-
-	public function test_rechecking_reports_the_version_the_platform_serves(): void {
-		$this->http->reply( 200, array( 'version' => '0123456789ab' ) );
-
-		$result = $this->tools->check_embed_version();
-
-		$this->assertSame( 'success', $result['type'] );
-		$this->assertSame( 'The embed script is at version 0123456789ab.', $result['message'] );
-	}
-
-	public function test_rechecking_reports_an_error_when_no_version_is_known(): void {
-		$this->http->fail( new \WP_Error( 'http_request_failed', 'timeout' ) );
-
-		$result = $this->tools->check_embed_version();
-
-		$this->assertSame( 'error', $result['type'] );
 	}
 
 	public function test_a_result_is_shown_once_to_the_user_it_was_left_for(): void {

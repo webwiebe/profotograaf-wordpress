@@ -52,7 +52,6 @@ class Gallery_Embed_Test extends Gallery_Test_Case {
 
 		$this->assertContains( 'init', $actions );
 		$this->assertContains( 'rest_api_init', $actions );
-		$this->assertContains( 'profotograaf_refresh_embed_version', $actions );
 		$this->assertContains( 'embed_oembed_html', $filters );
 		$this->assertContains( 'register_block_type_args', $filters );
 	}

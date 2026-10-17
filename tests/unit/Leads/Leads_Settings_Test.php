@@ -315,7 +315,7 @@ class Leads_Settings_Test extends Leads_Test_Case {
 	}
 
 	public function test_the_tool_buttons_need_the_capability_and_a_nonce(): void {
-		foreach ( array( 'handle_sync_galleries', 'handle_clear_gallery_index', 'handle_check_embed_version' ) as $handler ) {
+		foreach ( array( 'handle_sync_galleries', 'handle_clear_gallery_index' ) as $handler ) {
 			$this->allow( false );
 			try {
 				$this->page->$handler();
@@ -366,21 +366,6 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		$this->assertSame( 'Synced 1 gallery.', Site_Tools::take()['message'] );
 	}
 
-	public function test_rechecking_the_embed_version_leaves_a_result(): void {
-		$this->allow( true );
-		Functions\when( 'get_current_user_id' )->justReturn( 3 );
-		Functions\expect( 'wp_remote_request' )->once()->with( 'https://profotograaf.nl/api/v1/embed/script', \Mockery::type( 'array' ) )->andReturn( array( 'code' => 200, 'body' => '{"script_url":"/share/embed/embed.0123456789ab.js","version":"0123456789ab"}' ) );
-		Functions\when( 'wp_remote_retrieve_response_code' )->alias( fn( $response ) => $response['code'] );
-		Functions\when( 'wp_remote_retrieve_header' )->justReturn( '' );
-		Functions\when( 'wp_remote_retrieve_body' )->alias( fn( $response ) => $response['body'] );
-
-		$page = $this->page_with_api( new Fake_Transport() );
-		$page->handle_check_embed_version();
-
-		$this->assertSame( array( 'tools' ), $page->finished );
-		$this->assertStringContainsString( '0123456789ab', Site_Tools::take()['message'] );
-	}
-
 	public function test_the_page_shows_the_defaults_the_forms_and_the_tool_buttons(): void {
 		$this->allow( true );
 		Functions\when( 'get_current_user_id' )->justReturn( 3 );
@@ -409,7 +394,7 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		$this->assertStringContainsString( '<button>Save defaults</button>', $html );
 		$this->assertStringContainsString( 'name="profotograaf_settings[leads_failed_retention]"', $html );
 		$this->assertStringContainsString( 'name="forms[stub:1][source_tag]" value="Wedding page"', $html );
-		foreach ( array( 'profotograaf_sync_galleries', 'profotograaf_clear_gallery_index', 'profotograaf_check_embed_version', 'profotograaf_leads_dismiss' ) as $action ) {
+		foreach ( array( 'profotograaf_sync_galleries', 'profotograaf_clear_gallery_index', 'profotograaf_leads_dismiss' ) as $action ) {
 			$this->assertStringContainsString( 'value="' . $action . '"', $html );
 		}
 	}

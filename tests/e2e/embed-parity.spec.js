@@ -21,7 +21,7 @@ const WIDTHS = [ 390, 820, 1440 ];
 const LAYOUTS = [ 'masonry', 'grid' ];
 const TOLERANCE = 1;
 const GALLERY_API = /\/api\/v1\/embed\/galleries\/g-e2e(\?|$)/;
-const SCRIPT = /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/;
+const SCRIPT = /\/(share\/embed|build\/embed)\/embed(\.[a-f0-9]{12})?\.js$/;
 
 /**
  * Everything that identifies a tile to a visitor, in a form that does not
