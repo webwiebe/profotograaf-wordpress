@@ -33,6 +33,7 @@ jobs:
           tools: composer:v2
       - uses: ./.github/actions/setup-node-pnpm
         if: steps.wp.outputs.newer == 'true'
+      - run: tests/e2e/ci-env.sh
       - name: Test against the new release
         if: steps.wp.outputs.newer == 'true'
         env:
