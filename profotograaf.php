@@ -3,7 +3,7 @@
  * Plugin Name:       Profotograaf
  * Plugin URI:        https://github.com/webwiebe/profotograaf-wordpress
  * Description:       Show your Profotograaf galleries on your own site, offer clients a way in, and send form enquiries to your Profotograaf inbox.
- * Version:           0.2.2
+ * Version:           0.2.3
  * Requires at least: 6.9
  * Requires PHP:      8.1
  * Author:            Profotograaf
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PROFOTOGRAAF_VERSION', '0.2.2' );
+define( 'PROFOTOGRAAF_VERSION', '0.2.3' );
 define( 'PROFOTOGRAAF_FILE', __FILE__ );
 define( 'PROFOTOGRAAF_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PROFOTOGRAAF_URL', plugin_dir_url( __FILE__ ) );
