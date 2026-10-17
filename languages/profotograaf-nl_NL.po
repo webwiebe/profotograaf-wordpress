@@ -2890,7 +2890,7 @@ msgstr "Ruimte en vorm"
 msgid "Photo strip. Scroll sideways for more photos."
 msgstr "Fotostrook. Scroll opzij voor meer foto's."
 
-#: includes/class-full-page-renderer.php:169
+#: includes/class-full-page-renderer.php:192
 msgid "Made with Profotograaf"
 msgstr "Gemaakt met Profotograaf"
 
