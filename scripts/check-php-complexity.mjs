@@ -22,6 +22,8 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
+// Joined at run time: knip reads a literal "vendor/bin/..." argument as an import.
+const PHPCS = path.join("vendor", "bin", "phpcs");
 export const BASELINE_PATH = "scripts/php-complexity-baseline.txt";
 const KINDS = { "Generic.Metrics.CyclomaticComplexity": "complexity", "Generic.Metrics.NestingLevel": "nesting" };
 
@@ -101,7 +103,7 @@ export function compare(found, baseline) {
 function loadReport(root, args) {
   const i = args.indexOf("--from-json");
   if (i >= 0) return JSON.parse(fs.readFileSync(args[i + 1], "utf8"));
-  const run = spawnSync("vendor/bin/phpcs", ["--standard=phpcs-complexity.xml.dist", "--report=json", "-q"], {
+  const run = spawnSync(PHPCS, ["--standard=phpcs-complexity.xml.dist", "--report=json", "-q"], {
     cwd: root,
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
