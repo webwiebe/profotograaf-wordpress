@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Profotograaf 0.2.2\n"
+"Project-Id-Version: Profotograaf 0.2.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/profotograaf\n"
 "Last-Translator: Machine draft, needs human review\n"
 "Language-Team: Spanish (machine drafted, needs human review)\n"

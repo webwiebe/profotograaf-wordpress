@@ -1,6 +1,6 @@
 {
   "name": "profotograaf-wordpress",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "description": "Profotograaf for WordPress: client galleries, embeds and lead capture.",
   "license": "GPL-2.0-or-later",
