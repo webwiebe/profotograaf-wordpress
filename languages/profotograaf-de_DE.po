@@ -26,8 +26,8 @@ msgstr ""
 #: includes/class-cron-health.php:245
 #: includes/class-cron-health.php:258
 #: includes/class-sync-attention.php:189
-#: includes/modules/class-media-import-screen.php:228
-#: includes/modules/class-media-import-screen.php:241
+#: includes/modules/class-media-import-screen.php:249
+#: includes/modules/class-media-import-screen.php:262
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
@@ -260,33 +260,33 @@ msgstr "Die Anfrage zum Einschalten der Einbettung ist ungültig."
 msgid "This connection may not switch galleries on yet. Connect this site again under Settings > Profotograaf to grant the new permission."
 msgstr "Diese Verbindung darf Galerien noch nicht einschalten. Verbinde diese Website unter Einstellungen > Profotograaf erneut, um die neue Berechtigung zu erteilen."
 
-#: includes/class-api-client.php:163
+#: includes/class-api-client.php:174
 msgid "A lead needs a name and an email address."
 msgstr "Ein Lead braucht einen Namen und eine E-Mail-Adresse."
 
-#: includes/class-api-client.php:278
+#: includes/class-api-client.php:289
 msgid "That page is not on the Profotograaf platform."
 msgstr "Diese Seite gehört nicht zur Profotograaf-Plattform."
 
-#: includes/class-api-client.php:288
-#: includes/class-api-client.php:434
-#: includes/class-api-client.php:439
+#: includes/class-api-client.php:299
+#: includes/class-api-client.php:445
+#: includes/class-api-client.php:450
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf konnte nicht erreicht werden."
 
-#: includes/class-api-client.php:295
+#: includes/class-api-client.php:306
 msgid "The public page could not be loaded."
 msgstr "Die öffentliche Seite konnte nicht geladen werden."
 
-#: includes/class-api-client.php:320
+#: includes/class-api-client.php:331
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "Die Verbindung wird erneuert. Versuche es gleich noch einmal."
 
-#: includes/class-api-client.php:344
+#: includes/class-api-client.php:355
 msgid "The connection was ended in your Profotograaf account."
 msgstr "Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/class-api-client.php:419
+#: includes/class-api-client.php:430
 msgid "The request could not be encoded."
 msgstr "Die Anfrage konnte nicht kodiert werden."
 
@@ -1252,12 +1252,12 @@ msgstr "Telemetrie aktivieren"
 msgid "Not now"
 msgstr "Jetzt nicht"
 
-#: uninstall.php:57
+#: uninstall.php:79
 msgid "Undeliverable enquiries were deleted"
 msgstr "Nicht zustellbare Anfragen wurden gelöscht"
 
 #. translators: %d: number of enquiries.
-#: uninstall.php:60
+#: uninstall.php:82
 #, php-format
 msgid "%d enquiry that could not be delivered to Profotograaf was deleted together with the plugin."
 msgid_plural "%d enquiries that could not be delivered to Profotograaf were deleted together with the plugin."
@@ -1880,48 +1880,48 @@ msgstr "Erlaubt Redakteuren, die Dateien hochladen dürfen, deine Profotograaf-F
 msgid "Photo library in the editor"
 msgstr "Fotobibliothek im Editor"
 
-#: includes/class-photo-importer.php:90
+#: includes/class-photo-importer.php:84
 #: includes/class-virtual-attachments.php:166
 msgid "You are not allowed to add files to the Media Library."
 msgstr "Du darfst keine Dateien zur Mediathek hinzufügen."
 
 #: includes/class-photo-file-route.php:196
-#: includes/class-photo-importer.php:93
-#: includes/class-photo-importer.php:150
+#: includes/class-photo-importer.php:87
+#: includes/class-photo-importer.php:198
 #: includes/class-photo-rest.php:393
 #: includes/class-virtual-attachments.php:169
 msgid "Using Profotograaf photos in the editor is switched off in the plugin settings."
 msgstr "Die Verwendung von Profotograaf-Fotos im Editor ist in den Plugin-Einstellungen ausgeschaltet."
 
-#: includes/class-photo-importer.php:98
+#: includes/class-photo-importer.php:92
 #: includes/class-virtual-attachments.php:173
 msgid "This photo cannot be imported because it has no identifier."
 msgstr "Dieses Foto kann nicht importiert werden, weil es keine Kennung hat."
 
-#: includes/class-photo-importer.php:108
-#: includes/class-photo-importer.php:177
+#: includes/class-photo-importer.php:102
+#: includes/class-photo-importer.php:161
 #: includes/class-virtual-attachments.php:183
 msgid "The photo is not on the Profotograaf platform, so it was not imported."
 msgstr "Das Foto befindet sich nicht auf der Profotograaf-Plattform und wurde daher nicht importiert."
 
 #: includes/class-photo-file-route.php:227
-#: includes/class-photo-importer.php:334
+#: includes/class-photo-importer.php:337
 msgid "The photo could not be downloaded from Profotograaf. Try again later."
 msgstr "Das Foto konnte nicht von Profotograaf heruntergeladen werden. Versuche es später erneut."
 
-#: includes/class-photo-importer.php:232
-#: includes/class-photo-importer.php:240
-#: includes/class-photo-importer.php:373
+#: includes/class-photo-importer.php:238
+#: includes/class-photo-importer.php:245
+#: includes/class-photo-importer.php:376
 #: includes/class-virtual-attachments.php:208
 msgid "The photo could not be added to the Media Library."
 msgstr "Das Foto konnte nicht zur Mediathek hinzugefügt werden."
 
-#: includes/class-photo-importer.php:115
-#: includes/class-photo-importer.php:182
+#: includes/class-photo-importer.php:109
+#: includes/class-photo-importer.php:166
 msgid "This photo is being imported by another request. Try again in a moment."
 msgstr "Dieses Foto wird gerade von einer anderen Anfrage importiert. Versuche es gleich noch einmal."
 
-#: includes/class-photo-importer.php:325
+#: includes/class-photo-importer.php:328
 msgid "Profotograaf redirected the photo download, so it was not imported."
 msgstr "Profotograaf hat den Download des Fotos umgeleitet, daher wurde es nicht importiert."
 
@@ -1945,14 +1945,12 @@ msgstr "Dieses Foto ist nicht mehr in deiner Profotograaf-Bibliothek. Aktualisie
 msgid "Import from Profotograaf"
 msgstr "Aus Profotograaf importieren"
 
-#: includes/modules/class-media-import-screen.php:264
+#: includes/modules/class-media-import-screen.php:233
 msgid "Source"
 msgstr "Quelle"
 
-#. translators: %s: gallery title.
 #. translators: %s: link to the gallery on Profotograaf, titled with the gallery name.
-#: includes/modules/class-media-import-screen.php:225
-#: includes/modules/class-media-import-screen.php:238
+#: includes/modules/class-media-import-screen.php:259
 #, php-format
 msgid "Profotograaf, gallery %s"
 msgstr "Profotograaf, Galerie %s"
@@ -2073,24 +2071,24 @@ msgstr "Dieses Foto ist bei Profotograaf nicht mehr verfügbar."
 msgid "Search Profotograaf photos"
 msgstr "Profotograaf-Fotos durchsuchen"
 
-#: includes/class-photo-importer.php:147
+#: includes/class-photo-importer.php:195
 msgid "You are not allowed to replace this file."
 msgstr "Du darfst diese Datei nicht ersetzen."
 
-#: includes/class-photo-importer.php:158
+#: includes/class-photo-importer.php:205
 msgid "This file was not imported from Profotograaf."
 msgstr "Diese Datei wurde nicht aus Profotograaf importiert."
 
-#: includes/class-photo-importer.php:173
+#: includes/class-photo-importer.php:157
 #: includes/class-sync-resolve.php:294
 msgid "This photo is no longer available on Profotograaf. The copy in your Media Library is unchanged."
 msgstr "Dieses Foto ist auf Profotograaf nicht mehr verfügbar. Die Kopie in deiner Mediathek bleibt unverändert."
 
-#: includes/modules/class-media-import-screen.php:233
+#: includes/modules/class-media-import-screen.php:254
 msgid "Open on Profotograaf"
 msgstr "Auf Profotograaf öffnen"
 
-#: includes/modules/class-media-import-screen.php:257
+#: includes/modules/class-media-import-screen.php:279
 msgid "Re-import"
 msgstr "Erneut importieren"
 
@@ -2448,7 +2446,7 @@ msgstr "Diese Galerie verknüpfen"
 msgid "Sending files to Profotograaf is switched off in the plugin settings."
 msgstr "Das Senden von Dateien an Profotograaf ist in den Plugin-Einstellungen ausgeschaltet."
 
-#: includes/class-photo-importer.php:154
+#: includes/class-photo-importer.php:202
 msgid "This file was sent from this site, so there is nothing to re-import."
 msgstr "Diese Datei wurde von dieser Website gesendet, daher gibt es nichts erneut zu importieren."
 
@@ -2497,7 +2495,7 @@ msgstr "Profotograaf kennt die Galerie nicht, für die diese Datei bestimmt war.
 msgid "Profotograaf does not accept this kind of file."
 msgstr "Profotograaf akzeptiert diese Art von Datei nicht."
 
-#: includes/modules/class-media-import-screen.php:248
+#: includes/modules/class-media-import-screen.php:227
 msgid "Sent from this site. Changes to the title, caption and alt text are sent to Profotograaf too."
 msgstr "Von dieser Website gesendet. Änderungen an Titel, Bildunterschrift und Alternativtext werden ebenfalls an Profotograaf gesendet."
 
@@ -3140,7 +3138,7 @@ msgstr "Fotos auf Profotograaf behalten"
 msgid "Adds the choice \"Keep on Profotograaf\" next to Import on the Import from Profotograaf screen, for editors who can upload files. A photo kept on Profotograaf is added to the Media Library without a download. This site shows it from Profotograaf and stores no copy. It needs \"Use Profotograaf photos in the editor\". If you unpublish a gallery on Profotograaf, its photos stop loading from Profotograaf at once, but copies already held by edge caches and by visitors' browsers can keep showing for up to a year. Import the photos you may want to withdraw later. If you switch this off, the photos kept on Profotograaf stop showing on this site."
 msgstr "Fügt auf der Seite „Aus Profotograaf importieren“ neben „Importieren“ die Auswahl „Auf Profotograaf behalten“ hinzu, für Redakteure, die Dateien hochladen dürfen. Ein auf Profotograaf behaltenes Foto wird ohne Download zur Mediathek hinzugefügt. Diese Website zeigt es von Profotograaf an und speichert keine Kopie. Dafür muss „Profotograaf-Fotos im Editor verwenden“ eingeschaltet sein. Wenn du eine Galerie auf Profotograaf zurückziehst, laden ihre Fotos sofort nicht mehr von Profotograaf, aber Kopien, die bereits in Edge-Caches und in den Browsern der Besucher liegen, können bis zu einem Jahr sichtbar bleiben. Importiere die Fotos, die du später vielleicht zurückziehen möchtest. Wenn du dies ausschaltest, werden die auf Profotograaf behaltenen Fotos auf dieser Website nicht mehr angezeigt."
 
-#: includes/modules/class-media-import-screen.php:246
+#: includes/modules/class-media-import-screen.php:225
 msgid "Kept on Profotograaf. This site shows the photo from Profotograaf and stores no copy."
 msgstr "Auf Profotograaf behalten. Diese Website zeigt das Foto von Profotograaf an und speichert keine Kopie."
 
@@ -3649,19 +3647,19 @@ msgid_plural "%d photos could not be converted in the last run:"
 msgstr[0] "%d Foto konnte beim letzten Durchlauf nicht lokal gespeichert werden:"
 msgstr[1] "%d Fotos konnten beim letzten Durchlauf nicht lokal gespeichert werden:"
 
-#: uninstall.php:30
+#: uninstall.php:47
 msgid "The Profotograaf plugin was deleted from this site. Some of your photos are still in your Profotograaf account:"
 msgstr "Das Profotograaf-Plugin wurde von dieser Website gelöscht. Einige deiner Fotos sind noch in deinem Profotograaf-Konto:"
 
 #. translators: %d: number of photos.
-#: uninstall.php:37
+#: uninstall.php:54
 #, php-format
 msgid "- %d photo was shown from Profotograaf and shows no image on this site now. To show it again, install and connect the plugin and use Convert to local."
 msgid_plural "- %d photos were shown from Profotograaf and show no image on this site now. To show them again, install and connect the plugin and use Convert to local."
 msgstr[0] "- %d Foto wurde von Profotograaf angezeigt und zeigt auf dieser Website jetzt kein Bild mehr. Um es wieder anzuzeigen, installiere und verbinde das Plugin erneut und nutze „Lokal speichern“."
 msgstr[1] "- %d Fotos wurden von Profotograaf angezeigt und zeigen auf dieser Website jetzt kein Bild mehr. Um sie wieder anzuzeigen, installiere und verbinde das Plugin erneut und nutze „Lokal speichern“."
 
-#: uninstall.php:41
+#: uninstall.php:58
 msgid "Your photos on Profotograaf"
 msgstr "Deine Fotos auf Profotograaf"
 
@@ -3974,7 +3972,7 @@ msgid "Only when the site owner switches on copying: this site copies files from
 msgstr "Nur wenn der Website-Betreiber das Kopieren einschaltet: Diese Website kopiert im Hintergrund Dateien aus ihrer Mediathek in das verbundene Profotograaf-Konto. Sie sendet die Bilddateien sowie RAW- und Videodateien mit ihren Dateinamen und dem Zugriffstoken an https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. Zuerst legt sie mit https://profotograaf.nl/api/v1/embed/galleries private Galerien an, mit dem Website-Titel im Namen der Galerie. Dateien werden so gesendet, wie sie gespeichert sind, mit ihren Metadaten, die die GPS-Position enthalten können. Fotos von Personen sind personenbezogene Daten, daher braucht der Website-Betreiber eine Rechtsgrundlage für das Senden, und Profotograaf speichert die Kopien für den Website-Betreiber. Die Einstellungen für anonyme Nutzungsdaten und die Fotobibliothek schalten das Kopieren nicht ein. Eine Datei hier löschen, das Kopieren ausschalten oder das Plugin löschen lässt die Kopien im Profotograaf-Konto, bis sie dort gelöscht werden. Die Mediathek behält pro Datei einige versteckte Felder (den Kopierstatus, die Foto- und Galerie-IDs und eine Prüfsumme), bis das Plugin gelöscht wird."
 
 #. translators: %d: number of files.
-#: uninstall.php:33
+#: uninstall.php:50
 #, php-format
 msgid "- %d file from the Media Library is copied there. It stays until you delete it on Profotograaf."
 msgid_plural "- %d files from the Media Library are copied there. They stay until you delete them on Profotograaf."

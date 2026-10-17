@@ -8,17 +8,12 @@ complexity build includes/leads/class-failed-export.php 19
 complexity changes includes/trait-api-client-feed.php 16
 complexity clean includes/class-sections-schema.php 15
 complexity image includes/class-declarative-renderer.php 18
-complexity list_galleries includes/class-api-client.php 14
 complexity normalise includes/class-photo-catalogue.php 14
 complexity on_complete includes/leads/class-wpforms.php 13
-complexity parse includes/class-settings-schema.php 16
 complexity payload includes/leads/class-mapping.php 16
 complexity plan includes/class-reconcile.php 26
 complexity preview_photo includes/class-sections-rest.php 16
 complexity process_upload includes/class-upload-queue.php 13
-complexity profotograaf_uninstall_site uninstall.php 14
-complexity reimport includes/class-photo-importer.php 13
 complexity render includes/class-full-page-renderer.php 14
-complexity source_field includes/modules/class-media-import-screen.php 13
 complexity text_of includes/class-full-page-markup.php 13
 complexity upload_photo includes/trait-api-client-writes.php 13
