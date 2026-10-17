@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<ruleset name="Profotograaf complexity">
+	<description>Cyclomatic complexity and nesting depth, read by scripts/check-php-complexity.mjs. Not part of the lint run.</description>
+
+	<file>profotograaf.php</file>
+	<file>uninstall.php</file>
+	<file>includes</file>
+	<file>blocks</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+
+	<!-- Same limits as the oxlint config for TypeScript: complexity 12, depth 4. -->
+	<rule ref="Generic.Metrics.CyclomaticComplexity">
+		<properties>
+			<property name="complexity" value="12"/>
+			<property name="absoluteComplexity" value="12"/>
+		</properties>
+	</rule>
+	<rule ref="Generic.Metrics.NestingLevel">
+		<properties>
+			<property name="nestingLevel" value="4"/>
+			<property name="absoluteNestingLevel" value="4"/>
+		</properties>
+	</rule>
+</ruleset>

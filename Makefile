@@ -48,7 +48,13 @@ composer-audit:
 	$(DOCKER_RUN) -e COMPOSER_CACHE_DIR=/tmp/cc composer:2 composer audit --format=json --locked > coverage/composer-audit.json || true
 	$(PNPM) node scripts/composer-audit-gate.mjs < coverage/composer-audit.json
 
-quality-php: lint phpstan coverage-php composer-audit
+# phpcs exits non-zero when it finds anything; the gate script decides what blocks.
+complexity-php:
+	mkdir -p coverage
+	$(DOCKER_RUN) $(PHP_IMAGE) vendor/bin/phpcs --standard=phpcs-complexity.xml.dist --report=json -q > coverage/complexity.json || true
+	$(PNPM) node scripts/check-php-complexity.mjs --report --from-json coverage/complexity.json
+
+quality-php: lint phpstan coverage-php composer-audit complexity-php
 
 # Everything CI runs before a merge, except the Docker E2E and Plugin Check
 # (make e2e, make plugin-check). Run the diff-coverage gate yourself with
