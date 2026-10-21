@@ -178,8 +178,8 @@ importers:
         version: 2.0.4
     devDependencies:
       '@axe-core/playwright':
-        specifier: ^4.13.0
-        version: 4.13.0(playwright-core@1.64.0)
+        specifier: ^4.14.0
+        version: 4.14.0(playwright-core@1.64.0)
       '@playwright/test':
         specifier: ^1.64.0
         version: 1.64.0
@@ -188,7 +188,7 @@ importers:
         version: 10.4.2
       '@testing-library/react':
         specifier: ^16.3.3
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@types/node':
         specifier: ^26.6.5
         version: 26.6.5
@@ -199,8 +199,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@types/wordpress__block-editor':
-        specifier: ^15.0.6
-        version: 15.0.6(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)
+        specifier: ^15.0.7
+        version: 15.0.7(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)
       '@vitest/coverage-v8':
         specifier: ^5.0.4
         version: 5.0.4(vitest@5.0.4)
@@ -209,28 +209,28 @@ importers:
         version: 7.57.0
       '@wordpress/block-editor':
         specifier: ^18.1.0
-        version: 18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+        version: 18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/blocks':
         specifier: ^16.2.0
-        version: 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/browserslist-config':
         specifier: ^6.57.0
         version: 6.57.0
       '@wordpress/components':
         specifier: ^42.0.0
-        version: 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+        version: 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/data':
         specifier: ^10.57.0
-        version: 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/element':
         specifier: ^9.0.0
-        version: 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n':
         specifier: ^6.30.0
         version: 6.30.0
       '@wordpress/scripts':
         specifier: ^36.1.0
-        version: 36.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.5)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(yauzl@2.10.0)
+        version: 36.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.5)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(yauzl@2.10.0)
       jsdom:
         specifier: ^30.1.2
         version: 30.1.2(@noble/hashes@1.8.0)
@@ -244,11 +244,11 @@ importers:
         specifier: 7.0.2004
         version: 7.0.2004
       react:
-        specifier: ^19.3.0
-        version: 19.3.0
+        specifier: ^19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: ^19.3.0
-        version: 19.3.0(react@19.3.0)
+        specifier: ^19.3.1
+        version: 19.3.1(react@19.3.1)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -304,8 +304,9 @@ packages:
     resolution: {integrity: sha512-YnVzxDxLaqL0t7Q4wfcgHZjg55Wm6y5EaO7Bhu3q9J7wq/8iw3PhsnWiOQhYekx4VexnbkgWpTT6n+QIV7kczw==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
-  '@axe-core/playwright@4.13.0':
-    resolution: {integrity: sha512-6YLx+kxXu5GJceG4ozFg+33a2EMTdjYwWGloJ3sb9Kta5pp+ZNS53uxGVog5JetIY8s++P5UrtX+cri+u0VAVg==}
+  '@axe-core/playwright@4.14.0':
+    resolution: {integrity: sha512-SGUhG5PIHd2eMdpgBF2PyQLOhX+qyDR2PT4cmoS4Qk2ak+jX/rrSvst9l0PGv5WTHolKpUMvVmoHpr4cZgf1RQ==}
+    engines: {node: '>=22.12.0'}
     peerDependencies:
       playwright-core: '>= 1.0.0'
 
@@ -2583,8 +2584,8 @@ packages:
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
 
-  '@types/wordpress__block-editor@15.0.6':
-    resolution: {integrity: sha512-XDc596rkiNLOg0SZRONHojDRd7oE/+96nCBTQq51fJpAfgtHCPXQUs5hYJNaImxqWeuNrqYGpBgU5fFS7ZqRHw==}
+  '@types/wordpress__block-editor@15.0.7':
+    resolution: {integrity: sha512-py8WJ2p5txy6yaLnGFOzWhYJaoXEPsm1w1zRJxYRFVjertDcUDtsT7Lm0wy1HtaLBa2ty1hDjp7Y1V7NcRy3yA==}
 
   '@types/ws@8.18.2':
     resolution: {integrity: sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==}
@@ -3013,20 +3014,12 @@ packages:
       webpack-dev-server:
         optional: true
 
-  '@wordpress/a11y@4.56.0':
-    resolution: {integrity: sha512-pF17LuL8yPZhTZoA2Oz1MUlacQlizM0DRg6btfhFeuB/Bmx0TnbGp578Z+QDjS/j8WNOLhrHQWwDld/NIs8X7w==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/a11y@4.57.0':
     resolution: {integrity: sha512-1BhlEYblenx5w5SkHaEdBodcNf93NDt5nd7QmOc1PpDVxWsGc/ARO30puvUlTnc1tq0Z8KEwy/wiPaTJUoprLw==}
     engines: {node: '>=18.12.0'}
 
   '@wordpress/api-fetch@7.57.0':
     resolution: {integrity: sha512-NM9whtviaDmHmoJORHCZ1TqDRiC0nPooN/IqGEwfr2nX1X8F6d4hvOceiOZJJDTXQzdJoun5c9oUNQ4IrABQ4w==}
-    engines: {node: '>=18.12.0'}
-
-  '@wordpress/autop@4.56.0':
-    resolution: {integrity: sha512-DQ13tf/Jh/CYomv2aVtM1qXBKHrHKFKKhm9kzaIJvkESpU4vuJzg6no/h4zekdUHU2lswNmb5ZzE9ZkXvsWMDw==}
     engines: {node: '>=18.12.0'}
 
   '@wordpress/autop@4.57.0':
@@ -3045,10 +3038,6 @@ packages:
     resolution: {integrity: sha512-Dsug4Zxz2xOFtK6CGThKYXwCqC9Yztw2STKQzwztrX4yW+o6iDbzkxpcwdDhsaVJs0Jt9A4LmJpZPh+pUozzLA==}
     engines: {node: '>=18.12.0', npm: '>=8.19.2'}
 
-  '@wordpress/blob@4.56.0':
-    resolution: {integrity: sha512-nvrZNO2rKMo7mcyevoyoRGFBmLljLdlx49GgZtrvZ8ET7IDwJGeDPq6UWvaFS06O40wHKJ+y5m+SiItd0xnABg==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/blob@4.57.0':
     resolution: {integrity: sha512-t1ghgANfEzzSSNyPEIWE8PDX+wgvtzxkQX9yYG8o7jeDDqRS3aveKJS8226HkISqt7pAg+JN7iS7MaoQWT5Fuw==}
     engines: {node: '>=18.12.0'}
@@ -3063,10 +3052,6 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
-
-  '@wordpress/block-serialization-default-parser@5.56.0':
-    resolution: {integrity: sha512-ZS2DpbXSFke+Hqld0l2oB8SxNj49AC6MidE0CKA0MYk5Xd/eBeDUNt/JqjpVJlWcdiO+7kVCe8VP7YPOkON64A==}
-    engines: {node: '>=18.12.0'}
 
   '@wordpress/block-serialization-default-parser@5.57.0':
     resolution: {integrity: sha512-gxqS1TIMiWcIIsPTPdvztOZNEl7+TkVJ5WHk8BWOe2+WsaEcjL44heSceDl873+WZQ1RIAOBdHDyds8h4FjiaQ==}
@@ -3145,16 +3130,6 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@wordpress/compose@8.9.0':
-    resolution: {integrity: sha512-P5LIb2c+r77CVxhxRZW1RU+jZVn5QtkwsKrxea3oSRmbJn5Z3layII2Ilzw1+0qOUpgBgQbUnko0LsDLMTC/5g==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      '@types/react': ^18 || ^19
-      react: ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@wordpress/data@10.57.0':
     resolution: {integrity: sha512-R/b8HUJu+XxyPgbOiY62UySzsRNf1gcVXw4vB4lyOyraVrXzK1tbxOXnSugpZLHKJFRvyipV0/m3o/M4DpZmzQ==}
     engines: {node: '>=18.12.0'}
@@ -3180,10 +3155,6 @@ packages:
       '@types/react':
         optional: true
 
-  '@wordpress/date@5.56.0':
-    resolution: {integrity: sha512-JMcuc9PlX7UZ1ME95RgOslP2kJAnOADNl6x5LL15qvqJ/9oDvph8PIT8BEpLOjqOPLZ7uIVhtzN6pb+Ij1EgXg==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/date@5.57.0':
     resolution: {integrity: sha512-mT+Yd+ADpT74G/VsarsaiUNb7E61MjS+Ry6lq5f6Q4T8V0AVMLEQ2O06KskE4lW+q6z6hbnN2+reWiZzfkYeVw==}
     engines: {node: '>=18.12.0'}
@@ -3194,24 +3165,12 @@ packages:
     peerDependencies:
       webpack: ^5.0.0
 
-  '@wordpress/deprecated@4.56.0':
-    resolution: {integrity: sha512-to+VUihf/FGYPf74KXr6Yag+hTkaw8i8ZAa4x6Z3ZP3zMBu6pnxnc4QT0eZlWraeKdE2ZLbtT5tF7mkZSWzoFQ==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/deprecated@4.57.0':
     resolution: {integrity: sha512-eRjYiN5wE8cmV+sehqGTHpb2VxwSqv/FMkcQ+0po4G3JK+Y1V0StqZRDhsgcwUocPRKuAtTO7E28fcdo615DFw==}
     engines: {node: '>=18.12.0'}
 
-  '@wordpress/dom-ready@4.56.0':
-    resolution: {integrity: sha512-zpnI/8cQn3RoDMxKxqti32CGtUuyGl96ghNRmBo0zLPviVIlFIqNFBzeAXvuyqcoEsjmaAzswr1P7dlaFzrP2Q==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/dom-ready@4.57.0':
     resolution: {integrity: sha512-3UVrsq4LQxnPO7N28H2s0jdUbOb6+jJKT5EJVgwPJnZpCw2RLvpaN0u+P+6yZWIl8ytPwayTHuLHGnKBnIXZKQ==}
-    engines: {node: '>=18.12.0'}
-
-  '@wordpress/dom@4.56.0':
-    resolution: {integrity: sha512-gn+A1WqWv7dcQ4VA2PUo0JgFKegwlya8pCAyydgPpUBxEeSzUZnJl//SEIy4Og30GcNUAuOQbHDEL6rzcJfUfw==}
     engines: {node: '>=18.12.0'}
 
   '@wordpress/dom@4.57.0':
@@ -3260,10 +3219,6 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@wordpress/escape-html@3.56.0':
-    resolution: {integrity: sha512-5k+7+XuXgeczkg2QuiN2zROHzj9/dU9qyv78H6I291+QOXLLlfOBzB2ds/MLvIyjv1mP1jLkvzzOB0PxHgfr+Q==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/escape-html@3.57.0':
     resolution: {integrity: sha512-QT0x2X39blQjLHru11Dp00DAR0LLRMKMC6ATSWidliD3xQfKz+BjiPzTJd/LyhPLEE8C9li7ylKUlseIO2EYjQ==}
     engines: {node: '>=18.12.0'}
@@ -3281,10 +3236,6 @@ packages:
       typescript:
         optional: true
 
-  '@wordpress/global-styles-engine@1.23.0':
-    resolution: {integrity: sha512-OCQUhwigTL0vf6xJ3kVUAsq52cz0jvmwBeo7xNONFb3LclKE3qGRbnF69jBJ9IlJiT1fb9ljcBiZ/oabcmWUSQ==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/global-styles-engine@1.24.0':
     resolution: {integrity: sha512-gr6/lc6pWi7SjpmLwsRiJJfUOY4Xp3poyfouLD7+2QbA2bK7m2yhUWx9FR6T7YMGAG5fgUKQq5pQgiQkC5iyag==}
     engines: {node: '>=18.12.0'}
@@ -3299,16 +3250,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@wordpress/hooks@4.56.0':
-    resolution: {integrity: sha512-3+90yFqbMyzhqOEu88MjwlpznzVFl3am0YYIt7kc/8mfJ79IyHkYyiDdid3/fkJDMbZHH4tGy0J/JFp84/5Q2w==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/hooks@4.57.0':
     resolution: {integrity: sha512-vRJxRhOj+a19RvdW6u0ZBmiQc/t/ueVGsIP3IbS9zuvfLJILtvMSWXU8Fe3m/W+mBK5ZEOfm72LYBhWGPse0DA==}
-    engines: {node: '>=18.12.0'}
-
-  '@wordpress/html-entities@4.56.0':
-    resolution: {integrity: sha512-aV51VuaWPZBGbFUqRfSmNUEINWM9UYtN7feldCdV04RBfaD6BVXWYKRsjefpQOciXF4JAu9zV486ZTqWQmg0ow==}
     engines: {node: '>=18.12.0'}
 
   '@wordpress/html-entities@4.57.0':
@@ -3355,10 +3298,6 @@ packages:
     resolution: {integrity: sha512-VIYgydqUiKq+KNzSPqbJyCcDdDUqChdWksyOJ496h6/F1/dVMYe9sA9KABSXpVh1TgDaXGr48UgVdD7EtBSiAw==}
     engines: {node: '>=18.12.0'}
 
-  '@wordpress/is-shallow-equal@5.56.0':
-    resolution: {integrity: sha512-KpyMI+SJV8xqoaGF5VV+FEHfj137jUEam3A98cKBFW8rGxC0ip7i3LCww0jXPwBciKiOw+XBzgTjJBwk89kfYQ==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/is-shallow-equal@5.57.0':
     resolution: {integrity: sha512-QoIVWgnkKHAgrFB9hfpnmGvrAbutsa53DNl08i98guhtVVTSLzttlxgJxA3wpIepmR8FYiLNGB2Kfa49NdyIwg==}
     engines: {node: '>=18.12.0'}
@@ -3379,15 +3318,6 @@ packages:
       '@types/react':
         optional: true
       '@types/react-dom':
-        optional: true
-
-  '@wordpress/keycodes@4.56.0':
-    resolution: {integrity: sha512-zNF8WANxCBRXu25RB1QI2ZFoWydzWxz9F4dSKQ0nhEtvc6sY6gU/+WY+7xLdLMXU3lLZNFbEJOK369Fgygm/1w==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      '@types/react': ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
         optional: true
 
   '@wordpress/keycodes@4.57.0':
@@ -3442,16 +3372,6 @@ packages:
     peerDependencies:
       prettier: '>=3'
 
-  '@wordpress/primitives@4.56.0':
-    resolution: {integrity: sha512-QW6P5M8CfVM6M8igUNT7RH0GGojSQkqd+EBdlijuiFdOcDfGaFBUmIFrMJepDLqtNQxMxelCwsqVy7ZoEaq4Yw==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      '@types/react': ^18 || ^19
-      react: ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@wordpress/primitives@4.57.0':
     resolution: {integrity: sha512-TP4t+RTe7krEIhdl4oiqkmuKHAkRj3FAlCYfTjutrYHNGzBeYCkNdRd4QcMl2l+uSabLVQZ7XXDyFcKSzZJNdA==}
     engines: {node: '>=18.12.0'}
@@ -3465,10 +3385,6 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
-
-  '@wordpress/priority-queue@3.56.0':
-    resolution: {integrity: sha512-PwCtvndDcizxs7DpfQ33uDsu/we3fFG/sejK4KspwotC99LtGvO5QgvtiO6g7SIoXKAMdaNW82B9w4Y/VNCNNQ==}
-    engines: {node: '>=18.12.0'}
 
   '@wordpress/priority-queue@3.57.0':
     resolution: {integrity: sha512-ZIfR49tJ8MKEARh/Ucy18QsVQXzeriFXcR0q+urvnCwaPwgpAY1bQo1a5oA0Mw5wO+uDvjGt7m5uZZeSxfHzxg==}
@@ -3497,16 +3413,6 @@ packages:
     engines: {node: '>=18.12.0'}
     peerDependencies:
       redux: '>=4'
-
-  '@wordpress/rich-text@7.56.0':
-    resolution: {integrity: sha512-Z1kOWW5DD7tvkX3AygQzGVFFkPaEdIDyclXKy76j3HLBsaNiXaTTNX6JEdwCiSFEix0ixMV9mSE+xKFTA3hYag==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      '@types/react': ^18 || ^19
-      react: ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   '@wordpress/rich-text@7.57.0':
     resolution: {integrity: sha512-7Qlh8jynGsaagfOUA3t8bourV+r6F8CN5EOanj6MIrsqZaasLT80zhGZeBBR21V77HVNFFCMlDIFNjxmvgmmxA==}
@@ -3546,22 +3452,9 @@ packages:
       vitest:
         optional: true
 
-  '@wordpress/shortcode@4.56.0':
-    resolution: {integrity: sha512-fxRlg9amjSBw7BYFjl/kk49aUvVF4WUHhD/q/ne52H3hlarOYTXe5Wm4Y+wlvf1qfnDQskIJHzreGZ4jh9uY+g==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/shortcode@4.57.0':
     resolution: {integrity: sha512-FQvDTVC6XS/Q8RYxgCLCo/akf/UlgUwHvI8zga0bzKzyuyXHprx4ujQkGO8w4uM4uDSxLVaO/ISYW9KGSNvhpA==}
     engines: {node: '>=18.12.0'}
-
-  '@wordpress/style-engine@2.56.0':
-    resolution: {integrity: sha512-dMByQR+/6an+1LMAxDJD4751Nfb+/UPkTdT0SLhZ4YNvbaeigVtJLuAwwuMDF8vJBxv435iSjy2a9uP0keDbUA==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      '@types/react': ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   '@wordpress/style-engine@2.57.0':
     resolution: {integrity: sha512-CmBwZjdWJkqOlPIkEgbyOczd8jn7hrg/lwXhNji0ICs4IgZFh6bk1z10njFFs02v4rBh/rJ0OWUBDrc+C6LtsQ==}
@@ -3628,10 +3521,6 @@ packages:
       '@types/react':
         optional: true
 
-  '@wordpress/undo-manager@1.56.0':
-    resolution: {integrity: sha512-1jHpsam603sVmgmrV8ndAlaOpwK4CVhAeB9myz5CgRvPN7qukja8T672W+LkVxyAW8oPC1A/msSo9RXSRaoOFQ==}
-    engines: {node: '>=18.12.0'}
-
   '@wordpress/undo-manager@1.57.0':
     resolution: {integrity: sha512-LGTnpgeuRKDiEMrfzfAxkivlhN6apCsIVx3v7lyRb3vcr1rM9j8JL34W/+sLDLaUafb4I1f/LEBFRB18F55/Gg==}
     engines: {node: '>=18.12.0'}
@@ -3657,10 +3546,6 @@ packages:
 
   '@wordpress/vips@4.3.0':
     resolution: {integrity: sha512-yGvJ/qKTD9PpoUdUpXctQxcdYyewiSltror2NTSn0G+fHYJyH2U5NQG5/VwBEioMJt6fzTeUhIYspY7A0045fQ==}
-    engines: {node: '>=18.12.0'}
-
-  '@wordpress/warning@3.56.0':
-    resolution: {integrity: sha512-6dUEn4UYE0wKGRTrGlLRr8829vq0jY/m3xQmiiqSGvcdPdza5fR+R/ol4azQcge4V3CHsEzKZ8R9h5Qwi+Zv5g==}
     engines: {node: '>=18.12.0'}
 
   '@wordpress/warning@3.57.0':
@@ -3867,15 +3752,16 @@ packages:
     peerDependencies:
       postcss: ^8.1.0
 
-  autosize@4.0.4:
-    resolution: {integrity: sha512-5yxLQ22O0fCRGoxGfeLSNt3J8LB1v+umtpMnPW6XjkTWXKoN0AmXAIhelJcDtFT/Y/wYWmfE+oqU10Q0b8FhaQ==}
-
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
   axe-core@4.13.0:
     resolution: {integrity: sha512-UzGt8zg7Ny8djbYMhxl2zuEevVa7r2gJjYY5Lwr1xM7+XU2nd6CkIWFTVcCIbAP63vSz71NaVyyuSk9lHKcy0A==}
+    engines: {node: '>=4'}
+
+  axe-core@4.14.0:
+    resolution: {integrity: sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ==}
     engines: {node: '>=4'}
 
   axobject-query@4.1.0:
@@ -4154,9 +4040,6 @@ packages:
   compression@1.8.2:
     resolution: {integrity: sha512-o8vI5RE5A6EVVOd9o41jKp41aJom+QTEO/Bx8MYNjexMo/Bv2WOjUfZr+aL0WnYSgymUy6zeguqLTsIhV0gMvQ==}
     engines: {node: '>= 0.8.0'}
-
-  computed-style@0.1.4:
-    resolution: {integrity: sha512-WpAmaKbMNmS3OProfHIdJiNleNJdgUrJfbKArXua28QF7+0CoZjlLn0lp6vlc+dl5r2/X9GQiQRQQU4BzSa69w==}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -5698,10 +5581,6 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
 
-  line-height@0.3.1:
-    resolution: {integrity: sha512-YExecgqPwnp5gplD2+Y8e8A5+jKpr25+DzMbFdI1/1UAr0FJrTFv4VkHLf8/6B590i1wUPJWMKKldkd/bdQ//w==}
-    engines: {node: '>= 4.0.0'}
-
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
@@ -6731,12 +6610,6 @@ packages:
       react: ^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-autosize-textarea@7.1.0:
-    resolution: {integrity: sha512-BHpjCDkuOlllZn3nLazY2F8oYO1tS2jHnWhcjTWQdcKiiMU6gHLNt/fzmqMSyerR0eTdKtfSIqtSeTtghNwS+g==}
-    peerDependencies:
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0
-      react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0
-
   react-colorful@5.8.1:
     resolution: {integrity: sha512-oz68bhsnFWnpDf1ZR8daiQbYpXUnM2h2J6hl9Zg2rTpM/DU6vCqe1E+CpqmqLnJucMZetHZeifSAfJ+geN9lcA==}
     peerDependencies:
@@ -6764,10 +6637,10 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-dom@19.3.0:
-    resolution: {integrity: sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==}
+  react-dom@19.3.1:
+    resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
     peerDependencies:
-      react: ^19.3.0
+      react: ^19.3.1
 
   react-easy-crop@5.5.7:
     resolution: {integrity: sha512-kYo4NtMeXFQB7h1U+h5yhUkE46WQbQdq7if54uDlbMdZHdRgNehfvaFrXnFw5NR1PNoUOJIfTwLnWmEx/MaZnA==}
@@ -6825,8 +6698,8 @@ packages:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
 
-  react@19.3.0:
-    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
+  react@19.3.1:
+    resolution: {integrity: sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw==}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.2:
@@ -8132,36 +8005,36 @@ snapshots:
       '@ariakit/store': 0.1.10
       '@ariakit/utils': 0.2.1
 
-  '@ariakit/react-components@0.6.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@ariakit/react-components@0.6.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@ariakit/components': 0.1.13
-      '@ariakit/react-store': 0.1.11(react@19.3.0)
-      '@ariakit/react-utils': 0.2.6(react@19.3.0)
+      '@ariakit/react-store': 0.1.11(react@19.3.1)
+      '@ariakit/react-utils': 0.2.6(react@19.3.1)
       '@ariakit/store': 0.1.10
       '@ariakit/utils': 0.2.1
       '@floating-ui/dom': 1.8.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@ariakit/react-store@0.1.11(react@19.3.0)':
+  '@ariakit/react-store@0.1.11(react@19.3.1)':
     dependencies:
-      '@ariakit/react-utils': 0.2.6(react@19.3.0)
+      '@ariakit/react-utils': 0.2.6(react@19.3.1)
       '@ariakit/store': 0.1.10
       '@ariakit/utils': 0.2.1
-      react: 19.3.0
-      use-sync-external-store: 1.7.0(react@19.3.0)
+      react: 19.3.1
+      use-sync-external-store: 1.7.0(react@19.3.1)
 
-  '@ariakit/react-utils@0.2.6(react@19.3.0)':
+  '@ariakit/react-utils@0.2.6(react@19.3.1)':
     dependencies:
       '@ariakit/store': 0.1.10
       '@ariakit/utils': 0.2.1
-      react: 19.3.0
+      react: 19.3.1
 
-  '@ariakit/react@0.4.40(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@ariakit/react@0.4.40(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@ariakit/react-components': 0.6.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      '@ariakit/react-components': 0.6.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@ariakit/store@0.1.10':
     dependencies:
@@ -8184,9 +8057,9 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.5.3
 
-  '@axe-core/playwright@4.13.0(playwright-core@1.64.0)':
+  '@axe-core/playwright@4.14.0(playwright-core@1.64.0)':
     dependencies:
-      axe-core: 4.13.0
+      axe-core: 4.14.0
       playwright-core: 1.64.0
 
   '@babel/code-frame@7.29.7':
@@ -8942,28 +8815,28 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@base-ui/react@1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@base-ui/react@1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.7
-      '@base-ui/utils': 0.4.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@base-ui/utils': 0.4.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/utils': 0.2.12
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      use-sync-external-store: 1.7.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      use-sync-external-store: 1.7.0(react@19.3.1)
     optionalDependencies:
       '@date-fns/tz': 1.5.0
       '@types/react': 19.3.0
       date-fns: 4.4.0
 
-  '@base-ui/utils@0.4.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@base-ui/utils@0.4.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@floating-ui/utils': 0.2.12
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       reselect: 5.3.0
-      use-sync-external-store: 1.7.0(react@19.3.0)
+      use-sync-external-store: 1.7.0(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
 
@@ -9026,10 +8899,10 @@ snapshots:
 
   '@date-fns/utc@2.1.1': {}
 
-  '@daypicker/react@10.0.1(@types/react@19.3.0)(react@19.3.0)':
+  '@daypicker/react@10.0.1(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
-      react-day-picker: 10.0.1(@types/react@19.3.0)(react@19.3.0)
+      react: 19.3.1
+      react-day-picker: 10.0.1(@types/react@19.3.0)(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
 
@@ -9109,33 +8982,33 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.14.0(@types/react@18.3.31)(react@19.3.0)(supports-color@8.1.1)':
+  '@emotion/react@11.14.0(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@emotion/babel-plugin': 11.13.5(supports-color@8.1.1)
       '@emotion/cache': 11.14.0
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.0)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.1)
       '@emotion/utils': 1.4.2
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 18.3.31
     transitivePeerDependencies:
       - supports-color
 
-  '@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)':
+  '@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@emotion/babel-plugin': 11.13.5(supports-color@8.1.1)
       '@emotion/cache': 11.14.0
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.0)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.1)
       '@emotion/utils': 1.4.2
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
     transitivePeerDependencies:
@@ -9151,31 +9024,31 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(@types/react@18.3.31)(react@19.3.0)(supports-color@8.1.1)':
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1))(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@emotion/babel-plugin': 11.13.5(supports-color@8.1.1)
       '@emotion/is-prop-valid': 1.4.0
-      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/react': 11.14.0(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.0)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.1)
       '@emotion/utils': 1.4.2
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 18.3.31
     transitivePeerDependencies:
       - supports-color
 
-  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)':
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@emotion/babel-plugin': 11.13.5(supports-color@8.1.1)
       '@emotion/is-prop-valid': 1.4.0
-      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.0)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(react@19.3.1)
       '@emotion/utils': 1.4.2
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
     transitivePeerDependencies:
@@ -9183,9 +9056,9 @@ snapshots:
 
   '@emotion/unitless@0.10.0': {}
 
-  '@emotion/use-insertion-effect-with-fallbacks@1.2.0(react@19.3.0)':
+  '@emotion/use-insertion-effect-with-fallbacks@1.2.0(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
 
   '@emotion/utils@1.4.2': {}
 
@@ -9256,17 +9129,17 @@ snapshots:
       '@floating-ui/core': 1.8.0
       '@floating-ui/utils': 0.2.12
 
-  '@floating-ui/react-dom@2.0.8(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@floating-ui/react-dom@2.0.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@floating-ui/dom': 1.8.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  '@floating-ui/react-dom@2.1.9(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@floating-ui/react-dom@2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@floating-ui/dom': 1.8.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@floating-ui/utils@0.2.12': {}
 
@@ -9939,173 +9812,173 @@ snapshots:
 
   '@radix-ui/primitive@1.1.7': {}
 
-  '@radix-ui/react-compose-refs@1.1.5(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-compose-refs@1.1.5(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-context@1.2.2(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-context@1.2.2(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-dialog@1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@radix-ui/react-dialog@1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@radix-ui/primitive': 1.1.7
-      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-context': 1.2.2(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-dismissable-layer': 1.1.19(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-focus-guards': 1.1.6(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-focus-scope': 1.1.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-id': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-portal': 1.1.17(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-presence': 1.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-slot': 1.3.3(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-use-controllable-state': 1.2.6(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.0)
+      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-context': 1.2.2(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-dismissable-layer': 1.1.19(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-focus-guards': 1.1.6(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-focus-scope': 1.1.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-id': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-portal': 1.1.17(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-presence': 1.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-slot': 1.3.3(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-use-controllable-state': 1.2.6(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.1)
       aria-hidden: 1.2.6
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      react-remove-scroll: 2.7.2(@types/react@19.3.0)(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      react-remove-scroll: 2.7.2(@types/react@19.3.0)(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@radix-ui/react-dismissable-layer@1.1.19(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@radix-ui/react-dismissable-layer@1.1.19(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@radix-ui/primitive': 1.1.7
-      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-use-callback-ref': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-use-effect-event': 0.0.5(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-use-callback-ref': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-use-effect-event': 0.0.5(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@radix-ui/react-focus-guards@1.1.6(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-focus-guards@1.1.6(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-focus-scope@1.1.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@radix-ui/react-focus-scope@1.1.16(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-use-callback-ref': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-    optionalDependencies:
-      '@types/react': 19.3.0
-      '@types/react-dom': 19.3.0(@types/react@19.3.0)
-
-  '@radix-ui/react-id@1.1.4(@types/react@19.3.0)(react@19.3.0)':
-    dependencies:
-      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
-    optionalDependencies:
-      '@types/react': 19.3.0
-
-  '@radix-ui/react-portal@1.1.17(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-use-callback-ref': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@radix-ui/react-presence@1.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@radix-ui/react-id@1.1.4(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
+    optionalDependencies:
+      '@types/react': 19.3.0
+
+  '@radix-ui/react-portal@1.1.17(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@radix-ui/react-primitive@2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@radix-ui/react-presence@1.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@radix-ui/react-slot': 1.3.3(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@radix-ui/react-slot@1.3.3(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-primitive@2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
+      '@radix-ui/react-slot': 1.3.3(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+    optionalDependencies:
+      '@types/react': 19.3.0
+      '@types/react-dom': 19.3.0(@types/react@19.3.0)
+
+  '@radix-ui/react-slot@1.3.3(@types/react@19.3.0)(react@19.3.1)':
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-use-callback-ref@1.1.4(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-use-callback-ref@1.1.4(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-use-controllable-state@1.2.6(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-use-controllable-state@1.2.6(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
       '@radix-ui/primitive': 1.1.7
-      '@radix-ui/react-use-effect-event': 0.0.5(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
+      '@radix-ui/react-use-effect-event': 0.0.5(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-use-effect-event@0.0.5(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-use-effect-event@0.0.5(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      react: 19.3.0
+      '@radix-ui/react-use-layout-effect': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@radix-ui/react-use-layout-effect@1.1.4(@types/react@19.3.0)(react@19.3.0)':
+  '@radix-ui/react-use-layout-effect@1.1.4(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@react-spring/animated@10.1.2(react@19.3.0)':
+  '@react-spring/animated@10.1.2(react@19.3.1)':
     dependencies:
-      '@react-spring/shared': 10.1.2(react@19.3.0)
+      '@react-spring/shared': 10.1.2(react@19.3.1)
       '@react-spring/types': 10.1.2
-      react: 19.3.0
+      react: 19.3.1
 
-  '@react-spring/core@10.1.2(react@19.3.0)':
+  '@react-spring/core@10.1.2(react@19.3.1)':
     dependencies:
-      '@react-spring/animated': 10.1.2(react@19.3.0)
-      '@react-spring/shared': 10.1.2(react@19.3.0)
+      '@react-spring/animated': 10.1.2(react@19.3.1)
+      '@react-spring/shared': 10.1.2(react@19.3.1)
       '@react-spring/types': 10.1.2
-      react: 19.3.0
+      react: 19.3.1
 
   '@react-spring/rafz@10.1.2': {}
 
-  '@react-spring/shared@10.1.2(react@19.3.0)':
+  '@react-spring/shared@10.1.2(react@19.3.1)':
     dependencies:
       '@react-spring/rafz': 10.1.2
       '@react-spring/types': 10.1.2
-      react: 19.3.0
+      react: 19.3.1
 
   '@react-spring/types@10.1.2': {}
 
-  '@react-spring/web@10.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@react-spring/web@10.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@react-spring/animated': 10.1.2(react@19.3.0)
-      '@react-spring/core': 10.1.2(react@19.3.0)
-      '@react-spring/shared': 10.1.2(react@19.3.0)
+      '@react-spring/animated': 10.1.2(react@19.3.1)
+      '@react-spring/core': 10.1.2(react@19.3.1)
+      '@react-spring/shared': 10.1.2(react@19.3.1)
       '@react-spring/types': 10.1.2
       csstype: 3.2.3
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   '@rolldown/binding-android-arm-eabi@1.2.11':
     optional: true
@@ -10339,12 +10212,12 @@ snapshots:
       picocolors: 1.1.1
       pretty-format: 27.5.1
 
-  '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@testing-library/dom': 10.4.2
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
@@ -10500,16 +10373,15 @@ snapshots:
 
   '@types/unist@2.0.11': {}
 
-  '@types/wordpress__block-editor@15.0.6(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)':
+  '@types/wordpress__block-editor@15.0.7(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)':
     dependencies:
       '@types/react': 18.3.31
-      '@wordpress/blocks': 15.27.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/blocks': 15.27.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/element': 6.46.0
-      '@wordpress/global-styles-engine': 1.23.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/keycodes': 4.56.0(@types/react@18.3.31)
-      react-autosize-textarea: 7.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/global-styles-engine': 1.24.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - '@types/react-dom'
@@ -10744,10 +10616,10 @@ snapshots:
 
   '@use-gesture/core@10.3.1': {}
 
-  '@use-gesture/react@10.3.1(react@19.3.0)':
+  '@use-gesture/react@10.3.1(react@19.3.1)':
     dependencies:
       '@use-gesture/core': 10.3.1
-      react: 19.3.0
+      react: 19.3.1
 
   '@vitest/coverage-v8@5.0.4(vitest@5.0.4)':
     dependencies:
@@ -10883,11 +10755,6 @@ snapshots:
     optionalDependencies:
       webpack-dev-server: 5.2.6(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)(webpack-cli@5.1.4)(webpack@5.111.1)
 
-  '@wordpress/a11y@4.56.0':
-    dependencies:
-      '@wordpress/dom-ready': 4.56.0
-      '@wordpress/i18n': 6.30.0
-
   '@wordpress/a11y@4.57.0':
     dependencies:
       '@wordpress/dom-ready': 4.57.0
@@ -10898,8 +10765,6 @@ snapshots:
       '@wordpress/i18n': 6.30.0
       '@wordpress/private-apis': 2.0.0
       '@wordpress/url': 4.57.0
-
-  '@wordpress/autop@4.56.0': {}
 
   '@wordpress/autop@4.57.0': {}
 
@@ -10915,7 +10780,7 @@ snapshots:
       '@wordpress/warning': 3.57.0
       browserslist: 4.29.2
       core-js: 3.50.0
-      react: 19.3.0
+      react: 19.3.1
     transitivePeerDependencies:
       - supports-color
 
@@ -10923,48 +10788,46 @@ snapshots:
 
   '@wordpress/base-styles@6.20.0': {}
 
-  '@wordpress/blob@4.56.0': {}
-
   '@wordpress/blob@4.57.0': {}
 
-  '@wordpress/block-editor@18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/block-editor@18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
-      '@react-spring/web': 10.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@react-spring/web': 10.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 13.3.0
       '@wordpress/blob': 4.57.0
       '@wordpress/block-serialization-default-parser': 5.57.0
-      '@wordpress/blocks': 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/commands': 1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/dataviews': 20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/blocks': 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/commands': 1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/dataviews': 20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/date': 5.57.0
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/global-styles-engine': 1.24.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/global-styles-engine': 1.24.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/hooks': 4.57.0
       '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/image-cropper': 1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/image-cropper': 1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/interactivity': 7.0.0
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/kebab-case': 1.4.0
-      '@wordpress/keyboard-shortcuts': 5.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/keyboard-shortcuts': 5.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
-      '@wordpress/notices': 5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/notices': 5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/priority-queue': 3.57.0
       '@wordpress/private-apis': 2.0.0
-      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.0)
-      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.1)
+      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/style-engine': 2.57.0(@types/react@19.3.0)
       '@wordpress/token-list': 3.57.0
-      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/upload-media': 0.42.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/upload-media': 0.42.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/url': 4.57.0
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
@@ -10976,9 +10839,9 @@ snapshots:
       postcss: 8.5.28
       postcss-prefix-selector: 1.16.1(postcss@8.5.28)
       postcss-urlrebase: 1.4.0(postcss@8.5.28)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      react-easy-crop: 5.5.7(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      react-easy-crop: 5.5.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       remove-accents: 0.5.0
     optionalDependencies:
       '@types/react': 19.3.0
@@ -10993,28 +10856,26 @@ snapshots:
       - supports-color
       - vite
 
-  '@wordpress/block-serialization-default-parser@5.56.0': {}
-
   '@wordpress/block-serialization-default-parser@5.57.0': {}
 
-  '@wordpress/blocks@15.27.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/blocks@15.27.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/autop': 4.56.0
-      '@wordpress/blob': 4.56.0
-      '@wordpress/block-serialization-default-parser': 5.56.0
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/deprecated': 4.56.0
-      '@wordpress/dom': 4.56.0
-      '@wordpress/element': 8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/hooks': 4.56.0
-      '@wordpress/html-entities': 4.56.0
+      '@wordpress/autop': 4.57.0
+      '@wordpress/blob': 4.57.0
+      '@wordpress/block-serialization-default-parser': 5.57.0
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/deprecated': 4.57.0
+      '@wordpress/dom': 4.57.0
+      '@wordpress/element': 8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/hooks': 4.57.0
+      '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
-      '@wordpress/is-shallow-equal': 5.56.0
-      '@wordpress/keycodes': 4.56.0(@types/react@18.3.31)
+      '@wordpress/is-shallow-equal': 5.57.0
+      '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
       '@wordpress/private-apis': 1.56.0
-      '@wordpress/rich-text': 7.56.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/shortcode': 4.56.0
-      '@wordpress/warning': 3.56.0
+      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/shortcode': 4.57.0
+      '@wordpress/warning': 3.57.0
       change-case: 4.1.2
       colord: 2.10.0
       fast-deep-equal: 3.1.3
@@ -11022,7 +10883,7 @@ snapshots:
       is-plain-object: 5.1.0
       marked: 18.0.14
       memize: 2.1.1
-      react: 19.3.0
+      react: 19.3.1
       react-is: 18.3.1
       remove-accents: 0.5.0
       simple-html-tokenizer: 0.5.11
@@ -11033,22 +10894,22 @@ snapshots:
       - '@types/react-dom'
       - react-dom
 
-  '@wordpress/blocks@16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/blocks@16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/autop': 4.57.0
       '@wordpress/blob': 4.57.0
       '@wordpress/block-serialization-default-parser': 5.57.0
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/hooks': 4.57.0
       '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
       '@wordpress/private-apis': 2.0.0
-      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/shortcode': 4.57.0
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
@@ -11058,8 +10919,8 @@ snapshots:
       is-plain-object: 5.1.0
       marked: 18.0.14
       memize: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       react-is: 19.3.0
       remove-accents: 0.5.0
       simple-html-tokenizer: 0.5.11
@@ -11068,22 +10929,22 @@ snapshots:
       '@types/react': 18.3.31
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/blocks@16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/blocks@16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/autop': 4.57.0
       '@wordpress/blob': 4.57.0
       '@wordpress/block-serialization-default-parser': 5.57.0
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/hooks': 4.57.0
       '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
       '@wordpress/private-apis': 2.0.0
-      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/shortcode': 4.57.0
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
@@ -11093,8 +10954,8 @@ snapshots:
       is-plain-object: 5.1.0
       marked: 18.0.14
       memize: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       react-is: 19.3.0
       remove-accents: 0.5.0
       simple-html-tokenizer: 0.5.11
@@ -11105,22 +10966,22 @@ snapshots:
 
   '@wordpress/browserslist-config@6.57.0': {}
 
-  '@wordpress/commands@1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/commands@1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/keyboard-shortcuts': 5.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/keyboard-shortcuts': 5.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
-      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/private-apis': 2.0.0
       clsx: 2.1.1
-      cmdk: 1.1.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      cmdk: 1.1.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     transitivePeerDependencies:
       - '@date-fns/tz'
       - '@emotion/is-prop-valid'
@@ -11133,55 +10994,55 @@ snapshots:
       - supports-color
       - vite
 
-  '@wordpress/components@30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)':
+  '@wordpress/components@30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)':
     dependencies:
-      '@ariakit/react': 0.4.40(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@ariakit/react': 0.4.40(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@date-fns/utc': 2.1.1
       '@emotion/cache': 11.14.0
       '@emotion/css': 11.13.5(supports-color@8.1.1)
-      '@emotion/react': 11.14.0(@types/react@18.3.31)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/react': 11.14.0(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/serialize': 1.3.3
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(@types/react@18.3.31)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1))(@types/react@18.3.31)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/utils': 1.4.2
-      '@floating-ui/react-dom': 2.0.8(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@floating-ui/react-dom': 2.0.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@types/gradient-parser': 1.1.0
       '@types/highlight-words-core': 1.2.1
-      '@use-gesture/react': 10.3.1(react@19.3.0)
-      '@wordpress/a11y': 4.56.0
+      '@use-gesture/react': 10.3.1(react@19.3.1)
+      '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 6.20.0
-      '@wordpress/compose': 7.46.0(@types/react@18.3.31)(react@19.3.0)
-      '@wordpress/date': 5.56.0
-      '@wordpress/deprecated': 4.56.0
-      '@wordpress/dom': 4.56.0
+      '@wordpress/compose': 7.46.0(@types/react@18.3.31)(react@19.3.1)
+      '@wordpress/date': 5.57.0
+      '@wordpress/deprecated': 4.57.0
+      '@wordpress/dom': 4.57.0
       '@wordpress/element': 6.46.0
-      '@wordpress/escape-html': 3.56.0
-      '@wordpress/hooks': 4.56.0
-      '@wordpress/html-entities': 4.56.0
+      '@wordpress/escape-html': 3.57.0
+      '@wordpress/hooks': 4.57.0
+      '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 11.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/is-shallow-equal': 5.56.0
-      '@wordpress/keycodes': 4.56.0(@types/react@18.3.31)
-      '@wordpress/primitives': 4.56.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/icons': 11.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/is-shallow-equal': 5.57.0
+      '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
+      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/private-apis': 1.56.0
-      '@wordpress/rich-text': 7.56.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/warning': 3.56.0
+      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/warning': 3.57.0
       change-case: 4.1.2
       clsx: 2.1.1
       colord: 2.10.0
       date-fns: 3.6.0
       deepmerge: 4.3.1
       fast-deep-equal: 3.1.3
-      framer-motion: 11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      framer-motion: 11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       gradient-parser: 1.1.1
       highlight-words-core: 1.2.3
       is-plain-object: 5.1.0
       memize: 2.1.1
       path-to-regexp: 6.3.0
-      re-resizable: 6.11.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react: 19.3.0
-      react-colorful: 5.8.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react-day-picker: 9.14.0(react@19.3.0)
-      react-dom: 19.3.0(react@19.3.0)
+      re-resizable: 6.11.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-colorful: 5.8.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-day-picker: 9.14.0(react@19.3.1)
+      react-dom: 19.3.1(react@19.3.1)
       remove-accents: 0.5.0
       uuid: 9.0.1
     transitivePeerDependencies:
@@ -11190,41 +11051,41 @@ snapshots:
       - '@types/react-dom'
       - supports-color
 
-  '@wordpress/components@42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/components@42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
-      '@ariakit/react': 0.4.40(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@ariakit/react': 0.4.40(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@date-fns/utc': 2.1.1
       '@emotion/cache': 11.14.0
       '@emotion/css': 11.13.5(supports-color@8.1.1)
-      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/serialize': 1.3.3
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/utils': 1.4.2
-      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@types/gradient-parser': 1.1.0
       '@types/highlight-words-core': 1.2.3
-      '@use-gesture/react': 10.3.1(react@19.3.0)
+      '@use-gesture/react': 10.3.1(react@19.3.1)
       '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/date': 5.57.0
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/escape-html': 3.57.0
       '@wordpress/hooks': 4.57.0
       '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/kebab-case': 1.4.0
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
-      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/private-apis': 2.0.0
-      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.0)
-      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.1)
+      '@wordpress/rich-text': 7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/style-runtime': 0.13.0
-      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
       clsx: 2.1.1
@@ -11233,16 +11094,16 @@ snapshots:
       date-fns: 4.4.0
       deepmerge: 4.3.1
       fast-deep-equal: 3.1.3
-      framer-motion: 11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      framer-motion: 11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       gradient-parser: 1.2.0
       highlight-words-core: 1.2.3
       is-plain-object: 5.1.0
       memize: 2.1.1
       path-to-regexp: 6.3.0
-      re-resizable: 6.11.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react: 19.3.0
-      react-colorful: 5.8.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react-dom: 19.3.0(react@19.3.0)
+      re-resizable: 6.11.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-colorful: 5.8.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-dom: 19.3.1(react@19.3.1)
       remove-accents: 0.5.0
       uuid: 14.0.2
     optionalDependencies:
@@ -11258,29 +11119,29 @@ snapshots:
       - supports-color
       - vite
 
-  '@wordpress/compose@7.46.0(@types/react@18.3.31)(react@19.3.0)':
-    dependencies:
-      '@types/mousetrap': 1.6.15
-      '@wordpress/deprecated': 4.56.0
-      '@wordpress/dom': 4.56.0
-      '@wordpress/element': 6.46.0
-      '@wordpress/is-shallow-equal': 5.56.0
-      '@wordpress/keycodes': 4.56.0(@types/react@18.3.31)
-      '@wordpress/priority-queue': 3.56.0
-      '@wordpress/undo-manager': 1.56.0
-      change-case: 4.1.2
-      mousetrap: 1.6.5
-      react: 19.3.0
-      use-memo-one: 1.1.3(react@19.3.0)
-    transitivePeerDependencies:
-      - '@types/react'
-
-  '@wordpress/compose@8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/compose@7.46.0(@types/react@18.3.31)(react@19.3.1)':
     dependencies:
       '@types/mousetrap': 1.6.15
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 6.46.0
+      '@wordpress/is-shallow-equal': 5.57.0
+      '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
+      '@wordpress/priority-queue': 3.57.0
+      '@wordpress/undo-manager': 1.57.0
+      change-case: 4.1.2
+      mousetrap: 1.6.5
+      react: 19.3.1
+      use-memo-one: 1.1.3(react@19.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+
+  '@wordpress/compose@8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@types/mousetrap': 1.6.15
+      '@wordpress/deprecated': 4.57.0
+      '@wordpress/dom': 4.57.0
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
       '@wordpress/priority-queue': 3.57.0
@@ -11288,18 +11149,18 @@ snapshots:
       '@wordpress/undo-manager': 1.57.0
       change-case: 4.1.2
       mousetrap: 1.6.5
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 18.3.31
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/compose@8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/compose@8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@types/mousetrap': 1.6.15
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
       '@wordpress/priority-queue': 3.57.0
@@ -11307,38 +11168,17 @@ snapshots:
       '@wordpress/undo-manager': 1.57.0
       change-case: 4.1.2
       mousetrap: 1.6.5
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/compose@8.9.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/data@10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@types/mousetrap': 1.6.15
-      '@wordpress/deprecated': 4.56.0
-      '@wordpress/dom': 4.56.0
-      '@wordpress/element': 8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/is-shallow-equal': 5.56.0
-      '@wordpress/keycodes': 4.56.0(@types/react@18.3.31)
-      '@wordpress/priority-queue': 3.56.0
-      '@wordpress/private-apis': 1.56.0
-      '@wordpress/undo-manager': 1.56.0
-      change-case: 4.1.2
-      mousetrap: 1.6.5
-      react: 19.3.0
-      use-memo-one: 1.1.3(react@19.3.0)
-    optionalDependencies:
-      '@types/react': 18.3.31
-    transitivePeerDependencies:
-      - '@types/react-dom'
-      - react-dom
-
-  '@wordpress/data@10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/priority-queue': 3.57.0
       '@wordpress/private-apis': 2.0.0
@@ -11347,19 +11187,19 @@ snapshots:
       equivalent-key-map: 0.2.2
       is-plain-object: 5.1.0
       is-promise: 4.0.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       redux: 5.0.1
       rememo: 4.0.2
     optionalDependencies:
       '@types/react': 18.3.31
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/data@10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/data@10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/priority-queue': 3.57.0
       '@wordpress/private-apis': 2.0.0
@@ -11368,42 +11208,42 @@ snapshots:
       equivalent-key-map: 0.2.2
       is-plain-object: 5.1.0
       is-promise: 4.0.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       redux: 5.0.1
       rememo: 4.0.2
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/dataviews@20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/dataviews@20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
-      '@ariakit/react': 0.4.40(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@base-ui/react': 1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@ariakit/react': 0.4.40(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@base-ui/react': 1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@date-fns/tz': 1.5.0
-      '@daypicker/react': 10.0.1(@types/react@19.3.0)(react@19.3.0)
+      '@daypicker/react': 10.0.1(@types/react@19.3.0)(react@19.3.1)
       '@emotion/cache': 11.14.0
       '@emotion/css': 11.13.5(supports-color@8.1.1)
-      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
+      '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.1)(supports-color@8.1.1)
       '@emotion/utils': 1.4.2
-      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@use-gesture/react': 10.3.1(react@19.3.0)
+      '@floating-ui/react-dom': 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@use-gesture/react': 10.3.1(react@19.3.1)
       '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/date': 5.57.0
       '@wordpress/deprecated': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/hooks': 4.57.0
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/kebab-case': 1.4.0
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
-      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.0)
-      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.1)
+      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
       clsx: 2.1.1
@@ -11412,13 +11252,13 @@ snapshots:
       date-fns: 4.4.0
       deepmerge: 4.3.1
       fast-deep-equal: 3.1.3
-      framer-motion: 11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      framer-motion: 11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       highlight-words-core: 1.2.3
       is-plain-object: 5.1.0
       memize: 2.1.1
-      react: 19.3.0
-      react-colorful: 5.8.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-colorful: 5.8.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-dom: 19.3.1(react@19.3.1)
       remove-accents: 0.5.0
       uuid: 14.0.2
     optionalDependencies:
@@ -11432,12 +11272,6 @@ snapshots:
       - stylelint
       - supports-color
       - vite
-
-  '@wordpress/date@5.56.0':
-    dependencies:
-      '@wordpress/deprecated': 4.56.0
-      moment: 2.31.0
-      moment-timezone: 0.5.48
 
   '@wordpress/date@5.57.0':
     dependencies:
@@ -11450,21 +11284,11 @@ snapshots:
       json2php: 0.0.9
       webpack: 5.111.1(cssnano@6.1.2(postcss@8.5.28))(csso@5.0.5)(lightningcss@1.33.0)(postcss@8.5.28)(svgo@3.3.5)(webpack-cli@5.1.4)
 
-  '@wordpress/deprecated@4.56.0':
-    dependencies:
-      '@wordpress/hooks': 4.56.0
-
   '@wordpress/deprecated@4.57.0':
     dependencies:
       '@wordpress/hooks': 4.57.0
 
-  '@wordpress/dom-ready@4.56.0': {}
-
   '@wordpress/dom-ready@4.57.0': {}
-
-  '@wordpress/dom@4.56.0':
-    dependencies:
-      '@wordpress/deprecated': 4.56.0
 
   '@wordpress/dom@4.57.0':
     dependencies:
@@ -11493,56 +11317,54 @@ snapshots:
     dependencies:
       '@types/react': 18.3.31
       '@types/react-dom': 18.3.7(@types/react@18.3.31)
-      '@wordpress/escape-html': 3.56.0
+      '@wordpress/escape-html': 3.57.0
       change-case: 4.1.2
       is-plain-object: 5.1.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@wordpress/element@8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      '@wordpress/escape-html': 3.56.0
-      change-case: 4.1.2
-      is-plain-object: 5.1.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-    optionalDependencies:
-      '@types/react': 18.3.31
-      '@types/react-dom': 19.3.0(@types/react@19.3.0)
-
-  '@wordpress/element@9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/element@8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/escape-html': 3.57.0
       change-case: 4.1.2
       is-plain-object: 5.1.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 18.3.31
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/element@9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/element@9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/escape-html': 3.57.0
       change-case: 4.1.2
       is-plain-object: 5.1.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.31
+      '@types/react-dom': 19.3.0(@types/react@19.3.0)
+
+  '@wordpress/element@9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@wordpress/escape-html': 3.57.0
+      change-case: 4.1.2
+      is-plain-object: 5.1.0
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/escape-html@3.56.0': {}
-
   '@wordpress/escape-html@3.57.0': {}
 
-  '@wordpress/eslint-plugin@27.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(wp-prettier@3.9.6)':
+  '@wordpress/eslint-plugin@27.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(wp-prettier@3.9.6)':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.8.1(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))
       '@eslint/compat': 2.1.1(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))
       '@vitest/eslint-plugin': 1.6.27(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2)(vitest@5.0.4)
       '@wordpress/prettier-config': 4.57.0(wp-prettier@3.9.6)
-      '@wordpress/theme': 2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/theme': 2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       cosmiconfig: 7.1.0
       eslint: 10.11.0(jiti@2.7.0)(supports-color@8.1.1)
       eslint-config-prettier: 10.1.8(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))
@@ -11580,28 +11402,28 @@ snapshots:
       - vite
       - vitest
 
-  '@wordpress/global-styles-engine@1.23.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/global-styles-engine@1.24.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/blocks': 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/blocks': 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
-      '@wordpress/private-apis': 1.56.0
-      '@wordpress/style-engine': 2.56.0(@types/react@18.3.31)
+      '@wordpress/private-apis': 2.0.0
+      '@wordpress/style-engine': 2.57.0(@types/react@18.3.31)
       colord: 2.10.0
       deepmerge: 4.3.1
       fast-deep-equal: 3.1.3
       is-plain-object: 5.1.0
       memize: 2.1.1
-    transitivePeerDependencies:
-      - '@types/react'
-      - '@types/react-dom'
-      - react
-      - react-dom
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.31
+      '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/global-styles-engine@1.24.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/global-styles-engine@1.24.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/blocks': 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/blocks': 16.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
       '@wordpress/private-apis': 2.0.0
       '@wordpress/style-engine': 2.57.0(@types/react@19.3.0)
@@ -11610,17 +11432,13 @@ snapshots:
       fast-deep-equal: 3.1.3
       is-plain-object: 5.1.0
       memize: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/hooks@4.56.0': {}
-
   '@wordpress/hooks@4.57.0': {}
-
-  '@wordpress/html-entities@4.56.0': {}
 
   '@wordpress/html-entities@4.57.0': {}
 
@@ -11631,37 +11449,37 @@ snapshots:
       gettext-parser: 1.4.0
       tannin: 1.2.0
 
-  '@wordpress/icons@11.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/icons@11.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/element': 6.46.0
-      '@wordpress/primitives': 4.56.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       change-case: 4.1.2
-      react: 19.3.0
+      react: 19.3.1
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
       - react-dom
 
-  '@wordpress/icons@18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/icons@18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       change-case: 4.1.2
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/image-cropper@1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/image-cropper@1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
       dequal: 2.0.3
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      react-easy-crop: 5.5.7(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+      react-easy-crop: 5.5.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
     transitivePeerDependencies:
@@ -11683,30 +11501,22 @@ snapshots:
     transitivePeerDependencies:
       - preact-render-to-string
 
-  '@wordpress/is-shallow-equal@5.56.0': {}
-
   '@wordpress/is-shallow-equal@5.57.0': {}
 
   '@wordpress/kebab-case@1.4.0':
     dependencies:
       change-case: 4.1.2
 
-  '@wordpress/keyboard-shortcuts@5.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/keyboard-shortcuts@5.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
-
-  '@wordpress/keycodes@4.56.0(@types/react@18.3.31)':
-    dependencies:
-      '@wordpress/i18n': 6.30.0
-    optionalDependencies:
-      '@types/react': 18.3.31
 
   '@wordpress/keycodes@4.57.0(@types/react@18.3.31)':
     dependencies:
@@ -11720,14 +11530,14 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@wordpress/notices@5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/notices@5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       '@wordpress/a11y': 4.57.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
@@ -11752,20 +11562,20 @@ snapshots:
       postcss: 8.5.28
       postcss-import: 16.2.0(postcss@8.5.28)
 
-  '@wordpress/preferences@4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/preferences@4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/private-apis': 2.0.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
     transitivePeerDependencies:
@@ -11783,30 +11593,25 @@ snapshots:
     dependencies:
       prettier: wp-prettier@3.9.6
 
-  '@wordpress/primitives@4.56.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/primitives@4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/element': 8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 19.3.0
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 18.3.31
-    transitivePeerDependencies:
-      - '@types/react-dom'
-      - react-dom
+      '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/primitives@4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/primitives@4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       clsx: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
-
-  '@wordpress/priority-queue@3.56.0':
-    dependencies:
-      requestidlecallback: 0.3.0
 
   '@wordpress/priority-queue@3.57.0':
     dependencies:
@@ -11816,9 +11621,9 @@ snapshots:
 
   '@wordpress/private-apis@2.0.0': {}
 
-  '@wordpress/react-inert-value@1.0.0(@types/react@19.3.0)(react@19.3.0)':
+  '@wordpress/react-inert-value@1.0.0(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
@@ -11829,65 +11634,45 @@ snapshots:
       redux: 5.0.1
       rungen: 0.3.2
 
-  '@wordpress/rich-text@7.56.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      '@wordpress/a11y': 4.56.0
-      '@wordpress/compose': 8.9.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/deprecated': 4.56.0
-      '@wordpress/dom': 4.56.0
-      '@wordpress/element': 8.8.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/escape-html': 3.56.0
-      '@wordpress/i18n': 6.30.0
-      '@wordpress/keycodes': 4.56.0(@types/react@18.3.31)
-      '@wordpress/private-apis': 1.56.0
-      colord: 2.10.0
-      react: 19.3.0
-    optionalDependencies:
-      '@types/react': 18.3.31
-    transitivePeerDependencies:
-      - '@types/react-dom'
-      - react-dom
-
-  '@wordpress/rich-text@7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/rich-text@7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/a11y': 4.57.0
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@18.3.31)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/escape-html': 3.57.0
       '@wordpress/i18n': 6.30.0
       '@wordpress/keycodes': 4.57.0(@types/react@18.3.31)
       '@wordpress/private-apis': 2.0.0
       colord: 2.10.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 18.3.31
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/rich-text@7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/rich-text@7.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/a11y': 4.57.0
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/escape-html': 3.57.0
       '@wordpress/i18n': 6.30.0
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
       '@wordpress/private-apis': 2.0.0
       colord: 2.10.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
       '@types/react-dom': 19.3.0(@types/react@19.3.0)
 
-  '@wordpress/scripts@36.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.5)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(yauzl@2.10.0)':
+  '@wordpress/scripts@36.1.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.5)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(jiti@2.7.0)(lightningcss@1.33.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)(svgo@3.3.5)(type-fest@4.41.0)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(yauzl@2.10.0)':
     dependencies:
       '@babel/core': 7.25.7(supports-color@8.1.1)
       '@pmmmwh/react-refresh-webpack-plugin': 0.5.17(react-refresh@0.14.2)(type-fest@4.41.0)(webpack-dev-server@5.2.6)(webpack@5.111.1)
@@ -11896,11 +11681,11 @@ snapshots:
       '@wordpress/browserslist-config': 6.57.0
       '@wordpress/dependency-extraction-webpack-plugin': 6.57.0(webpack@5.111.1)
       '@wordpress/e2e-test-utils-playwright': 3.0.0(@opentelemetry/core@2.11.0(@opentelemetry/api@1.9.1))(@playwright/test@1.64.0)(@types/node@26.6.5)(supports-color@8.1.1)(yauzl@2.10.0)
-      '@wordpress/eslint-plugin': 27.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(wp-prettier@3.9.6)
+      '@wordpress/eslint-plugin': 27.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(@typescript-eslint/parser@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2))(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(supports-color@8.1.1)(typescript@7.0.2)(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))(vitest@5.0.4)(wp-prettier@3.9.6)
       '@wordpress/npm-package-json-lint-config': 5.57.0(npm-package-json-lint@6.4.0(supports-color@8.1.1)(typescript@7.0.2))
       '@wordpress/postcss-plugins-preset': 5.57.0(postcss@8.5.28)
       '@wordpress/prettier-config': 4.57.0(wp-prettier@3.9.6)
-      '@wordpress/stylelint-config': 26.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/stylelint-config': 26.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       adm-zip: 0.6.1
       babel-loader: 9.2.1(@babel/core@7.25.7(supports-color@8.1.1))(webpack@5.111.1)
       browserslist: 4.29.2
@@ -11922,8 +11707,8 @@ snapshots:
       postcss: 8.5.28
       postcss-loader: 6.2.1(postcss@8.5.28)(webpack@5.111.1)
       prettier: wp-prettier@3.9.6
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       react-refresh: 0.14.2
       read-pkg-up: 7.0.1
       resolve-bin: 1.0.1
@@ -11988,15 +11773,11 @@ snapshots:
       - webpack-plugin-serve
       - yauzl
 
-  '@wordpress/shortcode@4.56.0':
-    dependencies:
-      memize: 2.1.1
-
   '@wordpress/shortcode@4.57.0':
     dependencies:
       memize: 2.1.1
 
-  '@wordpress/style-engine@2.56.0(@types/react@18.3.31)':
+  '@wordpress/style-engine@2.57.0(@types/react@18.3.31)':
     dependencies:
       change-case: 4.1.2
     optionalDependencies:
@@ -12010,10 +11791,10 @@ snapshots:
 
   '@wordpress/style-runtime@0.13.0': {}
 
-  '@wordpress/stylelint-config@26.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/stylelint-config@26.1.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint-scss@7.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2)))(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       '@stylistic/stylelint-plugin': 5.3.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))
-      '@wordpress/theme': 2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/theme': 2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       stylelint: 17.15.0(supports-color@8.1.1)(typescript@7.0.2)
       stylelint-config-recommended: 18.0.0(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))
       stylelint-config-recommended-scss: 17.0.1(postcss@8.5.28)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))
@@ -12028,15 +11809,15 @@ snapshots:
       - react-dom
       - vite
 
-  '@wordpress/theme@2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/theme@2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       '@babel/parser': 7.29.9
       '@babel/types': 7.29.8
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/trace-mapping': 0.3.31
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/deprecated': 4.57.0
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/private-apis': 2.0.0
       '@wordpress/style-runtime': 0.13.0
       colorjs.io: 0.7.1
@@ -12046,8 +11827,8 @@ snapshots:
       '@types/react': 19.3.0
       lightningcss: 1.33.0
       postcss: 8.5.28
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       stylelint: 17.15.0(supports-color@8.1.1)(typescript@7.0.2)
       vite: 8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1)
     transitivePeerDependencies:
@@ -12055,26 +11836,26 @@ snapshots:
 
   '@wordpress/token-list@3.57.0': {}
 
-  '@wordpress/ui@0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
+  '@wordpress/ui@0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
-      '@base-ui/react': 1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@daypicker/react': 10.0.1(@types/react@19.3.0)(react@19.3.0)
+      '@base-ui/react': 1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@daypicker/react': 10.0.1(@types/react@19.3.0)(react@19.3.1)
       '@wordpress/a11y': 4.57.0
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
-      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/icons': 18.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/keycodes': 4.57.0(@types/react@19.3.0)
-      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/primitives': 4.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/private-apis': 2.0.0
-      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.0)
+      '@wordpress/react-inert-value': 1.0.0(@types/react@19.3.0)(react@19.3.1)
       '@wordpress/style-runtime': 0.13.0
-      '@wordpress/theme': 2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
+      '@wordpress/theme': 2.3.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(lightningcss@1.33.0)(postcss@8.5.28)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(stylelint@17.15.0(supports-color@8.1.1)(typescript@7.0.2))(vite@8.3.1(@types/node@26.6.5)(jiti@2.7.0)(sass@1.105.0)(terser@5.51.2)(yaml@2.9.1))
       '@wordpress/warning': 3.57.0
       clsx: 2.1.1
       date-fns: 4.4.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       tabbable: 6.5.0
     optionalDependencies:
       '@types/react': 19.3.0
@@ -12087,27 +11868,23 @@ snapshots:
       - stylelint
       - vite
 
-  '@wordpress/undo-manager@1.56.0':
-    dependencies:
-      '@wordpress/is-shallow-equal': 5.56.0
-
   '@wordpress/undo-manager@1.57.0':
     dependencies:
       '@wordpress/is-shallow-equal': 5.57.0
 
-  '@wordpress/upload-media@0.42.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@wordpress/upload-media@0.42.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@wordpress/blob': 4.57.0
-      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@wordpress/compose': 8.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/data': 10.57.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@wordpress/element': 9.0.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wordpress/i18n': 6.30.0
       '@wordpress/private-apis': 2.0.0
       '@wordpress/url': 4.57.0
       '@wordpress/video-conversion': 0.8.0
       '@wordpress/vips': 4.3.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       uuid: 14.0.2
     optionalDependencies:
       '@types/react': 19.3.0
@@ -12127,8 +11904,6 @@ snapshots:
     dependencies:
       '@wordpress/worker-threads': 1.17.0
       wasm-vips: 0.0.18
-
-  '@wordpress/warning@3.56.0': {}
 
   '@wordpress/warning@3.57.0': {}
 
@@ -12336,13 +12111,13 @@ snapshots:
       postcss: 8.5.28
       postcss-value-parser: 4.2.0
 
-  autosize@4.0.4: {}
-
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.1.0
 
   axe-core@4.13.0: {}
+
+  axe-core@4.14.0: {}
 
   axobject-query@4.1.0: {}
 
@@ -12619,14 +12394,14 @@ snapshots:
 
   clsx@2.1.1: {}
 
-  cmdk@1.1.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  cmdk@1.1.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
-      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-dialog': 1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@radix-ui/react-id': 1.1.4(@types/react@19.3.0)(react@19.3.0)
-      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-dialog': 1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@radix-ui/react-id': 1.1.4(@types/react@19.3.0)(react@19.3.1)
+      '@radix-ui/react-primitive': 2.1.10(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -12675,8 +12450,6 @@ snapshots:
       vary: 1.1.2
     transitivePeerDependencies:
       - supports-color
-
-  computed-style@0.1.4: {}
 
   concat-map@0.0.1: {}
 
@@ -13593,15 +13366,15 @@ snapshots:
 
   fraction.js@5.3.4: {}
 
-  framer-motion@11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  framer-motion@11.18.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       motion-dom: 11.18.1
       motion-utils: 11.18.1
       tslib: 2.8.1
     optionalDependencies:
       '@emotion/is-prop-valid': 1.4.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
   fresh@0.5.2: {}
 
@@ -14371,10 +14144,6 @@ snapshots:
       lightningcss-win32-x64-msvc: 1.33.0
 
   lilconfig@3.1.3: {}
-
-  line-height@0.3.1:
-    dependencies:
-      computed-style: 0.1.4
 
   lines-and-columns@1.2.4: {}
 
@@ -15521,39 +15290,31 @@ snapshots:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
-  re-resizable@6.11.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  re-resizable@6.11.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  react-autosize-textarea@7.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  react-colorful@5.8.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
-      autosize: 4.0.4
-      line-height: 0.3.1
-      prop-types: 15.8.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
 
-  react-colorful@5.8.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
-    dependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-
-  react-day-picker@10.0.1(@types/react@19.3.0)(react@19.3.0):
+  react-day-picker@10.0.1(@types/react@19.3.0)(react@19.3.1):
     dependencies:
       '@date-fns/tz': 1.5.0
       date-fns: 4.4.0
-      react: 19.3.0
+      react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-day-picker@9.14.0(react@19.3.0):
+  react-day-picker@9.14.0(react@19.3.1):
     dependencies:
       '@date-fns/tz': 1.5.0
       '@tabby_ai/hijri-converter': 1.0.5
       date-fns: 4.4.0
       date-fns-jalali: 4.1.0-0
-      react: 19.3.0
+      react: 19.3.1
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
@@ -15561,16 +15322,16 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-dom@19.3.0(react@19.3.0):
+  react-dom@19.3.1(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
       scheduler: 0.28.0
 
-  react-easy-crop@5.5.7(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  react-easy-crop@5.5.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       normalize-wheel: 1.0.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
       tslib: 2.8.1
 
   react-is@16.13.1: {}
@@ -15583,29 +15344,29 @@ snapshots:
 
   react-refresh@0.14.2: {}
 
-  react-remove-scroll-bar@2.3.8(@types/react@19.3.0)(react@19.3.0):
+  react-remove-scroll-bar@2.3.8(@types/react@19.3.0)(react@19.3.1):
     dependencies:
-      react: 19.3.0
-      react-style-singleton: 2.2.3(@types/react@19.3.0)(react@19.3.0)
+      react: 19.3.1
+      react-style-singleton: 2.2.3(@types/react@19.3.0)(react@19.3.1)
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-remove-scroll@2.7.2(@types/react@19.3.0)(react@19.3.0):
+  react-remove-scroll@2.7.2(@types/react@19.3.0)(react@19.3.1):
     dependencies:
-      react: 19.3.0
-      react-remove-scroll-bar: 2.3.8(@types/react@19.3.0)(react@19.3.0)
-      react-style-singleton: 2.2.3(@types/react@19.3.0)(react@19.3.0)
+      react: 19.3.1
+      react-remove-scroll-bar: 2.3.8(@types/react@19.3.0)(react@19.3.1)
+      react-style-singleton: 2.2.3(@types/react@19.3.0)(react@19.3.1)
       tslib: 2.8.1
-      use-callback-ref: 1.3.3(@types/react@19.3.0)(react@19.3.0)
-      use-sidecar: 1.1.3(@types/react@19.3.0)(react@19.3.0)
+      use-callback-ref: 1.3.3(@types/react@19.3.0)(react@19.3.1)
+      use-sidecar: 1.1.3(@types/react@19.3.0)(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-style-singleton@2.2.3(@types/react@19.3.0)(react@19.3.0):
+  react-style-singleton@2.2.3(@types/react@19.3.0)(react@19.3.1):
     dependencies:
       get-nonce: 1.0.1
-      react: 19.3.0
+      react: 19.3.1
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.3.0
@@ -15614,7 +15375,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  react@19.3.0: {}
+  react@19.3.1: {}
 
   read-cache@1.0.2: {}
 
@@ -16621,28 +16382,28 @@ snapshots:
       schema-utils: 3.3.0
       webpack: 5.111.1(cssnano@6.1.2(postcss@8.5.28))(csso@5.0.5)(lightningcss@1.33.0)(postcss@8.5.28)(svgo@3.3.5)(webpack-cli@5.1.4)
 
-  use-callback-ref@1.3.3(@types/react@19.3.0)(react@19.3.0):
+  use-callback-ref@1.3.3(@types/react@19.3.0)(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  use-memo-one@1.1.3(react@19.3.0):
+  use-memo-one@1.1.3(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
 
-  use-sidecar@1.1.3(@types/react@19.3.0)(react@19.3.0):
+  use-sidecar@1.1.3(@types/react@19.3.0)(react@19.3.1):
     dependencies:
       detect-node-es: 1.1.0
-      react: 19.3.0
+      react: 19.3.1
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.3.0
 
-  use-sync-external-store@1.7.0(react@19.3.0):
+  use-sync-external-store@1.7.0(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
 
   util-deprecate@1.0.2: {}
 
