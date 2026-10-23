@@ -43,9 +43,10 @@ function declarePlatformOverHttps( context ) {
 }
 
 // EMBED_SCRIPT_URL sends the script request to another build of embed.js, for
-// the live canary. The API stays the mock: the script takes its API origin from
-// the src of its own script tag, which is still the mock host.
-const EMBED_SCRIPT = /^\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/;
+// the live canary. The plugin serves its own copy from the plugin folder, so
+// that request is the one replaced. The API stays the mock: the script takes
+// its API origin from the data-platform attribute declared above.
+const PLUGIN_EMBED_SCRIPT = /\/wp-content\/plugins\/[^/]+\/build\/embed\/embed\.js(\?.*)?$/;
 
 const HOST = 'div[data-profotograaf-gallery="g-e2e"]';
 const PAGE_URL = 'http://mock-platform:8090/share/g/spring-wedding';
@@ -117,11 +118,16 @@ async function openEmbed( browser, url, viewport = { width: 1440, height: 900 },
 	const context = await browser.newContext( { viewport, ...device } );
 	await context.route( PLATFORM_HOST, async ( route ) => {
 		const [ , path ] = PLATFORM_HOST.exec( route.request().url() );
-		const live = process.env.EMBED_SCRIPT_URL;
-		const target = live && EMBED_SCRIPT.test( path ) ? live : MOCK + path;
-		const response = await route.fetch( { url: target } );
+		const response = await route.fetch( { url: MOCK + path } );
 		await route.fulfill( { response } );
 	} );
+	const live = process.env.EMBED_SCRIPT_URL;
+	if ( live ) {
+		await context.route( PLUGIN_EMBED_SCRIPT, async ( route ) => {
+			const response = await route.fetch( { url: live } );
+			await route.fulfill( { response } );
+		} );
+	}
 	await declarePlatformOverHttps( context );
 	await setup( context );
 	const page = await context.newPage();
