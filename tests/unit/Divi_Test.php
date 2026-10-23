@@ -147,4 +147,32 @@ class Divi_Test extends Wp_Test_Case {
 		$this->assertSame( 'on', $seen['attrs']['lightbox'] );
 		$this->assertSame( 'Wedding', $seen['attrs']['galleryTitle'] );
 	}
+
+	/**
+	 * Divi 5 runs a Divi 4 module in legacy mode: the saved props keep the Divi 4
+	 * field names and carry keys of Divi's own. Only the six fields count.
+	 */
+	public function test_legacy_mode_props_with_foreign_keys_render_the_same(): void {
+		$module        = $this->module();
+		$module->props = array(
+			'gallery_id'    => 'g_123',
+			'layout'        => 'grid',
+			'module_id'     => 'x1',
+			'admin_label'   => 'My gallery',
+			'custom_margin' => '10px|0|10px|0',
+		);
+		$seen          = array();
+		Functions\when( 'render_block' )->alias(
+			function ( array $block ) use ( &$seen ): string {
+				$seen = $block;
+				return 'ok';
+			}
+		);
+
+		$this->assertSame( 'ok', $module->render( array(), null, 'profotograaf_gallery' ) );
+		$this->assertSame( 'grid', $seen['attrs']['layout'] );
+		$this->assertArrayNotHasKey( 'module_id', $seen['attrs'] );
+		$this->assertArrayNotHasKey( 'admin_label', $seen['attrs'] );
+		$this->assertArrayNotHasKey( 'custom_margin', $seen['attrs'] );
+	}
 }
