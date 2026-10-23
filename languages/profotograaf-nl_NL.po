@@ -212,21 +212,21 @@ msgstr "Deze koppeling mag nog geen galerijen aanzetten. Koppel deze site opnieu
 msgid "A lead needs a name and an email address."
 msgstr "Een aanvraag heeft een naam en een e-mailadres nodig."
 
-#: includes/class-api-client.php:331
+#: includes/class-api-client.php:335
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "De verbinding wordt vernieuwd. Probeer het zo opnieuw."
 
-#: includes/class-api-client.php:355
+#: includes/class-api-client.php:363
 msgid "The connection was ended in your Profotograaf account."
 msgstr "De verbinding is beëindigd in je Profotograaf-account."
 
-#: includes/class-api-client.php:430
+#: includes/class-api-client.php:438
 msgid "The request could not be encoded."
 msgstr "Het verzoek kon niet worden gecodeerd."
 
-#: includes/class-api-client.php:299
-#: includes/class-api-client.php:445
-#: includes/class-api-client.php:450
+#: includes/class-api-client.php:303
+#: includes/class-api-client.php:453
+#: includes/class-api-client.php:458
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf is niet bereikbaar."
 
@@ -588,11 +588,11 @@ msgctxt "block keyword"
 msgid "portfolio"
 msgstr "portfolio"
 
-#: includes/class-api-client.php:289
+#: includes/class-api-client.php:293
 msgid "That page is not on the Profotograaf platform."
 msgstr "Die pagina staat niet op het Profotograaf-platform."
 
-#: includes/class-api-client.php:306
+#: includes/class-api-client.php:310
 msgid "The public page could not be loaded."
 msgstr "De openbare pagina kon niet worden geladen."
 
