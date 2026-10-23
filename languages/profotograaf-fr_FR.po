@@ -431,6 +431,7 @@ msgstr "Le chemin du portail client sur votre adresse Profotograaf, utilisé par
 msgid "Default gallery layout"
 msgstr "Disposition de galerie par défaut"
 
+#: includes/class-elementor-gallery-widget.php:121
 #: includes/class-settings-schema.php:133
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
@@ -438,6 +439,7 @@ msgstr "Disposition de galerie par défaut"
 msgid "Grid"
 msgstr "Grille"
 
+#: includes/class-elementor-gallery-widget.php:122
 #: includes/class-settings-schema.php:134
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
@@ -445,6 +447,7 @@ msgstr "Grille"
 msgid "Masonry"
 msgstr "Mosaïque"
 
+#: includes/class-elementor-gallery-widget.php:123
 #: includes/class-settings-schema.php:135
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
@@ -510,6 +513,7 @@ msgstr "Laissez les réglages et la connexion dans la base de données lorsque v
 msgid "Profotograaf default"
 msgstr "Valeur par défaut de Profotograaf"
 
+#: includes/class-elementor-gallery-widget.php:148
 #: includes/class-settings-schema.php:221
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:8
@@ -517,6 +521,7 @@ msgstr "Valeur par défaut de Profotograaf"
 msgid "On"
 msgstr "Activé"
 
+#: includes/class-elementor-gallery-widget.php:149
 #: includes/class-settings-schema.php:222
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:8
@@ -529,6 +534,7 @@ msgstr "Désactivé"
 msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
 msgstr "Un bloc ou un shortcode peut définir sa propre valeur. Laissez vide pour la valeur par défaut de Profotograaf."
 
+#: includes/class-elementor-gallery-widget.php:179
 #: includes/class-settings-schema.php:233
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
@@ -540,6 +546,7 @@ msgstr "Colonnes"
 msgid "Columns on wide screens, from 1 to 8."
 msgstr "Colonnes sur grand écran, de 1 à 8."
 
+#: includes/class-elementor-gallery-widget.php:174
 #: includes/class-settings-schema.php:242
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -550,6 +557,7 @@ msgstr "Colonnes sur tablette"
 msgid "Columns on medium screens, from 1 to 8."
 msgstr "Colonnes sur écran moyen, de 1 à 8."
 
+#: includes/class-elementor-gallery-widget.php:177
 #: includes/class-settings-schema.php:251
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -675,6 +683,7 @@ msgstr "Bouton « Voir plus »"
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr "Ajoute un bouton qui affiche les photos suivantes lorsque \"Photos par page\" est défini."
 
+#: includes/class-elementor-gallery-widget.php:144
 #: includes/class-settings-schema.php:325
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -1302,6 +1311,9 @@ msgid_plural "%d photos"
 msgstr[0] "%d photo"
 msgstr[1] "%d photos"
 
+#: includes/class-elementor-gallery-widget.php:119
+#: includes/class-elementor-gallery-widget.php:135
+#: includes/class-elementor-gallery-widget.php:147
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
@@ -1411,6 +1423,8 @@ msgstr "disposition : %s"
 #: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: includes/class-elementor-gallery-widget.php:99
+#: includes/class-elementor-gallery-widget.php:105
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
@@ -1419,6 +1433,7 @@ msgstr "disposition : %s"
 msgid "Gallery"
 msgstr "Galerie"
 
+#: includes/class-elementor-gallery-widget.php:116
 #: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
 msgid "Layout"
@@ -1625,6 +1640,7 @@ msgstr "mosaïque"
 msgid "showcase"
 msgstr "vitrine"
 
+#: includes/class-elementor-gallery-widget.php:82
 #: patterns/masonry-showcase.php:15
 #: patterns/portfolio-grid.php:15
 msgid "gallery"
@@ -1642,6 +1658,7 @@ msgstr "Grille de portfolio"
 msgid "A heading, a short introduction and a gallery grid."
 msgstr "Un titre, une courte introduction et une grille de galerie."
 
+#: includes/class-elementor-gallery-widget.php:85
 #: patterns/portfolio-grid.php:15
 msgid "portfolio"
 msgstr "portfolio"
@@ -3486,6 +3503,7 @@ msgstr "Cette galerie n'a pas encore de lien de partage. Choisissez une autre ga
 msgid "No gallery chosen. The block links to the client portal."
 msgstr "Aucune galerie choisie. Le bloc renvoie au portail client."
 
+#: includes/class-elementor-gallery-widget.php:107
 #: build/client-galleries/index.js:3
 msgid "Choose a gallery"
 msgstr "Choisir une galerie"
@@ -4338,3 +4356,27 @@ msgstr "Les galeries n’affichent que leur lien de secours tant que le script d
 #: includes/modules/class-site-health.php:228
 msgid "Install the plugin again from the release zip. A copy made from the source needs pnpm install and pnpm build first."
 msgstr "Réinstallez le plugin à partir du zip de la version. Une copie issue du code source nécessite d’abord pnpm install et pnpm build."
+
+#: includes/class-elementor-gallery-widget.php:56
+msgid "Profotograaf Gallery"
+msgstr "Galerie Profotograaf"
+
+#: includes/class-elementor-gallery-widget.php:83
+msgid "photo"
+msgstr "photo"
+
+#: includes/class-elementor-gallery-widget.php:84
+msgid "photography"
+msgstr "photographie"
+
+#: includes/class-elementor-gallery-widget.php:86
+msgid "client gallery"
+msgstr "galerie client"
+
+#: includes/class-elementor-gallery-widget.php:109
+msgid "No galleries yet. Connect your Profotograaf account under Settings, Profotograaf."
+msgstr "Aucune galerie pour le moment. Connectez votre compte Profotograaf sous Réglages, Profotograaf."
+
+#: includes/class-elementor-gallery-widget.php:120
+msgid "Automatic"
+msgstr "Automatique"

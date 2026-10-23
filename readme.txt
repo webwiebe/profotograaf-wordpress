@@ -1,6 +1,6 @@
 === Profotograaf ===
 Contributors: profotograaf
-Tags: photography, gallery, client gallery, portfolio, contact form
+Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -17,6 +17,7 @@ Profotograaf connects your WordPress site to your [Profotograaf](https://profoto
 * **Connect in one step.** Approve the connection in Profotograaf. Your password never reaches your WordPress site.
 * **Gallery block and shortcode.** Pick one of your galleries and place it on any page, in a grid, masonry or slideshow layout.
 * **Full-page gallery block.** Show one gallery across the whole page, in sections of different shapes: large single photos, pairs, grids, masonry and a filmstrip. Choose the Calm, Editorial or Playful preset, or build your own sequence and pick the photo for each spot.
+* **Elementor widget.** Add the "Profotograaf Gallery" widget in Elementor, choose a gallery, the layout, the columns and the lightbox. It shows the same gallery as the block, in the editor and on the page. Nothing of it loads without Elementor.
 * **Paste a link.** A pasted gallery link turns into an embedded gallery.
 * **Client galleries entry.** A "Find your gallery" block that leads clients to the client portal, on your Profotograaf address or on your own domain.
 * **Copy to Profotograaf.** Optional, off by default. Copies the images, RAW files and videos of your Media Library to private galleries in your Profotograaf account. It is a copy made once. It does not follow later edits or deletions.
