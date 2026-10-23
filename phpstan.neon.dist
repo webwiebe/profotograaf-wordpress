@@ -10,6 +10,9 @@ parameters:
 		- includes
 	bootstrapFiles:
 		- tests/phpstan-bootstrap.php
+	# Elementor is not installed here: the widget needs its base classes.
+	scanFiles:
+		- tests/stubs/elementor.php
 	phpVersion: 80100
 	# A baseline entry that no longer matches an error is itself an error, so the
 	# baseline can only shrink.
