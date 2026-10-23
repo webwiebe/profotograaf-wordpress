@@ -25,7 +25,13 @@ An empty value means the site default, as in the block and the shortcode.
 
 ## The Divi 4 module
 
-Name "Profotograaf Gallery", slug `profotograaf_gallery`, `vb_support` on. The module has the same six fields as the widget, as select fields on the General tab, with choices from `Builder_Gallery`. The fonts and text design options are off. Divi 5 has a different module API and is not covered.
+Name "Profotograaf Gallery", slug `profotograaf_gallery`, `vb_support` on. The module has the same six fields as the widget, as select fields on the General tab, with choices from `Builder_Gallery`. The fonts and text design options are off.
+
+### Divi 5
+
+Divi 5 has a different module API. According to Elegant Themes' backward compatibility pages (written during the Divi 5 alpha and beta, so re-check them on a Divi 5 site), Divi 5 detects a Divi 4 module it has no native version of, loads the Divi 4 framework for that page and runs the module in legacy mode. The content, design and advanced settings stay available in the builder and an alert in the Content tab marks the legacy mode. The cost is speed: a page with one legacy module loads the whole Divi 4 framework, and design changes re-render through PHP.
+
+The Divi 4 module therefore keeps working in Divi 5 without changes. `Divi_Test::test_legacy_mode_props_with_foreign_keys_render_the_same` pins the render path that legacy mode uses, and `test_the_fields_match_the_block_and_the_elementor_widget` pins the field names that saved content depends on. A native Divi 5 module is tracked in [#321](https://github.com/webwiebe/profotograaf-wordpress/issues/321) and gains the speed only. This has not been run on a Divi 5 site, since Divi is a paid theme.
 
 ## Rendering
 
