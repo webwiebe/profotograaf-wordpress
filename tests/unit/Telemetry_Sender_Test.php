@@ -266,6 +266,13 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( Telemetry_Payload::FIELDS, array_keys( $payload ) );
 	}
 
+	public function test_the_module_cap_leaves_room_for_every_module_the_plugin_ships(): void {
+		$modules = ( new \Profotograaf\Module_Loader( PROFOTOGRAAF_DIR . 'includes/modules' ) )->classes();
+
+		// A module past the cap is dropped from the list, and the list is sorted, so the last names go first.
+		$this->assertLessThanOrEqual( Telemetry_Payload::MAX_MODULES - 10, count( $modules ) );
+	}
+
 	public function test_outcomes_are_counted_only_after_opt_in(): void {
 		$sender = $this->sender();
 		$sender->on_lead_delivered();

@@ -52,6 +52,64 @@ final class Builder_Gallery {
 	}
 
 	/**
+	 * Layout choices as `value => label`, the site default first.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function layout_choices(): array {
+		return array(
+			''          => __( 'Site default', 'profotograaf' ),
+			'auto'      => __( 'Automatic', 'profotograaf' ),
+			'grid'      => __( 'Grid', 'profotograaf' ),
+			'masonry'   => __( 'Masonry', 'profotograaf' ),
+			'slideshow' => __( 'Slideshow', 'profotograaf' ),
+		);
+	}
+
+	/**
+	 * Lightbox choices as `value => label`, the site default first.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function lightbox_choices(): array {
+		return array(
+			''    => __( 'Site default', 'profotograaf' ),
+			'on'  => __( 'On', 'profotograaf' ),
+			'off' => __( 'Off', 'profotograaf' ),
+		);
+	}
+
+	/**
+	 * Column choices as `value => label`, the site default first, then 1 to the
+	 * limit of the field.
+	 *
+	 * @param string $field Field name: columns, columns_tablet or columns_mobile.
+	 * @return array<int|string,string> PHP turns the numeric keys into integers.
+	 */
+	public static function column_choices( string $field ): array {
+		$choices = array( '' => __( 'Site default', 'profotograaf' ) );
+		for ( $count = 1; $count <= ( self::MAX_COLUMNS[ $field ] ?? 0 ); $count++ ) {
+			$choices[ (string) $count ] = (string) $count;
+		}
+		return $choices;
+	}
+
+	/**
+	 * Label of a column field.
+	 *
+	 * @param string $field Field name: columns, columns_tablet or columns_mobile.
+	 */
+	public static function column_label( string $field ): string {
+		if ( 'columns_tablet' === $field ) {
+			return __( 'Columns on tablets', 'profotograaf' );
+		}
+		if ( 'columns_mobile' === $field ) {
+			return __( 'Columns on phones', 'profotograaf' );
+		}
+		return __( 'Columns', 'profotograaf' );
+	}
+
+	/**
 	 * Block attributes for the values a builder stored. Anything outside the
 	 * block's own choices becomes empty, which means the site default.
 	 *
