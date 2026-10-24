@@ -9,7 +9,9 @@
 namespace Profotograaf\Tests\Leads;
 
 use Brain\Monkey\Functions;
+use Profotograaf\Admin\Reconnect_Notices;
 use Profotograaf\Api_Client;
+use Profotograaf\Config;
 use Profotograaf\Connection;
 use Profotograaf\Leads\Delivery;
 use Profotograaf\Leads\Enquiry_Form;
@@ -218,5 +220,42 @@ class Lead_Health_Test extends Leads_Test_Case {
 		$html = $this->form( '' )->render( array(), $this->now, '', true );
 
 		$this->assertStringNotContainsString( 'role="alert"', $html );
+	}
+
+	public function test_a_complete_connection_has_no_reconnect_notices(): void {
+		$this->connect( 900, 'a', 'r', 'galleries:read galleries:embed leads:write' );
+		$this->connection->record_grant( Config::SCOPE_REVISION );
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => true );
+
+		$this->assertSame( array(), Reconnect_Notices::texts( $this->connection, new Settings() ) );
+	}
+
+	public function test_a_connection_without_the_leads_permission_adds_a_notice_when_leads_are_on(): void {
+		$this->connect( 900, 'a', 'r', 'galleries:read galleries:embed' );
+		$this->connection->record_grant( Config::SCOPE_REVISION );
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => true );
+
+		$texts = Reconnect_Notices::texts( $this->connection, new Settings() );
+
+		$this->assertCount( 1, $texts );
+		$this->assertStringContainsString( 'receive enquiries', $texts[0] );
+	}
+
+	public function test_a_connection_without_the_leads_permission_adds_no_notice_when_leads_are_off(): void {
+		$this->connect( 900, 'a', 'r', 'galleries:read galleries:embed' );
+		$this->connection->record_grant( Config::SCOPE_REVISION );
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => false );
+
+		$this->assertSame( array(), Reconnect_Notices::texts( $this->connection, new Settings() ) );
+	}
+
+	public function test_a_connection_made_before_embedding_asks_to_connect_again(): void {
+		$this->connect( 900, 'a', 'r', 'galleries:read leads:write' );
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => true );
+
+		$texts = Reconnect_Notices::texts( $this->connection, new Settings() );
+
+		$this->assertCount( 1, $texts );
+		$this->assertStringContainsString( 'switch galleries on for embedding', $texts[0] );
 	}
 }
