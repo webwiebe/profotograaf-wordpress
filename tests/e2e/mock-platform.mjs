@@ -238,12 +238,14 @@ function image( { res, url } ) {
 	if ( url.pathname.endsWith( '.jpg' ) ) {
 		// Recorded so a test can count the downloads.
 		state.jpegHits.push( url.pathname );
-		res.writeHead( 200, { 'content-type': 'image/jpeg', 'cache-control': 'no-store' } );
+		res.writeHead( 200, { 'content-type': 'image/jpeg', 'cache-control': 'no-store', 'access-control-allow-origin': '*' } );
 		return res.end( state.scenic ? scenicJpeg( id, variant ) : JPEG );
 	}
 	const [ width, height ] = variantSize( photo, variant );
 	const hue = ( Number( id.slice( 2 ) ) * 47 ) % 360;
-	res.writeHead( 200, { 'content-type': 'image/svg+xml', 'cache-control': 'no-store' } );
+	// The live embed.js requests images in CORS mode from a page on another
+	// origin than the mock, so the answer needs this header.
+	res.writeHead( 200, { 'content-type': 'image/svg+xml', 'cache-control': 'no-store', 'access-control-allow-origin': '*' } );
 	return res.end(
 		`<svg xmlns="http://www.w3.org/2000/svg" width="${ width }" height="${ height }" viewBox="0 0 ${ width } ${ height }">` +
 			`<rect width="100%" height="100%" fill="hsl(${ hue } 45% 60%)"/>` +
