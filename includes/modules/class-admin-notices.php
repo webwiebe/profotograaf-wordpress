@@ -371,7 +371,7 @@ class Admin_Notices implements Module {
 		 * @param string[] $labels Names such as `Contact Form 7: Wedding`.
 		 */
 		$labels = apply_filters( 'profotograaf_new_lead_forms', array() );
-		return is_array( $labels ) ? array_values( array_filter( array_map( 'strval', $labels ) ) ) : array();
+		return array_values( array_filter( array_map( 'strval', (array) $labels ) ) );
 	}
 
 	/**
