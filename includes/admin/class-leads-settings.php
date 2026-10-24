@@ -10,10 +10,12 @@ namespace Profotograaf\Admin;
 use Profotograaf\Embed_Script;
 use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Delivery;
+use Profotograaf\Leads\Enquiry_Form;
 use Profotograaf\Leads\Failed_Export;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Mapping;
 use Profotograaf\Leads\Queue;
+use Profotograaf\Leads\Skip_Counter;
 use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Modules\Settings_Page;
 use Profotograaf\Plugin;
@@ -61,18 +63,27 @@ class Leads_Settings {
 	private Plugin $plugin;
 
 	/**
+	 * The enquiry block's own settings.
+	 *
+	 * @var Leads_Block_Form
+	 */
+	private Leads_Block_Form $block_form;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Form_Settings $settings Per form settings.
-	 * @param Queue         $queue    Queue.
-	 * @param Bridge[]      $bridges  Bridges.
-	 * @param Plugin        $plugin   Plugin container.
+	 * @param Form_Settings     $settings Per form settings.
+	 * @param Queue             $queue    Queue.
+	 * @param Bridge[]          $bridges  Bridges.
+	 * @param Plugin            $plugin   Plugin container.
+	 * @param Skip_Counter|null $skips    Skipped submissions.
 	 */
-	public function __construct( Form_Settings $settings, Queue $queue, array $bridges, Plugin $plugin ) {
-		$this->settings = $settings;
-		$this->queue    = $queue;
-		$this->bridges  = $bridges;
-		$this->plugin   = $plugin;
+	public function __construct( Form_Settings $settings, Queue $queue, array $bridges, Plugin $plugin, ?Skip_Counter $skips = null ) {
+		$this->settings   = $settings;
+		$this->queue      = $queue;
+		$this->bridges    = $bridges;
+		$this->plugin     = $plugin;
+		$this->block_form = new Leads_Block_Form( $settings, $skips ?? new Skip_Counter() );
 	}
 
 	/**
@@ -87,7 +98,6 @@ class Leads_Settings {
 		add_action( 'admin_post_profotograaf_leads_dismiss', array( $this, 'handle_dismiss' ) );
 		add_action( 'admin_post_profotograaf_sync_galleries', array( $this, 'handle_sync_galleries' ) );
 		add_action( 'admin_post_profotograaf_clear_gallery_index', array( $this, 'handle_clear_gallery_index' ) );
-		add_action( 'admin_post_profotograaf_check_embed_version', array( $this, 'handle_check_embed_version' ) );
 	}
 
 	/**
@@ -129,7 +139,7 @@ class Leads_Settings {
 	public function handle_save(): void {
 		$this->authorize( 'profotograaf_leads_save' );
 
-		$known = array();
+		$known = array( Enquiry_Form::FORM_KEY );
 		foreach ( $this->forms() as $entry ) {
 			$known[] = $entry['form']['key'];
 		}
@@ -190,14 +200,6 @@ class Leads_Settings {
 	}
 
 	/**
-	 * Reads the current embed script version from the platform now.
-	 */
-	public function handle_check_embed_version(): void {
-		$this->authorize( 'profotograaf_check_embed_version' );
-		$this->finish_tool( $this->tools()->check_embed_version() );
-	}
-
-	/**
 	 * Renders the page.
 	 */
 	public function render(): void {
@@ -226,18 +228,18 @@ class Leads_Settings {
 			<?php ( new Settings_Fields( $this->plugin->settings() ) )->render_form( Settings_Schema::TAB_ENQUIRY, __( 'Save defaults', 'profotograaf' ) ); ?>
 
 			<h2><?php esc_html_e( 'Forms', 'profotograaf' ); ?></h2>
-			<?php if ( array() === $forms ) : ?>
-				<p><?php esc_html_e( 'No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form.', 'profotograaf' ); ?></p>
-			<?php else : ?>
-				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<input type="hidden" name="action" value="profotograaf_leads_save">
-					<?php wp_nonce_field( 'profotograaf_leads_save' ); ?>
-					<?php foreach ( $forms as $entry ) : ?>
-						<?php $this->render_form( $entry['bridge'], $entry['form'] ); ?>
-					<?php endforeach; ?>
-					<?php submit_button( __( 'Save changes', 'profotograaf' ) ); ?>
-				</form>
-			<?php endif; ?>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="profotograaf_leads_save">
+				<?php wp_nonce_field( 'profotograaf_leads_save' ); ?>
+				<?php $this->block_form->render(); ?>
+				<?php foreach ( $forms as $entry ) : ?>
+					<?php $this->render_form( $entry['bridge'], $entry['form'] ); ?>
+				<?php endforeach; ?>
+				<?php if ( array() === $forms ) : ?>
+					<p><?php esc_html_e( 'No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form.', 'profotograaf' ); ?></p>
+				<?php endif; ?>
+				<?php submit_button( __( 'Save changes', 'profotograaf' ) ); ?>
+			</form>
 
 			<h2><?php esc_html_e( 'Delivery', 'profotograaf' ); ?></h2>
 			<p>
@@ -254,12 +256,11 @@ class Leads_Settings {
 			</p>
 			<?php $this->render_failures( $counts['failed'] ); ?>
 
-			<h2><?php esc_html_e( 'Galleries and embed script', 'profotograaf' ); ?></h2>
+			<h2><?php esc_html_e( 'Galleries', 'profotograaf' ); ?></h2>
 			<div class="profotograaf-leads-actions">
 				<?php
 				$this->render_action( 'profotograaf_sync_galleries', __( 'Sync galleries now', 'profotograaf' ) );
 				$this->render_action( 'profotograaf_clear_gallery_index', __( 'Clear the gallery index', 'profotograaf' ) );
-				$this->render_action( 'profotograaf_check_embed_version', __( 'Re-check the embed version', 'profotograaf' ) );
 				?>
 			</div>
 		</div>
@@ -300,6 +301,7 @@ class Leads_Settings {
 				<label for="<?php echo esc_attr( 'profotograaf-' . $slug . '-source-tag' ); ?>"><?php esc_html_e( 'Source tag', 'profotograaf' ); ?></label>
 				<input type="text" class="regular-text" maxlength="<?php echo esc_attr( (string) Form_Settings::MAX_TAG ); ?>" id="<?php echo esc_attr( 'profotograaf-' . $slug . '-source-tag' ); ?>" name="<?php echo esc_attr( $base . '[source_tag]' ); ?>" value="<?php echo esc_attr( $config['source_tag'] ); ?>">
 			</p>
+			<?php $this->block_form->render_skips( $form['key'] ); ?>
 			<p class="description"><?php esc_html_e( 'Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name.', 'profotograaf' ); ?></p>
 			<table class="profotograaf-leads-map" data-profotograaf-map>
 				<?php foreach ( $targets as $target => $title ) : ?>
@@ -367,7 +369,7 @@ class Leads_Settings {
 			<?php
 			$this->render_action( 'profotograaf_leads_retry', __( 'Try again', 'profotograaf' ) );
 			$this->render_action( 'profotograaf_leads_export', __( 'Download as CSV', 'profotograaf' ) );
-			if ( $this->has_exported() ) {
+			if ( array() !== array_filter( $this->queue->failed_jobs(), static fn( array $job ): bool => isset( $job['exported_at'] ) ) ) {
 				$this->render_action( 'profotograaf_leads_dismiss', __( 'Remove exported enquiries', 'profotograaf' ) );
 			}
 			?>
@@ -389,13 +391,6 @@ class Leads_Settings {
 			<?php submit_button( $label, 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
-	}
-
-	/**
-	 * Whether a failed lead was exported.
-	 */
-	private function has_exported(): bool {
-		return array() !== array_filter( $this->queue->failed_jobs(), static fn( array $job ): bool => isset( $job['exported_at'] ) );
 	}
 
 	/**
@@ -442,7 +437,7 @@ class Leads_Settings {
 	 * The maintenance actions.
 	 */
 	private function tools(): Site_Tools {
-		return new Site_Tools( $this->plugin->api(), new Embed_Script() );
+		return new Site_Tools( $this->plugin->api() );
 	}
 
 	/**

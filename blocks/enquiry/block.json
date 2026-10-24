@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "profotograaf/enquiry",
+	"version": "0.1.0",
+	"title": "Enquiry form",
+	"category": "widgets",
+	"icon": "email",
+	"description": "A form with name, email, date and message. Each enquiry reaches your Profotograaf leads and your inbox.",
+	"keywords": [ "contact", "enquiry", "booking", "lead", "form", "profotograaf" ],
+	"textdomain": "profotograaf",
+	"attributes": {},
+	"supports": {
+		"html": false,
+		"autoRegister": true,
+		"align": [ "wide" ],
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	}
+}

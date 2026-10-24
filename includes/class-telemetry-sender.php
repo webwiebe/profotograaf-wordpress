@@ -29,7 +29,7 @@ class Telemetry_Sender {
 	public const RETRY_HOOK     = 'profotograaf_retry_telemetry_batch';
 	public const MAX_ATTEMPTS   = 3;
 	public const MAX_QUEUED     = 100;
-	public const BACKOFF        = array( 5, 10, 30 );
+	public const BACKOFF        = array( 5, 10 );
 
 	/**
 	 * Settings.
@@ -60,9 +60,25 @@ class Telemetry_Sender {
 	 * Listens for the outcomes that are counted.
 	 */
 	public function listen(): void {
+		add_action( 'profotograaf_refresh_succeeded', array( $this, 'on_refresh_succeeded' ) );
 		add_action( 'profotograaf_refresh_failed', array( $this, 'on_refresh_failed' ) );
+		add_action( 'profotograaf_refresh_retried', array( $this, 'on_refresh_retried' ) );
 		add_action( 'profotograaf_lead_delivered', array( $this, 'on_lead_delivered' ) );
 		add_action( 'profotograaf_lead_failed', array( $this, 'on_lead_failed' ), 10, 2 );
+	}
+
+	/**
+	 * Counts a token refresh that stored a new pair.
+	 */
+	public function on_refresh_succeeded(): void {
+		$this->count( 'refresh_success' );
+	}
+
+	/**
+	 * Counts a request that was sent again after a refresh.
+	 */
+	public function on_refresh_retried(): void {
+		$this->count( 'refresh_retried' );
 	}
 
 	/**
@@ -274,9 +290,9 @@ class Telemetry_Sender {
 	}
 
 	/**
-	 * Sends the queued batches. A failure keeps the batch, schedules a retry
-	 * after 5, 10 and then 30 seconds, and drops the queue after the third
-	 * failed attempt.
+	 * Sends the queued batches. A failure keeps the batch and schedules a retry
+	 * after 5 and then 10 seconds. The queue is dropped after the third failed
+	 * attempt.
 	 *
 	 * @return int Number of batches sent. Always 0 without consent, with
 	 *             Do Not Track or Global Privacy Control, or without an endpoint.

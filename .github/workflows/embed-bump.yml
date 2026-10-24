@@ -1,0 +1,116 @@
+name: Embed bump
+
+# A release of @profotograaf/embed in the platform repository sends
+# `repository_dispatch` (embed-release) here. This workflow downloads the
+# release assets, checks them against the checksums GitHub recorded for the
+# release, copies them into the plugin and opens a PR. The PR runs the normal
+# CI, so a package that breaks the plugin shows up red before anyone merges it.
+#
+# Needs the secret EMBED_BUMP_TOKEN: a fine-grained token with Contents (read)
+# on wiebe-xyz/professionals, to read its releases, and Contents plus Pull
+# requests (read and write) on this repository. The default token cannot read
+# the private platform repository, and a PR it opens does not start CI.
+#
+# What lands where:
+#   packages/embed/fixtures/*  ->  tests/fixtures/embed/
+#   dist/embed.js, embed.js.map ->  assets/embed/
+#   the version                 ->  assets/embed/VERSION
+
+on:
+  repository_dispatch:
+    types: [embed-release]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Embed package version to bump to (for example 1.2.0)
+        required: true
+
+concurrency:
+  group: embed-bump
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  PLATFORM_REPO: wiebe-xyz/professionals
+  VERSION: ${{ github.event.client_payload.version || inputs.version }}
+
+jobs:
+  bump:
+    name: Open the bump PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.EMBED_BUMP_TOKEN }}
+    steps:
+      - name: Check the version and the token
+        run: |
+          set -euo pipefail
+          if [ -z "$GH_TOKEN" ]; then
+            echo "EMBED_BUMP_TOKEN is not set" >&2
+            exit 1
+          fi
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "not a version: $VERSION" >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.EMBED_BUMP_TOKEN }}
+
+      - name: Download the release assets and verify them
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/embed-release"
+          mkdir -p "$dir"
+          tag="embed-v$VERSION"
+          gh release download "$tag" --repo "$PLATFORM_REPO" --dir "$dir" \
+            --pattern "profotograaf-embed-$VERSION.tgz" \
+            --pattern embed.js --pattern embed.js.map
+          gh api "repos/$PLATFORM_REPO/releases/tags/$tag" \
+            --jq '.assets[] | select(.digest != null) | "\(.digest | sub("^sha256:"; ""))  \(.name)"' \
+            > "$dir/SHA256SUMS"
+          # Every file we use must have a recorded checksum and match it.
+          for name in "profotograaf-embed-$VERSION.tgz" embed.js embed.js.map; do
+            grep -q "  $name\$" "$dir/SHA256SUMS" || { echo "no checksum recorded for $name" >&2; exit 1; }
+          done
+          (cd "$dir" && grep -E "  (profotograaf-embed-$VERSION.tgz|embed.js|embed.js.map)\$" SHA256SUMS | sha256sum -c -)
+          mkdir -p "$dir/package"
+          tar -xzf "$dir/profotograaf-embed-$VERSION.tgz" -C "$dir/package" --strip-components=1
+          # The tarball must hold the same script as the loose asset.
+          cmp "$dir/package/dist/embed.js" "$dir/embed.js"
+
+      - name: Copy the files into the plugin
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/embed-release"
+          rm -rf tests/fixtures/embed assets/embed
+          mkdir -p tests/fixtures/embed assets/embed
+          cp "$dir"/package/fixtures/* tests/fixtures/embed/
+          cp "$dir/embed.js" "$dir/embed.js.map" assets/embed/
+          printf '%s\n' "$VERSION" > assets/embed/VERSION
+
+      - name: Open or update the PR
+        run: |
+          set -euo pipefail
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "The plugin already holds embed $VERSION."
+            exit 0
+          fi
+          branch="embed-bump/$VERSION"
+          git config user.name "profotograaf-embed-bot"
+          git config user.email "embed-bot@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add tests/fixtures/embed assets/embed
+          git commit -m "Bump the embed package to $VERSION"
+          git push --force origin "$branch"
+          url="https://github.com/$PLATFORM_REPO/releases/tag/embed-v$VERSION"
+          body="Bumps @profotograaf/embed to $VERSION. Release: $url. The assets were checked against the checksums GitHub recorded for the release. Merge when CI is green."
+          if gh pr view "$branch" --json number >/dev/null 2>&1; then
+            gh pr edit "$branch" --body "$body"
+          else
+            gh pr create --base main --head "$branch" --title "Bump the embed package to $VERSION" --body "$body"
+          fi

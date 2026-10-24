@@ -17,7 +17,7 @@ Every 24 hours, one batch contains:
 - **WordPress version**: the major and minor version (not micro)
 - **PHP version**: the major and minor version (not micro)
 - **Site locale**: the WordPress locale, for example `nl_NL` or `en_US`
-- **Active modules**: a list of enabled Profotograaf modules (for example: `gallery_block`, `lead_forms`, `client_gallery`)
+- **Active modules**: a list of enabled Profotograaf modules (for example: `gallery_embed`, `leads`, `client_galleries`, `full_page_gallery`)
 - **Refresh outcomes**: count of successful, failed and retried token refresh attempts in the last 24 hours
 - **Delivery outcomes**: count of successful and failed lead deliveries in the last 24 hours
 - **Error codes**: a count of each distinct error code encountered during token refresh or lead delivery
@@ -38,7 +38,7 @@ When a plugin error is reported (see "Error collection" below), the event contai
 
 Additional context is removed: no access tokens, no API responses, no request bodies, no stack traces containing variables, no file paths outside the plugin directory.
 
-Error events are rate-limited and deduplicated by (error_code, error_location, http_status). A fingerprint that appears more than once per minute is only sent once per 24-hour batch.
+Error events are rate-limited and deduplicated by (error_code, error_location, http_status). A fingerprint is reported once per 24 hours, and at most 10 new fingerprints are reported per hour.
 
 ## What We Never Collect
 
@@ -92,7 +92,7 @@ Common rules:
 - **Frequency**: once every 24 hours, via WP-Cron scheduled job `profotograaf_send_telemetry_batch`. The job queues one usage event and one event per error, then sends the queue.
 - **Format**: JSON POST, content-type `application/json`. A service answers 202 when it accepts an event.
 - **Timeout**: 10 seconds (respects the `profotograaf_http_timeout` filter)
-- **Retry**: a failed event is retried up to 3 times, with exponential backoff (5 seconds, 10 seconds, 30 seconds), then the queue is dropped
+- **Retry**: a failed send is attempted up to 3 times in total. The first retry waits 5 seconds and the second 10 seconds. After the third failed attempt the queue is dropped.
 - **Throttling**: on a 429 or 503 answer the plugin stops sending until the time in the `Retry-After` header (five minutes without one, at most one day) and keeps the queue. These answers do not count towards the 3 attempts.
 
 ### Usage event (FunnelBarn)
@@ -109,7 +109,7 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
     "wordpress_version": "6.9",
     "php_version": "8.3",
     "locale": "en_US",
-    "active_modules": "client_gallery,gallery_embed,lead_forms",
+    "active_modules": "client_galleries,gallery_embed,leads",
     "refresh_success": 24,
     "refresh_failed": 0,
     "refresh_retried": 0,
@@ -123,7 +123,7 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
 ### Error events (BugBarn)
 
 - **Timing**: queued with the daily job
-- **Rate limiting**: one per (error_code, error_location, http_status) per 24-hour batch, deduplicated by earliest timestamp
+- **Rate limiting**: one per (error_code, error_location, http_status) per 24 hours, and at most 10 new fingerprints per hour
 - **Format**: one BugBarn event per error, at most 50 per day (the newest are kept). The plugin stores them in `profotograaf_telemetry_queued_errors` until the daily job runs. The error code is the `body`, the exception type and the message. The stack trace has one frame, the plugin file and line.
 
 ```json
@@ -159,12 +159,13 @@ One `daily_usage` event per day. The install id is the session id. Counters stay
 
 Errors are collected from these hooks and processes:
 
+- `profotograaf_refresh_succeeded`: triggered when a token refresh stored a new pair (counted as `refresh_success`)
+- `profotograaf_refresh_retried`: triggered when a request is sent again with a refreshed token after a 401 (counted as `refresh_retried`)
 - `profotograaf_refresh_failed`: triggered when token refresh fails
 - `profotograaf_lead_failed`: triggered when lead delivery fails
 - `profotograaf_lead_delivered`: triggered when a lead is sent successfully
 - `profotograaf_lead_skipped`: triggered when a lead is skipped
 - `profotograaf_lead_not_queued`: triggered when a lead cannot be queued
-- `profotograaf_disconnected`: triggered when the connection ends
 
 Additionally, errors logged to the WordPress error log (via `WP_Error` with a plugin-specific error code) are scraped and included.
 
@@ -182,7 +183,7 @@ The telemetry destination (server) retains:
 - **Usage telemetry**: 13 months
 - **Error events**: 13 months
 
-Older data is deleted automatically. The plugin owner can delete all telemetry for a specific install ID via the `profotograaf_clear_telemetry` filter and the plugin settings page.
+Older data is deleted automatically. The plugin has no way to delete telemetry that was already sent (see "Does not delete already-sent telemetry" below). Whether the platform should offer a deletion request is open in #313.
 
 The plugin itself keeps in `wp_options`:
 
@@ -210,8 +211,8 @@ The setting `profotograaf_telemetry_enabled` in WordPress options controls telem
 
 - **Default**: false (off)
 - **Translatable name**: "Share anonymous usage data"
-- **Description**: "Help improve Profotograaf by sharing anonymous usage and error data. This is completely optional and can be disabled at any time. No personal information is collected. See the telemetry design for details."
-- **Link**: renders a link to `docs/telemetry.md` in the setting description
+- **Description**: "Help improve Profotograaf by sharing anonymous usage and error data. This is optional and you can turn it off at any time. No personal information is collected. Turning it off stops sending at once and deletes data that is waiting to be sent."
+- **Link**: a link labelled "What is shared" to `docs/telemetry.md` (`Settings_Schema::TELEMETRY_DOC_URL`)
 
 The setting is visible in the WordPress settings screen under Settings > Profotograaf.
 
@@ -254,7 +255,7 @@ A new install ID means the old telemetry is no longer associated with this WordP
 
 ### Uninstalling the plugin
 
-When the plugin is uninstalled:
+When the plugin is uninstalled and `keep_data_on_uninstall` is off (the default):
 
 - All telemetry options are removed (`profotograaf_install_id`, `profotograaf_telemetry_enabled`, `profotograaf_telemetry_queued_*`)
 - Already-sent telemetry remains on the server (cannot be deleted by the plugin)
@@ -268,7 +269,7 @@ Add the following section to the External services section in `readme.txt`:
 ```
 = Telemetry =
 
-When you opt in to telemetry, Profotograaf sends anonymous usage and error data daily to https://f.profotograaf.nl (usage) and https://bb.profotograaf.nl (errors), or to the endpoints you configure. The data includes plugin, WordPress and PHP versions, locale, active modules, counts of successes and failures, and anonymized error codes. The site URL, user data, and gallery or lead content are never sent. The data is retained for 13 months. You can revoke consent or delete all telemetry by disconnecting from Profotograaf or toggling the telemetry setting off. See the telemetry design document for full details.
+When you opt in to telemetry, Profotograaf sends anonymous usage and error data daily to https://f.profotograaf.nl (usage) and https://bb.profotograaf.nl (errors), or to the endpoints you configure. The data includes plugin, WordPress and PHP versions, locale, active modules, counts of successes and failures, and anonymized error codes. The site URL, user data, and gallery or lead content are never sent. The data is retained for 13 months. You can revoke consent by disconnecting from Profotograaf or toggling the telemetry setting off. That stops sending and deletes what is still waiting to be sent. Data that was already sent is deleted after 13 months. See the telemetry design document for full details.
 ```
 
 For the default configuration, also add:
@@ -291,5 +292,5 @@ The default destinations are https://bb.profotograaf.nl (BugBarn, errors, handed
 | **Revoke** | Toggle off in settings, or disconnect (rotates install ID) |
 | **Retention** | 13 months on server, removed when plugin uninstalls locally |
 | **Identifier** | Random install UUID, rotated on disconnect |
-| **Rate limiting** | One error per fingerprint per 24-hour batch |
+| **Rate limiting** | One error per fingerprint per 24 hours, at most 10 new fingerprints per hour |
 | **Respects** | Do Not Track, Global Privacy Control, WordPress preferences |

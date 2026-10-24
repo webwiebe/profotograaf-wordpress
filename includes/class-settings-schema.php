@@ -155,7 +155,7 @@ final class Settings_Schema {
 				'type'        => 'text',
 				'default'     => '',
 				'label'       => __( 'Mail undeliverable enquiries to', 'profotograaf' ),
-				'description' => __( 'When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off.', 'profotograaf' ),
+				'description' => __( 'When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Until you save a choice this is the site admin email address. Save it empty to turn this off.', 'profotograaf' ),
 				'sanitize'    => array( self::class, 'sanitize_email_or_empty' ),
 			),
 			'leads_failed_retention' => array(

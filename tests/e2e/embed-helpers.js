@@ -9,12 +9,44 @@ const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 
 // WordPress points the script and the API at this host, which only the
 // containers resolve. The browser reaches the same mock on the published port.
-const PLATFORM_HOST = /^http:\/\/mock-platform:8090(\/.*)$/;
+const PLATFORM_HOST = /^https?:\/\/mock-platform:8090(\/.*)$/;
+
+// embed.js takes its API origin from the script tag's data-platform only when
+// that is an https origin, and otherwise from the origin that served the
+// script, which is the WordPress site. The mock answers over http inside the
+// containers, so the browser is shown the https spelling; PLATFORM_HOST maps
+// both spellings to the mock.
+const HTTP_PLATFORM_ATTRIBUTE = 'data-platform="http://mock-platform:8090"';
+const HTTPS_PLATFORM_ATTRIBUTE = 'data-platform="https://mock-platform:8090"';
+
+/**
+ * @param {string} html
+ * @return {string}
+ */
+function withHttpsPlatform( html ) {
+	return html.split( HTTP_PLATFORM_ATTRIBUTE ).join( HTTPS_PLATFORM_ATTRIBUTE );
+}
+
+/**
+ * Serves every document of the site with the platform declared over https.
+ *
+ * @param {import('@playwright/test').BrowserContext} context
+ */
+function declarePlatformOverHttps( context ) {
+	return context.route( ( target ) => target.hostname === 'localhost', async ( route ) => {
+		if ( route.request().resourceType() !== 'document' ) {
+			return route.fallback();
+		}
+		const response = await route.fetch();
+		return route.fulfill( { response, body: withHttpsPlatform( await response.text() ) } );
+	} );
+}
 
 // EMBED_SCRIPT_URL sends the script request to another build of embed.js, for
-// the live canary. The API stays the mock: the script takes its API origin from
-// the src of its own script tag, which is still the mock host.
-const EMBED_SCRIPT = /^\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/;
+// the live canary. The plugin serves its own copy from the plugin folder, so
+// that request is the one replaced. The API stays the mock: the script takes
+// its API origin from the data-platform attribute declared above.
+const PLUGIN_EMBED_SCRIPT = /\/wp-content\/plugins\/[^/]+\/build\/embed\/embed\.js(\?.*)?$/;
 
 const HOST = 'div[data-profotograaf-gallery="g-e2e"]';
 const PAGE_URL = 'http://mock-platform:8090/share/g/spring-wedding';
@@ -86,11 +118,27 @@ async function openEmbed( browser, url, viewport = { width: 1440, height: 900 },
 	const context = await browser.newContext( { viewport, ...device } );
 	await context.route( PLATFORM_HOST, async ( route ) => {
 		const [ , path ] = PLATFORM_HOST.exec( route.request().url() );
-		const live = process.env.EMBED_SCRIPT_URL;
-		const target = live && EMBED_SCRIPT.test( path ) ? live : MOCK + path;
-		const response = await route.fetch( { url: target } );
+		const response = await route.fetch( { url: MOCK + path } );
 		await route.fulfill( { response } );
 	} );
+	const live = process.env.EMBED_SCRIPT_URL;
+	if ( live ) {
+		await context.route( PLUGIN_EMBED_SCRIPT, async ( route ) => {
+			const response = await route.fetch( { url: live } );
+			await route.fulfill( { response } );
+		} );
+	}
+	await declarePlatformOverHttps( context );
+	if ( live ) {
+		// The live script asks for the large images in CORS mode, and the mock
+		// image route sends no CORS headers. Chromium also refuses these requests
+		// as a page on one loopback port reaching another, so the answer is served
+		// from here instead of the network.
+		await context.route( ( target ) => target.href.startsWith( `${ MOCK }/img/` ), async ( route ) => {
+			const response = await route.fetch();
+			await route.fulfill( { response, headers: { ...response.headers(), 'access-control-allow-origin': '*' } } );
+		} );
+	}
 	await setup( context );
 	const page = await context.newPage();
 	/** @type {string[]} */
@@ -160,7 +208,7 @@ function withoutDeclarativeShadowDom( context ) {
 			return route.fallback();
 		}
 		const response = await route.fetch();
-		const body = ( await response.text() ).replace( /<template shadowrootmode=/g, '<template data-shadowrootmode=' );
+		const body = withHttpsPlatform( ( await response.text() ).replace( /<template shadowrootmode=/g, '<template data-shadowrootmode=' ) );
 		return route.fulfill( { response, body } );
 	} );
 }
