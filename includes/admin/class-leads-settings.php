@@ -10,10 +10,12 @@ namespace Profotograaf\Admin;
 use Profotograaf\Embed_Script;
 use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Delivery;
+use Profotograaf\Leads\Enquiry_Form;
 use Profotograaf\Leads\Failed_Export;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Mapping;
 use Profotograaf\Leads\Queue;
+use Profotograaf\Leads\Skip_Counter;
 use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Modules\Settings_Page;
 use Profotograaf\Plugin;
@@ -61,18 +63,27 @@ class Leads_Settings {
 	private Plugin $plugin;
 
 	/**
+	 * Submissions skipped for lack of an email address.
+	 *
+	 * @var Skip_Counter
+	 */
+	private Skip_Counter $skips;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Form_Settings $settings Per form settings.
-	 * @param Queue         $queue    Queue.
-	 * @param Bridge[]      $bridges  Bridges.
-	 * @param Plugin        $plugin   Plugin container.
+	 * @param Form_Settings     $settings Per form settings.
+	 * @param Queue             $queue    Queue.
+	 * @param Bridge[]          $bridges  Bridges.
+	 * @param Plugin            $plugin   Plugin container.
+	 * @param Skip_Counter|null $skips    Skipped submissions.
 	 */
-	public function __construct( Form_Settings $settings, Queue $queue, array $bridges, Plugin $plugin ) {
+	public function __construct( Form_Settings $settings, Queue $queue, array $bridges, Plugin $plugin, ?Skip_Counter $skips = null ) {
 		$this->settings = $settings;
 		$this->queue    = $queue;
 		$this->bridges  = $bridges;
 		$this->plugin   = $plugin;
+		$this->skips    = $skips ?? new Skip_Counter();
 	}
 
 	/**
@@ -128,7 +139,7 @@ class Leads_Settings {
 	public function handle_save(): void {
 		$this->authorize( 'profotograaf_leads_save' );
 
-		$known = array();
+		$known = array( Enquiry_Form::FORM_KEY );
 		foreach ( $this->forms() as $entry ) {
 			$known[] = $entry['form']['key'];
 		}
@@ -217,18 +228,18 @@ class Leads_Settings {
 			<?php ( new Settings_Fields( $this->plugin->settings() ) )->render_form( Settings_Schema::TAB_ENQUIRY, __( 'Save defaults', 'profotograaf' ) ); ?>
 
 			<h2><?php esc_html_e( 'Forms', 'profotograaf' ); ?></h2>
-			<?php if ( array() === $forms ) : ?>
-				<p><?php esc_html_e( 'No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form.', 'profotograaf' ); ?></p>
-			<?php else : ?>
-				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<input type="hidden" name="action" value="profotograaf_leads_save">
-					<?php wp_nonce_field( 'profotograaf_leads_save' ); ?>
-					<?php foreach ( $forms as $entry ) : ?>
-						<?php $this->render_form( $entry['bridge'], $entry['form'] ); ?>
-					<?php endforeach; ?>
-					<?php submit_button( __( 'Save changes', 'profotograaf' ) ); ?>
-				</form>
-			<?php endif; ?>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="profotograaf_leads_save">
+				<?php wp_nonce_field( 'profotograaf_leads_save' ); ?>
+				<?php $this->render_block_form(); ?>
+				<?php foreach ( $forms as $entry ) : ?>
+					<?php $this->render_form( $entry['bridge'], $entry['form'] ); ?>
+				<?php endforeach; ?>
+				<?php if ( array() === $forms ) : ?>
+					<p><?php esc_html_e( 'No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form.', 'profotograaf' ); ?></p>
+				<?php endif; ?>
+				<?php submit_button( __( 'Save changes', 'profotograaf' ) ); ?>
+			</form>
 
 			<h2><?php esc_html_e( 'Delivery', 'profotograaf' ); ?></h2>
 			<p>
@@ -253,6 +264,56 @@ class Leads_Settings {
 				?>
 			</div>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Renders the switch of this plugin's own enquiry block.
+	 */
+	private function render_block_form(): void {
+		$config = $this->settings->get( Enquiry_Form::FORM_KEY );
+		$base   = 'forms[' . Enquiry_Form::FORM_KEY . ']';
+		?>
+		<fieldset class="profotograaf-leads-form">
+			<legend><?php esc_html_e( 'Profotograaf enquiry block', 'profotograaf' ); ?></legend>
+			<p>
+				<label>
+					<input type="checkbox" name="<?php echo esc_attr( $base . '[enabled]' ); ?>" value="1" <?php checked( $config['enabled'] ); ?>>
+					<?php esc_html_e( 'Send enquiries from the enquiry block to Profotograaf', 'profotograaf' ); ?>
+				</label>
+			</p>
+			<p>
+				<label for="profotograaf-native-enquiry-source-tag"><?php esc_html_e( 'Source tag', 'profotograaf' ); ?></label>
+				<input type="text" class="regular-text" maxlength="<?php echo esc_attr( (string) Form_Settings::MAX_TAG ); ?>" id="profotograaf-native-enquiry-source-tag" name="<?php echo esc_attr( $base . '[source_tag]' ); ?>" value="<?php echo esc_attr( $config['source_tag'] ); ?>">
+			</p>
+			<p class="description"><?php esc_html_e( 'The block is part of this plugin, so it needs no field mapping. Add it from the block inserter, or start from the contact page pattern.', 'profotograaf' ); ?></p>
+			<?php $this->render_skips( Enquiry_Form::FORM_KEY ); ?>
+		</fieldset>
+		<?php
+	}
+
+	/**
+	 * Says how many submissions of a form were not sent for lack of an email address.
+	 *
+	 * @param string $form_key Form key.
+	 */
+	private function render_skips( string $form_key ): void {
+		$skipped = $this->skips->all()[ $form_key ] ?? null;
+		if ( null === $skipped || $skipped['count'] < 1 ) {
+			return;
+		}
+		?>
+		<p class="notice notice-warning inline">
+			<?php
+			echo esc_html(
+				sprintf(
+					/* translators: %s: number of submissions. */
+					_n( '%s submission was not sent because it had no email address. Check that the form has an email field.', '%s submissions were not sent because they had no email address. Check that the form has an email field.', $skipped['count'], 'profotograaf' ),
+					number_format_i18n( $skipped['count'] )
+				)
+			);
+			?>
+		</p>
 		<?php
 	}
 
@@ -290,6 +351,7 @@ class Leads_Settings {
 				<label for="<?php echo esc_attr( 'profotograaf-' . $slug . '-source-tag' ); ?>"><?php esc_html_e( 'Source tag', 'profotograaf' ); ?></label>
 				<input type="text" class="regular-text" maxlength="<?php echo esc_attr( (string) Form_Settings::MAX_TAG ); ?>" id="<?php echo esc_attr( 'profotograaf-' . $slug . '-source-tag' ); ?>" name="<?php echo esc_attr( $base . '[source_tag]' ); ?>" value="<?php echo esc_attr( $config['source_tag'] ); ?>">
 			</p>
+			<?php $this->render_skips( $form['key'] ); ?>
 			<p class="description"><?php esc_html_e( 'Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name.', 'profotograaf' ); ?></p>
 			<table class="profotograaf-leads-map" data-profotograaf-map>
 				<?php foreach ( $targets as $target => $title ) : ?>

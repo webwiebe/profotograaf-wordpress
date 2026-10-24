@@ -144,7 +144,11 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		$this->assertSame(
 			array(
 				'forms' => array(
-					'stub:1' => array(
+					'native:enquiry' => array(
+						'enabled' => false,
+						'map'     => array(),
+					),
+					'stub:1'         => array(
 						'enabled' => true,
 						'map'     => array(
 							'email' => 'mail',
@@ -397,6 +401,64 @@ class Leads_Settings_Test extends Leads_Test_Case {
 		foreach ( array( 'profotograaf_sync_galleries', 'profotograaf_clear_gallery_index', 'profotograaf_leads_dismiss' ) as $action ) {
 			$this->assertStringContainsString( 'value="' . $action . '"', $html );
 		}
+	}
+
+	public function test_saving_keeps_the_switch_of_the_enquiry_block(): void {
+		$this->allow( true );
+		$_POST = array(
+			'forms' => array(
+				'native:enquiry' => array( 'enabled' => '1' ),
+			),
+		);
+		$this->page->handle_save();
+		$this->assertTrue( ( new Form_Settings() )->enabled( 'native:enquiry' ) );
+
+		$_POST = array( 'forms' => array( 'stub:1' => array( 'enabled' => '1' ) ) );
+		$this->page->handle_save();
+		$this->assertFalse( ( new Form_Settings() )->enabled( 'native:enquiry' ) );
+	}
+
+	private function render_page(): string {
+		Functions\when( 'get_current_user_id' )->justReturn( 3 );
+		Functions\when( 'number_format_i18n' )->returnArg();
+		Functions\when( 'wp_nonce_field' )->justReturn( '' );
+		Functions\when( 'settings_fields' )->justReturn( null );
+		Functions\when( 'sanitize_html_class' )->returnArg();
+		Functions\when( 'esc_url' )->returnArg();
+		Functions\when( 'selected' )->justReturn( '' );
+		Functions\when( 'checked' )->justReturn( '' );
+		Functions\when( 'submit_button' )->alias( fn( $label = '' ) => print( '<button>' . $label . '</button>' ) );
+
+		ob_start();
+		$this->page->render();
+		return (string) ob_get_clean();
+	}
+
+	public function test_the_page_lists_the_enquiry_block_with_its_switch_and_status(): void {
+		$this->allow( true );
+
+		$html = $this->render_page();
+
+		$this->assertStringContainsString( 'Profotograaf enquiry block', $html );
+		$this->assertStringContainsString( 'name="forms[native:enquiry][enabled]"', $html );
+		$this->assertStringNotContainsString( 'name="forms[native:enquiry][map]', $html );
+	}
+
+	public function test_the_page_shows_how_many_submissions_were_skipped_for_lack_of_an_email(): void {
+		$this->allow( true );
+		$skips = new \Profotograaf\Leads\Skip_Counter();
+		$skips->record( 'stub:1', $this->now );
+		$skips->record( 'stub:1', $this->now );
+
+		$html = $this->render_page();
+
+		$this->assertStringContainsString( '2 submissions were not sent because they had no email address', $html );
+	}
+
+	public function test_the_page_says_nothing_about_skips_when_there_are_none(): void {
+		$this->allow( true );
+
+		$this->assertStringNotContainsString( 'no email address', $this->render_page() );
 	}
 
 	public function test_a_tool_notice_is_not_shown_twice(): void {
