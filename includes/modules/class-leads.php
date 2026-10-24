@@ -102,7 +102,12 @@ class Leads implements Module {
 		$delivery = new Delivery( $queue, $plugin->api(), $plugin->connection() );
 		$delivery->register();
 		// A new pairing grants the leads permission, so enquiries it refused go out again.
-		add_action( 'profotograaf_connected', array( $delivery, 'requeue_denied' ) );
+		add_action(
+			'profotograaf_connected',
+			static function () use ( $delivery ): void {
+				$delivery->requeue_denied();
+			}
+		);
 
 		$cron = new Cron_Health( $queue );
 		$cron->register();
