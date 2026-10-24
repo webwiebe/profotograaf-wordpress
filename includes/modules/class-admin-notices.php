@@ -49,10 +49,10 @@ class Admin_Notices implements Module {
 	public const REVOKED = 'revoked';
 	public const REFRESH = 'refresh';
 	public const LEADS   = 'leads';
+	public const SYNC    = 'sync';
 
 	public const LEADS_RECONNECT = 'leads_reconnect';
 	public const LEADS_WAITING   = 'leads_waiting';
-	public const SYNC    = 'sync';
 
 	public const BACKUP_STORAGE = 'backup_storage';
 	public const BACKUP_FAILED  = 'backup_failed';

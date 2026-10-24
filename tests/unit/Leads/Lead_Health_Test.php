@@ -61,7 +61,7 @@ class Lead_Health_Test extends Leads_Test_Case {
 
 		$this->assertTrue( $this->connection->needs_leads_reconnect() );
 
-		$this->connection->save_tokens( array( 'access_token' => 'a2', 'refresh_token' => 'r2' ), $this->now );
+		$this->connection->save_tokens( array( 'access_token' => 'a2', 'refresh_token' => 'r2', 'scope' => 'galleries:read leads:write' ), $this->now );
 		$this->assertTrue( $this->connection->needs_leads_reconnect(), 'a refresh keeps the flag' );
 
 		$this->connection->record_grant( 1 );
@@ -73,7 +73,7 @@ class Lead_Health_Test extends Leads_Test_Case {
 	}
 
 	public function test_a_403_from_the_leads_route_flags_the_connection(): void {
-		$this->connect( 100000, 'a', 'r', null );
+		$this->connect( 100000, 'a', 'r', 'galleries:read leads:write' );
 		$http = new Fake_Transport();
 		$http->reply( 403, array( 'error' => 'insufficient_scope' ) );
 		$this->queue->enqueue( 'a', self::PAYLOAD );
@@ -86,7 +86,7 @@ class Lead_Health_Test extends Leads_Test_Case {
 	}
 
 	public function test_a_delivered_lead_clears_the_flag(): void {
-		$this->connect( 100000, 'a', 'r', null );
+		$this->connect( 100000, 'a', 'r', 'galleries:read leads:write' );
 		$this->connection->flag_leads_denied();
 		$http = new Fake_Transport();
 		$http->reply( 201, array( 'id' => 'lead-1' ) );
@@ -118,6 +118,7 @@ class Lead_Health_Test extends Leads_Test_Case {
 	}
 
 	public function test_the_fallback_address_defaults_to_the_admin_email(): void {
+		unset( $this->options[ Settings::OPTION ] );
 		$settings = new Settings();
 
 		$this->assertSame( 'admin@example.com', $settings->get( 'leads_fallback_email' ) );
@@ -129,6 +130,34 @@ class Lead_Health_Test extends Leads_Test_Case {
 		$this->assertSame( '', ( new Settings() )->get( 'leads_fallback_email' ) );
 	}
 
+	public function test_saving_another_setting_does_not_freeze_the_derived_fallback_address(): void {
+		unset( $this->options[ Settings::OPTION ] );
+		$settings = new Settings();
+
+		$saved = $settings->sanitize( array( 'leads_enabled' => '1' ) );
+
+		$this->assertArrayNotHasKey( 'leads_fallback_email', $saved );
+		$this->options['admin_email'] = 'new-admin@example.com';
+		$this->options[ Settings::OPTION ] = $saved;
+		$this->assertSame( 'new-admin@example.com', ( new Settings() )->get( 'leads_fallback_email' ) );
+	}
+
+	public function test_migrating_old_settings_does_not_freeze_the_derived_fallback_address(): void {
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => true );
+
+		( new Settings() )->migrate();
+
+		$this->assertArrayNotHasKey( 'leads_fallback_email', $this->options[ Settings::OPTION ] );
+	}
+
+	public function test_a_fallback_address_that_was_saved_stays_saved(): void {
+		$this->options[ Settings::OPTION ] = array( 'leads_fallback_email' => 'studio@example.com' );
+
+		$saved = ( new Settings() )->sanitize( array( 'leads_enabled' => '1' ) );
+
+		$this->assertSame( 'studio@example.com', $saved['leads_fallback_email'] );
+	}
+
 	public function test_a_saved_fallback_address_wins(): void {
 		$this->options[ Settings::OPTION ] = array( 'leads_fallback_email' => 'studio@example.com' );
 
@@ -136,6 +165,7 @@ class Lead_Health_Test extends Leads_Test_Case {
 	}
 
 	public function test_a_failed_enquiry_is_mailed_to_the_admin_email_without_any_setting(): void {
+		unset( $this->options[ Settings::OPTION ] );
 		$this->queue->enqueue( 'a', self::PAYLOAD );
 		$job = $this->store->jobs['a'];
 		$this->queue->fail( $job, 'Forbidden', 403 );

@@ -211,6 +211,10 @@ final class Settings {
 			} elseif ( '' !== $tab && $tab === $entry['tab'] && 'bool' === $entry['type'] ) {
 				$raw = false;
 			} else {
+				if ( 'leads_fallback_email' === $key && ! $this->is_stored( $key ) ) {
+					// Keep following the admin email until the photographer saves a choice.
+					continue;
+				}
 				$clean[ $key ] = $this->get( $key );
 				continue;
 			}
@@ -218,6 +222,16 @@ final class Settings {
 			$clean[ $key ] = null === $value ? $this->get( $key ) : $value;
 		}
 		return $clean;
+	}
+
+	/**
+	 * Whether a value for the key is saved, as opposed to derived or defaulted.
+	 *
+	 * @param string $key Schema key.
+	 */
+	private function is_stored( string $key ): bool {
+		$stored = get_option( self::OPTION, array() );
+		return is_array( $stored ) && array_key_exists( $key, $stored );
 	}
 
 	/**

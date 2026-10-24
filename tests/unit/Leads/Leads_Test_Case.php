@@ -54,6 +54,8 @@ abstract class Leads_Test_Case extends Wp_Test_Case {
 		parent::setUp();
 		$this->store                  = new Memory_Job_Store();
 		$this->options['admin_email'] = 'admin@example.com';
+		// The fallback address defaults to the admin email; most tests count alert mails only.
+		$this->options['profotograaf_settings'] = array( 'leads_fallback_email' => '' );
 		$this->queue                  = new Queue( $this->store, fn() => $this->now, new Lead_Alerts( new Settings() ) );
 		$this->dispatcher             = new Dispatcher( new Form_Settings(), $this->queue );
 
