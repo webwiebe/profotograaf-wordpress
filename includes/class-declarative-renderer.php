@@ -32,7 +32,22 @@ final class Declarative_Renderer {
 	 *
 	 * @var string[]
 	 */
-	private const SERVED_ATTRIBUTES = array( 'data-layout', 'data-captions', 'data-badge', 'data-lightbox' );
+	private const SERVED_ATTRIBUTES = array(
+		'data-layout',
+		'data-captions',
+		'data-badge',
+		'data-lightbox',
+		'data-columns',
+		'data-columns-tablet',
+		'data-columns-mobile',
+		'data-gap',
+		'data-gap-row',
+		'data-gap-column',
+		'data-radius',
+		'data-shadow',
+		'data-hover',
+		'data-hover-strength',
+	);
 
 	/**
 	 * The layouts a server draws completely.
@@ -55,13 +70,17 @@ final class Declarative_Renderer {
 			return null;
 		}
 		$captions = self::captions( $attrs );
+		$grow     = Declarative_Look::grow( $attrs );
 		$tiles    = '';
 		foreach ( $photos as $i => $photo ) {
-			$tiles .= self::tile( (array) $photo, (string) ( $gallery['title'] ?? '' ), (int) $i, $layout, $captions );
+			$tiles .= self::tile( (array) $photo, (string) ( $gallery['title'] ?? '' ), (int) $i, $layout, $captions, $grow );
 		}
+		$classes = implode( ' ', array_merge( array( 'gallery', $layout ), Declarative_Look::classes( $attrs, $layout ) ) );
+		$style   = Declarative_Look::style( $attrs, $layout, count( $photos ) );
+		$style   = '' === $style ? '' : ' style="' . self::esc( $style ) . '"';
 		$css = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
 		return '<template shadowrootmode="open"><style>' . ( false === $css ? '' : $css ) . '</style>'
-			. '<div class="pf"><div class="gallery ' . $layout . '"><div class="photos">' . $tiles . '</div></div></div>'
+			. '<div class="pf"><div class="' . $classes . '"' . $style . '><div class="photos">' . $tiles . '</div></div></div>'
 			. self::badge( (array) ( $gallery['badge'] ?? array() ), $attrs, $badge )
 			. '</template>';
 	}
@@ -139,21 +158,23 @@ final class Declarative_Renderer {
 	 * @param int                 $i        Index.
 	 * @param string              $layout   grid or masonry.
 	 * @param string              $captions off, below or overlay.
+	 * @param bool                $grow     The grow hover is on: the outermost element carries `u`.
 	 */
-	private static function tile( array $photo, string $title, int $i, string $layout, string $captions ): string {
+	private static function tile( array $photo, string $title, int $i, string $layout, string $captions, bool $grow ): string {
 		$alt    = (string) ( $photo['alt'] ?? '' );
 		$alt    = '' !== $alt ? $alt : (string) ( $photo['title'] ?? '' );
 		$alt    = '' !== $alt ? $alt : (string) ( $photo['caption'] ?? '' );
 		$alt    = '' !== $alt ? $alt : $title . ' ' . ( $i + 1 );
-		$button = '<button class="tile" type="button" aria-label="' . self::esc( $alt ) . '">' . self::image( $photo, $alt, 'grid' === $layout ) . '</button>';
 		$text   = 'off' === $captions ? '' : implode( ' - ', array_filter( array( (string) ( $photo['title'] ?? '' ), (string) ( $photo['caption'] ?? '' ) ), static fn( string $part ): bool => '' !== $part ) );
+		$mark   = $grow ? ' u' : '';
+		$button = '<button class="tile' . ( '' === $text ? $mark : '' ) . '" type="button" aria-label="' . self::esc( $alt ) . '">' . self::image( $photo, $alt, 'grid' === $layout ) . '</button>';
 		if ( '' === $text ) {
 			return $button;
 		}
 		if ( 'below' === $captions ) {
-			return '<figure class="item">' . $button . '<figcaption class="below">' . self::esc( $text ) . '</figcaption></figure>';
+			return '<figure class="item' . $mark . '">' . $button . '<figcaption class="below">' . self::esc( $text ) . '</figcaption></figure>';
 		}
-		return '<figure class="item ov">' . $button . '<figcaption class="cap">' . self::esc( $text ) . '</figcaption></figure>';
+		return '<figure class="item ov' . $mark . '">' . $button . '<figcaption class="cap">' . self::esc( $text ) . '</figcaption></figure>';
 	}
 
 	/**
