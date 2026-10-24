@@ -371,7 +371,7 @@ msgstr "Verbinden met Profotograaf"
 msgid "Default gallery layout"
 msgstr "Standaardindeling van galerijen"
 
-#: includes/class-elementor-gallery-widget.php:121
+#: includes/class-builder-gallery.php:67
 #: includes/class-settings-schema.php:133
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
@@ -379,7 +379,7 @@ msgstr "Standaardindeling van galerijen"
 msgid "Grid"
 msgstr "Raster"
 
-#: includes/class-elementor-gallery-widget.php:122
+#: includes/class-builder-gallery.php:68
 #: includes/class-settings-schema.php:134
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
@@ -387,7 +387,7 @@ msgstr "Raster"
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/class-elementor-gallery-widget.php:123
+#: includes/class-builder-gallery.php:69
 #: includes/class-settings-schema.php:135
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
@@ -475,9 +475,9 @@ msgid_plural "%d photos"
 msgstr[0] "%d foto"
 msgstr[1] "%d foto's"
 
-#: includes/class-elementor-gallery-widget.php:119
-#: includes/class-elementor-gallery-widget.php:135
-#: includes/class-elementor-gallery-widget.php:147
+#: includes/class-builder-gallery.php:65
+#: includes/class-builder-gallery.php:80
+#: includes/class-builder-gallery.php:94
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
@@ -505,6 +505,8 @@ msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord,
 #: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: includes/class-divi-gallery-module.php:52
+#: includes/class-divi-gallery-module.php:72
 #: includes/class-elementor-gallery-widget.php:99
 #: includes/class-elementor-gallery-widget.php:105
 #: build/client-galleries/index.js:3
@@ -515,6 +517,7 @@ msgstr "Deze galerij kan nu niet op andere sites worden getoond. Een wachtwoord,
 msgid "Gallery"
 msgstr "Galerij"
 
+#: includes/class-divi-gallery-module.php:76
 #: includes/class-elementor-gallery-widget.php:116
 #: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
@@ -1396,7 +1399,7 @@ msgstr "Niet nu"
 msgid "Profotograaf default"
 msgstr "Standaard van Profotograaf"
 
-#: includes/class-elementor-gallery-widget.php:148
+#: includes/class-builder-gallery.php:81
 #: includes/class-settings-schema.php:221
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:8
@@ -1404,7 +1407,7 @@ msgstr "Standaard van Profotograaf"
 msgid "On"
 msgstr "Aan"
 
-#: includes/class-elementor-gallery-widget.php:149
+#: includes/class-builder-gallery.php:82
 #: includes/class-settings-schema.php:222
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:8
@@ -1417,7 +1420,7 @@ msgstr "Uit"
 msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
 msgstr "Een blok of shortcode kan een eigen waarde instellen. Laat leeg voor de standaard van Profotograaf."
 
-#: includes/class-elementor-gallery-widget.php:179
+#: includes/class-builder-gallery.php:113
 #: includes/class-settings-schema.php:233
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
@@ -1429,7 +1432,7 @@ msgstr "Kolommen"
 msgid "Columns on wide screens, from 1 to 8."
 msgstr "Kolommen op brede schermen, van 1 tot 8."
 
-#: includes/class-elementor-gallery-widget.php:174
+#: includes/class-builder-gallery.php:108
 #: includes/class-settings-schema.php:242
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -1440,7 +1443,7 @@ msgstr "Kolommen op tablets"
 msgid "Columns on medium screens, from 1 to 8."
 msgstr "Kolommen op middelgrote schermen, van 1 tot 8."
 
-#: includes/class-elementor-gallery-widget.php:177
+#: includes/class-builder-gallery.php:111
 #: includes/class-settings-schema.php:251
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -1566,7 +1569,8 @@ msgstr "Knop Meer laden"
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr "Voeg een knop toe die de volgende foto's toont als \"Foto's per pagina\" is ingesteld."
 
-#: includes/class-elementor-gallery-widget.php:144
+#: includes/class-divi-gallery-module.php:81
+#: includes/class-elementor-gallery-widget.php:138
 #: includes/class-settings-schema.php:325
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -3599,6 +3603,7 @@ msgstr "Deze galerij heeft nog geen deellink. Kies een andere galerij."
 msgid "No gallery chosen. The block links to the client portal."
 msgstr "Geen galerij gekozen. Het blok linkt naar het klantportaal."
 
+#: includes/class-divi-gallery-module.php:73
 #: includes/class-elementor-gallery-widget.php:107
 #: build/client-galleries/index.js:3
 msgid "Choose a gallery"
@@ -4488,6 +4493,7 @@ msgstr "Galerijen tonen alleen hun terugvallink zolang het gallerijscript in de 
 msgid "Install the plugin again from the release zip. A copy made from the source needs pnpm install and pnpm build first."
 msgstr "Installeer de plugin opnieuw vanuit de release-zip. Een kopie uit de broncode heeft eerst pnpm install en pnpm build nodig."
 
+#: includes/class-divi-gallery-module.php:46
 #: includes/class-elementor-gallery-widget.php:56
 msgid "Profotograaf Gallery"
 msgstr "Profotograaf-galerij"
@@ -4504,10 +4510,11 @@ msgstr "fotografie"
 msgid "client gallery"
 msgstr "klantgalerij"
 
+#: includes/class-divi-gallery-module.php:74
 #: includes/class-elementor-gallery-widget.php:109
 msgid "No galleries yet. Connect your Profotograaf account under Settings, Profotograaf."
 msgstr "Nog geen galerijen. Koppel je Profotograaf-account onder Instellingen, Profotograaf."
 
-#: includes/class-elementor-gallery-widget.php:120
+#: includes/class-builder-gallery.php:66
 msgid "Automatic"
 msgstr "Automatisch"
