@@ -42,7 +42,8 @@ final class Form_Settings {
 			}
 		}
 		return array(
-			'enabled'    => ! empty( $form['enabled'] ),
+			// The block of this plugin is on until the photographer switches it off.
+			'enabled'    => array_key_exists( 'enabled', $form ) ? ! empty( $form['enabled'] ) : Enquiry_Form::FORM_KEY === $form_key,
 			'map'        => $map,
 			'source_tag' => self::clean_tag( $form['source_tag'] ?? '' ),
 		);

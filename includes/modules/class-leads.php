@@ -14,6 +14,7 @@ use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Contact_Form_7;
 use Profotograaf\Leads\Delivery;
 use Profotograaf\Leads\Dispatcher;
+use Profotograaf\Leads\Enquiry_Form;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Gravity_Forms;
 use Profotograaf\Leads\Lead_Alerts;
@@ -82,6 +83,8 @@ class Leads implements Module {
 				}
 			}
 		);
+
+		( new Enquiry_Form( $dispatcher, static fn(): bool => (bool) $plugin->settings()->get( 'leads_enabled' ) ) )->register();
 
 		$store    = new Option_Job_Store();
 		$delivery = new Delivery( $queue, $plugin->api() );

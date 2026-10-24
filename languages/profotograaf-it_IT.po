@@ -147,6 +147,7 @@ msgid "Name"
 msgstr "Nome"
 
 #: includes/admin/class-leads-settings.php:273
+#: includes/leads/class-enquiry-form.php:147
 msgid "Email address"
 msgstr "Indirizzo email"
 
@@ -716,6 +717,42 @@ msgstr "Consegnati %1$d, nuovo tentativo per %2$d, non riusciti %3$d. In sospeso
 #: includes/cli/class-status-command.php:111
 msgid "WP-Cron is not delivering leads. Run `wp profotograaf leads flush` from a system cron."
 msgstr "WP-Cron non sta consegnando i contatti. Esegui `wp profotograaf leads flush` da un cron di sistema."
+
+#: includes/leads/class-enquiry-form.php:146
+msgid "Your name"
+msgstr "Il tuo nome"
+
+#: includes/leads/class-enquiry-form.php:148
+msgid "Date of your event"
+msgstr "Data del tuo evento"
+
+#: includes/leads/class-enquiry-form.php:149
+msgid "Your message"
+msgstr "Il tuo messaggio"
+
+#: includes/leads/class-enquiry-form.php:152
+msgid "Leave this field empty"
+msgstr "Lascia vuoto questo campo"
+
+#: includes/leads/class-enquiry-form.php:154
+msgid "Send enquiry"
+msgstr "Invia la richiesta"
+
+#: includes/leads/class-enquiry-form.php:334
+msgid "Thank you. Your enquiry was received and I will get back to you soon."
+msgstr "Grazie. La tua richiesta è stata ricevuta e ti risponderò presto."
+
+#: includes/leads/class-enquiry-form.php:335
+msgid "Check your name and email address and send the form again."
+msgstr "Controlla il tuo nome e il tuo indirizzo email e invia di nuovo il modulo."
+
+#: includes/leads/class-enquiry-form.php:336
+msgid "Too many enquiries from your connection. Try again in an hour."
+msgstr "Troppe richieste dalla tua connessione. Riprova tra un'ora."
+
+#: includes/leads/class-enquiry-form.php:337
+msgid "Your enquiry was not received. Try again in a few minutes."
+msgstr "La tua richiesta non è stata ricevuta. Riprova tra qualche minuto."
 
 #: includes/leads/class-lead-alerts.php:61
 msgid "An enquiry could not be delivered"
@@ -1491,6 +1528,7 @@ msgid "photography"
 msgstr "fotografia"
 
 #: blocks/client-galleries/block.json
+#: blocks/enquiry/block.json
 #: blocks/full-page-gallery/block.json
 #: blocks/gallery/block.json
 msgctxt "block keyword"
@@ -1591,10 +1629,6 @@ msgstr "portale"
 #: patterns/client-portal-cta.php:15
 msgid "login"
 msgstr "accesso"
-
-#: patterns/contact-page.php:23
-msgid "Replace this text with your enquiry form block."
-msgstr "Sostituisci questo testo con il blocco del tuo modulo di richiesta."
 
 #: patterns/contact-page.php:27
 msgid "Contact page with enquiry form"
@@ -3544,6 +3578,41 @@ msgstr "condividi"
 msgctxt "block variation keyword"
 msgid "delivered"
 msgstr "consegnata"
+
+#: blocks/enquiry/block.json
+msgctxt "block title"
+msgid "Enquiry form"
+msgstr "Modulo di richiesta"
+
+#: blocks/enquiry/block.json
+msgctxt "block description"
+msgid "A form with name, email, date and message. Each enquiry reaches your Profotograaf leads and your inbox."
+msgstr "Un modulo con nome, email, data e messaggio. Ogni richiesta arriva nei tuoi lead Profotograaf e nella tua casella di posta."
+
+#: blocks/enquiry/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr "contatto"
+
+#: blocks/enquiry/block.json
+msgctxt "block keyword"
+msgid "enquiry"
+msgstr "richiesta"
+
+#: blocks/enquiry/block.json
+msgctxt "block keyword"
+msgid "booking"
+msgstr "prenotazione"
+
+#: blocks/enquiry/block.json
+msgctxt "block keyword"
+msgid "lead"
+msgstr "lead"
+
+#: blocks/enquiry/block.json
+msgctxt "block keyword"
+msgid "form"
+msgstr "modulo"
 
 #: includes/modules/class-virtual-edit-guard.php:79
 #: build/virtual-edit-editor/index.js:1
