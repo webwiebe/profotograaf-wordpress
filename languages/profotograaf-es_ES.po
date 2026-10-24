@@ -60,23 +60,23 @@ msgstr "Muestra tus galerías de Profotograaf en tu propio sitio, ofrece a tus c
 msgid "https://profotograaf.nl"
 msgstr "https://profotograaf.nl"
 
-#: includes/admin/class-leads-settings.php:104
-#: includes/admin/class-leads-settings.php:202
+#: includes/admin/class-leads-settings.php:115
+#: includes/admin/class-leads-settings.php:213
 #: includes/modules/class-privacy.php:79
 #: includes/modules/class-privacy.php:96
 #: includes/modules/class-privacy.php:117
 msgid "Profotograaf enquiries"
 msgstr "Consultas de Profotograaf"
 
-#: includes/admin/class-leads-settings.php:105
+#: includes/admin/class-leads-settings.php:116
 #: includes/class-settings-schema.php:63
 msgid "Enquiry forms"
 msgstr "Formularios de consulta"
 
-#: includes/admin/class-leads-settings.php:196
-#: includes/admin/class-leads-settings.php:476
+#: includes/admin/class-leads-settings.php:207
+#: includes/admin/class-leads-settings.php:538
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:307
+#: includes/modules/class-admin-notices.php:322
 #: includes/modules/class-backup.php:202
 #: includes/modules/class-link-consent-prompt.php:90
 #: includes/modules/class-media-upload.php:351
@@ -90,124 +90,120 @@ msgstr "Formularios de consulta"
 msgid "You do not have permission to do this."
 msgstr "No tienes permiso para hacer esto."
 
-#: includes/admin/class-leads-settings.php:205
+#: includes/admin/class-leads-settings.php:216
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
 msgstr "Envía las consultas de tus formularios de contacto a tu bandeja de entrada de Profotograaf. Activa un formulario y comprueba qué campo alimenta cada parte de la consulta. No se envía nada de un formulario que dejes desactivado."
 
-#: includes/admin/class-leads-settings.php:210
+#: includes/admin/class-leads-settings.php:221
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr "Este sitio no está conectado a Profotograaf, así que las consultas esperan en una cola."
 
 #: includes/admin/class-backup-panel.php:84
-#: includes/admin/class-leads-settings.php:211
-#: includes/modules/class-admin-notices.php:179
+#: includes/admin/class-leads-settings.php:222
+#: includes/modules/class-admin-notices.php:180
 msgid "Connect this site"
 msgstr "Conectar este sitio"
 
-#: includes/admin/class-leads-settings.php:216
+#: includes/admin/class-leads-settings.php:227
 msgid "Site defaults"
 msgstr "Valores predeterminados del sitio"
 
-#: includes/admin/class-leads-settings.php:217
+#: includes/admin/class-leads-settings.php:228
 msgid "Save defaults"
 msgstr "Guardar valores predeterminados"
 
-#: includes/admin/class-leads-settings.php:219
+#: includes/admin/class-leads-settings.php:230
 msgid "Forms"
 msgstr "Formularios"
 
-#: includes/admin/class-leads-settings.php:221
+#: includes/admin/class-leads-settings.php:239
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
 msgstr "No se encontró ningún plugin de formularios compatible. Instala Contact Form 7, WPForms o Gravity Forms y crea un formulario."
 
-#: includes/admin/class-leads-settings.php:229
+#: includes/admin/class-leads-settings.php:241
 msgid "Save changes"
 msgstr "Guardar cambios"
 
-#: includes/admin/class-leads-settings.php:233
+#: includes/admin/class-leads-settings.php:244
 msgid "Delivery"
 msgstr "Entrega"
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
-#: includes/admin/class-leads-settings.php:239
+#: includes/admin/class-leads-settings.php:250
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
 msgstr "Pendientes de envío: %1$d. No se pudieron enviar: %2$d."
 
-#: includes/admin/class-leads-settings.php:251
+#: includes/admin/class-leads-settings.php:262
 msgid "Sync galleries now"
 msgstr "Sincronizar galerías ahora"
 
-#: includes/admin/class-leads-settings.php:252
+#: includes/admin/class-leads-settings.php:263
 msgid "Clear the gallery index"
 msgstr "Vaciar el índice de galerías"
 
-#: includes/admin/class-leads-settings.php:272
+#: includes/admin/class-leads-settings.php:333
 #: includes/modules/class-privacy.php:187
 msgid "Name"
 msgstr "Nombre"
 
-#: includes/admin/class-leads-settings.php:273
+#: includes/admin/class-leads-settings.php:334
 #: includes/leads/class-enquiry-form.php:161
 msgid "Email address"
 msgstr "Dirección de correo electrónico"
 
-#: includes/admin/class-leads-settings.php:274
+#: includes/admin/class-leads-settings.php:335
 #: includes/modules/class-privacy.php:189
 msgid "Phone"
 msgstr "Teléfono"
 
-#: includes/admin/class-leads-settings.php:275
+#: includes/admin/class-leads-settings.php:336
 msgid "Event date"
 msgstr "Fecha del evento"
 
-#: includes/admin/class-leads-settings.php:276
+#: includes/admin/class-leads-settings.php:337
 #: includes/modules/class-privacy.php:191
 msgid "Message"
 msgstr "Mensaje"
 
-#: includes/admin/class-leads-settings.php:286
+#: includes/admin/class-leads-settings.php:347
 msgid "Send submissions of this form to Profotograaf"
 msgstr "Enviar los envíos de este formulario a Profotograaf"
 
-#: includes/admin/class-leads-settings.php:290
-msgid "Source tag"
-msgstr "Etiqueta de origen"
-
-#: includes/admin/class-leads-settings.php:293
+#: includes/admin/class-leads-settings.php:355
 msgid "Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name."
 msgstr "Se muestra como origen de la consulta en tu bandeja de entrada de Profotograaf. Déjalo vacío para usar el plugin de formularios y el nombre del formulario."
 
 #. translators: %s: name of the form field that is picked automatically.
-#: includes/admin/class-leads-settings.php:310
+#: includes/admin/class-leads-settings.php:372
 #, php-format
 msgid "Automatic (%s)"
 msgstr "Automático (%s)"
 
-#: includes/admin/class-leads-settings.php:311
+#: includes/admin/class-leads-settings.php:373
 msgid "Automatic (no field found)"
 msgstr "Automático (no se encontró ningún campo)"
 
-#: includes/admin/class-leads-settings.php:315
+#: includes/admin/class-leads-settings.php:377
 #: includes/modules/class-media-upload.php:171
 msgid "Do not send"
 msgstr "No enviar"
 
-#: includes/admin/class-leads-settings.php:324
+#: includes/admin/class-leads-settings.php:386
 msgid "Every other field is sent along as a label and value."
 msgstr "Cada uno de los demás campos se envía con su etiqueta y su valor."
 
 #. translators: 1: form name, 2: error message.
-#: includes/admin/class-leads-settings.php:346
+#: includes/admin/class-leads-settings.php:408
 #, php-format
 msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
-#: includes/admin/class-leads-settings.php:355
+#: includes/admin/class-leads-settings.php:417
 msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
 msgstr "Las consultas que no se pudieron enviar se conservan en este sitio hasta que las exportes y las elimines o hasta que pase el periodo de conservación de los ajustes."
 
-#: includes/admin/class-leads-settings.php:358
+#: includes/admin/class-leads-settings.php:420
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
@@ -215,23 +211,23 @@ msgstr "Las consultas que no se pudieron enviar se conservan en este sitio hasta
 msgid "Try again"
 msgstr "Reintentar"
 
-#: includes/admin/class-leads-settings.php:359
+#: includes/admin/class-leads-settings.php:421
 msgid "Download as CSV"
 msgstr "Descargar como CSV"
 
-#: includes/admin/class-leads-settings.php:361
+#: includes/admin/class-leads-settings.php:423
 msgid "Remove exported enquiries"
 msgstr "Eliminar consultas exportadas"
 
-#: includes/admin/class-leads-settings.php:411
+#: includes/admin/class-leads-settings.php:473
 msgid "Changes saved."
 msgstr "Cambios guardados."
 
-#: includes/admin/class-leads-settings.php:413
+#: includes/admin/class-leads-settings.php:475
 msgid "The enquiries are queued again."
 msgstr "Las consultas se han puesto de nuevo en cola."
 
-#: includes/admin/class-leads-settings.php:415
+#: includes/admin/class-leads-settings.php:477
 msgid "The exported enquiries were removed."
 msgstr "Se eliminaron las consultas exportadas."
 
@@ -403,11 +399,36 @@ msgstr "Profotograaf aprobó la conexión pero no envió tokens. Empieza de nuev
 msgid "General"
 msgstr "General"
 
-#: includes/admin/class-leads-settings.php:248
+#: includes/admin/class-leads-settings.php:259
 #: includes/class-settings-schema.php:62
 #: includes/modules/class-privacy.php:229
 msgid "Galleries"
 msgstr "Galerías"
+
+#: includes/admin/class-leads-settings.php:278
+msgid "Profotograaf enquiry block"
+msgstr "Bloque de consultas de Profotograaf"
+
+#: includes/admin/class-leads-settings.php:282
+msgid "Send enquiries from the enquiry block to Profotograaf"
+msgstr "Enviar a Profotograaf las consultas del bloque de consultas"
+
+#: includes/admin/class-leads-settings.php:286
+#: includes/admin/class-leads-settings.php:351
+msgid "Source tag"
+msgstr "Etiqueta de origen"
+
+#: includes/admin/class-leads-settings.php:289
+msgid "The block is part of this plugin, so it needs no field mapping. Add it from the block inserter, or start from the contact page pattern."
+msgstr "El bloque forma parte de este plugin y no necesita asignar campos. Añádelo desde el insertor de bloques o empieza con el patrón de la página de contacto."
+
+#. translators: %s: number of submissions.
+#: includes/admin/class-leads-settings.php:311
+#, php-format
+msgid "%s submission was not sent because it had no email address. Check that the form has an email field."
+msgid_plural "%s submissions were not sent because they had no email address. Check that the form has an email field."
+msgstr[0] "%s envío no se transmitió porque no tenía dirección de correo. Comprueba que el formulario tenga un campo de correo."
+msgstr[1] "%s envíos no se transmitieron porque no tenían dirección de correo. Comprueba que el formulario tenga un campo de correo."
 
 #: includes/class-settings-schema.php:65
 msgid "Advanced"
@@ -831,50 +852,62 @@ msgstr[1] "Se sincronizaron %s galerías."
 msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
 msgstr "Se vació el índice de galerías. Se vuelve a llenar cuando se muestra o sincroniza una galería."
 
-#: includes/modules/class-admin-notices.php:141
+#: includes/modules/class-admin-notices.php:142
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr "Profotograaf ya no está conectado. La conexión se terminó en tu cuenta de Profotograaf."
 
 #: includes/admin/class-backup-panel.php:93
-#: includes/modules/class-admin-notices.php:143
-#: includes/modules/class-admin-notices.php:165
+#: includes/modules/class-admin-notices.php:144
+#: includes/modules/class-admin-notices.php:166
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Volver a conectar este sitio"
 
-#: includes/modules/class-admin-notices.php:151
+#: includes/modules/class-admin-notices.php:152
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr "Profotograaf no pudo renovar la conexión. Las galerías y las consultas dejan de funcionar cuando caduca."
 
-#: includes/modules/class-admin-notices.php:153
+#: includes/modules/class-admin-notices.php:154
 msgid "Check the connection"
 msgstr "Comprobar la conexión"
 
-#: includes/modules/class-admin-notices.php:163
+#: includes/modules/class-admin-notices.php:164
 msgid "Profotograaf cannot send your enquiries yet. This connection lacks the permission to receive enquiries."
 msgstr "Profotograaf aún no puede enviar tus consultas. Esta conexión no tiene permiso para recibir consultas."
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:175
+#: includes/modules/class-admin-notices.php:176
 #, php-format
 msgid "%d enquiry is waiting to be sent because this site is not connected to Profotograaf."
 msgid_plural "%d enquiries are waiting to be sent because this site is not connected to Profotograaf."
 msgstr[0] "%d consulta espera a ser enviada porque este sitio no está conectado a Profotograaf."
 msgstr[1] "%d consultas esperan a ser enviadas porque este sitio no está conectado a Profotograaf."
 
+#. translators: %s: names of the forms, separated by commas.
+#: includes/modules/class-admin-notices.php:190
+#, php-format
+msgid "%s now sends its enquiries to Profotograaf. Check its fields and switch."
+msgid_plural "%s now send their enquiries to Profotograaf. Check their fields and switches."
+msgstr[0] "%s ahora envía sus consultas a Profotograaf. Revisa sus campos y su interruptor."
+msgstr[1] "%s ahora envían sus consultas a Profotograaf. Revisa sus campos y sus interruptores."
+
+#: includes/modules/class-admin-notices.php:194
+msgid "Review the forms"
+msgstr "Revisar los formularios"
+
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:191
+#: includes/modules/class-admin-notices.php:206
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] "No se pudo entregar %d consulta a Profotograaf."
 msgstr[1] "No se pudieron entregar %d consultas a Profotograaf."
 
-#: includes/modules/class-admin-notices.php:195
+#: includes/modules/class-admin-notices.php:210
 msgid "Retry or export the enquiries"
 msgstr "Reintentar o exportar las consultas"
 
-#: includes/modules/class-admin-notices.php:296
+#: includes/modules/class-admin-notices.php:311
 msgid "Dismiss"
 msgstr "Descartar"
 
@@ -3528,7 +3561,7 @@ msgstr "Profotograaf respondió con el error %d."
 msgid "The upload failed (%s)."
 msgstr "La subida falló (%s)."
 
-#: includes/modules/class-admin-notices.php:258
+#: includes/modules/class-admin-notices.php:273
 msgid "See why and retry"
 msgstr "Ver el motivo y reintentar"
 
@@ -3911,7 +3944,7 @@ msgid "The Profotograaf copy queue moves"
 msgstr "La cola de la copia de Profotograaf avanza"
 
 #: includes/class-backup-health.php:198
-#: includes/modules/class-admin-notices.php:244
+#: includes/modules/class-admin-notices.php:259
 msgid "Open the copy settings"
 msgstr "Abrir los ajustes de la copia"
 
@@ -3980,12 +4013,12 @@ msgstr "Ya hay otra copia en curso."
 msgid "Copying stopped early. Run the command again to send the rest."
 msgstr "La copia se detuvo antes de tiempo. Vuelve a ejecutar el comando para enviar el resto."
 
-#: includes/modules/class-admin-notices.php:242
+#: includes/modules/class-admin-notices.php:257
 msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now."
 msgstr "Tu almacenamiento de Profotograaf está lleno, así que la copia está en pausa. Libera espacio o mejora tu plan y después pulsa Copiar ahora."
 
 #. translators: %d: number of files.
-#: includes/modules/class-admin-notices.php:254
+#: includes/modules/class-admin-notices.php:269
 #, php-format
 msgid "%d file could not be copied to Profotograaf."
 msgid_plural "%d files could not be copied to Profotograaf."
@@ -4225,7 +4258,7 @@ msgstr "Ninguna foto importada se eliminó ni se cambió en Profotograaf."
 msgid "Photos removed or changed on Profotograaf stay on this site until you decide. Nothing is deleted for you."
 msgstr "Las fotos eliminadas o cambiadas en Profotograaf permanecen en este sitio hasta que decidas. No se elimina nada por ti."
 
-#: includes/modules/class-admin-notices.php:220
+#: includes/modules/class-admin-notices.php:235
 msgid "Show them"
 msgstr "Mostrarlas"
 
