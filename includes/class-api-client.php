@@ -234,6 +234,10 @@ class Api_Client {
 			if ( is_wp_error( $refreshed ) ) {
 				return $refreshed;
 			}
+			/**
+			 * Fires when a request is sent again with a refreshed token after a 401.
+			 */
+			do_action( 'profotograaf_refresh_retried' );
 			$response = $this->send( $method, $path, $body, $this->connection->access_token(), $raw );
 		}
 		if ( is_wp_error( $response ) ) {
@@ -348,6 +352,10 @@ class Api_Client {
 			}
 			if ( 200 === $response['status'] && is_array( $response['body'] ) && ! empty( $response['body']['access_token'] ) && ! empty( $response['body']['refresh_token'] ) ) {
 				$this->connection->save_tokens( $response['body'], $now );
+				/**
+				 * Fires when a token refresh stored a new pair.
+				 */
+				do_action( 'profotograaf_refresh_succeeded' );
 				return true;
 			}
 			if ( 400 === $response['status'] || 401 === $response['status'] ) {

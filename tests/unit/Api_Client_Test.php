@@ -187,6 +187,8 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->http->reply( 401, array( 'error' => 'expired' ) );
 		$this->refresh_reply();
 		$this->http->reply( 200, array() );
+		Actions\expectDone( 'profotograaf_refresh_succeeded' )->once();
+		Actions\expectDone( 'profotograaf_refresh_retried' )->once();
 
 		$this->assertSame( array(), $this->api->list_galleries() );
 
