@@ -242,12 +242,12 @@ final class Enquiry_Form {
 	}
 
 	/**
-	 * admin-post handler: handles the post and redirects back with the outcome.
+	 * Handles the admin-post request and redirects back with the outcome.
 	 */
 	public function on_post(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Signed timestamp, see token(); a nonce expires on cached pages.
 		$input = wp_unslash( $_POST );
-		$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
+		$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		$page  = isset( $input['pf_page'] ) ? esc_url_raw( (string) $input['pf_page'] ) : '';
 		$back  = '' !== $page && 0 === strpos( $page, home_url() ) ? $page : home_url( '/' );
 

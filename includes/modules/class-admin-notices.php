@@ -180,7 +180,7 @@ class Admin_Notices implements Module {
 					'screen'    => 'settings_page_' . Settings_Page::SLUG,
 				);
 			}
-		}
+		}//end if
 
 		$failed = $this->failed_leads();
 		if ( $failed > 0 ) {

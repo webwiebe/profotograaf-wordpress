@@ -137,7 +137,7 @@ class Lead_Health_Test extends Leads_Test_Case {
 		$saved = $settings->sanitize( array( 'leads_enabled' => '1' ) );
 
 		$this->assertArrayNotHasKey( 'leads_fallback_email', $saved );
-		$this->options['admin_email'] = 'new-admin@example.com';
+		$this->options['admin_email']      = 'new-admin@example.com';
 		$this->options[ Settings::OPTION ] = $saved;
 		$this->assertSame( 'new-admin@example.com', ( new Settings() )->get( 'leads_fallback_email' ) );
 	}
