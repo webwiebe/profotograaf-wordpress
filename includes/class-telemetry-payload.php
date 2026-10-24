@@ -62,7 +62,7 @@ final class Telemetry_Payload {
 
 	public const MAX_ERRORS = 50;
 
-	private const MAX_MODULES     = 30;
+	public const MAX_MODULES      = 50;
 	private const MAX_ERROR_CODES = 20;
 
 	/**
