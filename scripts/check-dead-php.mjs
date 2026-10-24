@@ -72,14 +72,31 @@ export function definitions(src) {
   return found.filter((d) => !d.name.startsWith("__") && !d.name.endsWith("_") && !IMPLICIT.has(d.name));
 }
 
+// A class that extends a page builder base (Elementor or Divi) has its methods
+// called by the builder, so their names appear nowhere else in the plugin.
+export function extendsBuilder(src) {
+  const code = stripComments(src);
+  const imported = new Set([...code.matchAll(/\buse\s+\\?Elementor\\(?:[A-Za-z_]+\\)*([A-Za-z_]+)\s*;/g)].map((m) => m[1]));
+  const bases = [...code.matchAll(/\bclass\s+[A-Za-z_][A-Za-z0-9_]*\s+extends\s+\\?([A-Za-z_\\][A-Za-z0-9_\\]*)/g)].map((m) => m[1]);
+  return bases.some((base) => base.startsWith("Elementor\\") || base.startsWith("ET_Builder_") || imported.has(base));
+}
+
+// The definitions of one file that something might leave unused: the classes
+// the module loader finds by directory and the methods a page builder calls are
+// used without their name appearing anywhere else.
+function candidates(file, source) {
+  const builderClass = extendsBuilder(source);
+  const skipped = ({ kind }) => (kind === "class" && DISCOVERED.test(file)) || (kind === "function" && builderClass);
+  return definitions(source).filter((d) => !skipped(d));
+}
+
 export function findDead(root, entries = SOURCE_ROOTS, useEntries = USE_ROOTS) {
   const files = phpFiles(root, entries);
   const code = new Map(phpFiles(root, useEntries).map((f) => [f, stripComments(fs.readFileSync(path.join(root, f), "utf8"))]));
   const dead = [];
   for (const file of files) {
     const seen = new Set();
-    for (const { kind, name } of definitions(fs.readFileSync(path.join(root, file), "utf8"))) {
-      if (kind === "class" && DISCOVERED.test(file)) continue;
+    for (const { kind, name } of candidates(file, fs.readFileSync(path.join(root, file), "utf8"))) {
       const key = `${kind} ${name}`;
       if (seen.has(key)) continue;
       seen.add(key);

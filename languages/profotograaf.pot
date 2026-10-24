@@ -272,6 +272,8 @@ msgstr ""
 #: includes/admin/class-client-links-panel.php:93
 #: includes/admin/class-upload-panel.php:166
 #: includes/admin/class-upload-panel.php:237
+#: includes/class-elementor-gallery-widget.php:99
+#: includes/class-elementor-gallery-widget.php:105
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:12
 #: build/gallery/index.js:11
@@ -969,6 +971,130 @@ msgstr ""
 msgid "Photo changes on Profotograaf have not been checked for more than three hours."
 msgstr ""
 
+#: includes/class-elementor-gallery-widget.php:56
+msgid "Profotograaf Gallery"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:82
+#: patterns/masonry-showcase.php:15
+#: patterns/portfolio-grid.php:15
+msgid "gallery"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:83
+msgid "photo"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:84
+msgid "photography"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:85
+#: patterns/portfolio-grid.php:15
+msgid "portfolio"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:86
+msgid "client gallery"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:107
+#: build/client-galleries/index.js:3
+msgid "Choose a gallery"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:109
+msgid "No galleries yet. Connect your Profotograaf account under Settings, Profotograaf."
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:116
+#: build/full-page-gallery/index.js:12
+#: build/gallery/index.js:11
+msgid "Layout"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:119
+#: includes/class-elementor-gallery-widget.php:135
+#: includes/class-elementor-gallery-widget.php:147
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:1
+#: build/gallery/index.js:3
+#: build/gallery/index.js:4
+msgid "Site default"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:120
+msgid "Automatic"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:121
+#: includes/class-settings-schema.php:133
+#: build/full-page-gallery/index.js:5
+#: build/gallery/index.js:1
+#: build/gallery/index.js:3
+msgid "Grid"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:122
+#: includes/class-settings-schema.php:134
+#: build/full-page-gallery/index.js:5
+#: build/gallery/index.js:1
+#: build/gallery/index.js:3
+msgid "Masonry"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:123
+#: includes/class-settings-schema.php:135
+#: build/gallery/index.js:1
+#: build/gallery/index.js:3
+msgid "Slideshow"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:144
+#: includes/class-settings-schema.php:325
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Lightbox"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:148
+#: includes/class-settings-schema.php:221
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:8
+#: build/gallery/index.js:3
+msgid "On"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:149
+#: includes/class-settings-schema.php:222
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:8
+#: build/gallery/index.js:3
+msgid "Off"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:174
+#: includes/class-settings-schema.php:242
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Columns on tablets"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:177
+#: includes/class-settings-schema.php:251
+#: build/full-page-gallery/index.js:4
+#: build/gallery/index.js:3
+msgid "Columns on phones"
+msgstr ""
+
+#: includes/class-elementor-gallery-widget.php:179
+#: includes/class-settings-schema.php:233
+#: build/full-page-gallery/index.js:4
+#: build/full-page-gallery/index.js:5
+#: build/gallery/index.js:3
+msgid "Columns"
+msgstr ""
+
 #: includes/class-embed-script.php:159
 msgid "This gallery could not be loaded. Please try again later."
 msgstr ""
@@ -1344,26 +1470,6 @@ msgstr ""
 msgid "Used when a gallery block or shortcode does not choose a layout. Profotograaf default shows each gallery in the closest layout your site can draw: grid, masonry or slideshow."
 msgstr ""
 
-#: includes/class-settings-schema.php:133
-#: build/full-page-gallery/index.js:5
-#: build/gallery/index.js:1
-#: build/gallery/index.js:3
-msgid "Grid"
-msgstr ""
-
-#: includes/class-settings-schema.php:134
-#: build/full-page-gallery/index.js:5
-#: build/gallery/index.js:1
-#: build/gallery/index.js:3
-msgid "Masonry"
-msgstr ""
-
-#: includes/class-settings-schema.php:135
-#: build/gallery/index.js:1
-#: build/gallery/index.js:3
-msgid "Slideshow"
-msgstr ""
-
 #: includes/class-settings-schema.php:142
 msgid "Collect enquiries"
 msgstr ""
@@ -1445,45 +1551,12 @@ msgstr ""
 msgid "Leave the settings and the connection in the database when you delete the plugin, for example to reinstall it later."
 msgstr ""
 
-#: includes/class-settings-schema.php:221
-#: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:8
-#: build/gallery/index.js:3
-msgid "On"
-msgstr ""
-
-#: includes/class-settings-schema.php:222
-#: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:8
-#: build/gallery/index.js:3
-msgid "Off"
-msgstr ""
-
-#: includes/class-settings-schema.php:233
-#: build/full-page-gallery/index.js:4
-#: build/full-page-gallery/index.js:5
-#: build/gallery/index.js:3
-msgid "Columns"
-msgstr ""
-
 #: includes/class-settings-schema.php:234
 msgid "Columns on wide screens, from 1 to 8."
 msgstr ""
 
-#: includes/class-settings-schema.php:242
-#: build/full-page-gallery/index.js:4
-#: build/gallery/index.js:3
-msgid "Columns on tablets"
-msgstr ""
-
 #: includes/class-settings-schema.php:243
 msgid "Columns on medium screens, from 1 to 8."
-msgstr ""
-
-#: includes/class-settings-schema.php:251
-#: build/full-page-gallery/index.js:4
-#: build/gallery/index.js:3
-msgid "Columns on phones"
 msgstr ""
 
 #: includes/class-settings-schema.php:252
@@ -1607,12 +1680,6 @@ msgstr ""
 
 #: includes/class-settings-schema.php:318
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
-msgstr ""
-
-#: includes/class-settings-schema.php:325
-#: build/full-page-gallery/index.js:4
-#: build/gallery/index.js:3
-msgid "Lightbox"
 msgstr ""
 
 #: includes/class-settings-schema.php:326
@@ -3085,11 +3152,6 @@ msgstr ""
 msgid "showcase"
 msgstr ""
 
-#: patterns/masonry-showcase.php:15
-#: patterns/portfolio-grid.php:15
-msgid "gallery"
-msgstr ""
-
 #: patterns/masonry-showcase.php:17
 msgid "Showcase"
 msgstr ""
@@ -3100,10 +3162,6 @@ msgstr ""
 
 #: patterns/portfolio-grid.php:14
 msgid "A heading, a short introduction and a gallery grid."
-msgstr ""
-
-#: patterns/portfolio-grid.php:15
-msgid "portfolio"
 msgstr ""
 
 #: patterns/portfolio-grid.php:15
@@ -3467,10 +3525,6 @@ msgid "Choose another gallery"
 msgstr ""
 
 #: build/client-galleries/index.js:3
-msgid "Choose a gallery"
-msgstr ""
-
-#: build/client-galleries/index.js:3
 msgid "Remove gallery"
 msgstr ""
 
@@ -3598,13 +3652,6 @@ msgstr ""
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:4
 msgid "Add a photo"
-msgstr ""
-
-#: build/full-page-gallery/index.js:4
-#: build/gallery/index.js:1
-#: build/gallery/index.js:3
-#: build/gallery/index.js:4
-msgid "Site default"
 msgstr ""
 
 #: build/full-page-gallery/index.js:4
@@ -3862,11 +3909,6 @@ msgstr ""
 
 #: build/full-page-gallery/index.js:12
 msgid "Add a section"
-msgstr ""
-
-#: build/full-page-gallery/index.js:12
-#: build/gallery/index.js:11
-msgid "Layout"
 msgstr ""
 
 #: build/full-page-gallery/index.js:12

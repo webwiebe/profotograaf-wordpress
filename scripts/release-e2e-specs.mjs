@@ -16,6 +16,7 @@ const smoke = ["settings", "gallery", "plugin-compat"];
 /** [pattern, spec names]. The first matching entry wins; order is most specific first. */
 const MAP = [
   [/^includes\/class-full-page-|^blocks\/full-page-gallery\//, ["full-page"]],
+  [/^includes\/class-(builder-gallery|elementor-)|^includes\/modules\/class-elementor/, ["elementor"]],
   [/^includes\/class-(gallery|reserved-space|embed-script|shortcode|layout-map|empty-gallery|fallback-link|option-resolver|oembed|section)|^blocks\/gallery\//, gallery],
   [/^includes\/class-virtual-|^includes\/class-photo-(file-route|url-signer)/, ["virtual-attachments", "virtual-block-urls", "virtual-removal", "virtual-sync", "keep-on-profotograaf", "convert-to-local"]],
   [/^includes\/class-backup-/, ["backup", "backup-status"]],
