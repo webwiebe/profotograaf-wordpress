@@ -10,6 +10,7 @@ namespace Profotograaf\Modules;
 use Profotograaf\Admin\Backup_Intro;
 use Profotograaf\Admin\Client_Links_Panel;
 use Profotograaf\Admin\Leads_Settings;
+use Profotograaf\Admin\Reconnect_Notices;
 use Profotograaf\Admin\Settings_Fields;
 use Profotograaf\Admin\Upload_Panel;
 use Profotograaf\Cron_Health;
@@ -294,18 +295,12 @@ class Settings_Page implements Module {
 						?>
 					<?php endif; ?>
 				</p>
-				<?php if ( $connection->needs_reconnect() ) : ?>
+				<?php foreach ( Reconnect_Notices::texts( $connection, $this->plugin()->settings() ) as $notice ) : ?>
 					<div class="notice notice-warning inline">
-						<p><?php esc_html_e( 'This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are.', 'profotograaf' ); ?></p>
+						<p><?php echo esc_html( $notice ); ?></p>
 					</div>
 					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary', 'reconnect' ); ?>
-				<?php endif; ?>
-				<?php if ( ! $connection->needs_reconnect() && $connection->needs_write_reconnect( $this->plugin()->settings()->writes_to_platform() ) ) : ?>
-					<div class="notice notice-warning inline">
-						<p><?php echo esc_html( Backup_Intro::reconnect_text( $this->plugin()->settings(), true ) ); ?></p>
-					</div>
-					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary', 'reconnect' ); ?>
-				<?php endif; ?>
+				<?php endforeach; ?>
 				<?php $this->render_action_form( 'profotograaf_disconnect', __( 'Disconnect', 'profotograaf' ), 'secondary' ); ?>
 			<?php else : ?>
 				<p class="profotograaf-status">

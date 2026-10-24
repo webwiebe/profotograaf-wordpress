@@ -84,11 +84,30 @@ class Leads implements Module {
 			}
 		);
 
-		( new Enquiry_Form( $dispatcher, static fn(): bool => (bool) $plugin->settings()->get( 'leads_enabled' ) ) )->register();
+		( new Enquiry_Form(
+			$dispatcher,
+			static fn(): bool => (bool) $plugin->settings()->get( 'leads_enabled' ),
+			static function () use ( $plugin ): string {
+				if ( ! $plugin->settings()->get( 'leads_enabled' ) ) {
+					return 'off';
+				}
+				if ( ! $plugin->connection()->is_connected() ) {
+					return 'disconnected';
+				}
+				return $plugin->connection()->needs_leads_reconnect() ? 'reconnect' : '';
+			}
+		) )->register();
 
 		$store    = new Option_Job_Store();
-		$delivery = new Delivery( $queue, $plugin->api() );
+		$delivery = new Delivery( $queue, $plugin->api(), $plugin->connection() );
 		$delivery->register();
+		// A new pairing grants the leads permission, so enquiries it refused go out again.
+		add_action(
+			'profotograaf_connected',
+			static function () use ( $delivery ): void {
+				$delivery->requeue_denied();
+			}
+		);
 
 		$cron = new Cron_Health( $queue );
 		$cron->register();

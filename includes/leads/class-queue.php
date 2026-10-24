@@ -221,15 +221,19 @@ final class Queue {
 	}
 
 	/**
-	 * Puts every failed job back in line.
+	 * Puts failed jobs back in line.
 	 *
+	 * @param int|null $status Only jobs the platform answered with this HTTP status, all failed jobs by default.
 	 * @return int Jobs requeued.
 	 */
-	public function retry_failed(): int {
+	public function retry_failed( ?int $status = null ): int {
 		$now   = $this->now();
 		$count = 0;
 		foreach ( $this->store->all() as $id => $job ) {
 			if ( 'failed' !== ( $job['status'] ?? '' ) ) {
+				continue;
+			}
+			if ( null !== $status && (int) ( $job['last_status'] ?? 0 ) !== $status ) {
 				continue;
 			}
 			$job['status']     = 'pending';

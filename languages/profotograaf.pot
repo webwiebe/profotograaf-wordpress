@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-24T13:42:57+00:00\n"
+"POT-Creation-Date: 2026-10-24T13:49:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -31,9 +31,9 @@ msgstr ""
 #: includes/modules/class-media-upload.php:285
 #: includes/modules/class-patterns.php:53
 #: includes/modules/class-privacy.php:65
-#: includes/modules/class-settings-page.php:78
 #: includes/modules/class-settings-page.php:79
-#: includes/modules/class-settings-page.php:279
+#: includes/modules/class-settings-page.php:80
+#: includes/modules/class-settings-page.php:280
 #: includes/modules/class-site-health.php:331
 #: includes/modules/class-site-health.php:401
 #: includes/modules/class-sync-flags.php:66
@@ -114,12 +114,14 @@ msgstr ""
 
 #: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:211
+#: includes/modules/class-admin-notices.php:179
 msgid "Connect this site"
 msgstr ""
 
 #: includes/admin/class-backup-panel.php:93
-#: includes/modules/class-admin-notices.php:138
-#: includes/modules/class-settings-page.php:187
+#: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:165
+#: includes/modules/class-settings-page.php:188
 msgid "Connect this site again"
 msgstr ""
 
@@ -324,14 +326,14 @@ msgstr ""
 #: includes/admin/class-leads-settings.php:196
 #: includes/admin/class-leads-settings.php:476
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:275
+#: includes/modules/class-admin-notices.php:307
 #: includes/modules/class-backup.php:202
 #: includes/modules/class-link-consent-prompt.php:90
 #: includes/modules/class-media-upload.php:351
 #: includes/modules/class-review-notice.php:89
-#: includes/modules/class-settings-page.php:244
-#: includes/modules/class-settings-page.php:271
-#: includes/modules/class-settings-page.php:481
+#: includes/modules/class-settings-page.php:245
+#: includes/modules/class-settings-page.php:272
+#: includes/modules/class-settings-page.php:476
 #: includes/modules/class-telemetry-consent.php:127
 #: includes/modules/class-virtual-convert.php:203
 #: includes/modules/class-virtual-removal.php:83
@@ -396,7 +398,7 @@ msgid "Name"
 msgstr ""
 
 #: includes/admin/class-leads-settings.php:273
-#: includes/leads/class-enquiry-form.php:147
+#: includes/leads/class-enquiry-form.php:161
 msgid "Email address"
 msgstr ""
 
@@ -484,7 +486,7 @@ msgid "The exported enquiries were removed."
 msgstr ""
 
 #: includes/admin/class-network-page.php:69
-#: includes/modules/class-settings-page.php:289
+#: includes/modules/class-settings-page.php:290
 msgid "Connected"
 msgstr ""
 
@@ -497,7 +499,7 @@ msgid "Plugin not active"
 msgstr ""
 
 #: includes/admin/class-network-page.php:75
-#: includes/modules/class-settings-page.php:312
+#: includes/modules/class-settings-page.php:307
 msgid "Not connected"
 msgstr ""
 
@@ -514,7 +516,7 @@ msgid "Site"
 msgstr ""
 
 #: includes/admin/class-network-page.php:98
-#: includes/modules/class-settings-page.php:284
+#: includes/modules/class-settings-page.php:285
 #: includes/modules/class-site-health.php:336
 msgid "Connection"
 msgstr ""
@@ -524,8 +526,16 @@ msgid "Failed enquiries"
 msgstr ""
 
 #: includes/admin/class-network-page.php:109
-#: includes/modules/class-settings-page.php:109
+#: includes/modules/class-settings-page.php:110
 msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-reconnect-notices.php:31
+msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
+msgstr ""
+
+#: includes/admin/class-reconnect-notices.php:36
+msgid "This connection lacks the permission to receive enquiries, so enquiries from your forms cannot be sent. Connect again to grant it. Enquiries that were refused are sent again afterwards."
 msgstr ""
 
 #. translators: %s: gallery title.
@@ -828,7 +838,7 @@ msgid "Open the Profotograaf settings"
 msgstr ""
 
 #: includes/class-backup-health.php:198
-#: includes/modules/class-admin-notices.php:212
+#: includes/modules/class-admin-notices.php:244
 msgid "Open the copy settings"
 msgstr ""
 
@@ -1499,7 +1509,7 @@ msgid "Mail undeliverable enquiries to"
 msgstr ""
 
 #: includes/class-settings-schema.php:158
-msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Leave empty to turn this off."
+msgid "When an enquiry cannot be delivered to Profotograaf, send it by email to this address instead. The email contains the enquiry. Until you save a choice this is the site admin email address. Save it empty to turn this off."
 msgstr ""
 
 #: includes/class-settings-schema.php:167
@@ -2083,39 +2093,51 @@ msgstr[1] ""
 msgid "%1$d converted, %2$d could not be converted and stay kept on Profotograaf."
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:146
+#: includes/leads/class-enquiry-form.php:160
 msgid "Your name"
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:148
+#: includes/leads/class-enquiry-form.php:162
 msgid "Date of your event"
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:149
+#: includes/leads/class-enquiry-form.php:163
 msgid "Your message"
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:152
+#: includes/leads/class-enquiry-form.php:166
 msgid "Leave this field empty"
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:154
+#: includes/leads/class-enquiry-form.php:168
 msgid "Send enquiry"
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:334
+#: includes/leads/class-enquiry-form.php:345
+msgid "Enquiries are switched off for this site, so visitors do not see this form. Turn on Collect enquiries in the Profotograaf settings."
+msgstr ""
+
+#: includes/leads/class-enquiry-form.php:346
+msgid "This site is not connected to Profotograaf. Enquiries wait on this site until you connect it."
+msgstr ""
+
+#: includes/leads/class-enquiry-form.php:347
+msgid "Profotograaf needs a new permission to receive enquiries. Connect this site again in the Profotograaf settings."
+msgstr ""
+
+#: includes/leads/class-enquiry-form.php:365
 msgid "Thank you. Your enquiry was received and I will get back to you soon."
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:335
+#: includes/leads/class-enquiry-form.php:366
 msgid "Check your name and email address and send the form again."
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:336
+#: includes/leads/class-enquiry-form.php:367
 msgid "Too many enquiries from your connection. Try again in an hour."
 msgstr ""
 
-#: includes/leads/class-enquiry-form.php:337
+#: includes/leads/class-enquiry-form.php:368
 msgid "Your enquiry was not received. Try again in a few minutes."
 msgstr ""
 
@@ -2184,51 +2206,63 @@ msgstr[1] ""
 msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:136
+#: includes/modules/class-admin-notices.php:141
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:146
+#: includes/modules/class-admin-notices.php:151
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:148
+#: includes/modules/class-admin-notices.php:153
 msgid "Check the connection"
 msgstr ""
 
+#: includes/modules/class-admin-notices.php:163
+msgid "Profotograaf cannot send your enquiries yet. This connection lacks the permission to receive enquiries."
+msgstr ""
+
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:159
+#: includes/modules/class-admin-notices.php:175
+#, php-format
+msgid "%d enquiry is waiting to be sent because this site is not connected to Profotograaf."
+msgid_plural "%d enquiries are waiting to be sent because this site is not connected to Profotograaf."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of enquiries.
+#: includes/modules/class-admin-notices.php:191
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-admin-notices.php:163
+#: includes/modules/class-admin-notices.php:195
 msgid "Retry or export the enquiries"
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:188
+#: includes/modules/class-admin-notices.php:220
 msgid "Show them"
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:210
+#: includes/modules/class-admin-notices.php:242
 msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now."
 msgstr ""
 
 #. translators: %d: number of files.
-#: includes/modules/class-admin-notices.php:222
+#: includes/modules/class-admin-notices.php:254
 #, php-format
 msgid "%d file could not be copied to Profotograaf."
 msgid_plural "%d files could not be copied to Profotograaf."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/modules/class-admin-notices.php:226
+#: includes/modules/class-admin-notices.php:258
 msgid "See why and retry"
 msgstr ""
 
-#: includes/modules/class-admin-notices.php:264
+#: includes/modules/class-admin-notices.php:296
 msgid "Dismiss"
 msgstr ""
 
@@ -2566,106 +2600,101 @@ msgstr ""
 msgid "If the Profotograaf plugin works well for you, a short review on WordPress.org helps other photographers find it."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:185
+#: includes/modules/class-settings-page.php:186
 msgid "Profotograaf needs a new permission to switch galleries on for embedding."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:219
+#: includes/modules/class-settings-page.php:220
 msgid "Disconnected from Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:223
+#: includes/modules/class-settings-page.php:224
 msgid "Disconnected. This site no longer has access. To also remove it from your account, open Connected apps in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:254
+#: includes/modules/class-settings-page.php:255
 msgid "Connected to Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:257
+#: includes/modules/class-settings-page.php:258
 msgid "The connection was declined in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:260
+#: includes/modules/class-settings-page.php:261
 msgid "The code expired. Start the connection again."
 msgstr ""
 
 #. translators: %s: date the site was connected.
-#: includes/modules/class-settings-page.php:293
+#: includes/modules/class-settings-page.php:294
 #, php-format
 msgid "since %s."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:299
-msgid "This connection was made before Profotograaf could let this site switch galleries on for embedding. Connect again to grant that permission. Your galleries and settings stay as they are."
-msgstr ""
-
-#: includes/modules/class-settings-page.php:301
-#: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:302
 msgid "Connect again"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:309
+#: includes/modules/class-settings-page.php:304
 msgid "Disconnect"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:317
+#: includes/modules/class-settings-page.php:312
 msgid "Connect this site to your Profotograaf account to place galleries and receive enquiries. You approve the connection in Profotograaf, so your password never reaches this site."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:318
+#: includes/modules/class-settings-page.php:313
 msgid "Connecting shares this site's name and the administrator email address with Profotograaf, so it can fill them in for you if you create an account."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:319
+#: includes/modules/class-settings-page.php:314
 msgid "Connect to Profotograaf"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:324
+#: includes/modules/class-settings-page.php:319
 msgid "Set up the enquiry forms"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:332
+#: includes/modules/class-settings-page.php:327
 msgid "Photo changes"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:372
+#: includes/modules/class-settings-page.php:367
 msgid "Confirm this code in Profotograaf to finish connecting:"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:375
+#: includes/modules/class-settings-page.php:370
 msgid "Open the approval page"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:377
+#: includes/modules/class-settings-page.php:372
 msgid "Waiting for you to approve the connection in Profotograaf."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:378
+#: includes/modules/class-settings-page.php:373
 msgid "Cancel"
 msgstr ""
 
-#: includes/modules/class-settings-page.php:389
+#: includes/modules/class-settings-page.php:384
 msgid "Embedding on this site"
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:394
+#: includes/modules/class-settings-page.php:389
 #, php-format
 msgid "%s is allowed to show your Profotograaf pages in a frame."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:398
+#: includes/modules/class-settings-page.php:393
 msgid "Profotograaf only allows embedding on sites served over https. Serve this site over https to embed your pages in a frame."
 msgstr ""
 
 #. translators: %s: site address, for example https://example.com.
-#: includes/modules/class-settings-page.php:403
+#: includes/modules/class-settings-page.php:398
 #, php-format
 msgid "To show your Profotograaf pages in a frame on this site, add %s under \"Sites allowed to embed my pages\" in your Profotograaf account settings."
 msgstr ""
 
-#: includes/modules/class-settings-page.php:411
+#: includes/modules/class-settings-page.php:406
 msgid "Check again"
 msgstr ""
 

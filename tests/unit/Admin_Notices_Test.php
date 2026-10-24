@@ -32,6 +32,12 @@ class Stubbed_Admin_Notices extends Admin_Notices {
 		return $this->failed;
 	}
 
+	public int $pending = 0;
+
+	protected function pending_leads(): int {
+		return $this->pending;
+	}
+
 	protected function screen_id(): string {
 		return $this->screen;
 	}
@@ -171,6 +177,58 @@ class Admin_Notices_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( 'page=profotograaf-leads', $html );
 
 		$this->notices->failed = 0;
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_a_missing_leads_permission_shows_a_reconnect_notice(): void {
+		$this->connect( 900, 'a', 'r', 'galleries:read galleries:embed' );
+
+		$html = $this->html();
+
+		$this->assertSame( 1, substr_count( $html, 'profotograaf-notice--leads_reconnect' ) );
+		$this->assertStringContainsString( 'permission to receive enquiries', $html );
+		$this->assertStringContainsString( 'Connect this site again', $html );
+		$this->assertStringContainsString( 'options-general.php?page=profotograaf"', $html );
+	}
+
+	public function test_a_denied_leads_call_shows_the_reconnect_notice_until_a_new_grant(): void {
+		$this->connect( 900, 'a', 'r', null );
+		$this->connection->flag_leads_denied();
+		$this->assertStringContainsString( 'profotograaf-notice--leads_reconnect', $this->html() );
+
+		$this->connection->record_grant( 1 );
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_no_leads_reconnect_notice_while_enquiries_are_switched_off(): void {
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => false );
+		$this->connect( 900, 'a', 'r', 'galleries:read' );
+
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_waiting_enquiries_on_a_disconnected_site_show_a_notice_with_the_count(): void {
+		$this->notices->pending = 3;
+
+		$html = $this->html();
+
+		$this->assertSame( 1, substr_count( $html, 'profotograaf-notice--leads_waiting' ) );
+		$this->assertStringContainsString( '3 enquiries are waiting', $html );
+		$this->assertStringContainsString( 'Connect this site', $html );
+	}
+
+	public function test_waiting_enquiries_show_no_notice_on_a_connected_site(): void {
+		$this->connect();
+		$this->notices->pending = 3;
+
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_the_waiting_notice_clears_when_nothing_waits(): void {
+		$this->notices->pending = 1;
+		$this->assertStringContainsString( '1 enquiry is waiting', $this->html() );
+
+		$this->notices->pending = 0;
 		$this->assertSame( '', $this->html() );
 	}
 
