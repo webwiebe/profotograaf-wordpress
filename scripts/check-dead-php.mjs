@@ -72,14 +72,29 @@ export function definitions(src) {
   return found.filter((d) => !d.name.startsWith("__") && !d.name.endsWith("_") && !IMPLICIT.has(d.name));
 }
 
+// A class that extends a page builder base (Elementor or Divi) has its methods
+// called by the builder, so their names appear nowhere else in the plugin.
+export function extendsBuilder(src) {
+  const code = stripComments(src);
+  const imported = new Set([...code.matchAll(/\buse\s+\\?Elementor\\(?:[A-Za-z_]+\\)*([A-Za-z_]+)\s*;/g)].map((m) => m[1]));
+  for (const m of code.matchAll(/\bclass\s+[A-Za-z_][A-Za-z0-9_]*\s+extends\s+\\?([A-Za-z_\\][A-Za-z0-9_\\]*)/g)) {
+    const base = m[1];
+    if (/^\\?Elementor\\/.test(base) || /^ET_Builder_/.test(base.replace(/^\\/, "")) || imported.has(base)) return true;
+  }
+  return false;
+}
+
 export function findDead(root, entries = SOURCE_ROOTS, useEntries = USE_ROOTS) {
   const files = phpFiles(root, entries);
   const code = new Map(phpFiles(root, useEntries).map((f) => [f, stripComments(fs.readFileSync(path.join(root, f), "utf8"))]));
   const dead = [];
   for (const file of files) {
     const seen = new Set();
-    for (const { kind, name } of definitions(fs.readFileSync(path.join(root, file), "utf8"))) {
+    const source = fs.readFileSync(path.join(root, file), "utf8");
+    const builderClass = extendsBuilder(source);
+    for (const { kind, name } of definitions(source)) {
       if (kind === "class" && DISCOVERED.test(file)) continue;
+      if (kind === "function" && builderClass) continue;
       const key = `${kind} ${name}`;
       if (seen.has(key)) continue;
       seen.add(key);

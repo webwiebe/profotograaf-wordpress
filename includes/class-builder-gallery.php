@@ -7,8 +7,6 @@
 
 namespace Profotograaf;
 
-use Profotograaf\Modules\Gallery_Embed;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,6 +18,12 @@ defined( 'ABSPATH' ) || exit;
  * output as the block. This class loads no builder code.
  */
 final class Builder_Gallery {
+
+	/**
+	 * Name of the gallery block that renders every builder gallery. The Gallery_Embed
+	 * module registers the block under this name.
+	 */
+	public const BLOCK = 'profotograaf/gallery';
 
 	/**
 	 * Layouts a builder offers, besides the site default (empty).
@@ -156,7 +160,7 @@ final class Builder_Gallery {
 		}
 		return render_block(
 			array(
-				'blockName'    => Gallery_Embed::BLOCK,
+				'blockName'    => self::BLOCK,
 				'attrs'        => $attributes,
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',

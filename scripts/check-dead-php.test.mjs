@@ -106,6 +106,15 @@ test("--update-baseline writes the findings and the next check passes", () => {
   assert.equal(run(root).status, 0);
 });
 
+test("methods of a class that extends an Elementor or Divi base are alive", () => {
+  const root = repo({
+    "includes/class-w.php": "<?php use Elementor\\Widget_Base;\nclass W extends Widget_Base { public function get_icon() {} }\nnew W();",
+    "includes/class-d.php": "<?php class D extends ET_Builder_Module { public function get_fields() {} }\nnew D();",
+    "includes/class-x.php": "<?php class X extends Other_Base { public function stray() {} }\nnew X();",
+  });
+  assert.deepEqual(findDead(root), ["function stray includes/class-x.php"]);
+});
+
 test("the committed baseline matches the repo", () => {
   const root = path.resolve(path.dirname(script), "..");
   const result = run(root);
