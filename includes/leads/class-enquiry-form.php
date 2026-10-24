@@ -67,14 +67,24 @@ final class Enquiry_Form {
 	private $enabled;
 
 	/**
+	 * Returns what keeps enquiries from reaching Profotograaf: `off`,
+	 * `disconnected`, `reconnect` or an empty string.
+	 *
+	 * @var callable
+	 */
+	private $problem;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Dispatcher    $dispatcher Where the lead goes.
 	 * @param callable|null $enabled    Returns whether lead capture is on, always on by default.
+	 * @param callable|null $problem    Returns the delivery problem for the editor warning, none by default.
 	 */
-	public function __construct( Dispatcher $dispatcher, ?callable $enabled = null ) {
+	public function __construct( Dispatcher $dispatcher, ?callable $enabled = null, ?callable $problem = null ) {
 		$this->dispatcher = $dispatcher;
 		$this->enabled    = $enabled ?? static fn(): bool => true;
+		$this->problem    = $problem ?? static fn(): string => '';
 	}
 
 	/**
@@ -108,7 +118,8 @@ final class Enquiry_Form {
 	public function render_block( array $attributes ): string {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read only, picks a message.
 		$outcome = isset( $_GET[ self::QUERY ] ) ? sanitize_key( wp_unslash( $_GET[ self::QUERY ] ) ) : '';
-		return $this->render( $attributes, time(), $outcome );
+		$editing = defined( 'REST_REQUEST' ) && REST_REQUEST && current_user_can( 'edit_posts' );
+		return $this->render( $attributes, time(), $outcome, $editing );
 	}
 
 	/**
@@ -126,17 +137,20 @@ final class Enquiry_Form {
 	 * @param array<string,mixed> $attributes Block attributes.
 	 * @param int                 $now        Unix time.
 	 * @param string              $outcome    Outcome of the last post, empty for none.
+	 * @param bool                $editing    Whether the editor draws the block, which adds a warning when enquiries cannot reach Profotograaf.
 	 */
-	public function render( array $attributes, int $now, string $outcome = '' ): string {
+	public function render( array $attributes, int $now, string $outcome = '', bool $editing = false ): string {
 		unset( $attributes );
+		$warning = $editing ? $this->warning( (string) call_user_func( $this->problem ) ) : '';
 		if ( ! (bool) call_user_func( $this->enabled ) ) {
-			return '';
+			return $warning;
 		}
 
 		$message = $this->message( $outcome );
 		$page    = (string) get_permalink();
 
 		$html  = '<div class="wp-block-profotograaf-enquiry">';
+		$html .= $warning;
 		$html .= $message;
 		if ( 'sent' !== $outcome ) {
 			$html .= '<form class="profotograaf-enquiry" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
@@ -308,6 +322,23 @@ final class Enquiry_Form {
 			. ( $required ? ' required' : '' )
 			. ( '' !== $autocomplete ? ' autocomplete="' . esc_attr( $autocomplete ) . '"' : '' )
 			. ' /></p>';
+	}
+
+	/**
+	 * The editor warning for a delivery problem. Visitors never see it.
+	 *
+	 * @param string $problem `off`, `disconnected`, `reconnect` or empty.
+	 */
+	private function warning( string $problem ): string {
+		$texts = array(
+			'off'          => __( 'Enquiries are switched off for this site, so visitors do not see this form. Turn on Collect enquiries in the Profotograaf settings.', 'profotograaf' ),
+			'disconnected' => __( 'This site is not connected to Profotograaf. Enquiries wait on this site until you connect it.', 'profotograaf' ),
+			'reconnect'    => __( 'Profotograaf needs a new permission to receive enquiries. Connect this site again in the Profotograaf settings.', 'profotograaf' ),
+		);
+		if ( ! isset( $texts[ $problem ] ) ) {
+			return '';
+		}
+		return '<p class="profotograaf-enquiry__warning" role="alert">' . esc_html( $texts[ $problem ] ) . '</p>';
 	}
 
 	/**

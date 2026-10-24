@@ -27,6 +27,8 @@ defined( 'ABSPATH' ) || exit;
  * - Revoked: the platform ended the connection.
  * - Refresh: the background token refresh keeps failing.
  * - Leads: enquiries failed for good and wait on this site.
+ * - Leads reconnect: the connection lacks the permission to send enquiries.
+ * - Leads waiting: enquiries are queued and the site is not connected.
  * - Backup storage: the backup is paused because the storage on Profotograaf
  *   is full.
  * - Backup failures: files could not be copied and wait for the
@@ -47,6 +49,9 @@ class Admin_Notices implements Module {
 	public const REVOKED = 'revoked';
 	public const REFRESH = 'refresh';
 	public const LEADS   = 'leads';
+
+	public const LEADS_RECONNECT = 'leads_reconnect';
+	public const LEADS_WAITING   = 'leads_waiting';
 	public const SYNC    = 'sync';
 
 	public const BACKUP_STORAGE = 'backup_storage';
@@ -148,6 +153,33 @@ class Admin_Notices implements Module {
 				'label'     => __( 'Check the connection', 'profotograaf' ),
 				'screen'    => 'settings_page_' . Settings_Page::SLUG,
 			);
+		}
+
+		$plugin = $this->plugin ?? Plugin::instance();
+		if ( $plugin->settings()->get( 'leads_enabled' ) ) {
+			if ( $connection->needs_leads_reconnect() ) {
+				$notices[ self::LEADS_RECONNECT ] = array(
+					'signature' => 'leads_reconnect:' . (int) $connection->status()['connected_at'],
+					'message'   => __( 'Profotograaf cannot send your enquiries yet. This connection lacks the permission to receive enquiries.', 'profotograaf' ),
+					'link'      => $settings,
+					'label'     => __( 'Connect this site again', 'profotograaf' ),
+					'screen'    => 'settings_page_' . Settings_Page::SLUG,
+				);
+			}
+			$pending = $connection->is_connected() ? 0 : $this->pending_leads();
+			if ( $pending > 0 ) {
+				$notices[ self::LEADS_WAITING ] = array(
+					'signature' => 'leads_waiting:' . $pending,
+					'message'   => sprintf(
+						/* translators: %d: number of enquiries. */
+						_n( '%d enquiry is waiting to be sent because this site is not connected to Profotograaf.', '%d enquiries are waiting to be sent because this site is not connected to Profotograaf.', $pending, 'profotograaf' ),
+						$pending
+					),
+					'link'      => $settings,
+					'label'     => __( 'Connect this site', 'profotograaf' ),
+					'screen'    => 'settings_page_' . Settings_Page::SLUG,
+				);
+			}
 		}
 
 		$failed = $this->failed_leads();
@@ -310,6 +342,13 @@ class Admin_Notices implements Module {
 	 */
 	protected function failed_leads(): int {
 		return ( new Queue( new Option_Job_Store() ) )->counts()['failed'];
+	}
+
+	/**
+	 * Number of enquiries waiting to be sent.
+	 */
+	protected function pending_leads(): int {
+		return ( new Queue( new Option_Job_Store() ) )->counts()['pending'];
 	}
 
 	/**

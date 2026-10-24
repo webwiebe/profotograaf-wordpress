@@ -73,6 +73,11 @@ final class Settings {
 				return $value;
 			}
 		}
+		if ( 'leads_fallback_email' === $key ) {
+			// Until the photographer saves a choice, a failed enquiry is mailed to the admin. A saved empty value turns that off.
+			$admin = get_option( 'admin_email', '' );
+			return is_string( $admin ) ? $admin : '';
+		}
 		return $entry['default'];
 	}
 

@@ -306,6 +306,12 @@ class Settings_Page implements Module {
 					</div>
 					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary', 'reconnect' ); ?>
 				<?php endif; ?>
+				<?php if ( $connection->needs_leads_reconnect() && $this->plugin()->settings()->get( 'leads_enabled' ) ) : ?>
+					<div class="notice notice-warning inline">
+						<p><?php esc_html_e( 'This connection lacks the permission to receive enquiries, so enquiries from your forms cannot be sent. Connect again to grant it. Enquiries that were refused are sent again afterwards.', 'profotograaf' ); ?></p>
+					</div>
+					<?php $this->render_action_form( 'profotograaf_connect', __( 'Connect again', 'profotograaf' ), 'primary', 'reconnect' ); ?>
+				<?php endif; ?>
 				<?php $this->render_action_form( 'profotograaf_disconnect', __( 'Disconnect', 'profotograaf' ), 'secondary' ); ?>
 			<?php else : ?>
 				<p class="profotograaf-status">
