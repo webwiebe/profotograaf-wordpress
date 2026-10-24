@@ -100,6 +100,7 @@ msgstr "Questo sito non è collegato a Profotograaf, quindi le richieste restano
 
 #: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:211
+#: includes/modules/class-admin-notices.php:179
 msgid "Connect this site"
 msgstr "Collega questo sito"
 
@@ -836,6 +837,7 @@ msgstr "Profotograaf non è più collegato. La connessione è stata terminata ne
 
 #: includes/admin/class-backup-panel.php:93
 #: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:165
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Ricollega questo sito"
@@ -1006,6 +1008,7 @@ msgstr "Questa connessione è stata creata prima che Profotograaf potesse permet
 
 #: includes/modules/class-settings-page.php:301
 #: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:313
 msgid "Connect again"
 msgstr "Ricollega"
 

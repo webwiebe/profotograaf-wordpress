@@ -100,6 +100,7 @@ msgstr "Deze site is niet verbonden met Profotograaf, dus aanvragen wachten in e
 
 #: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:211
+#: includes/modules/class-admin-notices.php:179
 msgid "Connect this site"
 msgstr "Verbind deze site"
 
@@ -295,6 +296,7 @@ msgstr "Profotograaf heeft een nieuwe toestemming nodig om galerijen aan te zett
 
 #: includes/admin/class-backup-panel.php:93
 #: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:165
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Koppel deze site opnieuw"
@@ -342,6 +344,7 @@ msgstr "Deze koppeling is gemaakt voordat Profotograaf deze site galerijen kon l
 
 #: includes/modules/class-settings-page.php:301
 #: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:313
 msgid "Connect again"
 msgstr "Opnieuw koppelen"
 

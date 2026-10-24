@@ -100,6 +100,7 @@ msgstr "Este sitio no está conectado a Profotograaf, así que las consultas esp
 
 #: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:211
+#: includes/modules/class-admin-notices.php:179
 msgid "Connect this site"
 msgstr "Conectar este sitio"
 
@@ -836,6 +837,7 @@ msgstr "Profotograaf ya no está conectado. La conexión se terminó en tu cuent
 
 #: includes/admin/class-backup-panel.php:93
 #: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:165
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Volver a conectar este sitio"
@@ -1006,6 +1008,7 @@ msgstr "Esta conexión se hizo antes de que Profotograaf pudiera permitir que es
 
 #: includes/modules/class-settings-page.php:301
 #: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:313
 msgid "Connect again"
 msgstr "Volver a conectar"
 

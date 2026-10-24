@@ -100,6 +100,7 @@ msgstr "Ce site n'est pas connecté à Profotograaf, les demandes attendent donc
 
 #: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:211
+#: includes/modules/class-admin-notices.php:179
 msgid "Connect this site"
 msgstr "Connecter ce site"
 
@@ -836,6 +837,7 @@ msgstr "Profotograaf n'est plus connecté. La connexion a été interrompue dans
 
 #: includes/admin/class-backup-panel.php:93
 #: includes/modules/class-admin-notices.php:143
+#: includes/modules/class-admin-notices.php:165
 #: includes/modules/class-settings-page.php:187
 msgid "Connect this site again"
 msgstr "Reconnecter ce site"
@@ -1006,6 +1008,7 @@ msgstr "Cette connexion a été établie avant que Profotograaf puisse permettre
 
 #: includes/modules/class-settings-page.php:301
 #: includes/modules/class-settings-page.php:307
+#: includes/modules/class-settings-page.php:313
 msgid "Connect again"
 msgstr "Se reconnecter"
 
