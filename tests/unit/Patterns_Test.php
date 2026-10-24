@@ -171,10 +171,12 @@ class Patterns_Test extends Wp_Test_Case {
 		$this->assertStringContainsString( '<form></form>', $this->patterns['profotograaf/contact-page']['content'] );
 	}
 
-	public function test_the_contact_page_has_a_placeholder_for_the_form_by_default(): void {
+	public function test_the_contact_page_uses_the_enquiry_block_by_default(): void {
 		$this->register();
 
-		$this->assertStringContainsString( 'Replace this text with your enquiry form block.', $this->patterns['profotograaf/contact-page']['content'] );
+		$content = $this->patterns['profotograaf/contact-page']['content'];
+		$this->assertCount( 1, $this->block_attributes( $content, 'profotograaf/enquiry' ) );
+		$this->assertStringNotContainsString( 'Replace this text', $content );
 		$this->assertCount( 1, $this->block_attributes( $this->patterns['profotograaf/contact-page']['content'], 'profotograaf/gallery' ) );
 	}
 
