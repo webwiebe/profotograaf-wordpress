@@ -9,6 +9,7 @@ namespace Profotograaf\Tests\Leads;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Leads\Contact_Form_7;
+use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Gravity_Forms;
 use Profotograaf\Leads\Wpforms;
 
@@ -102,14 +103,17 @@ class Bridges_Test extends Leads_Test_Case {
 	}
 
 	public function test_a_form_that_is_off_queues_nothing(): void {
+		$this->options[ Form_Settings::OPTION ]['forms']['cf7:12'] = array( 'enabled' => false );
+
 		$this->cf7_submit( $this->cf7_form() );
 
 		$this->assertSame( array(), $this->store->jobs );
 		$this->assertSame( array(), $this->scheduled );
 	}
 
-	public function test_only_the_switched_on_form_is_sent(): void {
+	public function test_a_form_switched_off_is_not_sent_while_another_is_on(): void {
 		$this->enable( 'cf7:99' );
+		$this->options[ Form_Settings::OPTION ]['forms']['cf7:12'] = array( 'enabled' => false );
 
 		$this->cf7_submit( $this->cf7_form( 12 ) );
 

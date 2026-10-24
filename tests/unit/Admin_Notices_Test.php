@@ -38,6 +38,17 @@ class Stubbed_Admin_Notices extends Admin_Notices {
 		return $this->pending;
 	}
 
+	/**
+	 * Titles of the forms that are new.
+	 *
+	 * @var string[]
+	 */
+	public array $new_forms = array();
+
+	protected function new_forms(): array {
+		return $this->new_forms;
+	}
+
 	protected function screen_id(): string {
 		return $this->screen;
 	}
@@ -220,6 +231,34 @@ class Admin_Notices_Test extends Wp_Test_Case {
 	public function test_waiting_enquiries_show_no_notice_on_a_connected_site(): void {
 		$this->connect();
 		$this->notices->pending = 3;
+
+		$this->assertSame( '', $this->html() );
+	}
+
+	public function test_new_forms_get_a_notice_that_lists_them(): void {
+		$this->notices->new_forms = array( 'Contact Form 7: Wedding', 'WPForms: Portraits' );
+
+		$html = $this->html();
+
+		$this->assertStringContainsString( 'Contact Form 7: Wedding', $html );
+		$this->assertStringContainsString( 'WPForms: Portraits', $html );
+		$this->assertStringContainsString( 'now send their enquiries to Profotograaf', $html );
+		$this->assertStringContainsString( 'page=profotograaf-leads', $html );
+	}
+
+	public function test_a_single_new_form_gets_the_singular_notice(): void {
+		$this->notices->new_forms = array( 'Contact Form 7: Wedding' );
+
+		$this->assertStringContainsString( 'now sends its enquiries to Profotograaf', $this->html() );
+	}
+
+	public function test_no_new_forms_no_notice(): void {
+		$this->assertStringNotContainsString( 'enquiries to Profotograaf', $this->html() );
+	}
+
+	public function test_the_new_forms_notice_is_off_when_enquiries_are_switched_off(): void {
+		$this->options[ Settings::OPTION ] = array( 'leads_enabled' => false );
+		$this->notices->new_forms          = array( 'Contact Form 7: Wedding' );
 
 		$this->assertSame( '', $this->html() );
 	}

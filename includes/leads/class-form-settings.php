@@ -11,7 +11,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Stores, per form, whether its submissions go to Profotograaf and the field
- * mapping. Nothing is sent for a form that has no entry here.
+ * mapping. A form that has no entry here yet sends by default, so a new form
+ * does not lose enquiries; New_Forms lists those forms for review.
  *
  * The option is `profotograaf_leads` (`forms` maps a form key such as
  * `cf7:12` to `enabled`, `map` and an optional `source_tag`), not autoloaded.
@@ -42,11 +43,22 @@ final class Form_Settings {
 			}
 		}
 		return array(
-			// The block of this plugin is on until the photographer switches it off.
-			'enabled'    => array_key_exists( 'enabled', $form ) ? ! empty( $form['enabled'] ) : Enquiry_Form::FORM_KEY === $form_key,
+			// A form is on until the photographer switches it off.
+			'enabled'    => array_key_exists( 'enabled', $form ) ? ! empty( $form['enabled'] ) : true,
 			'map'        => $map,
 			'source_tag' => self::clean_tag( $form['source_tag'] ?? '' ),
 		);
+	}
+
+	/**
+	 * Keys of the forms that have a saved entry.
+	 *
+	 * @return string[]
+	 */
+	public function saved_keys(): array {
+		$stored = get_option( self::OPTION, array() );
+		$forms  = is_array( $stored ) && isset( $stored['forms'] ) && is_array( $stored['forms'] ) ? $stored['forms'] : array();
+		return array_map( 'strval', array_keys( $forms ) );
 	}
 
 	/**
