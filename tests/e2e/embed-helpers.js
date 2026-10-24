@@ -129,6 +129,16 @@ async function openEmbed( browser, url, viewport = { width: 1440, height: 900 },
 		} );
 	}
 	await declarePlatformOverHttps( context );
+	if ( live ) {
+		// The live script asks for the large images in CORS mode, and the mock
+		// image route sends no CORS headers. Chromium also refuses these requests
+		// as a page on one loopback port reaching another, so the answer is served
+		// from here instead of the network.
+		await context.route( ( target ) => target.href.startsWith( `${ MOCK }/img/` ), async ( route ) => {
+			const response = await route.fetch();
+			await route.fulfill( { response, headers: { ...response.headers(), 'access-control-allow-origin': '*' } } );
+		} );
+	}
 	await setup( context );
 	const page = await context.newPage();
 	/** @type {string[]} */
