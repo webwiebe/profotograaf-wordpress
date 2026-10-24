@@ -187,37 +187,7 @@ final class Enquiry_Form {
 				return $this->done( 'limited', 'limit' );
 			}
 
-			$submission = new Submission(
-				self::FORM_KEY,
-				'Website enquiry form',
-				array(
-					array(
-						'id'    => 'name',
-						'label' => 'Name',
-						'type'  => 'name',
-						'value' => $name,
-					),
-					array(
-						'id'    => 'email',
-						'label' => 'Email',
-						'type'  => 'email',
-						'value' => $email,
-					),
-					array(
-						'id'    => 'date',
-						'label' => 'Event date',
-						'type'  => 'date',
-						'value' => Submission::text( sanitize_text_field( (string) ( $input['pf_date'] ?? '' ) ) ),
-					),
-					array(
-						'id'    => 'message',
-						'label' => 'Message',
-						'type'  => 'textarea',
-						'value' => Submission::text( sanitize_textarea_field( (string) ( $input['pf_message'] ?? '' ) ) ),
-					),
-				),
-				esc_url_raw( Submission::text( $input['pf_page'] ?? '' ) )
-			);
+			$submission = $this->submission( $input, $name, $email );
 
 			$result = $this->dispatcher->submit( $submission );
 			return 'queued' === $result ? $this->done( 'sent', 'queued' ) : $this->done( 'error', $result );
@@ -228,16 +198,57 @@ final class Enquiry_Form {
 	}
 
 	/**
-	 * admin-post handler: handles the post and redirects back with the outcome.
+	 * Builds the submission for a valid enquiry.
+	 *
+	 * @param array<string,mixed> $input Posted fields.
+	 * @param string              $name  Cleaned name.
+	 * @param string              $email Cleaned email address.
+	 */
+	private function submission( array $input, string $name, string $email ): Submission {
+		return new Submission(
+			self::FORM_KEY,
+			'Website enquiry form',
+			array(
+				array(
+					'id'    => 'name',
+					'label' => 'Name',
+					'type'  => 'name',
+					'value' => $name,
+				),
+				array(
+					'id'    => 'email',
+					'label' => 'Email',
+					'type'  => 'email',
+					'value' => $email,
+				),
+				array(
+					'id'    => 'date',
+					'label' => 'Event date',
+					'type'  => 'date',
+					'value' => Submission::text( sanitize_text_field( (string) ( $input['pf_date'] ?? '' ) ) ),
+				),
+				array(
+					'id'    => 'message',
+					'label' => 'Message',
+					'type'  => 'textarea',
+					'value' => Submission::text( sanitize_textarea_field( (string) ( $input['pf_message'] ?? '' ) ) ),
+				),
+			),
+			esc_url_raw( Submission::text( $input['pf_page'] ?? '' ) )
+		);
+	}
+
+	/**
+	 * Handles the admin-post request and redirects back with the outcome.
 	 */
 	public function on_post(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Signed timestamp, see token(); a nonce expires on cached pages.
 		$input = wp_unslash( $_POST );
-		$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
+		$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		$page  = isset( $input['pf_page'] ) ? esc_url_raw( (string) $input['pf_page'] ) : '';
 		$back  = '' !== $page && 0 === strpos( $page, home_url() ) ? $page : home_url( '/' );
 
-		$outcome = $this->handle( is_array( $input ) ? $input : array(), $ip, time() );
+		$outcome = $this->handle( $input, $ip, time() );
 
 		wp_safe_redirect( add_query_arg( self::QUERY, $outcome, $back ) );
 		exit;

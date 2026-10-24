@@ -737,19 +737,19 @@ msgstr "Laissez ce champ vide"
 msgid "Send enquiry"
 msgstr "Envoyer la demande"
 
-#: includes/leads/class-enquiry-form.php:323
+#: includes/leads/class-enquiry-form.php:334
 msgid "Thank you. Your enquiry was received and I will get back to you soon."
 msgstr "Merci. Votre demande a bien été reçue et je vous répondrai bientôt."
 
-#: includes/leads/class-enquiry-form.php:324
+#: includes/leads/class-enquiry-form.php:335
 msgid "Check your name and email address and send the form again."
 msgstr "Vérifiez votre nom et votre adresse e-mail, puis renvoyez le formulaire."
 
-#: includes/leads/class-enquiry-form.php:325
+#: includes/leads/class-enquiry-form.php:336
 msgid "Too many enquiries from your connection. Try again in an hour."
 msgstr "Trop de demandes depuis votre connexion. Réessayez dans une heure."
 
-#: includes/leads/class-enquiry-form.php:326
+#: includes/leads/class-enquiry-form.php:337
 msgid "Your enquiry was not received. Try again in a few minutes."
 msgstr "Votre demande n'a pas été reçue. Réessayez dans quelques minutes."
 

@@ -761,19 +761,19 @@ msgstr "Laat dit veld leeg"
 msgid "Send enquiry"
 msgstr "Aanvraag versturen"
 
-#: includes/leads/class-enquiry-form.php:323
+#: includes/leads/class-enquiry-form.php:334
 msgid "Thank you. Your enquiry was received and I will get back to you soon."
 msgstr "Bedankt. Je aanvraag is ontvangen en ik neem snel contact met je op."
 
-#: includes/leads/class-enquiry-form.php:324
+#: includes/leads/class-enquiry-form.php:335
 msgid "Check your name and email address and send the form again."
 msgstr "Controleer je naam en e-mailadres en verstuur het formulier opnieuw."
 
-#: includes/leads/class-enquiry-form.php:325
+#: includes/leads/class-enquiry-form.php:336
 msgid "Too many enquiries from your connection. Try again in an hour."
 msgstr "Te veel aanvragen vanaf jouw verbinding. Probeer het over een uur opnieuw."
 
-#: includes/leads/class-enquiry-form.php:326
+#: includes/leads/class-enquiry-form.php:337
 msgid "Your enquiry was not received. Try again in a few minutes."
 msgstr "Je aanvraag is niet aangekomen. Probeer het over enkele minuten opnieuw."
 
