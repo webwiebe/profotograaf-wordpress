@@ -115,24 +115,18 @@ class Elementor_Gallery_Widget extends Widget_Base {
 			array(
 				'label'   => esc_html__( 'Layout', 'profotograaf' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					''          => esc_html__( 'Site default', 'profotograaf' ),
-					'auto'      => esc_html__( 'Automatic', 'profotograaf' ),
-					'grid'      => esc_html__( 'Grid', 'profotograaf' ),
-					'masonry'   => esc_html__( 'Masonry', 'profotograaf' ),
-					'slideshow' => esc_html__( 'Slideshow', 'profotograaf' ),
-				),
+				'options' => Builder_Gallery::layout_choices(),
 				'default' => '',
 			)
 		);
 
-		foreach ( Builder_Gallery::MAX_COLUMNS as $field => $max ) {
+		foreach ( array_keys( Builder_Gallery::MAX_COLUMNS ) as $field ) {
 			$this->add_control(
 				$field,
 				array(
-					'label'   => $this->columns_label( $field ),
+					'label'   => Builder_Gallery::column_label( $field ),
 					'type'    => Controls_Manager::SELECT,
-					'options' => array( '' => esc_html__( 'Site default', 'profotograaf' ) ) + $this->column_counts( $max ),
+					'options' => Builder_Gallery::column_choices( $field ),
 					'default' => '',
 				)
 			);
@@ -143,11 +137,7 @@ class Elementor_Gallery_Widget extends Widget_Base {
 			array(
 				'label'   => esc_html__( 'Lightbox', 'profotograaf' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					''    => esc_html__( 'Site default', 'profotograaf' ),
-					'on'  => esc_html__( 'On', 'profotograaf' ),
-					'off' => esc_html__( 'Off', 'profotograaf' ),
-				),
+				'options' => Builder_Gallery::lightbox_choices(),
 				'default' => '',
 			)
 		);
@@ -162,34 +152,5 @@ class Elementor_Gallery_Widget extends Widget_Base {
 		$settings = $this->get_settings_for_display();
 		// The renderer escapes everything it prints.
 		echo Builder_Gallery::render( is_array( $settings ) ? $settings : array(), self::$index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	}
-
-	/**
-	 * Label of a column control.
-	 *
-	 * @param string $field Field name.
-	 */
-	private function columns_label( string $field ): string {
-		if ( 'columns_tablet' === $field ) {
-			return esc_html__( 'Columns on tablets', 'profotograaf' );
-		}
-		if ( 'columns_mobile' === $field ) {
-			return esc_html__( 'Columns on phones', 'profotograaf' );
-		}
-		return esc_html__( 'Columns', 'profotograaf' );
-	}
-
-	/**
-	 * Column counts from 1 to $max.
-	 *
-	 * @param int $max Largest count.
-	 * @return array<int,string>
-	 */
-	private function column_counts( int $max ): array {
-		$counts = array();
-		for ( $count = 1; $count <= $max; $count++ ) {
-			$counts[ (string) $count ] = (string) $count;
-		}
-		return $counts;
 	}
 }
