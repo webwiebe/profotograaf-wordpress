@@ -159,6 +159,7 @@ jobs:
       - uses: ./.github/actions/setup-node-pnpm
       # The release copy holds the built blocks, so Plugin Check reviews them too.
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       - run: tests/e2e/plugin-check.sh
       - if: always()

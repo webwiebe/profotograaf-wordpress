@@ -59,6 +59,8 @@ services:
   mock-platform:
     image: node:22-alpine
     command: ["node", "/mock/mock-platform.mjs"]
+    environment:
+      MOCK_PUBLIC_ORIGIN: "http://localhost:${MOCK_PORT:-8090}"
     ports:
       - "${MOCK_PORT:-8090}:8090"
     volumes:
