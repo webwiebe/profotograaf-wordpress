@@ -339,6 +339,15 @@ class Virtual_Attachments_Test extends Gallery_Test_Case {
 		$this->assertSame( 400, $this->attachment_meta[ $id ]['sizes']['thumbnail']['width'] );
 	}
 
+	public function test_create_stores_a_filesize_so_the_core_image_editor_finds_one(): void {
+		$this->enable();
+
+		$id = $this->create_one();
+
+		$this->assertArrayHasKey( 'filesize', $this->attachment_meta[ $id ] );
+		$this->assertSame( 0, $this->attachment_meta[ $id ]['filesize'] );
+	}
+
 	public function test_a_small_photo_keeps_its_own_size(): void {
 		$this->enable();
 

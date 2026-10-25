@@ -36,6 +36,16 @@ function PickerRow( {
 					</span>
 				</span>
 			</Button>
+			{ gallery.url && (
+				<a
+					className="profotograaf-gallery-picker__share"
+					href={ gallery.url }
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'Open the share page', 'profotograaf' ) }
+				</a>
+			) }
 		</li>
 	);
 }

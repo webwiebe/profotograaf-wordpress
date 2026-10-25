@@ -72,6 +72,7 @@ jobs:
     name: E2E (WordPress ${{ matrix.wp }})
     needs: plan
     runs-on: [self-hosted, build]
+    # A hung job holds the only runner, so every other job queues behind it.
     timeout-minutes: 120
     strategy:
       fail-fast: false
@@ -85,18 +86,14 @@ jobs:
       E2E_VISUAL: ${{ matrix.wp == '7.1' && needs.plan.outputs.full == 'true' && '1' || '' }}
     steps:
       - uses: actions/checkout@v7
-      # The runner's login keychain is not reachable from a job, and docker's
-      # credential helper reads it even for public images. A config without a
-      # credsStore pulls them anonymously.
-      - name: Docker without the keychain helper
-        run: |
-          mkdir -p "$RUNNER_TEMP/docker-config"
-          echo '{}' > "$RUNNER_TEMP/docker-config/config.json"
-          echo "DOCKER_CONFIG=$RUNNER_TEMP/docker-config" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm exec playwright install chromium
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm exec playwright install --with-deps chromium
       - if: env.E2E_BROWSER_MATRIX == '1'
-        run: pnpm exec playwright install firefox webkit
+        run: pnpm exec playwright install --with-deps firefox webkit
       # The E2E site runs the release copy, which holds the built blocks.
       - run: pnpm build
       - run: tests/e2e/ci-env.sh
@@ -142,16 +139,8 @@ jobs:
       PROFOTOGRAAF_MULTISITE: '1'
     steps:
       - uses: actions/checkout@v7
-      # The runner's login keychain is not reachable from a job, and docker's
-      # credential helper reads it even for public images. A config without a
-      # credsStore pulls them anonymously.
-      - name: Docker without the keychain helper
-        run: |
-          mkdir -p "$RUNNER_TEMP/docker-config"
-          echo '{}' > "$RUNNER_TEMP/docker-config/config.json"
-          echo "DOCKER_CONFIG=$RUNNER_TEMP/docker-config" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup-node-pnpm
-      - run: pnpm exec playwright install chromium
+      - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm build
       - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh

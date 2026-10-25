@@ -432,6 +432,10 @@ final class Virtual_Attachments {
 				'width'      => $width,
 				'height'     => $height,
 				'file'       => $file,
+				// There is no local file to measure. WordPress 7.1 core reads
+				// $meta['filesize'] unguarded when the image editor backs up the
+				// original (wp-admin/includes/image-edit.php), a PHP warning without it.
+				'filesize'   => 0,
 				'sizes'      => $sizes,
 				'image_meta' => array(),
 			)

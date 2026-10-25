@@ -40,6 +40,26 @@ describe( 'Picker', () => {
 		);
 	} );
 
+	it( 'links the share page of a gallery that sends a url and shows nothing for one that sends none', async () => {
+		fetchMock.mockResolvedValue( [
+			galleryRow(),
+			galleryRow( { id: 'g-2', title: 'Autumn', url: '' } ),
+			galleryRow( { id: 'g-3', title: 'Winter', url: undefined } as unknown as Partial< ReturnType< typeof galleryRow > > ),
+		] );
+		const onPick = vi.fn();
+		render( <Picker onPick={ onPick } /> );
+		await screen.findByText( 'Spring wedding' );
+
+		const links = screen.getAllByRole( 'link', { name: /share page/i } );
+		expect( links ).toHaveLength( 1 );
+		expect( links[ 0 ]?.getAttribute( 'href' ) ).toBe( 'https://studio.example/share/g/spring-wedding' );
+		expect( links[ 0 ]?.getAttribute( 'target' ) ).toBe( '_blank' );
+		expect( links[ 0 ]?.getAttribute( 'rel' ) ).toContain( 'noopener' );
+
+		fireEvent.click( links[ 0 ] as HTMLElement );
+		expect( onPick ).not.toHaveBeenCalled();
+	} );
+
 	it( 'says 0 visible for a gallery listed with no photos', async () => {
 		fetchMock.mockResolvedValue( [ galleryRow( { photo_count: 0 } ) ] );
 		render( <Picker onPick={ vi.fn() } /> );

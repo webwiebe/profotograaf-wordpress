@@ -5,12 +5,22 @@ const { defineConfig, devices } = require( '@playwright/test' );
 // specs that check how the real embed.js lays a gallery out, and only when
 // E2E_BROWSER_MATRIX is set (the WordPress 7.1 CI job sets it). A plain local
 // run stays on chromium.
+// The mock platform runs on loopback next to WordPress, and recent Chromium
+// blocks a page's images from another loopback origin ("Permission was denied
+// ... loopback address space"). The real platform is public, so production
+// never meets Local Network Access. Both Chromium projects need the flag.
+const CHROMIUM_LAUNCH = {
+	args: [ '--disable-features=LocalNetworkAccessChecks,LocalNetworkAccessChecksWebSockets,PrivateNetworkAccessSendPreflights' ],
+};
 const LAYOUT_SPECS = /embed-(layout|options)\.spec\.js$/;
+// Playwright's Firefox build exits with "Could not find profile folder" on the
+// macOS runner for any profile path (#338), so Firefox runs on Linux only.
+const FIREFOX = process.platform === 'darwin' ? [] : [ { name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ] } } ];
 const matrix = process.env.E2E_BROWSER_MATRIX
 	? [
-			{ name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ] } },
+			...FIREFOX,
 			{ name: 'webkit', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Safari' ] } },
-			{ name: 'mobile-chrome', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Pixel 7' ] } },
+			{ name: 'mobile-chrome', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Pixel 7' ], launchOptions: CHROMIUM_LAUNCH } },
 	  ]
 	: [];
 
@@ -40,5 +50,14 @@ module.exports = defineConfig( {
 		ignoreHTTPSErrors: baseURL.startsWith( 'https:' ),
 		trace: 'retain-on-failure',
 	},
-	projects: [ { name: 'chromium', use: { ...devices[ 'Desktop Chrome' ] } }, ...matrix ],
+	projects: [
+		{
+			name: 'chromium',
+			use: {
+				...devices[ 'Desktop Chrome' ],
+				launchOptions: CHROMIUM_LAUNCH,
+			},
+		},
+		...matrix,
+	],
 } );
