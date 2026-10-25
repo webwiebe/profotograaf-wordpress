@@ -60,6 +60,19 @@ describe( 'Picker', () => {
 		expect( onPick ).not.toHaveBeenCalled();
 	} );
 
+	it( 'hides the share link of a gallery the platform does not serve', async () => {
+		fetchMock.mockResolvedValue( [
+			galleryRow( { available: false } ),
+			galleryRow( { id: 'g-2', title: 'Autumn' } ),
+		] );
+		render( <Picker onPick={ vi.fn() } /> );
+		await screen.findByText( 'Spring wedding' );
+
+		const links = screen.getAllByRole( 'link', { name: /share page/i } );
+		expect( links ).toHaveLength( 1 );
+		expect( links[ 0 ]?.closest( 'li' )?.textContent ).toContain( 'Autumn' );
+	} );
+
 	it( 'says 0 visible for a gallery listed with no photos', async () => {
 		fetchMock.mockResolvedValue( [ galleryRow( { photo_count: 0 } ) ] );
 		render( <Picker onPick={ vi.fn() } /> );

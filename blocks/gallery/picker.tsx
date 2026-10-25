@@ -36,7 +36,7 @@ function PickerRow( {
 					</span>
 				</span>
 			</Button>
-			{ gallery.url && (
+			{ gallery.url && gallery.available && (
 				<a
 					className="profotograaf-gallery-picker__share"
 					href={ gallery.url }
