@@ -16,7 +16,7 @@ jobs:
   # that touches only docs, translations or workflows runs none.
   e2e-select:
     name: Pick the E2E specs for this release
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     outputs:
       specs: ${{ steps.pick.outputs.specs }}
     steps:
@@ -45,7 +45,7 @@ jobs:
     needs: [ci, e2e]
     # A skipped e2e job (nothing to run) does not block the release.
     if: ${{ !cancelled() && !failure() }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     env:
       SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
       SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
@@ -80,7 +80,7 @@ jobs:
   # without the BugBarn variable and secret.
   bugbarn-marker:
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
       - name: Post the release marker to BugBarn

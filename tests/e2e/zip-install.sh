@@ -6,6 +6,11 @@
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# Several runners share one docker host: a project name per CI run keeps two
+# zip checks from sharing containers and volumes. The file has no host ports.
+if [[ -n "${GITHUB_RUN_ID:-}" ]]; then
+	export COMPOSE_PROJECT_NAME="profotograaf-zip-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}-$$"
+fi
 compose=(docker compose -f "$root/tests/e2e/docker-compose.zip.yml")
 version="$(sed -n 's/^ \* Version: *//p' "$root/profotograaf.php" | head -1 | tr -d '[:space:]')"
 zip="/zips/profotograaf-$version.zip"
