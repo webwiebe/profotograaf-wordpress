@@ -5,12 +5,19 @@ const { defineConfig, devices } = require( '@playwright/test' );
 // specs that check how the real embed.js lays a gallery out, and only when
 // E2E_BROWSER_MATRIX is set (the WordPress 7.1 CI job sets it). A plain local
 // run stays on chromium.
+// The mock platform runs on loopback next to WordPress, and recent Chromium
+// blocks a page's images from another loopback origin ("Permission was denied
+// ... loopback address space"). The real platform is public, so production
+// never meets Local Network Access. Both Chromium projects need the flag.
+const CHROMIUM_LAUNCH = {
+	args: [ '--disable-features=LocalNetworkAccessChecks,LocalNetworkAccessChecksWebSockets,PrivateNetworkAccessSendPreflights' ],
+};
 const LAYOUT_SPECS = /embed-(layout|options)\.spec\.js$/;
 const matrix = process.env.E2E_BROWSER_MATRIX
 	? [
 			{ name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ] } },
 			{ name: 'webkit', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Safari' ] } },
-			{ name: 'mobile-chrome', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Pixel 7' ] } },
+			{ name: 'mobile-chrome', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Pixel 7' ], launchOptions: CHROMIUM_LAUNCH } },
 	  ]
 	: [];
 
@@ -45,13 +52,7 @@ module.exports = defineConfig( {
 			name: 'chromium',
 			use: {
 				...devices[ 'Desktop Chrome' ],
-				// The mock platform runs on loopback next to WordPress, and recent
-				// Chromium blocks a page's images from another loopback origin
-				// ("Permission was denied ... loopback address space"). The real
-				// platform is public, so production never meets Local Network Access.
-				launchOptions: {
-					args: [ '--disable-features=LocalNetworkAccessChecks,LocalNetworkAccessChecksWebSockets,PrivateNetworkAccessSendPreflights' ],
-				},
+				launchOptions: CHROMIUM_LAUNCH,
 			},
 		},
 		...matrix,
