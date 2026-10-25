@@ -78,37 +78,15 @@ trait Api_Client_Writes {
 		if ( false === $contents ) {
 			return Api_Errors::make( 'profotograaf_invalid', __( 'The file could not be read.', 'profotograaf' ), 0, false );
 		}
-		$filename  = '' === $filename ? basename( $path ) : $filename;
-		$mime_type = '' === $mime_type ? 'application/octet-stream' : $mime_type;
-		// Quotes and line breaks would end the header value early.
-		$safe_name = str_replace( array( '"', "\r", "\n", '\\' ), '_', $filename );
-		$boundary  = 'profotograaf' . bin2hex( random_bytes( 12 ) );
-
-		$raw = array(
-			'body'         => '--' . $boundary . "\r\n"
-				. 'Content-Disposition: form-data; name="file"; filename="' . $safe_name . '"' . "\r\n"
-				. 'Content-Type: ' . preg_replace( '/[^\w.+\/-]/', '', $mime_type ) . "\r\n\r\n"
-				. $contents . "\r\n"
-				. '--' . $boundary . "--\r\n",
-			'content_type' => 'multipart/form-data; boundary=' . $boundary,
-			'timeout'      => self::UPLOAD_TIMEOUT,
-		);
+		$filename = '' === $filename ? basename( $path ) : $filename;
+		$raw      = self::multipart( $contents, $filename, $mime_type );
 
 		$result = Api_Errors::guard_write(
 			$this->perform( 'POST', '/api/v1/embed/galleries/' . rawurlencode( $gallery_id ) . '/photos', null, $raw ),
 			$this->connection
 		);
 		if ( is_wp_error( $result ) ) {
-			$data = $result->get_error_data();
-			if ( 'profotograaf_http' === $result->get_error_code() && is_array( $data ) && 413 === ( $data['status'] ?? 0 ) ) {
-				return Api_Errors::make(
-					'profotograaf_storage_full',
-					__( 'Your Profotograaf storage is full. Free up space or upgrade your plan to send more files.', 'profotograaf' ),
-					413,
-					false
-				);
-			}
-			return $result;
+			return self::storage_full_or( $result );
 		}
 		$result = is_array( $result ) ? $result : array();
 		if ( empty( $result['id'] ) ) {
@@ -119,6 +97,48 @@ trait Api_Client_Writes {
 			'gallery_id' => (string) ( $result['gallery_id'] ?? $gallery_id ),
 			'filename'   => (string) ( $result['filename'] ?? $filename ),
 		);
+	}
+
+	/**
+	 * The request arguments of a one-file multipart upload.
+	 *
+	 * @param string $contents  File contents.
+	 * @param string $filename  File name to send.
+	 * @param string $mime_type Media type, application/octet-stream when empty.
+	 * @return array{body:string,content_type:string,timeout:int}
+	 */
+	private static function multipart( string $contents, string $filename, string $mime_type ): array {
+		$mime_type = '' === $mime_type ? 'application/octet-stream' : $mime_type;
+		// Quotes and line breaks would end the header value early.
+		$safe_name = str_replace( array( '"', "\r", "\n", '\\' ), '_', $filename );
+		$boundary  = 'profotograaf' . bin2hex( random_bytes( 12 ) );
+		return array(
+			'body'         => '--' . $boundary . "\r\n"
+				. 'Content-Disposition: form-data; name="file"; filename="' . $safe_name . '"' . "\r\n"
+				. 'Content-Type: ' . preg_replace( '/[^\w.+\/-]/', '', $mime_type ) . "\r\n\r\n"
+				. $contents . "\r\n"
+				. '--' . $boundary . "--\r\n",
+			'content_type' => 'multipart/form-data; boundary=' . $boundary,
+			'timeout'      => self::UPLOAD_TIMEOUT,
+		);
+	}
+
+	/**
+	 * A 413 answer becomes the storage-full error, any other error stays as it is.
+	 *
+	 * @param WP_Error $error Error from the upload request.
+	 */
+	private static function storage_full_or( WP_Error $error ): WP_Error {
+		$data = $error->get_error_data();
+		if ( 'profotograaf_http' === $error->get_error_code() && is_array( $data ) && 413 === ( $data['status'] ?? 0 ) ) {
+			return Api_Errors::make(
+				'profotograaf_storage_full',
+				__( 'Your Profotograaf storage is full. Free up space or upgrade your plan to send more files.', 'profotograaf' ),
+				413,
+				false
+			);
+		}
+		return $error;
 	}
 
 	/**

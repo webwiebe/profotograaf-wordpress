@@ -143,9 +143,10 @@ async function checkLoadMore( host, perPage ) {
 }
 
 /**
- * The state of a gallery embed.js did not draw: no shadow root content, the
- * fallback link still there and, once the reservation is released, no tall
- * blank box.
+ * The state of a gallery whose platform call failed. The visitor sees the
+ * server-drawn tiles (#269), and the fallback link when the page has no tiles.
+ * Either way the box holds what it shows: a gallery without tiles gives its
+ * reserved space back, one with tiles keeps a height of its own.
  *
  * An embed.js that reports its state (data-pf-state, professionals#2338)
  * releases the box at once: within RELEASE_AFTER_STATE_MS of the state. An
@@ -156,17 +157,22 @@ async function checkLoadMore( host, perPage ) {
 async function expectFallback( host ) {
 	await host.scrollIntoViewIfNeeded();
 	await expect( host ).toHaveAttribute( 'data-pf-ready', '' );
-	expect( await host.evaluate( ( el ) => el.shadowRoot?.querySelectorAll( '.tile' ).length ?? 0 ) ).toBe( 0 );
-	await expect( host.locator( ':scope > a' ) ).toBeVisible();
+	const tiles = await host.evaluate( ( el ) => el.shadowRoot?.querySelectorAll( '.tile' ).length ?? 0 );
+	if ( 0 === tiles ) {
+		await expect( host.locator( ':scope > a' ) ).toBeVisible();
+	}
 	const reported = await expect( host )
 		.toHaveAttribute( 'data-pf-state', /./, { timeout: STATE_WAIT_MS } )
 		.then( () => true, () => false );
-	await expect
-		.poll( () => host.evaluate( ( el ) => el.getBoundingClientRect().height ), {
-			message: reported ? 'the blank box is released at once' : 'the blank box is released',
-			timeout: reported ? RELEASE_AFTER_STATE_MS : RELEASE_MS,
-		} )
-		.toBeLessThan( 120 );
+	const height = expect.poll( () => host.evaluate( ( el ) => el.getBoundingClientRect().height ), {
+		message: reported ? 'the box is settled at once' : 'the box is settled',
+		timeout: reported ? RELEASE_AFTER_STATE_MS : RELEASE_MS,
+	} );
+	if ( 0 === tiles ) {
+		await height.toBeLessThan( 120 );
+	} else {
+		await height.toBeGreaterThan( 0 );
+	}
 }
 
 /**

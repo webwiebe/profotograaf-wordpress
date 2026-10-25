@@ -7,11 +7,13 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Builder_Gallery;
 use Profotograaf\Embed_Script;
 use Profotograaf\Full_Page_Payload;
 use Profotograaf\Gallery_Index;
 use Profotograaf\Gallery_Renderer;
 use Profotograaf\Gallery_Rest;
+use Profotograaf\Link_Consent;
 use Profotograaf\Module;
 use Profotograaf\Oembed;
 use Profotograaf\Plugin;
@@ -33,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Gallery_Embed implements Module {
 
-	public const BLOCK = 'profotograaf/gallery';
+	public const BLOCK = Builder_Gallery::BLOCK;
 
 	/**
 	 * Renderer shared by the block and the shortcode.
@@ -48,6 +50,13 @@ class Gallery_Embed implements Module {
 	 * @var Settings|null
 	 */
 	private ?Settings $settings = null;
+
+	/**
+	 * Consent to the Free plan link. The block renders nothing without it.
+	 *
+	 * @var Link_Consent|null
+	 */
+	private ?Link_Consent $consent = null;
 
 	/**
 	 * Name of the JavaScript global that carries the site defaults.
@@ -65,14 +74,14 @@ class Gallery_Embed implements Module {
 		$renderer       = new Gallery_Renderer( $script, $index, $plugin->settings(), new Full_Page_Payload( $plugin->api() ) );
 		$this->renderer = $renderer;
 		$this->settings = $plugin->settings();
+		$this->consent  = $plugin->link_consent();
 
-		( new Shortcode( $renderer ) )->register();
+		( new Shortcode( $renderer, $this->consent ) )->register();
 		( new Oembed( $script ) )->register();
 		( new Gallery_Rest( $plugin->api(), $index ) )->register();
 		( new Sections_Rest( $plugin->api() ) )->register();
 
 		add_action( Gallery_Index::LOOKUP_HOOK, array( $index, 'lookup' ) );
-		add_action( Embed_Script::REFRESH_HOOK, array( $script, 'refresh' ) );
 		add_filter( 'script_loader_tag', array( $script, 'add_error_handler' ), 10, 2 );
 		add_filter( 'register_block_type_args', array( $this, 'block_args' ), 10, 2 );
 		add_action( 'init', array( $this, 'load_script_translations' ), 20 );
@@ -102,6 +111,9 @@ class Gallery_Embed implements Module {
 	public function render_block( array $attributes ): string {
 		if ( null === $this->renderer ) {
 			return '';
+		}
+		if ( null !== $this->consent && ! $this->consent->allows_render() ) {
+			return $this->consent->refusal( Settings_Page::url() );
 		}
 		$class = 'wp-block-profotograaf-gallery';
 		if ( ! empty( $attributes['align'] ) ) {

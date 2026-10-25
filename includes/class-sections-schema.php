@@ -229,16 +229,28 @@ final class Sections_Schema {
 			return is_bool( $value ) ? $value : in_array( $value, array( 1, '1', 'true', 'on' ), true );
 		}
 		if ( is_int( $fallback ) || isset( $rule['min'] ) ) {
-			if ( ! is_numeric( $value ) ) {
-				return null;
-			}
-			$number = (int) $value;
-			return max( (int) ( $rule['min'] ?? $number ), min( (int) ( $rule['max'] ?? $number ), $number ) );
+			return is_numeric( $value ) ? self::clamp( (int) $value, $rule ) : null;
 		}
-		if ( ! is_scalar( $value ) ) {
-			return null;
-		}
-		$text = (string) $value;
+		return is_scalar( $value ) ? self::clean_text( (string) $value, $rule ) : null;
+	}
+
+	/**
+	 * A number held to the rule's min and max.
+	 *
+	 * @param int                 $number Value.
+	 * @param array<string,mixed> $rule   Field rule.
+	 */
+	private static function clamp( int $number, array $rule ): int {
+		return max( (int) ( $rule['min'] ?? $number ), min( (int) ( $rule['max'] ?? $number ), $number ) );
+	}
+
+	/**
+	 * A text value cleaned by the rule's enum or pattern, else sanitized.
+	 *
+	 * @param string              $text Value.
+	 * @param array<string,mixed> $rule Field rule.
+	 */
+	private static function clean_text( string $text, array $rule ): ?string {
 		if ( isset( $rule['enum'] ) ) {
 			return in_array( $text, $rule['enum'], true ) ? $text : null;
 		}

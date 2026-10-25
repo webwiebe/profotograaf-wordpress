@@ -9,7 +9,6 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Functions;
 use Profotograaf\Connection;
-use Profotograaf\Embed_Script;
 use Profotograaf\Logger;
 use Profotograaf\Modules\Site_Health;
 use Profotograaf\Plugin;
@@ -18,11 +17,11 @@ use Profotograaf\Tests\Leads\Leads_Test_Case;
 class Site_Health_Test extends Leads_Test_Case {
 
 	/**
-	 * What the embed.js request returns: a status code or a WP_Error.
+	 * Whether the gallery script file is in the plugin folder.
 	 *
-	 * @var int|\WP_Error
+	 * @var bool
 	 */
-	private $embed_response = 200;
+	private bool $script_present = true;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -42,8 +41,7 @@ class Site_Health_Test extends Leads_Test_Case {
 	private function module(): Site_Health {
 		$module = new Site_Health(
 			$this->queue,
-			new Embed_Script(),
-			fn() => $this->embed_response,
+			fn() => $this->script_present,
 			$this->clock()
 		);
 		$module->register( new Plugin( new Connection(), null, $this->clock() ) );
@@ -155,23 +153,18 @@ class Site_Health_Test extends Leads_Test_Case {
 		$this->assertSame( 'good', $this->module()->token_result()['status'] );
 	}
 
-	public function test_embed_js_reachable_is_good(): void {
+	public function test_the_gallery_script_in_the_plugin_folder_is_good(): void {
 		$this->assertSame( 'good', $this->module()->embed_result()['status'] );
 	}
 
-	public function test_embed_js_error_status_is_critical_with_the_address(): void {
-		$this->embed_response = 503;
+	public function test_a_missing_gallery_script_is_critical_and_says_how_to_fix_it(): void {
+		$this->script_present = false;
 
 		$result = $this->module()->embed_result();
 
 		$this->assertSame( 'critical', $result['status'] );
-		$this->assertStringContainsString( '/share/embed/embed.js', $result['description'] );
-	}
-
-	public function test_embed_js_network_failure_is_critical(): void {
-		$this->embed_response = new \WP_Error( 'http_request_failed', 'timeout' );
-
-		$this->assertSame( 'critical', $this->module()->embed_result()['status'] );
+		$this->assertStringContainsString( 'missing', $result['label'] );
+		$this->assertStringContainsString( 'pnpm build', $result['actions'] );
 	}
 
 	public function test_an_empty_queue_has_no_backlog_or_failures(): void {
@@ -228,7 +221,7 @@ class Site_Health_Test extends Leads_Test_Case {
 		$fields = $info['profotograaf']['fields'];
 
 		$this->assertSame( 'Profotograaf', $info['profotograaf']['label'] );
-		foreach ( array( 'plugin_version', 'wp_version', 'php_version', 'connection', 'modules', 'leads_pending', 'leads_failed', 'embed_version', 'wp_cron', 'recent_errors' ) as $key ) {
+		foreach ( array( 'plugin_version', 'wp_version', 'php_version', 'connection', 'modules', 'leads_pending', 'leads_failed', 'wp_cron', 'recent_errors' ) as $key ) {
 			$this->assertArrayHasKey( $key, $fields );
 		}
 		$this->assertSame( '0.0.0-test', $fields['plugin_version']['value'] );

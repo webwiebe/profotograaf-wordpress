@@ -118,22 +118,33 @@ class Api_Client {
 			if ( ! is_array( $row ) || empty( $row['id'] ) ) {
 				continue;
 			}
-			$rows[] = array(
-				'id'           => (string) $row['id'],
-				'slug'         => (string) ( $row['slug'] ?? '' ),
-				'title'        => (string) ( $row['title'] ?? '' ),
-				'url'          => (string) ( $row['url'] ?? '' ),
-				'embeddable'   => ! empty( $row['embeddable'] ),
-				'available'    => ! empty( $row['available'] ),
-				'photo_count'  => (int) ( $row['photo_count'] ?? 0 ),
-				'cover_url'    => (string) ( $row['cover_url'] ?? '' ),
-				'cover_alt'    => (string) ( $row['cover_alt'] ?? '' ),
-				'layout'       => Layout_Map::clean( $row['layout'] ?? '' ),
-				'embed_layout' => Layout_Map::clean( $row['embed_layout'] ?? '' ),
-				'updated_at'   => (string) ( $row['updated_at'] ?? '' ),
-			);
+			$rows[] = self::gallery_row( $row );
 		}
 		return $rows;
+	}
+
+	/**
+	 * One gallery of the platform list, cast to the shapes the pickers read.
+	 *
+	 * @param array<string,mixed> $row Raw row.
+	 * @return array{id:string,slug:string,title:string,url:string,embeddable:bool,available:bool,photo_count:int,cover_url:string,cover_alt:string,layout:string,embed_layout:string,updated_at:string}
+	 */
+	private static function gallery_row( array $row ): array {
+		$text = static fn( string $key ): string => (string) ( $row[ $key ] ?? '' );
+		return array(
+			'id'           => (string) $row['id'],
+			'slug'         => $text( 'slug' ),
+			'title'        => $text( 'title' ),
+			'url'          => $text( 'url' ),
+			'embeddable'   => ! empty( $row['embeddable'] ),
+			'available'    => ! empty( $row['available'] ),
+			'photo_count'  => (int) ( $row['photo_count'] ?? 0 ),
+			'cover_url'    => $text( 'cover_url' ),
+			'cover_alt'    => $text( 'cover_alt' ),
+			'layout'       => Layout_Map::clean( $row['layout'] ?? '' ),
+			'embed_layout' => Layout_Map::clean( $row['embed_layout'] ?? '' ),
+			'updated_at'   => $text( 'updated_at' ),
+		);
 	}
 
 	/**
@@ -223,6 +234,10 @@ class Api_Client {
 			if ( is_wp_error( $refreshed ) ) {
 				return $refreshed;
 			}
+			/**
+			 * Fires when a request is sent again with a refreshed token after a 401.
+			 */
+			do_action( 'profotograaf_refresh_retried' );
 			$response = $this->send( $method, $path, $body, $this->connection->access_token(), $raw );
 		}
 		if ( is_wp_error( $response ) ) {
@@ -337,6 +352,10 @@ class Api_Client {
 			}
 			if ( 200 === $response['status'] && is_array( $response['body'] ) && ! empty( $response['body']['access_token'] ) && ! empty( $response['body']['refresh_token'] ) ) {
 				$this->connection->save_tokens( $response['body'], $now );
+				/**
+				 * Fires when a token refresh stored a new pair.
+				 */
+				do_action( 'profotograaf_refresh_succeeded' );
 				return true;
 			}
 			if ( 400 === $response['status'] || 401 === $response['status'] ) {

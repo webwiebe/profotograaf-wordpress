@@ -229,10 +229,8 @@ class Photo_Catalogue {
 		}
 		$thumb = self::variant_url( $photo, 'thumb' );
 		$web   = self::variant_url( $photo, 'web' );
-		$full  = $photo['full_url'] ?? '';
-		$full  = is_string( $full ) && '' !== $full ? $full : $web;
-		$cover = $photo['thumbnail_url'] ?? '';
-		$cover = is_string( $cover ) && '' !== $cover ? $cover : $web;
+		$full  = self::string_or( $photo['full_url'] ?? '', $web );
+		$cover = self::string_or( $photo['thumbnail_url'] ?? '', $web );
 		return array(
 			'id'            => (string) $photo['id'],
 			'gallery_id'    => (string) ( $photo['gallery_id'] ?? '' ),
@@ -246,6 +244,16 @@ class Photo_Catalogue {
 			'web_url'       => $full,
 			'version'       => self::version( $full ),
 		);
+	}
+
+	/**
+	 * The value when it is a non-empty string, else the fallback.
+	 *
+	 * @param mixed  $value    Value from the platform.
+	 * @param string $fallback Used for anything else.
+	 */
+	private static function string_or( $value, string $fallback ): string {
+		return is_string( $value ) && '' !== $value ? $value : $fallback;
 	}
 
 	/**

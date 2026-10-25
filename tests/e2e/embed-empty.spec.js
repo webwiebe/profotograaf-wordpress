@@ -2,12 +2,13 @@
 // A gallery with nothing the embed can show (tests/e2e/mock-platform.mjs):
 // g-e2e-empty has no photos, g-e2e-png holds one PNG photo that the public
 // payload leaves out (wiebe-xyz/professionals#2330). Visitors get a collapsed
-// block, never the failed look. A script that does not load keeps the failed
-// state with a visible fallback link.
+// block, never the failed look. A script that does not load leaves the gallery
+// the server drew; in a browser without declarative shadow DOM it keeps the
+// failed state with a visible fallback link.
 const { test, expect } = require( '@playwright/test' );
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { wp, publishPost, shortcode, openEmbed } = require( './embed-helpers' );
+const { wp, publishPost, shortcode, openEmbed, withoutDeclarativeShadowDom } = require( './embed-helpers' );
 
 // The embed.js from before the state contract (professionals#2338): it sets
 // data-pf-ready and nothing else.
@@ -97,10 +98,22 @@ test.describe( 'a gallery with nothing to show', () => {
 		await context.close();
 	} );
 
-	test( 'a script that does not load keeps the failed state with the fallback link inside the block', async ( { browser } ) => {
+	test( 'a script that does not load leaves the gallery the server drew', async ( { browser } ) => {
 		const { context, page } = await openEmbed( browser, urls.failed, { width: 390, height: 800 }, ( ctx ) =>
 			ctx.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/, ( route ) => route.abort() )
 		);
+		const drawn = host( page, 'g-e2e' );
+
+		await expect( drawn.locator( '.photos .tile' ).first() ).toBeVisible();
+		expect( await heightOf( drawn ) ).toBeGreaterThan( 100 );
+		await context.close();
+	} );
+
+	test( 'without declarative shadow DOM a script that does not load keeps the failed state with the fallback link inside the block', async ( { browser } ) => {
+		const { context, page } = await openEmbed( browser, urls.failed, { width: 390, height: 800 }, async ( ctx ) => {
+			await withoutDeclarativeShadowDom( ctx );
+			await ctx.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/, ( route ) => route.abort() );
+		} );
 		const failed = host( page, 'g-e2e' );
 
 		await expect( failed ).toHaveAttribute( 'data-profotograaf-failed', '' );

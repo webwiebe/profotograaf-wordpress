@@ -40,12 +40,21 @@ class Shortcode {
 	private Gallery_Renderer $renderer;
 
 	/**
+	 * Consent to the Free plan link, or null to render without asking.
+	 *
+	 * @var Link_Consent|null
+	 */
+	private ?Link_Consent $consent;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Gallery_Renderer $renderer Renderer.
+	 * @param Gallery_Renderer  $renderer Renderer.
+	 * @param Link_Consent|null $consent  Consent to the Free plan link.
 	 */
-	public function __construct( Gallery_Renderer $renderer ) {
+	public function __construct( Gallery_Renderer $renderer, ?Link_Consent $consent = null ) {
 		$this->renderer = $renderer;
+		$this->consent  = $consent;
 	}
 
 	/**
@@ -62,6 +71,9 @@ class Shortcode {
 	 * @return string HTML.
 	 */
 	public function render( $atts ): string {
+		if ( null !== $this->consent && ! $this->consent->allows_render() ) {
+			return $this->consent->refusal( admin_url( 'options-general.php?page=profotograaf' ) );
+		}
 		$atts    = shortcode_atts(
 			array(
 				'id'     => '',

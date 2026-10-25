@@ -14,6 +14,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PORT = 8090;
+// The origin the browser and WordPress's visitors reach the mock on: the published
+// port, which differs per CI job (tests/e2e/ci-env.sh).
+const ORIGIN = process.env.MOCK_PUBLIC_ORIGIN || `http://localhost:${ PORT }`;
 const state = { approved: false, tokens: 0, refreshes: 0, leads: [], initiate: null, jpegHits: [], scenic: false, mode: 'up', apiHits: [], statusCalls: [], reviewPrompt: { eligible: false, reason: '', at: '' }, changes: /** @type {Record<string, unknown>[]} */ ( [] ), changeCalls: /** @type {Record<string, unknown>[]} */ ( [] ), ...writeLog() };
 
 // The calls to the write routes, empty after /__reset.
@@ -83,11 +86,11 @@ const GALLERY = {
 	id: 'g-e2e',
 	slug: 'spring-wedding',
 	title: 'Spring wedding',
-	url: 'http://localhost:8090/share/g/spring-wedding',
+	url: `${ ORIGIN }/share/g/spring-wedding`,
 	embeddable: true,
 	available: true,
 	photo_count: 19,
-	cover_url: 'http://localhost:8090/cover.jpg',
+	cover_url: `${ ORIGIN }/cover.jpg`,
 	updated_at: '2026-09-01T10:00:00Z',
 };
 
@@ -98,7 +101,7 @@ const GALLERY_PARALLAX = {
 	id: 'g-e2e-parallax',
 	slug: 'sample-parallax',
 	title: 'Sample parallax',
-	url: 'http://localhost:8090/share/g/sample-parallax',
+	url: `${ ORIGIN }/share/g/sample-parallax`,
 	layout: 'parallax',
 };
 
@@ -270,8 +273,8 @@ function deviceInitiate( { res, body } ) {
 	return json( res, 201, {
 		device_code: 'e2e-device-code',
 		user_code: 'WXYZ-2346',
-		verification_uri: 'http://localhost:8090/app/devices/approve',
-		verification_uri_complete: 'http://localhost:8090/app/devices/approve?code=WXYZ-2346',
+		verification_uri: `${ ORIGIN }/app/devices/approve`,
+		verification_uri_complete: `${ ORIGIN }/app/devices/approve?code=WXYZ-2346`,
 		expires_in: 600,
 		interval: 1,
 	} );
@@ -332,7 +335,7 @@ const routes = {
 			client_id: 'wordpress',
 			site_url: typeof body.site_url === 'string' ? body.site_url : '',
 			review_prompt: state.reviewPrompt,
-			error_reporting: { endpoint: 'http://localhost:8090', project: 'wordpress-plugin', key: 'e2e-key', environment: 'e2e' },
+			error_reporting: { endpoint: ORIGIN, project: 'wordpress-plugin', key: 'e2e-key', environment: 'e2e' },
 		} );
 	} ),
 	'POST /api/v1/auth/devices/signout': authed( ( { res } ) => {
@@ -369,7 +372,7 @@ const routes = {
 		if ( status !== 201 ) {
 			return writeError( res, status, 'title required' );
 		}
-		return json( res, 201, { id: 'g-e2e-new', slug: 'new', title: body.title, url: 'http://localhost:8090/share/g/new' } );
+		return json( res, 201, { id: 'g-e2e-new', slug: 'new', title: body.title, url: `${ ORIGIN }/share/g/new` } );
 	} ),
 	'GET /api/v1/embed/galleries': authed( ( { res } ) => json( res, 200, [ GALLERY, GALLERY_PARALLAX ] ) ),
 	'GET /api/v1/embed/galleries/g-e2e-error': ( { res } ) => json( res, 503, { error: 'unavailable' }, { 'access-control-allow-origin': '*' } ),
@@ -445,14 +448,14 @@ const PHOTO_LIST = [ 'p-1', 'p-2', 'p-3' ].map( ( id, index ) => ( {
 	alt: '',
 	title: [ 'Bride', 'Groom', 'Rings' ][ index ],
 	caption: '',
-	url: `http://localhost:8090/share/g/spring-wedding/photo/${ id }`,
+	url: `${ ORIGIN }/share/g/spring-wedding/photo/${ id }`,
 	gallery_id: 'g-e2e',
 	gallery_title: 'Spring wedding',
-	thumbnail_url: `http://localhost:8090/img/${ id }/thumb.jpg`,
-	full_url: `http://localhost:8090/img/${ id }/web.jpg`,
+	thumbnail_url: `${ ORIGIN }/img/${ id }/thumb.jpg`,
+	full_url: `${ ORIGIN }/img/${ id }/web.jpg`,
 	images: [
-		{ variant: 'thumb', url: `http://localhost:8090/img/${ id }/thumb.jpg`, width: 400, height: 400 },
-		{ variant: 'web', url: `http://localhost:8090/img/${ id }/web.jpg`, width: 1600, height: 1067 },
+		{ variant: 'thumb', url: `${ ORIGIN }/img/${ id }/thumb.jpg`, width: 400, height: 400 },
+		{ variant: 'web', url: `${ ORIGIN }/img/${ id }/web.jpg`, width: 1600, height: 1067 },
 	],
 } ) );
 

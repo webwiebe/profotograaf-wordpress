@@ -1,0 +1,5 @@
+# PHP symbols that nothing else in the plugin source refers to.
+# This list may only SHRINK. Regenerate with:
+#   node scripts/check-dead-php.mjs --update-baseline
+#
+# <kind> <name> <path>

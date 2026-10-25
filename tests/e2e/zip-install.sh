@@ -6,6 +6,11 @@
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# Several runners share one docker host: a project name per CI run keeps two
+# zip checks from sharing containers and volumes. The file has no host ports.
+if [[ -n "${GITHUB_RUN_ID:-}" ]]; then
+	export COMPOSE_PROJECT_NAME="profotograaf-zip-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}-$$"
+fi
 compose=(docker compose -f "$root/tests/e2e/docker-compose.zip.yml")
 version="$(sed -n 's/^ \* Version: *//p' "$root/profotograaf.php" | head -1 | tr -d '[:space:]')"
 zip="/zips/profotograaf-$version.zip"
@@ -42,7 +47,7 @@ check "the gallery block is registered" "yes" "$(wp eval 'echo WP_Block_Type_Reg
 check "the full-page gallery block is registered" "yes" "$(wp eval 'echo WP_Block_Type_Registry::get_instance()->is_registered( "profotograaf/full-page-gallery" ) ? "yes" : "no";')"
 check "the plugin can be deactivated and activated again" "active" "$(wp plugin deactivate profotograaf >/dev/null && wp plugin activate profotograaf >/dev/null && wp plugin get profotograaf --field=status)"
 
-log="$("${compose[@]}" exec -T wordpress sh -c 'cat /var/www/html/wp-content/debug.log 2>/dev/null || true')"
+log="$("${compose[@]}" exec -T wordpress sh -c 'cat /var/www/html/wp-content/debug.log 2>/dev/null || true' | "$root/tests/e2e/plugin-log-lines.sh")"
 if [[ -n "$log" ]]; then
 	echo "FAIL the debug log is not empty:" >&2
 	echo "$log" >&2

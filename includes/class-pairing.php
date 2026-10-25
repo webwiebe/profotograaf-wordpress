@@ -33,6 +33,18 @@ class Pairing {
 	private const SITE_URL_MAX_LENGTH = 300;
 
 	/**
+	 * How the platform's sign-up funnel attributes a connection made here.
+	 */
+	public const REF = 'wordpress-plugin';
+
+	/**
+	 * The screens that start a connection. A closed list: any other value is
+	 * dropped, so the approval link never carries free text. A new entry point
+	 * adds a value here.
+	 */
+	public const SURFACES = array( 'settings', 'reconnect' );
+
+	/**
 	 * Languages the platform's sign-up form is available in.
 	 */
 	private const PREFILL_LANGUAGES = array( 'en', 'nl', 'de', 'fr' );
@@ -75,9 +87,10 @@ class Pairing {
 	 * Starts a pairing and remembers it.
 	 *
 	 * @param array<int,string> $extra_scopes Scopes to request on top of Config::SCOPES.
+	 * @param string            $surface      The screen that starts the connection, one of SURFACES. Another value is left out of the approval link.
 	 * @return array{user_code:string,verification_uri:string,expires_at:int,interval:int}|WP_Error
 	 */
-	public function start( array $extra_scopes = array() ) {
+	public function start( array $extra_scopes = array(), string $surface = '' ) {
 		$host = (string) wp_parse_url( home_url(), PHP_URL_HOST );
 
 		$result = $this->api->public_request(
@@ -118,7 +131,7 @@ class Pairing {
 		$pairing = array(
 			'device_code'      => (string) $body['device_code'],
 			'user_code'        => (string) $body['user_code'],
-			'verification_uri' => $uri,
+			'verification_uri' => self::attributed( $uri, $surface ),
 			'expires_at'       => $this->now() + max( 1, (int) ( $body['expires_in'] ?? 600 ) ),
 			'interval'         => max( 1, (int) ( $body['interval'] ?? 5 ) ),
 		);
@@ -130,6 +143,21 @@ class Pairing {
 			'expires_at'       => $pairing['expires_at'],
 			'interval'         => $pairing['interval'],
 		);
+	}
+
+	/**
+	 * The approval link with the attribution of this plugin: `ref` always, and
+	 * `surface` when it is on the closed list.
+	 *
+	 * @param string $uri     Approval link from the platform.
+	 * @param string $surface Screen that started the connection.
+	 */
+	public static function attributed( string $uri, string $surface ): string {
+		$query = array( 'ref' => self::REF );
+		if ( in_array( $surface, self::SURFACES, true ) ) {
+			$query['surface'] = $surface;
+		}
+		return $uri . ( false === strpos( $uri, '?' ) ? '?' : '&' ) . http_build_query( $query );
 	}
 
 	/**

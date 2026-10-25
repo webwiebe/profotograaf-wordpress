@@ -217,11 +217,25 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( '11111111-2222-4333-8444-555555555555', $body['attributes']['install_id'] );
 		$this->assertSame( 500, $body['attributes']['http_status'] );
 		$this->assertSame( '0.1.0', $body['attributes']['plugin_version'] );
+		$this->assertSame( 'profotograaf-wordpress@0.1.0', $body['attributes']['release'] );
+		$this->assertSame( 'wordpress', $body['attributes']['surface'] );
 		$second = json_decode( (string) $errors[1]['args']['body'], true );
 		$this->assertSame( array(), $second['exception']['stacktrace'] );
 		$this->assertArrayNotHasKey( 'timestamp', $second );
 		$this->assertSame( array(), $sender->pending_errors() );
 		$this->assertSame( array(), $sender->queue() );
+	}
+
+	public function test_the_error_release_is_the_plugin_version_and_left_out_without_one(): void {
+		$item = array(
+			'install_id'     => '11111111-2222-4333-8444-555555555555',
+			'error_code'     => 'a_code',
+			'plugin_version' => '1.2.3',
+		);
+		$this->assertSame( 'profotograaf-wordpress@1.2.3', Telemetry_Payload::bugbarn_event( $item )['attributes']['release'] );
+
+		$item['plugin_version'] = '';
+		$this->assertArrayNotHasKey( 'release', Telemetry_Payload::bugbarn_event( $item )['attributes'] );
 	}
 
 	public function test_free_text_in_module_and_error_fields_is_stripped(): void {
@@ -252,6 +266,13 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( Telemetry_Payload::FIELDS, array_keys( $payload ) );
 	}
 
+	public function test_the_module_cap_leaves_room_for_every_module_the_plugin_ships(): void {
+		$modules = ( new \Profotograaf\Module_Loader( PROFOTOGRAAF_DIR . 'includes/modules' ) )->classes();
+
+		// A module past the cap is dropped from the list, and the list is sorted, so the last names go first.
+		$this->assertLessThanOrEqual( Telemetry_Payload::MAX_MODULES - 10, count( $modules ) );
+	}
+
 	public function test_outcomes_are_counted_only_after_opt_in(): void {
 		$sender = $this->sender();
 		$sender->on_lead_delivered();
@@ -261,8 +282,13 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$sender->on_lead_delivered();
 		$sender->on_lead_failed( array( 'email' => 'a@b.test' ), new \WP_Error( 'lead_delivery_timeout', 'Slow for a@b.test' ) );
 		$sender->on_refresh_failed( new \WP_Error( 'invalid_token', 'x' ) );
+		$sender->on_refresh_succeeded();
+		$sender->on_refresh_succeeded();
+		$sender->on_refresh_retried();
 
 		$payload = $sender->payload();
+		$this->assertSame( 2, $payload['refresh_success'] );
+		$this->assertSame( 1, $payload['refresh_retried'] );
 		$this->assertSame( 1, $payload['delivery_success'] );
 		$this->assertSame( 1, $payload['delivery_failed'] );
 		$this->assertSame( 1, $payload['refresh_failed'] );

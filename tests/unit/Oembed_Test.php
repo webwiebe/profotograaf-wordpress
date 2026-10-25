@@ -97,7 +97,7 @@ class Oembed_Test extends Gallery_Test_Case {
 		$result = $this->oembed->filter_html( $html, 'https://profotograaf.nl/share/g/spring' );
 
 		$this->assertSame( '<div data-profotograaf-gallery="g-1"><a href="https://profotograaf.nl/share/g/spring">Spring</a></div>', $result );
-		$this->assertSame( 'https://profotograaf.nl/share/embed/embed.0123456789ab.js', $this->enqueued['profotograaf-embed']['src'], 'The version in the result is remembered.' );
+		$this->assertSame( 'https://example.test/wp-content/plugins/profotograaf/build/embed/embed.js', $this->enqueued['profotograaf-embed']['src'], 'The platform script is replaced by the one the plugin ships.' );
 	}
 
 	public function test_a_result_for_another_site_is_left_alone(): void {

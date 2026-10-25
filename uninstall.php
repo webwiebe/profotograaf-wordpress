@@ -16,9 +16,26 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
  * `keep_data_on_uninstall` (Settings > Advanced) leaves everything in place.
  */
 function profotograaf_uninstall_site(): void {
-	global $wpdb;
-
 	$settings = get_option( 'profotograaf_settings', array() );
+
+	profotograaf_uninstall_notify_photos();
+
+	if ( is_array( $settings ) && ! empty( $settings['keep_data_on_uninstall'] ) ) {
+		return;
+	}
+
+	profotograaf_uninstall_notify_failed_enquiries( is_array( $settings ) ? $settings : array() );
+	profotograaf_uninstall_delete_options();
+	profotograaf_uninstall_delete_backup_meta();
+	profotograaf_uninstall_delete_transients();
+	profotograaf_uninstall_clear_cron();
+}
+
+/**
+ * Mails the admin one short note when Profotograaf still holds photos of this site.
+ */
+function profotograaf_uninstall_notify_photos(): void {
+	global $wpdb;
 
 	// One short note to the admin when Profotograaf still holds photos of this site: photos kept on Profotograaf (virtual
 	// attachments, which show no image from now on) and copies the backup made. Both stay there, also when the data is deleted.
@@ -42,15 +59,20 @@ function profotograaf_uninstall_site(): void {
 			implode( "\n", $lines )
 		);
 	}
+}
 
-	if ( is_array( $settings ) && ! empty( $settings['keep_data_on_uninstall'] ) ) {
-		return;
-	}
+/**
+ * Tells the admin about enquiries that never reached Profotograaf, without personal data.
+ *
+ * @param array<string,mixed> $settings The plugin settings.
+ */
+function profotograaf_uninstall_notify_failed_enquiries( array $settings ): void {
+	global $wpdb;
 
 	// Enquiries that never reached Profotograaf are deleted with the rest. Tell the admin first, without personal data.
 	$failed = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value LIKE %s", $wpdb->esc_like( 'profotograaf_lead_job_' ) . '%', '%' . $wpdb->esc_like( '"status":"failed"' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off check on uninstall.
 	if ( $failed > 0 ) {
-		$to = is_array( $settings ) && ! empty( $settings['leads_alert_email'] ) ? (string) $settings['leads_alert_email'] : (string) get_option( 'admin_email', '' );
+		$to = ! empty( $settings['leads_alert_email'] ) ? (string) $settings['leads_alert_email'] : (string) get_option( 'admin_email', '' );
 		if ( '' !== $to ) {
 			wp_mail(
 				$to,
@@ -63,6 +85,13 @@ function profotograaf_uninstall_site(): void {
 			);
 		}
 	}
+}
+
+/**
+ * Deletes every option of the plugin.
+ */
+function profotograaf_uninstall_delete_options(): void {
+	global $wpdb;
 
 	$like  = $wpdb->esc_like( 'profotograaf_' ) . '%';
 	$names = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
@@ -72,17 +101,36 @@ function profotograaf_uninstall_site(): void {
 	// Photo import locks (Photo_Importer::LOCK_PREFIX) left behind by a crashed request are covered by the same prefix.
 	// The log ring buffer (Logger::OPTION) is one of these options. Naming it keeps the removal explicit.
 	delete_option( 'profotograaf_log' );
+}
+
+/**
+ * Deletes the backup state on Media Library items.
+ */
+function profotograaf_uninstall_delete_backup_meta(): void {
+	global $wpdb;
 
 	// The backup state on Media Library items (`_profotograaf_backup_state` and the other `_profotograaf_backup_` fields).
 	// Other post meta of the plugin stays, like the imported photos it describes and the marks of photos kept on Profotograaf. The copies the backup made stay on Profotograaf,
 	// and so does their record (`_profotograaf_copy_*`), so a reinstall recognises a copied file by its checksum and does not send it again.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s", $wpdb->esc_like( '_profotograaf_backup_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
+}
+
+/**
+ * Deletes the transients of the plugin.
+ */
+function profotograaf_uninstall_delete_transients(): void {
+	global $wpdb;
 
 	$transients = $wpdb->get_col( $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( '_transient_profotograaf_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cleanup on uninstall.
 	foreach ( (array) $transients as $name ) {
 		delete_transient( substr( (string) $name, strlen( '_transient_' ) ) );
 	}
+}
 
+/**
+ * Clears every scheduled event of the plugin.
+ */
+function profotograaf_uninstall_clear_cron(): void {
 	$cron = _get_cron_array();
 	if ( is_array( $cron ) ) {
 		foreach ( $cron as $events ) {

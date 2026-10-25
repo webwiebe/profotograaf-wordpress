@@ -9,7 +9,8 @@ to and which E2E case covers it.
 
 1. **Plugin markup.** `Gallery_Renderer::render()` writes one `div` with
    `data-profotograaf-gallery`, `data-layout` and one `data-*` attribute per
-   option that has a value. Inside it sits the fallback link to the gallery on
+   option that has a value. Inside it sits the declarative shadow root the
+   server draws (`Server_Gallery`), the fallback link to the gallery on
    Profotograaf and a `noscript` note. The block's own supports (alignment,
    colour, typography, border, spacing, anchor, class) reach the same `div`
    through `get_block_wrapper_attributes()`.
@@ -19,19 +20,27 @@ to and which E2E case covers it.
    changes at the container's width of 900px and below and 600px and below,
    the same widths embed.js uses (a viewport media query stands in for
    browsers without container queries). A theme column of 650px on a wide
-   screen therefore holds the tablet ratio. The space is held until the
-   gallery is drawn, and is released after 8 seconds when nothing is drawn.
-3. **embed.js.** `https://profotograaf.nl/share/embed/embed.js` (source:
-   `web/src/public/embed/` in wiebe-xyz/professionals, vendored for the E2E
+   screen therefore holds the tablet ratio. The space is held until embed.js
+   has drawn the gallery, and is released after 8 seconds when nothing is
+   drawn. A gallery the server drew already holds its own height and reserves
+   no space (`includes/class-gallery-renderer.php`).
+3. **embed.js.** `build/embed/embed.js` in the plugin, from the `@profotograaf/embed` package (source:
+   `packages/embed` in wiebe-xyz/professionals, vendored for the E2E
    run in `tests/e2e/fixtures/embed.js`) fetches
    `/api/v1/embed/galleries/{id}`, reads the `data-*` attributes and draws the
-   gallery in an open shadow root. Its CSS lives inside that root, so neither
+   gallery in an open shadow root where the server did not. Its CSS lives inside that root, so neither
    the theme nor block support CSS reaches the photos.
 
 An option resolves block attribute first, then shortcode attribute, then the
 site default on the Galleries settings tab. An empty value means "not set
 here" and falls through. When nothing sets it, no `data-*` attribute is written
 and embed.js uses its own default.
+
+The value `auto` (the "Profotograaf default" choice in the block editor, allowed
+for `layout` in `block.json`) stops the chain at that point. The setting below it
+is skipped and the option renders as if nothing were set: the gallery's own
+layout and order, all photos and automatic columns. A saved block can hold it, so
+it stays valid. For duotone the same stop is the value `none`.
 
 ## Platform layouts
 
@@ -157,11 +166,12 @@ are the pairs and triples where one option changes what another does.
 ## Sample pages
 
 `tests/e2e/sample-pages.js` creates the pages "Sample: Grid", "Sample:
-Masonry", "Sample: Slideshow" and "Sample: Combinations" on a site with
-wp-cli. Each block has an anchor that `sample-pages.spec.js` looks up. The
-galleries come from the platform by title ("Sample – Landscape", "Sample –
-Portrait", "Sample – Mixed", "Sample – Large (40+)", "Sample – Few (1 to 3)",
-"Sample – Empty", "Sample – PNG") or from `--<role>=<gallery id>`.
+Masonry", "Sample: Slideshow", "Sample: Combinations", "Sample: Spacing and
+shape" and "Sample: Full page" on a site with wp-cli. Each block has an anchor
+that `sample-pages.spec.js` looks up. The galleries come from the platform by
+title ("Sample – Landscape", "Sample – Portrait", "Sample – Mixed", "Sample –
+Large (40+)", "Sample – Few (1 to 3)", "Sample – Empty", "Sample – PNG",
+"Sample – Fifty") or from `--<role>=<gallery id>`.
 
 ```
 node tests/e2e/sample-pages.js --compose=../profotograaf-wordpress-cms/docker-compose.yml

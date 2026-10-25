@@ -89,13 +89,7 @@ final class Full_Page_Renderer {
 		}
 		$layout   = Gallery_Layout::resolve( $gallery, $attributes['preset'] ?? '', (array) ( $attributes['sections'] ?? array() ), (array) ( $attributes['picks'] ?? array() ) );
 		$preset   = $layout['preset'];
-		$sections = Section_Sequencer::sequence(
-			array_values( array_filter( (array) ( $gallery['photos'] ?? array() ), 'is_array' ) ),
-			$preset,
-			$layout['custom'],
-			$layout['picks'],
-			Gallery_Renderer::clean_ids( $attributes['excludedPhotoIds'] ?? array() )
-		);
+		$sections = $this->sequence( $gallery, $attributes, $layout );
 		if ( array() === $sections ) {
 			return $this->fallback( $id, $attributes, $gallery, true );
 		}
@@ -105,10 +99,7 @@ final class Full_Page_Renderer {
 		$data    = array(
 			'lightbox' => $options['lightbox'],
 			'photos'   => $markup->photos(),
-			'beacon'   => array(
-				'url'     => Config::platform_endpoint( '/share/embed/view' ),
-				'gallery' => is_scalar( $gallery['id'] ?? null ) && '' !== (string) $gallery['id'] ? (string) $gallery['id'] : $id,
-			),
+			'beacon'   => self::beacon( $gallery, $id ),
 		);
 		return sprintf(
 			'<div %1$s>%2$s%3$s<script type="application/json" class="pf-fp-data">%4$s</script></div>',
@@ -116,6 +107,38 @@ final class Full_Page_Renderer {
 			$html,
 			$this->badge( $gallery ),
 			(string) wp_json_encode( $data, self::JSON_FLAGS )
+		);
+	}
+
+	/**
+	 * The sections to draw for a gallery and its resolved layout.
+	 *
+	 * @param array<string,mixed> $gallery    Gallery payload.
+	 * @param array<string,mixed> $attributes Block attributes.
+	 * @param array<string,mixed> $layout     Resolved layout.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function sequence( array $gallery, array $attributes, array $layout ): array {
+		return Section_Sequencer::sequence(
+			array_values( array_filter( (array) ( $gallery['photos'] ?? array() ), 'is_array' ) ),
+			$layout['preset'],
+			$layout['custom'],
+			$layout['picks'],
+			Gallery_Renderer::clean_ids( $attributes['excludedPhotoIds'] ?? array() )
+		);
+	}
+
+	/**
+	 * Where the view beacon goes and for which gallery.
+	 *
+	 * @param array<string,mixed> $gallery Gallery payload.
+	 * @param string              $id      Gallery id of the block.
+	 * @return array{url:string,gallery:string}
+	 */
+	private static function beacon( array $gallery, string $id ): array {
+		return array(
+			'url'     => Config::platform_endpoint( '/share/embed/view' ),
+			'gallery' => is_scalar( $gallery['id'] ?? null ) && '' !== (string) $gallery['id'] ? (string) $gallery['id'] : $id,
 		);
 	}
 

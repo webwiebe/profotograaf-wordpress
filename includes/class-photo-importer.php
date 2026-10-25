@@ -28,19 +28,13 @@ final class Photo_Importer {
 	public const META_GALLERY_ID = '_profotograaf_gallery_id';
 	public const META_VERSION    = '_profotograaf_version';
 
-	/**
-	 * Prefix of the per-photo lock options. uninstall.php removes leftovers.
-	 */
+	/** Prefix of the per-photo lock options. uninstall.php removes leftovers. */
 	public const LOCK_PREFIX = 'profotograaf_import_lock_';
 
-	/**
-	 * Seconds after which a lock counts as abandoned (a crashed request).
-	 */
+	/** Seconds after which a lock counts as abandoned (a crashed request). */
 	public const LOCK_TTL = 60;
 
-	/**
-	 * Times a held lock is waited for, one pause each, before giving up.
-	 */
+	/** Times a held lock is waited for, one pause each, before giving up. */
 	private const LOCK_WAIT_STEPS = 10;
 
 	/**
@@ -143,22 +137,12 @@ final class Photo_Importer {
 	 * @return int|WP_Error The attachment id.
 	 */
 	public function reimport( int $attachment_id, ?array $fallback = null ) {
-		if ( $attachment_id <= 0 || ! current_user_can( 'edit_post', $attachment_id ) || ! current_user_can( 'upload_files' ) ) {
-			return Api_Errors::make( 'profotograaf_reimport_forbidden', __( 'You are not allowed to replace this file.', 'profotograaf' ), 403, false );
+		$denied = $this->reimport_denied( $attachment_id );
+		if ( null !== $denied ) {
+			return $denied;
 		}
-		if ( ! $this->settings->media_source_enabled() ) {
-			return Api_Errors::make( 'profotograaf_media_source_off', __( 'Using Profotograaf photos in the editor is switched off in the plugin settings.', 'profotograaf' ), 403, false );
-		}
-		if ( Media_Baseline::is_upload( $attachment_id ) ) {
-			// The platform serves a 1600 px web variant only. Re-importing would replace the full-size original the site sent.
-			return Api_Errors::make( 'profotograaf_reimport_uploaded', __( 'This file was sent from this site, so there is nothing to re-import.', 'profotograaf' ), 400, false );
-		}
-		$photo_id = (string) get_post_meta( $attachment_id, self::META_PHOTO_ID, true );
-		if ( '' === $photo_id || null === $this->catalogue ) {
-			return Api_Errors::make( 'profotograaf_reimport_not_imported', __( 'This file was not imported from Profotograaf.', 'profotograaf' ), 400, false );
-		}
-
-		$catalogue = $this->catalogue->get();
+		$photo_id  = (string) get_post_meta( $attachment_id, self::META_PHOTO_ID, true );
+		$catalogue = $this->catalogue instanceof Photo_Catalogue ? $this->catalogue->get() : new WP_Error( 'profotograaf_reimport_not_imported' );
 		if ( is_wp_error( $catalogue ) ) {
 			return $catalogue;
 		}
@@ -202,6 +186,28 @@ final class Photo_Importer {
 	}
 
 	/**
+	 * Why an attachment cannot be re-imported, or null when it can.
+	 *
+	 * @param int $attachment_id Attachment id.
+	 */
+	private function reimport_denied( int $attachment_id ): ?WP_Error {
+		if ( $attachment_id <= 0 || ! current_user_can( 'edit_post', $attachment_id ) || ! current_user_can( 'upload_files' ) ) {
+			return Api_Errors::make( 'profotograaf_reimport_forbidden', __( 'You are not allowed to replace this file.', 'profotograaf' ), 403, false );
+		}
+		if ( ! $this->settings->media_source_enabled() ) {
+			return Api_Errors::make( 'profotograaf_media_source_off', __( 'Using Profotograaf photos in the editor is switched off in the plugin settings.', 'profotograaf' ), 403, false );
+		}
+		if ( Media_Baseline::is_upload( $attachment_id ) ) {
+			// The platform serves a 1600 px web variant only. Re-importing would replace the full-size original the site sent.
+			return Api_Errors::make( 'profotograaf_reimport_uploaded', __( 'This file was sent from this site, so there is nothing to re-import.', 'profotograaf' ), 400, false );
+		}
+		if ( '' === (string) get_post_meta( $attachment_id, self::META_PHOTO_ID, true ) || null === $this->catalogue ) {
+			return Api_Errors::make( 'profotograaf_reimport_not_imported', __( 'This file was not imported from Profotograaf.', 'profotograaf' ), 400, false );
+		}
+		return null;
+	}
+
+	/**
 	 * Downloads the current web variant and swaps it into the attachment. Runs
 	 * under the lock. The old files go only after the new ones are in place.
 	 *
@@ -232,14 +238,12 @@ final class Photo_Importer {
 			return Api_Errors::make( 'profotograaf_import_failed', __( 'The photo could not be added to the Media Library.', 'profotograaf' ), 500, true );
 		}
 		$new_file = (string) $moved['file'];
-
 		$new_meta = wp_generate_attachment_metadata( $attachment_id, $new_file );
 		if ( array() === $new_meta ) {
 			wp_delete_file( $new_file );
 			Logger::error( 'The sizes of the re-imported photo could not be made.', array( 'photo' => $photo_id ) );
 			return Api_Errors::make( 'profotograaf_import_failed', __( 'The photo could not be added to the Media Library.', 'profotograaf' ), 500, true );
 		}
-
 		update_attached_file( $attachment_id, $new_file );
 		if ( ! empty( $moved['type'] ) ) {
 			wp_update_post(
@@ -254,7 +258,6 @@ final class Photo_Importer {
 		update_post_meta( $attachment_id, self::META_GALLERY_ID, $this->text( $photo, 'gallery_id' ) );
 		update_post_meta( $attachment_id, self::META_VERSION, $this->text( $photo, 'version' ) );
 		Media_Baseline::record_reimport( $attachment_id );
-
 		if ( '' !== $old_file && $old_file !== $new_file ) {
 			wp_delete_attachment_files( $attachment_id, is_array( $old_meta ) ? $old_meta : array(), is_array( $old_backups ) ? $old_backups : array(), $old_file );
 		}

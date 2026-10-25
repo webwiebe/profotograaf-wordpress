@@ -257,7 +257,20 @@ final class Full_Page_Markup {
 		$field    = static fn( string $key ): string => is_scalar( $photo[ $key ] ?? null ) ? trim( wp_strip_all_tags( (string) $photo[ $key ] ) ) : '';
 		$override = $this->texts[ is_scalar( $photo['id'] ?? null ) ? (string) $photo['id'] : '' ] ?? array();
 		$caption  = $override['caption'] ?? implode( ' - ', array_filter( array( $field( 'title' ), $field( 'caption' ) ) ) );
-		$alt      = $override['alt'] ?? '';
+		return array(
+			'alt'     => $this->alt_for( $field, $override['alt'] ?? '', $index ),
+			'caption' => $caption,
+		);
+	}
+
+	/**
+	 * The alt text: the override, else the first of the photo's alt, title and caption, else the gallery title and the photo's number.
+	 *
+	 * @param callable $field Cleaned text of a photo field.
+	 * @param string   $alt   Override, may be empty.
+	 * @param int      $index Position in the flat list.
+	 */
+	private function alt_for( callable $field, string $alt, int $index ): string {
 		foreach ( array( 'alt', 'title', 'caption' ) as $key ) {
 			$alt = '' !== $alt ? $alt : $field( $key );
 		}
@@ -265,10 +278,7 @@ final class Full_Page_Markup {
 			$title = is_scalar( $this->gallery['title'] ?? null ) ? trim( wp_strip_all_tags( (string) $this->gallery['title'] ) ) : '';
 			$alt   = trim( $title . ' ' . ( $index + 1 ) );
 		}
-		return array(
-			'alt'     => $alt,
-			'caption' => $caption,
-		);
+		return $alt;
 	}
 
 	/**

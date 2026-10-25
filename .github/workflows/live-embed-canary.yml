@@ -21,7 +21,7 @@ permissions:
 jobs:
   canary:
     name: Layout spec with the live embed.js
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     env:
       WP_VERSION: '7.1'
       EMBED_SCRIPT_URL: https://profotograaf.nl/share/embed/embed.js
@@ -36,6 +36,7 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       - name: Layout spec against the live script
         run: pnpm exec playwright test tests/e2e/embed-layout.spec.js

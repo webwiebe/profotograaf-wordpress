@@ -109,15 +109,6 @@ class Error_Reporter {
 	}
 
 	/**
-	 * `profotograaf_disconnected`.
-	 *
-	 * @param mixed $reason `user` or `revoked`.
-	 */
-	public function on_disconnected( $reason = '' ): void {
-		$this->report( 'disconnected_' . ( is_string( $reason ) ? $reason : '' ), 0, false );
-	}
-
-	/**
 	 * `profotograaf_log`. Reports error-level entries, using the `error` and
 	 * `status` context keys when the caller set them.
 	 *

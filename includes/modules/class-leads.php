@@ -14,11 +14,14 @@ use Profotograaf\Leads\Bridge;
 use Profotograaf\Leads\Contact_Form_7;
 use Profotograaf\Leads\Delivery;
 use Profotograaf\Leads\Dispatcher;
+use Profotograaf\Leads\Enquiry_Form;
 use Profotograaf\Leads\Form_Settings;
 use Profotograaf\Leads\Gravity_Forms;
 use Profotograaf\Leads\Lead_Alerts;
+use Profotograaf\Leads\New_Forms;
 use Profotograaf\Leads\Option_Job_Store;
 use Profotograaf\Leads\Queue;
+use Profotograaf\Leads\Skip_Counter;
 use Profotograaf\Leads\Wpforms;
 use Profotograaf\Module;
 use Profotograaf\Plugin;
@@ -46,7 +49,8 @@ class Leads implements Module {
 
 		$queue      = new Queue( new Option_Job_Store(), null, new Lead_Alerts( $plugin->settings() ) );
 		$settings   = new Form_Settings();
-		$dispatcher = new Dispatcher( $settings, $queue );
+		$skips      = new Skip_Counter();
+		$dispatcher = new Dispatcher( $settings, $queue, $skips );
 
 		/**
 		 * Filters the form plugin bridges.
@@ -83,16 +87,47 @@ class Leads implements Module {
 			}
 		);
 
+		if ( is_admin() ) {
+			// The admin notice asks for the forms that started sending without a review.
+			add_filter(
+				'profotograaf_new_lead_forms',
+				static function () use ( $bridges, $settings ): array {
+					return ( new New_Forms( $bridges, $settings ) )->labels();
+				}
+			);
+		}
+
+		( new Enquiry_Form(
+			$dispatcher,
+			static fn(): bool => (bool) $plugin->settings()->get( 'leads_enabled' ),
+			static function () use ( $plugin ): string {
+				if ( ! $plugin->settings()->get( 'leads_enabled' ) ) {
+					return 'off';
+				}
+				if ( ! $plugin->connection()->is_connected() ) {
+					return 'disconnected';
+				}
+				return $plugin->connection()->needs_leads_reconnect() ? 'reconnect' : '';
+			}
+		) )->register();
+
 		$store    = new Option_Job_Store();
-		$delivery = new Delivery( $queue, $plugin->api() );
+		$delivery = new Delivery( $queue, $plugin->api(), $plugin->connection() );
 		$delivery->register();
+		// A new pairing grants the leads permission, so enquiries it refused go out again.
+		add_action(
+			'profotograaf_connected',
+			static function () use ( $delivery ): void {
+				$delivery->requeue_denied();
+			}
+		);
 
 		$cron = new Cron_Health( $queue );
 		$cron->register();
 		Registrar::register( $plugin, $queue, $store, $delivery, $cron );
 
 		if ( is_admin() ) {
-			( new Leads_Settings( $settings, $queue, $bridges, $plugin ) )->register();
+			( new Leads_Settings( $settings, $queue, $bridges, $plugin, $skips ) )->register();
 		}
 	}
 }

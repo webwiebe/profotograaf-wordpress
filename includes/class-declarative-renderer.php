@@ -167,8 +167,27 @@ final class Declarative_Renderer {
 		$images = array_values( (array) ( $photo['images'] ?? array() ) );
 		$width  = (int) ( $photo['width'] ?? 0 );
 		$height = (int) ( $photo['height'] ?? 0 );
-		$ratio  = $width && $height ? $width / $height : 0;
-		$parts  = array();
+		$set    = self::srcset( $images, $width && $height ? $width / $height : 0, $square );
+		$best   = self::best_url( $images );
+		$out    = '<img alt="' . self::esc( $alt ) . '" src="' . self::esc( $best ) . '"';
+		if ( '' !== $set ) {
+			$out .= ' srcset="' . self::esc( $set ) . '" sizes="' . ( $square ? '(max-width: 600px) 50vw, 33vw' : '(max-width: 600px) 100vw, 50vw' ) . '"';
+		}
+		if ( $width && $height ) {
+			$out .= ' width="' . $width . '" height="' . $height . '"';
+		}
+		return $out . ' loading="lazy" decoding="async" draggable="false">';
+	}
+
+	/**
+	 * The srcset of a photo's images. A thumb with another aspect than the photo stays out, except in a grid.
+	 *
+	 * @param array<int,mixed> $images Payload images.
+	 * @param float|int        $ratio  Width over height of the photo, 0 when unknown.
+	 * @param bool             $square Grid layout: the square thumbs stay in.
+	 */
+	private static function srcset( array $images, $ratio, bool $square ): string {
+		$parts = array();
 		foreach ( $images as $image ) {
 			$image = (array) $image;
 			$w     = (int) ( $image['width'] ?? 0 );
@@ -177,22 +196,24 @@ final class Declarative_Renderer {
 				$parts[] = ( $image['url'] ?? '' ) . ' ' . $w . 'w';
 			}
 		}
-		$set  = implode( ', ', $parts );
+		return implode( ', ', $parts );
+	}
+
+	/**
+	 * The src: the web variant, else the last image.
+	 *
+	 * @param array<int,mixed> $images Payload images.
+	 */
+	private static function best_url( array $images ): string {
 		$best = '';
 		foreach ( $images as $image ) {
-			$best = (string) ( ( (array) $image )['url'] ?? '' );
-			if ( 'web' === ( ( (array) $image )['variant'] ?? '' ) ) {
+			$image = (array) $image;
+			$best  = (string) ( $image['url'] ?? '' );
+			if ( 'web' === ( $image['variant'] ?? '' ) ) {
 				break;
 			}
 		}
-		$out = '<img alt="' . self::esc( $alt ) . '" src="' . self::esc( $best ) . '"';
-		if ( '' !== $set ) {
-			$out .= ' srcset="' . self::esc( $set ) . '" sizes="' . ( $square ? '(max-width: 600px) 50vw, 33vw' : '(max-width: 600px) 100vw, 50vw' ) . '"';
-		}
-		if ( $width && $height ) {
-			$out .= ' width="' . $width . '" height="' . $height . '"';
-		}
-		return $out . ' loading="lazy" decoding="async" draggable="false">';
+		return $best;
 	}
 
 	/**

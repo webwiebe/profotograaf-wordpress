@@ -31,10 +31,8 @@ on:
         type: string
         required: true
 
-# One stack at a time per runner host: the compose project uses the fixed ports
-# 8080 and 8090, and the browser maps the mock platform by name.
 concurrency:
-  group: profotograaf-e2e-stack
+  group: e2e-${{ github.workflow }}-${{ github.ref }}-${{ inputs.specs && 'targeted' || github.event.schedule || 'manual' }}
   cancel-in-progress: false
 
 permissions:
@@ -77,7 +75,6 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         wp: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env:
@@ -102,6 +99,7 @@ jobs:
         run: pnpm exec playwright install firefox webkit
       # The E2E site runs the release copy, which holds the built blocks.
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       - name: Run the specs
         env:
@@ -135,8 +133,8 @@ jobs:
 
   e2e-multisite:
     name: E2E multisite (WordPress 7.1)
-    needs: [plan, e2e]
-    if: ${{ !cancelled() && needs.plan.outputs.full == 'true' && (github.event_name != 'schedule' || github.event.schedule == '17 2 * * *') }}
+    needs: plan
+    if: needs.plan.outputs.full == 'true' && (github.event_name != 'schedule' || github.event.schedule == '17 2 * * *')
     runs-on: [self-hosted, build]
     timeout-minutes: 30
     env:
@@ -155,6 +153,7 @@ jobs:
       - uses: ./.github/actions/setup-node-pnpm
       - run: pnpm exec playwright install chromium
       - run: pnpm build
+      - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
       # Converts the site to a network, creates two subsites and network-activates the plugin.
       - run: tests/e2e/multisite.sh

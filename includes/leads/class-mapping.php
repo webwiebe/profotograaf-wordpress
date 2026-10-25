@@ -132,7 +132,7 @@ final class Mapping {
 			$name = (string) strstr( $email, '@', true );
 		}
 
-		$lead = array(
+		$lead                 = array(
 			'name'        => self::cut( $name, self::MAX_NAME ),
 			'email'       => self::cut( $email, self::MAX_EMAIL ),
 			'phone'       => self::cut( isset( $resolved['phone'] ) ? $values[ $resolved['phone'] ] : '', self::MAX_PHONE ),
@@ -142,16 +142,28 @@ final class Mapping {
 			'source_form' => self::cut( $submission->form_label, self::MAX_SOURCE_FORM ),
 			'page_url'    => self::page_url( $submission->page_url ),
 		);
+		$lead['extra_fields'] = self::extra_fields( $submission->fields, $values, array_values( $resolved ) );
 
-		$used  = array_values( $resolved );
+		return array_filter(
+			self::fit( $lead ),
+			static fn( $value ): bool => '' !== $value && array() !== $value
+		);
+	}
+
+	/**
+	 * The fields no target took, as label and value pairs.
+	 *
+	 * @param array<int,array{id:string,label:string,type:string,value?:string}> $fields Fields.
+	 * @param array<string,string>                                               $values Text per field id.
+	 * @param string[]                                                           $used   Ids a target took.
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	private static function extra_fields( array $fields, array $values, array $used ): array {
 		$extra = array();
-		foreach ( $submission->fields as $field ) {
+		foreach ( $fields as $field ) {
 			$value = $values[ $field['id'] ];
-			if ( in_array( $field['id'], $used, true ) || '' === $value ) {
-				continue;
-			}
 			$label = self::cut( '' !== trim( $field['label'] ) ? $field['label'] : $field['id'], self::MAX_LABEL );
-			if ( '' === $label ) {
+			if ( in_array( $field['id'], $used, true ) || '' === $value || '' === $label ) {
 				continue;
 			}
 			$extra[] = array(
@@ -162,19 +174,22 @@ final class Mapping {
 				break;
 			}
 		}
-		$lead['extra_fields'] = $extra;
+		return $extra;
+	}
 
-		// The platform refuses a body over 32 KB: drop extras from the end first.
+	/**
+	 * The platform refuses a body over 32 KB: drops extras from the end first.
+	 *
+	 * @param array<string,mixed> $lead Lead with its extra fields.
+	 * @return array<string,mixed>
+	 */
+	private static function fit( array $lead ): array {
 		$size = strlen( (string) wp_json_encode( $lead ) );
 		while ( array() !== $lead['extra_fields'] && $size > self::MAX_BODY_BYTES ) {
 			array_pop( $lead['extra_fields'] );
 			$size = strlen( (string) wp_json_encode( $lead ) );
 		}
-
-		return array_filter(
-			$lead,
-			static fn( $value ): bool => '' !== $value && array() !== $value
-		);
+		return $lead;
 	}
 
 	/**

@@ -133,48 +133,81 @@ final class Reconcile {
 
 		$rows      = is_array( $input['rows'] ?? null ) ? array_values( $input['rows'] ) : array();
 		$catalogue = is_array( $input['catalogue'] ?? null ) ? $input['catalogue'] : array();
-		$now       = (int) ( $input['now'] ?? time() );
 
-		if ( ! empty( $input['paused'] ) ) {
-			$none['skipped'] = 'paused';
+		$none['skipped'] = self::skip_reason( $input, $rows, $catalogue );
+		if ( '' !== $none['skipped'] || array() === $rows ) {
 			return $none;
+		}
+
+		$needs   = array();
+		$changes = self::decide( $rows, $input, self::listed_index( $catalogue ), 0 === (int) ( $catalogue['dropped'] ?? 0 ), $needs );
+
+		$none['changes']      = $changes;
+		$none['needs_lookup'] = array_values( array_unique( $needs ) );
+		return $none;
+	}
+
+	/**
+	 * Why a run decides nothing: `paused`, `stale_catalogue`, `account_changed`, or empty.
+	 *
+	 * @param array<string,mixed>            $input     Run input.
+	 * @param array<int,array<string,mixed>> $rows      Imported attachments.
+	 * @param array<string,mixed>            $catalogue Catalogue snapshot.
+	 */
+	private static function skip_reason( array $input, array $rows, array $catalogue ): string {
+		if ( ! empty( $input['paused'] ) ) {
+			return 'paused';
 		}
 		if ( array() === $rows ) {
-			return $none;
+			return '';
 		}
 		if ( ! empty( $catalogue['stale'] ) || ! is_array( $catalogue['photos'] ?? null ) ) {
-			$none['skipped'] = 'stale_catalogue';
-			return $none;
+			return 'stale_catalogue';
 		}
+		if ( empty( $input['after_pairing'] ) || 0 !== (int) ( $catalogue['dropped'] ?? 0 ) ) {
+			return '';
+		}
+		$listed = self::listed_index( $catalogue );
+		foreach ( $rows as $row ) {
+			if ( isset( $listed[ (string) $row['photo_id'] ] ) ) {
+				return '';
+			}
+		}
+		return 'account_changed';
+	}
 
+	/**
+	 * Catalogue photos by id.
+	 *
+	 * @param array<string,mixed> $catalogue Catalogue snapshot.
+	 * @return array<string,array<string,mixed>>
+	 */
+	private static function listed_index( array $catalogue ): array {
 		$listed = array();
-		foreach ( $catalogue['photos'] as $photo ) {
+		foreach ( (array) ( $catalogue['photos'] ?? array() ) as $photo ) {
 			if ( is_array( $photo ) && isset( $photo['id'] ) ) {
 				$listed[ (string) $photo['id'] ] = $photo;
 			}
 		}
-		$complete = 0 === (int) ( $catalogue['dropped'] ?? 0 );
+		return $listed;
+	}
 
-		if ( ! empty( $input['after_pairing'] ) && $complete ) {
-			$any = false;
-			foreach ( $rows as $row ) {
-				if ( isset( $listed[ (string) $row['photo_id'] ] ) ) {
-					$any = true;
-					break;
-				}
-			}
-			if ( ! $any ) {
-				$none['skipped'] = 'account_changed';
-				return $none;
-			}
-		}
-
-		$galleries = self::gallery_index( $input['galleries'] ?? null );
-		$feed      = self::feed_index( $input['feed'] ?? null );
+	/**
+	 * Target state per row, as changes by attachment id.
+	 *
+	 * @param array<int,array<string,mixed>>    $rows     Imported attachments.
+	 * @param array<string,mixed>               $input    Run input.
+	 * @param array<string,array<string,mixed>> $listed Catalogue photos by id.
+	 * @param bool                              $complete Whether the catalogue dropped nothing.
+	 * @param array<int,string>                 $needs    Gallery ids needing a lookup (filled).
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function decide( array $rows, array $input, array $listed, bool $complete, array &$needs ): array {
+		$galleries = Reconcile_Input::gallery_index( $input['galleries'] ?? null );
+		$feed      = Reconcile_Input::feed_index( $input['feed'] ?? null );
 		$lookups   = is_array( $input['gallery_photos'] ?? null ) ? $input['gallery_photos'] : array();
-
-		$changes = array();
-		$needs   = array();
+		$now       = (int) ( $input['now'] ?? time() );
+		$changes   = array();
 		foreach ( $rows as $row ) {
 			if ( self::STATE_KEPT === $row['state'] ) {
 				continue;
@@ -183,18 +216,12 @@ final class Reconcile {
 			$target   = isset( $listed[ $photo_id ] )
 				? self::when_listed( $row, $listed[ $photo_id ], isset( $feed['changed'][ $photo_id ] ) )
 				: self::when_unlisted( $row, $feed, $galleries, $complete, $lookups, $needs );
-			if ( null === $target ) {
-				continue;
-			}
-			$change = self::change( $row, $target, $now );
+			$change   = null === $target ? null : self::change( $row, $target, $now );
 			if ( null !== $change ) {
 				$changes[ (int) $row['attachment_id'] ] = $change;
 			}
 		}
-
-		$none['changes']      = $changes;
-		$none['needs_lookup'] = array_values( array_unique( $needs ) );
-		return $none;
+		return $changes;
 	}
 
 	/**
@@ -424,61 +451,6 @@ final class Reconcile {
 		$hash     = Media_Baseline::text_hash( $title, $caption, '' !== $alt ? $alt : $title );
 		$accepted = (string) ( $row['text_accepted'] ?? '' );
 		return $hash !== (string) $row['text_base'] && $hash !== (string) $row['text_now'] && $hash !== $accepted;
-	}
-
-	/**
-	 * Gallery rows by id with a `serving` flag.
-	 *
-	 * @param mixed $rows Gallery list rows, or null when the request failed.
-	 * @return array<string,array{serving:bool}>|null
-	 */
-	private static function gallery_index( $rows ): ?array {
-		if ( ! is_array( $rows ) ) {
-			return null;
-		}
-		$index = array();
-		foreach ( $rows as $gallery ) {
-			if ( ! is_array( $gallery ) || empty( $gallery['id'] ) ) {
-				continue;
-			}
-			$index[ (string) $gallery['id'] ] = array(
-				'serving' => ! empty( $gallery['embeddable'] ) && ! empty( $gallery['available'] ),
-			);
-		}
-		return $index;
-	}
-
-	/**
-	 * Feed entries by id.
-	 *
-	 * @param mixed $feed Feed input, or null.
-	 * @return array{deleted:array<string,array{gallery_id:string}>,changed:array<string,bool>,galleries_deleted:array<string,bool>}
-	 */
-	private static function feed_index( $feed ): array {
-		$index = array(
-			'deleted'           => array(),
-			'changed'           => array(),
-			'galleries_deleted' => array(),
-		);
-		if ( ! is_array( $feed ) ) {
-			return $index;
-		}
-		foreach ( (array) ( $feed['photos_deleted'] ?? array() ) as $entry ) {
-			if ( is_array( $entry ) && ! empty( $entry['id'] ) ) {
-				$index['deleted'][ (string) $entry['id'] ] = array( 'gallery_id' => (string) ( $entry['gallery_id'] ?? '' ) );
-			}
-		}
-		foreach ( (array) ( $feed['photos_changed'] ?? array() ) as $id ) {
-			if ( is_scalar( $id ) && '' !== (string) $id ) {
-				$index['changed'][ (string) $id ] = true;
-			}
-		}
-		foreach ( (array) ( $feed['galleries_deleted'] ?? array() ) as $id ) {
-			if ( is_scalar( $id ) && '' !== (string) $id ) {
-				$index['galleries_deleted'][ (string) $id ] = true;
-			}
-		}
-		return $index;
 	}
 
 	/**

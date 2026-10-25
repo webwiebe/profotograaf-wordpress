@@ -47,6 +47,8 @@ class Platform_Status_Sync implements Module {
 		add_action( self::SOON_HOOK, array( $this, 'run' ) );
 		add_action( 'init', array( $this, 'ensure_scheduled' ) );
 		add_action( 'profotograaf_connected', array( $this, 'schedule' ) );
+		// The plan decides whether the owner has to accept the link of the Free plan.
+		add_action( 'profotograaf_connected', array( $this, 'queue_soon' ) );
 		add_action( 'profotograaf_disconnected', array( $this, 'on_disconnected' ) );
 		add_action( 'profotograaf_review_event_queued', array( $this, 'queue_soon' ) );
 		add_action( 'load-settings_page_' . Settings_Page::SLUG, array( $this, 'on_settings_page' ) );
@@ -64,6 +66,7 @@ class Platform_Status_Sync implements Module {
 		if ( true !== $this->plugin->platform_status()->refresh( $event ) ) {
 			return;
 		}
+		$this->plugin->link_consent()->sync();
 		if ( null !== $event ) {
 			$review->acknowledge( $event );
 		}
@@ -122,6 +125,7 @@ class Platform_Status_Sync implements Module {
 		wp_clear_scheduled_hook( self::SOON_HOOK );
 		if ( null !== $this->plugin ) {
 			$this->plugin->platform_status()->forget();
+			$this->plugin->link_consent()->forget();
 		}
 	}
 }
