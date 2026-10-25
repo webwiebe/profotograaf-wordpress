@@ -72,6 +72,8 @@ jobs:
     name: E2E (WordPress ${{ matrix.wp }})
     needs: plan
     runs-on: [self-hosted, build]
+    # A hung job holds the only runner, so every other job queues behind it.
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -131,6 +133,7 @@ jobs:
     needs: plan
     if: needs.plan.outputs.full == 'true' && (github.event_name != 'schedule' || github.event.schedule == '17 2 * * *')
     runs-on: [self-hosted, build]
+    timeout-minutes: 30
     env:
       WP_VERSION: '7.1'
       PROFOTOGRAAF_MULTISITE: '1'
