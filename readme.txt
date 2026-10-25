@@ -1,6 +1,6 @@
 === Profotograaf ===
 Contributors: profotograaf
-Tags: photography, gallery, client gallery, portfolio, contact form
+Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -17,6 +17,7 @@ Profotograaf connects your WordPress site to your [Profotograaf](https://profoto
 * **Connect in one step.** Approve the connection in Profotograaf. Your password never reaches your WordPress site.
 * **Gallery block and shortcode.** Pick one of your galleries and place it on any page, in a grid, masonry or slideshow layout.
 * **Full-page gallery block.** Show one gallery across the whole page, in sections of different shapes: large single photos, pairs, grids, masonry and a filmstrip. Choose the Calm, Editorial or Playful preset, or build your own sequence and pick the photo for each spot.
+* **Elementor widget and Divi module.** Add "Profotograaf Gallery" in Elementor or Divi 4, choose a gallery, the layout, the columns and the lightbox. It shows the same gallery as the block, in the builder and on the page. Nothing of it loads without the builder.
 * **Paste a link.** A pasted gallery link turns into an embedded gallery.
 * **Client galleries entry.** A "Find your gallery" block that leads clients to the client portal, on your Profotograaf address or on your own domain.
 * **Copy to Profotograaf.** Optional, off by default. Copies the images, RAW files and videos of your Media Library to private galleries in your Profotograaf account. It is a copy made once. It does not follow later edits or deletions.
@@ -136,7 +137,7 @@ When an editor with permission to upload files browses or searches the photo lib
 
 Telemetry is off until you switch on "Share anonymous usage data" in the advanced settings or answer the prompt in the admin. Once it is on, the plugin sends data every 24 hours with POST requests to two services operated by the plugin author: one usage event to FunnelBarn at `https://f.profotograaf.nl/api/v1/events` and one event per error to BugBarn, by default at `https://bb.profotograaf.nl/api/v1/events`. Profotograaf tells the plugin the error destination when the site checks its connection status, and the plugin sends no error reports until it has one. A host can replace the addresses with the `profotograaf_telemetry_usage_endpoint` and `profotograaf_telemetry_endpoint` filters. If a service answers 429 or 503, the plugin waits before it sends again. Nothing is sent when you have not opted in, when the request carries Do Not Track or Global Privacy Control, or when the endpoint is empty.
 
-The usage event holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
+The usage event holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of successful, retried and failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
 
 BugBarn: https://bb.profotograaf.nl
 FunnelBarn: https://f.profotograaf.nl

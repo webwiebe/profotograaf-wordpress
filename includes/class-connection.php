@@ -106,6 +106,7 @@ class Connection {
 				'scope_revision' => $previous['scope_revision'],
 				'embed_denied'   => $previous['embed_denied'],
 				'write_denied'   => $previous['write_denied'],
+				'leads_denied'   => $previous['leads_denied'],
 				'scopes'         => $this->scopes_from( $response ),
 			)
 		);
@@ -121,7 +122,47 @@ class Connection {
 		$data['scope_revision'] = $revision;
 		$data['embed_denied']   = false;
 		$data['write_denied']   = false;
+		$data['leads_denied']   = false;
 		$this->write( $data );
+	}
+
+	/**
+	 * Remembers that the platform refused an enquiry because the token lacks
+	 * the leads:write scope (a 403).
+	 */
+	public function flag_leads_denied(): void {
+		$data = $this->data();
+		if ( $data['leads_denied'] ) {
+			return;
+		}
+		$data['leads_denied'] = true;
+		$this->write( $data );
+	}
+
+	/**
+	 * Forgets a refused enquiry after the platform accepted one.
+	 */
+	public function clear_leads_denied(): void {
+		$data = $this->data();
+		if ( ! $data['leads_denied'] ) {
+			return;
+		}
+		$data['leads_denied'] = false;
+		$this->write( $data );
+	}
+
+	/**
+	 * Whether sending enquiries needs a new pairing.
+	 *
+	 * The stored grant decides when it is known and lacks leads:write. A 403
+	 * from the leads route decides when the platform refused the call anyway.
+	 * An unknown grant is no reason to ask.
+	 */
+	public function needs_leads_reconnect(): bool {
+		if ( ! $this->is_connected() ) {
+			return false;
+		}
+		return $this->data()['leads_denied'] || ( $this->scopes_known() && ! $this->has_scope( 'leads:write' ) );
 	}
 
 	/**
@@ -280,7 +321,7 @@ class Connection {
 	/**
 	 * Default stored shape.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,scopes:list<string>|null}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,leads_denied:bool,scopes:list<string>|null}
 	 */
 	private function defaults(): array {
 		return array(
@@ -293,6 +334,7 @@ class Connection {
 			'scope_revision' => 0,
 			'embed_denied'   => false,
 			'write_denied'   => false,
+			'leads_denied'   => false,
 			'scopes'         => null,
 		);
 	}
@@ -300,7 +342,7 @@ class Connection {
 	/**
 	 * Stored data merged over the defaults.
 	 *
-	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,scopes:list<string>|null}
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,leads_denied:bool,scopes:list<string>|null}
 	 */
 	private function data(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -313,6 +355,7 @@ class Connection {
 		}
 		$data['embed_denied'] = ! empty( $stored['embed_denied'] );
 		$data['write_denied'] = ! empty( $stored['write_denied'] );
+		$data['leads_denied'] = ! empty( $stored['leads_denied'] );
 		if ( isset( $stored['scopes'] ) && is_array( $stored['scopes'] ) ) {
 			$data['scopes'] = array_values( array_filter( array_map( 'strval', $stored['scopes'] ), static fn( string $scope ): bool => '' !== $scope ) );
 		}

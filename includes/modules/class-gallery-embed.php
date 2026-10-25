@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Modules;
 
+use Profotograaf\Builder_Gallery;
 use Profotograaf\Embed_Script;
 use Profotograaf\Full_Page_Payload;
 use Profotograaf\Gallery_Index;
@@ -34,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Gallery_Embed implements Module {
 
-	public const BLOCK = 'profotograaf/gallery';
+	public const BLOCK = Builder_Gallery::BLOCK;
 
 	/**
 	 * Renderer shared by the block and the shortcode.

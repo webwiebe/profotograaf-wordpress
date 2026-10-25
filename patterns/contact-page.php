@@ -12,15 +12,15 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Filters the block markup of the enquiry form in the contact page pattern.
  *
- * The default is a paragraph that asks the editor to insert the form of their
- * form plugin (Contact Form 7 or Gravity Forms). Return the form's block markup
- * to ship a ready made form.
+ * The default is the plugin's own enquiry block, which sends each enquiry to
+ * the photographer's leads. Return the block markup of another form (Contact
+ * Form 7, WPForms or Gravity Forms) to use that form instead.
  *
  * @param string $markup Block markup.
  */
 $profotograaf_form = (string) apply_filters(
 	'profotograaf_pattern_enquiry_form',
-	Patterns::paragraph( __( 'Replace this text with your enquiry form block.', 'profotograaf' ) )
+	Patterns::block( 'profotograaf/enquiry' )
 );
 
 return array(
