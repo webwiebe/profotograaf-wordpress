@@ -13,9 +13,12 @@ const CHROMIUM_LAUNCH = {
 	args: [ '--disable-features=LocalNetworkAccessChecks,LocalNetworkAccessChecksWebSockets,PrivateNetworkAccessSendPreflights' ],
 };
 const LAYOUT_SPECS = /embed-(layout|options)\.spec\.js$/;
+// Playwright's Firefox build exits with "Could not find profile folder" on the
+// macOS runner for any profile path (#338), so Firefox runs on Linux only.
+const FIREFOX = process.platform === 'darwin' ? [] : [ { name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ] } } ];
 const matrix = process.env.E2E_BROWSER_MATRIX
 	? [
-			{ name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ] } },
+			...FIREFOX,
 			{ name: 'webkit', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Safari' ] } },
 			{ name: 'mobile-chrome', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Pixel 7' ], launchOptions: CHROMIUM_LAUNCH } },
 	  ]
