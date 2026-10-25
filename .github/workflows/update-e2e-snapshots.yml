@@ -1,7 +1,7 @@
 name: Update E2E snapshots
 
-# Regenerates the Linux baselines of tests/e2e/embed-visual.spec.js on the same
-# runner image the E2E job uses. Run it from the Actions tab. The new images come back as the
+# Regenerates the darwin baselines of tests/e2e/embed-visual.spec.js on the same
+# runner the E2E job uses. Run it from the Actions tab. The new images come back as the
 # artifact "e2e-snapshots": download it, copy the files into
 # tests/e2e/embed-visual.spec.js-snapshots/ and commit them.
 
@@ -14,7 +14,7 @@ permissions:
 jobs:
   snapshots:
     name: Regenerate the embed.js baselines (WordPress 7.1)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     env:
       WP_VERSION: '7.1'
       E2E_VISUAL: '1'

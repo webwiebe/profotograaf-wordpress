@@ -40,7 +40,7 @@ env:
 jobs:
   bump:
     name: Open the bump PR
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, build]
     timeout-minutes: 10
     env:
       GH_TOKEN: ${{ secrets.EMBED_BUMP_TOKEN }}
