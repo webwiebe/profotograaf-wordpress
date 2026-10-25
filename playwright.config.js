@@ -40,5 +40,20 @@ module.exports = defineConfig( {
 		ignoreHTTPSErrors: baseURL.startsWith( 'https:' ),
 		trace: 'retain-on-failure',
 	},
-	projects: [ { name: 'chromium', use: { ...devices[ 'Desktop Chrome' ] } }, ...matrix ],
+	projects: [
+		{
+			name: 'chromium',
+			use: {
+				...devices[ 'Desktop Chrome' ],
+				// The mock platform runs on loopback next to WordPress, and recent
+				// Chromium blocks a page's images from another loopback origin
+				// ("Permission was denied ... loopback address space"). The real
+				// platform is public, so production never meets Local Network Access.
+				launchOptions: {
+					args: [ '--disable-features=LocalNetworkAccessChecks,LocalNetworkAccessChecksWebSockets,PrivateNetworkAccessSendPreflights' ],
+				},
+			},
+		},
+		...matrix,
+	],
 } );
