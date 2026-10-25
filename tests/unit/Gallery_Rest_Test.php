@@ -105,6 +105,18 @@ class Gallery_Rest_Test extends Gallery_Test_Case {
 		$this->assertNull( ( new Gallery_Index( $this->api ) )->count( 'g-unknown' ) );
 	}
 
+	public function test_the_share_link_of_a_row_goes_through_url_escaping(): void {
+		Functions\when( 'esc_url_raw' )->alias( static fn( $url ) => str_starts_with( (string) $url, 'https://' ) ? (string) $url : '' );
+		$unsafe        = $this->row( 'g-2' );
+		$unsafe['url'] = 'javascript:alert(1)';
+		$this->http->reply( 200, array( $this->row( 'g-1' ), $unsafe ) );
+
+		$rows = $this->rest->list_galleries();
+
+		$this->assertSame( 'https://profotograaf.nl/share/g/spring-wedding', $rows[0]['url'] );
+		$this->assertSame( '', $rows[1]['url'] );
+	}
+
 	public function test_a_disconnected_site_gets_a_409_with_the_api_message(): void {
 		$this->options = array();
 

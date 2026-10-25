@@ -231,9 +231,9 @@ msgstr "Las consultas se han puesto de nuevo en cola."
 msgid "The exported enquiries were removed."
 msgstr "Se eliminaron las consultas exportadas."
 
-#: includes/class-gallery-rest.php:166
-#: includes/class-gallery-rest.php:184
-#: includes/class-gallery-rest.php:211
+#: includes/class-gallery-rest.php:167
+#: includes/class-gallery-rest.php:185
+#: includes/class-gallery-rest.php:212
 #: includes/class-photo-list.php:56
 #: includes/class-sections-rest.php:91
 #: includes/trait-api-client-writes.php:72
@@ -4518,3 +4518,9 @@ msgstr "Aún no hay galerías. Conecta tu cuenta de Profotograaf en Ajustes, Pro
 #: includes/class-builder-gallery.php:66
 msgid "Automatic"
 msgstr "Automático"
+
+#: build/client-galleries/index.js:3
+#: build/full-page-gallery/index.js:3
+#: build/gallery/index.js:3
+msgid "Open the share page"
+msgstr "Abrir la página para compartir"
