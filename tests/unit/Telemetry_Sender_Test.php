@@ -266,6 +266,13 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( Telemetry_Payload::FIELDS, array_keys( $payload ) );
 	}
 
+	public function test_the_module_cap_leaves_room_for_every_module_the_plugin_ships(): void {
+		$modules = ( new \Profotograaf\Module_Loader( PROFOTOGRAAF_DIR . 'includes/modules' ) )->classes();
+
+		// A module past the cap is dropped from the list, and the list is sorted, so the last names go first.
+		$this->assertLessThanOrEqual( Telemetry_Payload::MAX_MODULES - 10, count( $modules ) );
+	}
+
 	public function test_outcomes_are_counted_only_after_opt_in(): void {
 		$sender = $this->sender();
 		$sender->on_lead_delivered();
@@ -275,8 +282,13 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$sender->on_lead_delivered();
 		$sender->on_lead_failed( array( 'email' => 'a@b.test' ), new \WP_Error( 'lead_delivery_timeout', 'Slow for a@b.test' ) );
 		$sender->on_refresh_failed( new \WP_Error( 'invalid_token', 'x' ) );
+		$sender->on_refresh_succeeded();
+		$sender->on_refresh_succeeded();
+		$sender->on_refresh_retried();
 
 		$payload = $sender->payload();
+		$this->assertSame( 2, $payload['refresh_success'] );
+		$this->assertSame( 1, $payload['refresh_retried'] );
 		$this->assertSame( 1, $payload['delivery_success'] );
 		$this->assertSame( 1, $payload['delivery_failed'] );
 		$this->assertSame( 1, $payload['refresh_failed'] );

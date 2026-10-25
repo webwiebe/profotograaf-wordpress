@@ -1,6 +1,6 @@
 === Profotograaf ===
 Contributors: profotograaf
-Tags: photography, gallery, client gallery, portfolio, contact form
+Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -17,6 +17,7 @@ Profotograaf connects your WordPress site to your [Profotograaf](https://profoto
 * **Connect in one step.** Approve the connection in Profotograaf. Your password never reaches your WordPress site.
 * **Gallery block and shortcode.** Pick one of your galleries and place it on any page, in a grid, masonry or slideshow layout.
 * **Full-page gallery block.** Show one gallery across the whole page, in sections of different shapes: large single photos, pairs, grids, masonry and a filmstrip. Choose the Calm, Editorial or Playful preset, or build your own sequence and pick the photo for each spot.
+* **Elementor widget and Divi module.** Add "Profotograaf Gallery" in Elementor or Divi 4, choose a gallery, the layout, the columns and the lightbox. It shows the same gallery as the block, in the builder and on the page. Nothing of it loads without the builder.
 * **Paste a link.** A pasted gallery link turns into an embedded gallery.
 * **Client galleries entry.** A "Find your gallery" block that leads clients to the client portal, on your Profotograaf address or on your own domain.
 * **Copy to Profotograaf.** Optional, off by default. Copies the images, RAW files and videos of your Media Library to private galleries in your Profotograaf account. It is a copy made once. It does not follow later edits or deletions.
@@ -108,9 +109,7 @@ While your site is connected, the plugin asks `https://profotograaf.nl/api/v1/em
 
 = Showing a gallery on your site =
 
-A page that contains a Profotograaf gallery makes the visitor's browser load the embed script from `https://profotograaf.nl/share/embed/` and the gallery data and photos from `https://profotograaf.nl`. Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the script also reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
-
-Once a day, in the background, the plugin asks `https://profotograaf.nl/api/v1/embed/script` which version of the embed script is current, so pages load the script under its versioned address. The request carries no token and no data about your site or its visitors. When it fails, the plugin keeps the version it knew and tries again the next day.
+A page that contains a Profotograaf gallery makes the visitor's browser load the gallery script from your own site (it ships in the plugin folder, `build/embed/embed.js`, and is the readable `@profotograaf/embed` package) and the gallery data and photos from `https://profotograaf.nl`. Profotograaf receives the visitor's IP address and browser details in the way any web server does. When the gallery scrolls into view, the script also reports one anonymous view (the gallery, the host name of your site) to `https://profotograaf.nl/share/embed/view`. It does not report a view when the visitor's browser sends Do Not Track or Global Privacy Control.
 
 When a page with a gallery is rendered and no copy of the gallery is stored yet, your server asks `GET https://profotograaf.nl/api/v1/embed/galleries/<gallery id>` for the public gallery data (title, layout, photo sizes, captions and image links) and writes the gallery's markup into the page, so browsers that support declarative shadow DOM show it without waiting for the script. The request comes from your site's server, carries no token and holds no data about your site or its visitors. The plugin keeps the answer as a WordPress transient for 5 minutes, so at most one request per gallery is made in that time. After a failed request the plugin waits 1 minute before it asks again, and the page shows the gallery as before in the meantime. Terms of service: https://profotograaf.nl/terms. Privacy policy: https://profotograaf.nl/privacy.
 
@@ -138,7 +137,7 @@ When an editor with permission to upload files browses or searches the photo lib
 
 Telemetry is off until you switch on "Share anonymous usage data" in the advanced settings or answer the prompt in the admin. Once it is on, the plugin sends data every 24 hours with POST requests to two services operated by the plugin author: one usage event to FunnelBarn at `https://f.profotograaf.nl/api/v1/events` and one event per error to BugBarn, by default at `https://bb.profotograaf.nl/api/v1/events`. Profotograaf tells the plugin the error destination when the site checks its connection status, and the plugin sends no error reports until it has one. A host can replace the addresses with the `profotograaf_telemetry_usage_endpoint` and `profotograaf_telemetry_endpoint` filters. If a service answers 429 or 503, the plugin waits before it sends again. Nothing is sent when you have not opted in, when the request carries Do Not Track or Global Privacy Control, or when the endpoint is empty.
 
-The usage event holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
+The usage event holds these fields and nothing else: a random identifier of this installation (replaced when you disconnect), the plugin version, the WordPress and PHP version (major and minor only), the site language, the names of the plugin's active modules, the number of successful, retried and failed token refreshes, delivered and failed enquiries in the last 24 hours, and a count per error code. Your site address, visitors, galleries, enquiries and tokens are never sent. The data is kept for 13 months. Turning the setting off or disconnecting deletes what is waiting to be sent. Details: https://github.com/webwiebe/profotograaf-wordpress/blob/main/docs/telemetry.md
 
 BugBarn: https://bb.profotograaf.nl
 FunnelBarn: https://f.profotograaf.nl
@@ -300,6 +299,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 = 0.1.0 =
 * New: on the Free plan the owner accepts the "Powered by Profotograaf" link once, with a required checkbox. The gallery block, the full-page gallery block and the shortcode show nothing to visitors until then. The acceptance is stored with its time and plan, dropped when the account moves to a paid plan, and asked again after a downgrade. Galleries keep showing while the plan is unknown, and the admin sees a notice. The status call now carries the account plan.
 * Fix: the Dutch translation calls the Masonry layout "masonry" instead of "metselwerk", and the installation steps send you to the signed-in download on profotograaf.nl, then the zip upload, since the plugin is not in the plugin directory yet.
+* Change: galleries no longer load JavaScript from profotograaf.nl. The interactive layer is the `@profotograaf/embed` package, built into the plugin (`build/embed/`) and served from your site. The daily lookup of the script version is gone, and so are the "Re-check the embed version" button and the version line in Site Health information.
 * New: the FAQ and the README say what Copy to Profotograaf does and that it is a copy that does not follow later edits or deletions, and what the Find your gallery button opens for clients.
 * New: a copy changed in both places has a Resolve conflict dialog with the two images side by side, the text fields compared, and Keep mine, Use Profotograaf's version and Keep both. Update text takes chosen title, caption and alt text fields only.
 * New: copies that need attention show in a Profotograaf column and a Needs attention filter in the Media Library, a dismissible notice, a section on the Import screen with a bulk Remove for copies removed on Profotograaf, and Site Health.
@@ -353,7 +353,7 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * New: leave photos out of a gallery block (Photos panel) or shortcode (`exclude`). The editor lists up to 500 photos of the gallery, 200 per request.
 * Dutch (nl_NL) and English.
 * New: starting a connection sends the site address, site title, administrator email address and site language, so Profotograaf can prefill a new account.
-* Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the embed script version is read from a public platform route.
+* Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the gallery script ships with the plugin.
 
 == Upgrade Notice ==
 

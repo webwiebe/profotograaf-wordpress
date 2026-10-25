@@ -55,12 +55,10 @@ jobs:
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
-        env:
-          runner: self-hosted
-        with:
-          php-version: '8.3'
-          tools: composer:2.9
+      # setup-php takes a lock with sudo, which the self-hosted runner user does
+      # not have. Homebrew PHP on the host runs the analysis tools.
+      - name: PHP from Homebrew
+        run: echo "/opt/homebrew/opt/php@8.3/bin" >> "$GITHUB_PATH"
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
@@ -87,14 +85,13 @@ jobs:
         php: ['8.1', '8.2', '8.3', '8.4']
     steps:
       - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
-        env:
-          runner: self-hosted
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer:2.9
+      # The deps install on the host (platform pinned to PHP 8.1 in composer.json),
+      # the tests run in the PHP version of the matrix.
+      - name: PHP from Homebrew
+        run: echo "/opt/homebrew/opt/php@8.3/bin" >> "$GITHUB_PATH"
       - run: composer install --no-interaction --no-progress
-      - run: vendor/bin/phpunit
+      - name: PHPUnit
+        run: docker run --rm -v "$PWD":/app -w /app php:${{ matrix.php }}-cli vendor/bin/phpunit
 
   coverage:
     name: Coverage (diff gate, cliff guard)
@@ -104,21 +101,16 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: shivammathur/setup-php@v2
-        env:
-          runner: self-hosted
-        with:
-          php-version: '8.3'
-          tools: composer:2.9
-          coverage: pcov
+      # setup-php takes a lock with sudo, which the self-hosted runner user does
+      # not have. Homebrew PHP on the host runs the analysis tools.
+      - name: PHP from Homebrew
+        run: echo "/opt/homebrew/opt/php@8.3/bin" >> "$GITHUB_PATH"
       - uses: ./.github/actions/setup-node-pnpm
       - run: composer install --no-interaction --no-progress
       - name: vitest coverage
         run: pnpm test:coverage
       - name: PHPUnit coverage
-        run: vendor/bin/phpunit --coverage-clover coverage/php/clover.xml
-        env:
-          XDEBUG_MODE: off
+        run: make coverage-php
       - name: Diff coverage, TypeScript (blocking, 80% of changed lines)
         run: >
           node scripts/diff-coverage.mjs

@@ -106,7 +106,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		// The server drew the gallery, so the light-DOM fallback link is not rendered; it stays in the markup.
 		await expect( embed.locator( '.photos .tile' ).first() ).toBeVisible();
 		await expect( embed.locator( ':scope > a' ) ).toHaveAttribute( 'href', /\/share\/g\/spring-wedding$/ );
-		const scripts = anonymous.locator( 'script[src*="/share/embed/embed"]' );
+		const scripts = anonymous.locator( 'script[src*="/embed/embed"]' );
 		await expect( scripts ).toHaveCount( 1 );
 		await expect( scripts.first() ).toHaveAttribute( 'async', '' );
 		await visitor.close();
@@ -122,7 +122,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed ).toHaveAttribute( 'data-layout', 'slideshow' );
 		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
-		await expect( page.locator( 'script[src*="/share/embed/embed"]' ) ).toHaveCount( 1 );
+		await expect( page.locator( 'script[src*="/embed/embed"]' ) ).toHaveCount( 1 );
 		await visitor.close();
 	} );
 
@@ -179,7 +179,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await page.goto( url );
 
 		await expect( page.locator( 'div[data-profotograaf-gallery="g-e2e"]' ) ).toHaveCount( 2 );
-		await expect( page.locator( 'script[src*="/share/embed/embed"]' ) ).toHaveCount( 1 );
+		await expect( page.locator( 'script[src*="/embed/embed"]' ) ).toHaveCount( 1 );
 		await visitor.close();
 	} );
 
@@ -192,7 +192,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toHaveAttribute( 'href', 'http://mock-platform:8090/share/g/spring-wedding' );
-		const scripts = page.locator( 'script[src*="/share/embed/embed"]' );
+		const scripts = page.locator( 'script[src*="/embed/embed"]' );
 		await expect( scripts ).toHaveCount( 1 );
 		await expect( scripts.first() ).toHaveAttribute( 'src', /\/share\/embed\/embed\.[a-f0-9]{12}\.js$/ );
 		await visitor.close();

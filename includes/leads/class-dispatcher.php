@@ -34,14 +34,23 @@ final class Dispatcher {
 	private Queue $queue;
 
 	/**
+	 * Counts the submissions that had no email address.
+	 *
+	 * @var Skip_Counter|null
+	 */
+	private ?Skip_Counter $skips;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Form_Settings $settings Per form settings.
-	 * @param Queue         $queue    Queue.
+	 * @param Form_Settings     $settings Per form settings.
+	 * @param Queue             $queue    Queue.
+	 * @param Skip_Counter|null $skips    Counter of skipped submissions.
 	 */
-	public function __construct( Form_Settings $settings, Queue $queue ) {
+	public function __construct( Form_Settings $settings, Queue $queue, ?Skip_Counter $skips = null ) {
 		$this->settings = $settings;
 		$this->queue    = $queue;
+		$this->skips    = $skips;
 	}
 
 	/**
@@ -65,6 +74,8 @@ final class Dispatcher {
 				 * @param Submission $submission Submission.
 				 */
 				do_action( 'profotograaf_lead_skipped', $submission );
+				$this->skips?->record( $submission->form_key, $this->queue->now() );
+				Logger::warning( 'A submission was not sent because it has no email address.', array( 'form' => $submission->form_key ) );
 				return 'no_email';
 			}
 

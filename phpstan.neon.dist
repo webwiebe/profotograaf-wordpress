@@ -10,6 +10,10 @@ parameters:
 		- includes
 	bootstrapFiles:
 		- tests/phpstan-bootstrap.php
+	# Elementor and Divi are not installed here: the builder classes need their base classes.
+	scanFiles:
+		- tests/stubs/elementor.php
+		- tests/stubs/divi.php
 	phpVersion: 80100
 	# A baseline entry that no longer matches an error is itself an error, so the
 	# baseline can only shrink.

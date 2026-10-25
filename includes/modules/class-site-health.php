@@ -59,18 +59,11 @@ class Site_Health implements Module {
 	private ?Queue $queue;
 
 	/**
-	 * The embed.js script.
-	 *
-	 * @var Embed_Script
-	 */
-	private Embed_Script $embed;
-
-	/**
-	 * Returns the HTTP status of an address, or a WP_Error.
+	 * Tells whether the gallery script file is in the plugin folder.
 	 *
 	 * @var callable
 	 */
-	private $fetch;
+	private $script_present;
 
 	/**
 	 * Returns the current unix time.
@@ -89,25 +82,14 @@ class Site_Health implements Module {
 	/**
 	 * Constructor. Tests pass their own services.
 	 *
-	 * @param Queue|null        $queue Lead queue, the options table queue by default.
-	 * @param Embed_Script|null $embed Embed script.
-	 * @param callable|null     $fetch Returns the HTTP status for a URL, or a WP_Error.
-	 * @param callable|null     $clock Returns the current unix time.
+	 * @param Queue|null    $queue Lead queue, the options table queue by default.
+	 * @param callable|null $script_present Returns whether the gallery script file exists.
+	 * @param callable|null $clock Returns the current unix time.
 	 */
-	public function __construct( ?Queue $queue = null, ?Embed_Script $embed = null, ?callable $fetch = null, ?callable $clock = null ) {
-		$this->queue = $queue;
-		$this->embed = $embed ?? new Embed_Script();
-		$this->fetch = $fetch ?? static function ( string $url ) {
-			$response = wp_remote_head(
-				$url,
-				array(
-					'timeout'     => Config::http_timeout(),
-					'redirection' => 0,
-				)
-			);
-			return is_wp_error( $response ) ? $response : (int) wp_remote_retrieve_response_code( $response );
-		};
-		$this->clock = $clock ?? static fn(): int => time();
+	public function __construct( ?Queue $queue = null, ?callable $script_present = null, ?callable $clock = null ) {
+		$this->queue          = $queue;
+		$this->script_present = $script_present ?? static fn(): bool => is_readable( PROFOTOGRAAF_DIR . Embed_Script::FILE );
+		$this->clock          = $clock ?? static fn(): int => time();
 	}
 
 	/**
@@ -229,28 +211,21 @@ class Site_Health implements Module {
 	}
 
 	/**
-	 * Whether embed.js can be reached. Runs as an asynchronous test so the
-	 * Site Health page never waits for the platform.
+	 * Whether the gallery script is in the plugin folder. The script ships with
+	 * the plugin, so this reads the file and makes no request.
 	 *
 	 * @return array<string,mixed>
 	 */
 	public function embed_result(): array {
-		$url    = Config::platform_endpoint( '/share/embed/embed.js' );
-		$status = ( $this->fetch )( $url );
-
-		if ( ! is_wp_error( $status ) && 200 === $status ) {
-			return $this->result( self::EMBED_TEST, 'good', __( 'The Profotograaf gallery script is reachable', 'profotograaf' ), __( 'This server can load embed.js from the platform.', 'profotograaf' ) );
+		if ( ( $this->script_present )() ) {
+			return $this->result( self::EMBED_TEST, 'good', __( 'The Profotograaf gallery script is installed', 'profotograaf' ), __( 'The plugin folder holds the gallery script.', 'profotograaf' ) );
 		}
 		return $this->result(
 			self::EMBED_TEST,
 			'critical',
-			__( 'The Profotograaf gallery script cannot be reached', 'profotograaf' ),
-			sprintf(
-				/* translators: %s: address of embed.js. */
-				__( 'Galleries only show their fallback link while %s cannot be loaded.', 'profotograaf' ),
-				$url
-			),
-			'<p>' . esc_html__( 'Check that the platform is online and that no firewall, proxy or Content-Security-Policy script-src rule blocks the address.', 'profotograaf' ) . '</p>'
+			__( 'The Profotograaf gallery script is missing', 'profotograaf' ),
+			__( 'Galleries only show their fallback link while the gallery script is missing from the plugin folder.', 'profotograaf' ),
+			'<p>' . esc_html__( 'Install the plugin again from the release zip. A copy made from the source needs pnpm install and pnpm build first.', 'profotograaf' ) . '</p>'
 		);
 	}
 
@@ -339,12 +314,11 @@ class Site_Health implements Module {
 		if ( ! is_array( $info ) ) {
 			return $info;
 		}
-		$counts  = $this->queue()->counts();
-		$cron    = new Cron_Health( $this->queue() );
-		$last    = $cron->last_run();
-		$status  = $this->connection()->status();
-		$version = $this->embed->version();
-		$errors  = array();
+		$counts = $this->queue()->counts();
+		$cron   = new Cron_Health( $this->queue() );
+		$last   = $cron->last_run();
+		$status = $this->connection()->status();
+		$errors = array();
 		foreach ( array_slice( Logger::entries(), -self::ERRORS_SHOWN ) as $entry ) {
 			if ( Logger::ERROR === $entry['level'] || Logger::WARNING === $entry['level'] ) {
 				$errors[] = gmdate( 'Y-m-d H:i', $entry['time'] ) . ' ' . $entry['level'] . ' ' . $entry['message'];
@@ -364,7 +338,6 @@ class Site_Health implements Module {
 				'modules'        => $this->field( __( 'Active modules', 'profotograaf' ), implode( ', ', $this->module_names() ) ),
 				'leads_pending'  => $this->field( __( 'Leads waiting', 'profotograaf' ), $counts['pending'] ),
 				'leads_failed'   => $this->field( __( 'Leads failed', 'profotograaf' ), $counts['failed'] ),
-				'embed_version'  => $this->field( __( 'Embed script version', 'profotograaf' ), '' === $version ? __( 'unknown', 'profotograaf' ) : $version ),
 				'wp_cron'        => $this->field(
 					__( 'WP-Cron', 'profotograaf' ),
 					( $cron->is_disabled() ? __( 'disabled', 'profotograaf' ) : __( 'enabled', 'profotograaf' ) )

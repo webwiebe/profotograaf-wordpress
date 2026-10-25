@@ -17,9 +17,25 @@ allowBuilds:
 # copy-webpack-plugin that allows >=7.0.3.
 # GHSA-68fv-2mgg-jv7q: css-tree (under csso in the webpack toolchain) pulls
 # source-map-js 1.2.1. Drop this once the toolchain resolves >=1.2.2 itself.
+# GHSA-q3jh-wrc6-jgq8 and the sensitiveHeaders regex advisory: follow-redirects
+# 1.16.0 sits under webpack-dev-server > http-proxy-middleware > http-proxy in
+# @wordpress/scripts. Drop this once that chain resolves >=1.16.1 itself.
+# The other entries of this block close the high advisories that `pnpm audit
+# --audit-level high` reports for the dev toolchain on 2026-10-24: vite (under
+# vitest coverage), launch-editor, body-parser (both under webpack-dev-server),
+# markdown-it (under markdownlint-cli), zod (under chromium-bidi) and undici
+# (under jsdom). Each stays inside its current major. Drop an entry once the
+# toolchain resolves a patched release itself.
 overrides:
+  body-parser: "^1.20.9"
+  follow-redirects: "^1.16.1"
+  launch-editor: "^2.14.2"
+  markdown-it: "^14.3.3"
   serialize-javascript: ">=7.0.3"
   source-map-js: ">=1.2.2"
+  undici: "^8.12.2"
+  vite: "^8.3.3"
+  zod: "^4.6.6"
 
 # GHSA-vfj7-8cjw-p6xm: braces (<=3.0.3) stack exhaustion on deeply nested glob
 # patterns. No patched release exists. It sits under stylelint and micromatch in

@@ -24,13 +24,9 @@ jobs:
           echo "major=$major" >> "$GITHUB_OUTPUT"
           echo "tested=$tested" >> "$GITHUB_OUTPUT"
           if [ "$major" != "$tested" ]; then echo "newer=true" >> "$GITHUB_OUTPUT"; fi
-      - uses: shivammathur/setup-php@v2
-        env:
-          runner: self-hosted
+      - name: PHP from Homebrew
         if: steps.wp.outputs.newer == 'true'
-        with:
-          php-version: '8.3'
-          tools: composer:v2
+        run: echo "/opt/homebrew/opt/php@8.3/bin" >> "$GITHUB_PATH"
       - uses: ./.github/actions/setup-node-pnpm
         if: steps.wp.outputs.newer == 'true'
       - run: tests/e2e/ci-env.sh

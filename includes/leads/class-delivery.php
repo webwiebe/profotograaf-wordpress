@@ -8,6 +8,7 @@
 namespace Profotograaf\Leads;
 
 use Profotograaf\Api_Client;
+use Profotograaf\Connection;
 use Profotograaf\Logger;
 
 defined( 'ABSPATH' ) || exit;
@@ -45,14 +46,37 @@ final class Delivery {
 	private Api_Client $api;
 
 	/**
+	 * Stored connection, to remember a refused leads permission.
+	 *
+	 * @var Connection|null
+	 */
+	private ?Connection $connection;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Queue      $queue Queue.
-	 * @param Api_Client $api   API client.
+	 * @param Queue           $queue      Queue.
+	 * @param Api_Client      $api        API client.
+	 * @param Connection|null $connection Stored connection.
 	 */
-	public function __construct( Queue $queue, Api_Client $api ) {
-		$this->queue = $queue;
-		$this->api   = $api;
+	public function __construct( Queue $queue, Api_Client $api, ?Connection $connection = null ) {
+		$this->queue      = $queue;
+		$this->api        = $api;
+		$this->connection = $connection;
+	}
+
+	/**
+	 * Puts the enquiries the platform refused for the missing leads permission
+	 * back in line and schedules a run. Call it after a new pairing.
+	 *
+	 * @return int Jobs requeued.
+	 */
+	public function requeue_denied(): int {
+		$count = $this->queue->retry_failed( 403 );
+		if ( $count > 0 ) {
+			self::schedule( $this->queue->now() );
+		}
+		return $count;
 	}
 
 	/**
@@ -120,6 +144,7 @@ final class Delivery {
 	private function deliver( array $job ): string {
 		$response = $this->api->post_lead( (array) $job['payload'] );
 		if ( ! is_wp_error( $response ) ) {
+			$this->connection?->clear_leads_denied();
 			$this->queue->complete( (string) $job['id'] );
 			/**
 			 * Fires after the platform accepted a lead.
@@ -136,6 +161,10 @@ final class Delivery {
 		$status    = (int) ( $data['status'] ?? 0 );
 		$message   = $response->get_error_message();
 		$temporary = ! empty( $data['retryable'] ) || in_array( $response->get_error_code(), array( 'profotograaf_not_connected', 'profotograaf_refresh_busy' ), true );
+
+		if ( 403 === $status ) {
+			$this->connection?->flag_leads_denied();
+		}
 
 		$log = array(
 			'job'    => substr( (string) $job['id'], 0, 8 ),

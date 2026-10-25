@@ -1,12 +1,12 @@
 # Profotograaf as a media source in WordPress
 
-Design note for issue #44 (spike, part of epic #48). No code ships with this note. It answers the questions in the issue, lists the child issues to open and the questions that need an owner decision.
+Design note for issue #44 (spike, part of epic #48). Status: Superseded by [virtual-attachments.md](virtual-attachments.md). The import, the inserter category, the media modal, the signed file route and the virtual attachments it describes now ship, and virtual-attachments.md records the virtual attachments as built. Where this note and the code differ, the code is right.
 
 ## Recommendation
 
 1. Ship an opt-in import first. A Profotograaf photo becomes a normal Media Library attachment the moment an editor uses it, with the platform photo id stored in post meta. Every core feature that needs an attachment id then works (featured image, Gallery block, lightbox, duotone, srcset, REST `media`, other plugins).
 2. Offer the photos in two places: a "Profotograaf" category in the block inserter media tab (single photo per click) and an "Import from Profotograaf" screen under Media with multi-select. A tab in the classic media modal follows later, because it is the only way to feed the Gallery block several photos at once.
-3. Build a throwaway prototype of virtual attachments after that, behind the same setting. Do not ship it before the unpublish behaviour (section "Question 2: virtual attachment") has a platform answer.
+3. Build virtual attachments after that, behind the same setting (shipped, see virtual-attachments.md).
 4. Keep the Profotograaf gallery block for live embeds and client delivery. It renders the platform's own layouts and views, which the core blocks do not.
 
 ## What the platform gives today
@@ -78,9 +78,9 @@ A virtual attachment is an `attachment` post with `post_mime_type` `image/jpeg`,
 What works, from the source read above:
 
 - `wp_get_attachment_url` filter returns the platform `web` URL.
-- `wp_get_attachment_metadata` returns `width`, `height`, `file` and a `sizes` array with `thumb` and `web`.
+- The stored `_wp_attachment_metadata` holds `width`, `height`, `file` and a `sizes` array with `thumb` and `web`. No `wp_get_attachment_metadata` filter is involved.
 - `image_downsize` returns the right variant for a requested size.
-- `wp_calculate_image_srcset` filter returns `thumb` and `web` as the candidate sources, since the platform URLs do not share a directory with each other and core's own builder would make wrong URLs from `dirname( $src ) . '/' . $size['file']`.
+- `wp_calculate_image_srcset` filter returns the `web` URL as the only candidate source, since the platform URLs do not share a directory with each other and core's own builder would make wrong URLs from `dirname( $src ) . '/' . $size['file']`.
 - `set_post_thumbnail()` accepts it, so #45 works.
 - Duotone, crop box (CSS), caption, lightbox and theme styles work on any image URL.
 
@@ -93,7 +93,7 @@ What breaks or needs a decision:
 - The 1600 px cap applies to the displayed file too. Import has the same cap, so it is no worse here.
 - Deleting the attachment in WordPress deletes nothing on the platform. That is correct. It should be said in the UI.
 
-Recommendation: prototype it as a spike behind the opt-in setting after import ships, run the matrix in child issue 9, and decide from the results and the unpublish answer. A "convert to local" action (turn a virtual attachment into an import) belongs to the same spike and gives photographers an exit.
+Recommendation at the time: prototype it as a spike behind the opt-in setting after import ships, run the matrix in child issue 9, and decide from the results and the unpublish answer. The prototype shipped. A "convert to local" action (turn a virtual attachment into an import) belongs to the same spike and gives photographers an exit.
 
 ## Question 3: search, multi-select, paging, unreachable platform
 
@@ -103,7 +103,7 @@ The platform lists photos per gallery only. The plugin builds a catalogue:
 
 - Source list: embeddable and available galleries from the existing gallery list (#17's `Gallery_Index` already remembers up to 500).
 - Photos: one public `GET /embed/galleries/{id}` per gallery, with `If-None-Match` and the platform's five minute freshness. Stored in a transient keyed by gallery id and `version`, refreshed by a cron job and by the editor on demand. The editor never waits on more than one gallery fetch at a time.
-- A REST route `GET /profotograaf/v1/photos?search=&page=&per_page=` (`upload_files`) searches `title`, `caption` and the gallery title over the catalogue, orders by gallery `updated_at` then position, slices the page and returns `{ items, totalItems, totalPages }` with the item shape above.
+- A REST route `GET /profotograaf/v1/photos?search=&gallery=&page=&per_page=` (`upload_files`, `per_page` capped at 100) searches `title`, `caption`, `alt` and the gallery title over the catalogue, orders by gallery `updated_at` then position, slices the page and returns `{ items, totalItems, totalPages }` with the item shape above.
 - The inserter category's `fetch` calls this route through `apiFetch` and returns the same totals, which gives core's pager.
 
 Typing a gallery name lists that gallery's photos. The inserter offers no filter dropdown, so this is the only gallery filter there. The Import screen can have a real gallery filter.
@@ -126,7 +126,7 @@ The inserter inserts one item per click. Dragging also takes one. Multi-select n
 
 Core fetches the `url` from the editor's browser. For platform URLs that probably fails CORS (see the platform table), and core then inserts a hot-linked image with a warning dialog and no id. Two ways out:
 
-- A. The plugin serves the file. Each item's `url` is a short-lived signed same-origin REST URL (`.../profotograaf/v1/photos/{id}/profotograaf-{assetId}-{version}.jpg`). The route downloads from the platform with `download_url()` and streams it. Core's fetch then works, core's `mediaUpload` does the upload, and a `rest_after_insert_attachment` hook reads the asset id from the uploaded file name and writes the meta. No platform change. The cost is one PHP request per insertion and the HMAC signing code.
+- A. The plugin serves the file. Each item's `url` is a short-lived signed same-origin REST URL (`.../profotograaf/v1/photos/{id}/file/profotograaf-{id}.jpg?exp=&sig=`). The route downloads from the platform with `download_url()` and streams it. Core's fetch then works, core's `mediaUpload` does the upload, and a `rest_after_insert_attachment` hook reads the asset id from the uploaded file name and writes the meta. No platform change. The cost is one PHP request per insertion and the HMAC signing code.
 - B. The platform adds `Access-Control-Allow-Origin: *` to `/share/img/*` and a file name that carries the asset id. The plugin sends the platform URL straight through. Simpler plugin code, a platform dependency.
 
 Recommendation: A for the first release so nothing waits on the platform, then switch to B when it exists.
@@ -144,13 +144,13 @@ The modal feeds the Gallery block ("Add media"), the classic editor and the feat
 
 ## Proposed child issues
 
-Not created. Order is the dependency order. "Platform" names the dependency on the platform repository.
+Superseded list, now built. Order is the dependency order. "Platform" names the dependency on the platform repository.
 
 | # | Title | Scope | Platform dependency |
 | --- | --- | --- | --- |
 | 1 | Add the media source opt-in setting | `media_source` in `Settings_Schema`, settings page toggle with explanation, `uninstall.php`, README and readme.txt External services entry, tests for the default off state | None |
 | 2 | Build the photo catalogue from embeddable galleries | Class that reads galleries from `Gallery_Index`, fetches each public gallery with ETag, stores photos in transients, stale on error, cron refresh, logger for failures, unit tests with the fake transport | None (uses the public embed endpoint) |
-| 3 | REST route for browsing photos | `GET /profotograaf/v1/photos` with search, paging, totals, `edit_posts`, translated error mapping, `stale` flag | None |
+| 3 | REST route for browsing photos | `GET /profotograaf/v1/photos` with search, paging, totals, `upload_files`, translated error mapping, `stale` flag | None |
 | 4 | Import a photo into the Media Library | Importer with `download_url` and `media_handle_sideload`, idempotent by photo id, meta keys, title, caption, alt fallback, `profotograaf_photo_imported` action, tests for duplicate and failure paths | None |
 | 5 | Add a Profotograaf category to the block inserter | `registerInserterMediaCategory`, fetch that never rejects, returns `id` for imported photos, signed same-origin file route plus attachment hook (path A), `@wordpress/i18n` strings and `wp_set_script_translations`, E2E on WordPress 6.9, 7.0 and 7.1 | None for path A. Optional P1 for path B |
 | 6 | Add an "Import from Profotograaf" screen under Media | Paged grid with gallery filter, search, multi-select, bulk import with progress and per-photo errors, "Source" filter in the media modal through `ajax_query_attachments_args`, imported badge in attachment details | None |
