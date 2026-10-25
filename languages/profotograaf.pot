@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-24T13:53:24+00:00\n"
+"POT-Creation-Date: 2026-10-25T11:10:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -1321,9 +1321,9 @@ msgstr ""
 msgid "This gallery needs JavaScript to be shown here."
 msgstr ""
 
-#: includes/class-gallery-rest.php:166
-#: includes/class-gallery-rest.php:184
-#: includes/class-gallery-rest.php:211
+#: includes/class-gallery-rest.php:167
+#: includes/class-gallery-rest.php:185
+#: includes/class-gallery-rest.php:212
 #: includes/class-photo-list.php:56
 #: includes/class-sections-rest.php:91
 #: includes/trait-api-client-writes.php:72
@@ -3596,6 +3596,12 @@ msgid "%d photo"
 msgid_plural "%d photos"
 msgstr[0] ""
 msgstr[1] ""
+
+#: build/client-galleries/index.js:3
+#: build/full-page-gallery/index.js:3
+#: build/gallery/index.js:3
+msgid "Open the share page"
+msgstr ""
 
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3

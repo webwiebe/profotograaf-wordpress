@@ -25,6 +25,12 @@
 	background: #fff;
 }
 
+.profotograaf-gallery-picker__share {
+	display: block;
+	margin-top: 4px;
+	font-size: 12px;
+}
+
 .profotograaf-gallery-picker__thumb {
 	display: block;
 	width: 100%;

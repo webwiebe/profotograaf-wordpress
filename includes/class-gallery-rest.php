@@ -148,6 +148,7 @@ class Gallery_Rest {
 		return array_map(
 			static function ( array $row ): array {
 				$row['cover_url'] = esc_url_raw( $row['cover_url'] );
+				$row['url']       = esc_url_raw( $row['url'] );
 				return $row;
 			},
 			$rows
