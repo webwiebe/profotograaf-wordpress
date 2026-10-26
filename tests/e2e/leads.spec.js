@@ -84,6 +84,14 @@ test.describe.serial( 'Lead bridge: Contact Form 7', () => {
 		await login( page );
 		await connect( page );
 
+		// A form with no saved choice sends by default (#336), so switch it off.
+		await page.goto( '/wp-admin/options-general.php?page=profotograaf-leads' );
+		const form = page.getByRole( 'group', { name: /Wedding inquiry/ } );
+		await form.getByLabel( 'Send submissions of this form to Profotograaf' ).uncheck();
+		await page.getByRole( 'button', { name: 'Save changes' } ).click();
+		await expect( page.getByText( 'Changes saved.' ) ).toBeVisible();
+		await expect( form.getByLabel( 'Send submissions of this form to Profotograaf' ) ).not.toBeChecked();
+
 		await submitForm( page, fixture.page );
 		wp( 'cron', 'event', 'run', '--due-now' );
 
