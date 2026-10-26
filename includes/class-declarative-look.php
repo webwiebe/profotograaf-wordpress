@@ -29,24 +29,6 @@ final class Declarative_Look {
 	private const DEFAULT_GAP = 8;
 
 	/**
-	 * Host attributes this class reads.
-	 *
-	 * @var string[]
-	 */
-	public const ATTRIBUTES = array(
-		'data-columns',
-		'data-columns-tablet',
-		'data-columns-mobile',
-		'data-gap',
-		'data-gap-row',
-		'data-gap-column',
-		'data-radius',
-		'data-shadow',
-		'data-hover',
-		'data-hover-strength',
-	);
-
-	/**
 	 * Class names for the gallery box, after the layout class.
 	 *
 	 * @param array<string,string> $attrs  Host attributes.
