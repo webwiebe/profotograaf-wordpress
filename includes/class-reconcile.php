@@ -112,7 +112,7 @@ final class Reconcile {
 	 * - `rows`: from rows().
 	 * - `catalogue`: `photos` (normalised rows), `stale` (bool), `dropped` (int).
 	 * - `galleries`: rows of GET /api/v1/embed/galleries (`id`, `embeddable`, `available`), or null when the request failed.
-	 * - `feed`: `photos_deleted` (list of `{id, gallery_id}`), `photos_changed` (photo ids created or updated), `galleries_deleted` (gallery ids), or null.
+	 * - `feed`: `photos_deleted` (list of `{id, gallery_id}`), `photos_changed` (photo ids created or updated), `galleries_deleted` and `galleries_unavailable` (gallery ids), or null.
 	 * - `gallery_photos`: photo ids per gallery id from GET /api/v1/embed/galleries/{id}/photos, `false` for a gallery that answered 404 or failed. Optional.
 	 * - `after_pairing`: true for the first run after a pairing.
 	 * - `paused`: true while the account pause is active.
@@ -359,6 +359,8 @@ final class Reconcile {
 			$reason = self::REASON_GALLERY_DELETED;
 		} elseif ( '' !== $gallery && null !== $galleries && count( $galleries ) < self::GALLERY_LIST_CAP && ! isset( $galleries[ $gallery ] ) ) {
 			$reason = self::REASON_GALLERY_DELETED;
+		} elseif ( '' !== $gallery && isset( $feed['galleries_unavailable'][ $gallery ] ) ) {
+			$reason = self::REASON_UNAVAILABLE;
 		} elseif ( '' !== $gallery && isset( $galleries[ $gallery ] ) && ! $galleries[ $gallery ]['serving'] ) {
 			$reason = self::REASON_UNAVAILABLE;
 		} elseif ( null !== $deleted && $complete ) {
@@ -372,7 +374,7 @@ final class Reconcile {
 			if ( is_array( $lookups[ $gallery ] ) && ! in_array( $photo_id, array_map( 'strval', $lookups[ $gallery ] ), true ) ) {
 				$reason = self::REASON_UNKNOWN;
 			}
-		}
+		}//end if
 
 		if ( null === $reason ) {
 			return null;

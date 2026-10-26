@@ -241,9 +241,11 @@ class Change_Poller_Test extends Gallery_Test_Case {
 		$this->options[ Backup_Galleries::OPTION ] = array( '2026-10' => 'bg-oct' );
 		$page                                      = array(
 			'galleries' => array(
-				'created' => array( 'bg-oct' ),
-				'updated' => array( 'bg-oct' ),
-				'deleted' => array( 'bg-oct' ),
+				'created'     => array( 'bg-oct' ),
+				'updated'     => array( 'bg-oct' ),
+				'deleted'     => array( 'bg-oct' ),
+				'unavailable' => array( array( 'id' => 'bg-oct', 'reason' => 'password' ) ),
+				'available'   => array( 'bg-oct' ),
 			),
 			'photos'    => array(
 				'created' => array( array( 'id' => 'p-b', 'gallery_id' => 'bg-oct' ) ),
@@ -484,6 +486,63 @@ class Change_Poller_Test extends Gallery_Test_Case {
 
 		$this->assertSame( Reconcile::STATE_MISSING, $this->meta[11][ Reconcile::META_STATE ] );
 		$this->assertSame( Reconcile::REASON_UNAVAILABLE, $this->meta[11][ Reconcile::META_REASON ] );
+	}
+
+	public function test_a_gallery_the_feed_reports_unavailable_is_flagged_in_that_poll(): void {
+		$this->copy( 11 );
+		$this->feed( array( 'galleries' => array( 'created' => array(), 'updated' => array(), 'deleted' => array(), 'unavailable' => array( array( 'id' => 'g-1', 'reason' => 'password' ) ), 'available' => array() ) ) );
+		$this->library( array() );
+		// The list still says serving: the feed decides.
+		$this->http->reply( 200, array( $this->gallery() ) );
+
+		$result = $this->poller->run();
+
+		$this->assertSame( 1, $result['applied'] );
+		$this->assertSame( Reconcile::STATE_MISSING, $this->meta[11][ Reconcile::META_STATE ] );
+		$this->assertSame( Reconcile::REASON_UNAVAILABLE, $this->meta[11][ Reconcile::META_REASON ] );
+	}
+
+	public function test_an_unavailable_gallery_without_imported_copies_changes_nothing(): void {
+		$this->copy( 11 );
+		$this->feed( array( 'galleries' => array( 'created' => array(), 'updated' => array(), 'deleted' => array(), 'unavailable' => array( array( 'id' => 'g-9', 'reason' => 'expired' ) ), 'available' => array() ) ) );
+		$this->http->reply( 200, array( $this->gallery() ) );
+
+		$result = $this->poller->run();
+
+		$this->assertSame( 0, $result['applied'] );
+		$this->assertArrayNotHasKey( Reconcile::META_STATE, $this->meta[11] );
+		$this->assertCount( 2, $this->http->requests );
+	}
+
+	public function test_a_gallery_the_feed_reports_available_again_clears_the_flag_in_that_poll(): void {
+		$this->copy( 11, 'p1', array( Reconcile::META_STATE => Reconcile::STATE_MISSING, Reconcile::META_REASON => Reconcile::REASON_UNAVAILABLE ) );
+		$this->feed( array( 'galleries' => array( 'created' => array(), 'updated' => array(), 'deleted' => array(), 'unavailable' => array(), 'available' => array( 'g-1' ) ) ) );
+		$this->library( array( $this->photo() ) );
+		$this->http->reply( 200, array( $this->gallery() ) );
+
+		$result = $this->poller->run();
+
+		$this->assertSame( 1, $result['applied'] );
+		$this->assertArrayNotHasKey( Reconcile::META_STATE, $this->meta[11] );
+	}
+
+	public function test_a_gallery_in_both_feed_lists_counts_as_available(): void {
+		$page     = array(
+			'galleries' => array(
+				'created'     => array(),
+				'updated'     => array(),
+				'deleted'     => array(),
+				'unavailable' => array( array( 'id' => 'g-1', 'reason' => 'password' ) ),
+				'available'   => array( 'g-1' ),
+			),
+			'photos'    => array( 'created' => array(), 'updated' => array(), 'deleted' => array() ),
+		);
+		$imported = array( array( 'id' => 11, 'photo_id' => 'p1', 'gallery_id' => 'g-1' ) );
+
+		$feed = Imported_Copies::filter_feed( $page, $imported );
+
+		$this->assertSame( array(), $feed['galleries_unavailable'] );
+		$this->assertTrue( $feed['relevant'] );
 	}
 
 	public function test_a_quiet_poll_makes_no_catalogue_request(): void {

@@ -22,9 +22,12 @@ defined( 'ABSPATH' ) || exit;
  * nothing (delivery is at least once). A failed run records the error and
  * leaves the cursor and the last-success time as they were.
  *
- * The feed does not report a gallery that stopped serving. Every run also
- * compares the gallery list with the stored states and reconciles when a
- * gallery of an imported copy changed what it serves.
+ * The feed names a gallery that stopped serving (`galleries.unavailable`) or
+ * serves again (`galleries.available`), so the poll that sees the entry
+ * flags or clears the copies of that gallery. Every run also compares the
+ * gallery list with the stored states and reconciles when a gallery of an
+ * imported copy changed what it serves, which covers a platform that sends
+ * no such entries.
  *
  * A `resync` answer stores the new cursor and starts a reconcile of every
  * imported copy in batches of BATCH_SIZE through single cron events.

@@ -86,7 +86,7 @@ final class Imported_Copies {
 	 *
 	 * @param array<string,mixed>                                        $page     Feed page from Api_Client::changes().
 	 * @param array<int,array{id:int,photo_id:string,gallery_id:string}> $imported Imported copies.
-	 * @return array{photos_deleted:array<int,array{id:string,gallery_id:string}>,photos_changed:array<int,string>,galleries_deleted:array<int,string>,relevant:bool}
+	 * @return array{photos_deleted:array<int,array{id:string,gallery_id:string}>,photos_changed:array<int,string>,galleries_deleted:array<int,string>,galleries_unavailable:array<int,string>,relevant:bool}
 	 */
 	public static function filter_feed( array $page, array $imported ): array {
 		$photos    = array();
@@ -115,11 +115,22 @@ final class Imported_Copies {
 		$gone = array_values( array_filter( $page['galleries']['deleted'], static fn( string $id ): bool => isset( $galleries[ $id ] ) ) );
 		$live = array_filter( array_merge( $page['galleries']['created'], $page['galleries']['updated'] ), static fn( string $id ): bool => isset( $galleries[ $id ] ) );
 
+		// The serving state of a gallery written since the cursor. A gallery in both lists counts as available.
+		$back        = array_filter( $page['galleries']['available'], static fn( string $id ): bool => isset( $galleries[ $id ] ) );
+		$unavailable = array();
+		foreach ( $page['galleries']['unavailable'] as $entry ) {
+			if ( isset( $galleries[ $entry['id'] ] ) && ! in_array( $entry['id'], $page['galleries']['available'], true ) ) {
+				$unavailable[] = $entry['id'];
+			}
+		}
+		$unavailable = array_values( array_unique( $unavailable ) );
+
 		return array(
-			'photos_deleted'    => $deleted,
-			'photos_changed'    => array_values( array_unique( $changed ) ),
-			'galleries_deleted' => $gone,
-			'relevant'          => array() !== $deleted || array() !== $changed || array() !== $gone || array() !== $live,
+			'photos_deleted'        => $deleted,
+			'photos_changed'        => array_values( array_unique( $changed ) ),
+			'galleries_deleted'     => $gone,
+			'galleries_unavailable' => $unavailable,
+			'relevant'              => array() !== $deleted || array() !== $changed || array() !== $gone || array() !== $live || array() !== $unavailable || array() !== $back,
 		);
 	}
 
