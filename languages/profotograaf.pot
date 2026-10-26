@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-25T11:10:46+00:00\n"
+"POT-Creation-Date: 2026-10-26T02:26:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -1011,7 +1011,7 @@ msgstr ""
 msgid "Columns"
 msgstr ""
 
-#: includes/class-change-poller.php:394
+#: includes/class-change-poller.php:397
 #: includes/class-virtual-sync.php:294
 msgid "The photo list could not be refreshed."
 msgstr ""
