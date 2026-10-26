@@ -1,10 +1,8 @@
 {
-  "note": "A strong shadow with the hover effect off.",
+  "note": "Six photos as a grid with the hover effect off.",
   "attrs": {
-    "data-layout": "masonry",
-    "data-shadow": "strong",
-    "data-hover": "none",
-    "data-hover-strength": "strong"
+    "data-layout": "grid",
+    "data-hover": "none"
   },
   "gallery": {
     "id": "g1",

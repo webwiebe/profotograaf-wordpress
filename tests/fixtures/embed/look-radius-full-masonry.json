@@ -1,5 +1,5 @@
 {
-  "note": "Full radius on masonry: ignored, because the tiles are not square.",
+  "note": "Six photos as masonry with the full radius: tiles are not square, so it is ignored.",
   "attrs": {
     "data-layout": "masonry",
     "data-radius": "full"

@@ -1,5 +1,5 @@
 {
-  "note": "Full radius on a grid (square crop): the rfull class and a 50% radius.",
+  "note": "Six photos as a grid with the full radius: square crops become circles.",
   "attrs": {
     "data-layout": "grid",
     "data-radius": "full"

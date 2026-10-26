@@ -1,8 +1,9 @@
 {
-  "note": "Masonry with a column count above the photo count: the count is capped at six.",
+  "note": "Six photos as masonry with a strong shadow and the grow hover.",
   "attrs": {
     "data-layout": "masonry",
-    "data-columns": "9"
+    "data-shadow": "strong",
+    "data-hover": "grow"
   },
   "gallery": {
     "id": "g1",

@@ -1,9 +1,9 @@
 {
-  "note": "A soft shadow, the grow hover and its strong strength.",
+  "note": "Six photos as a grid with a soft shadow and a strong zoom hover.",
   "attrs": {
     "data-layout": "grid",
     "data-shadow": "soft",
-    "data-hover": "grow",
+    "data-hover": "zoom",
     "data-hover-strength": "strong"
   },
   "gallery": {

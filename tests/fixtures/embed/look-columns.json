@@ -1,9 +1,9 @@
 {
-  "note": "Six photos in a grid with a column count per breakpoint.",
+  "note": "Six photos as a grid with a column count per breakpoint.",
   "attrs": {
     "data-layout": "grid",
-    "data-columns": "4",
-    "data-columns-tablet": "3",
+    "data-columns": "3",
+    "data-columns-tablet": "2",
     "data-columns-mobile": "1"
   },
   "gallery": {

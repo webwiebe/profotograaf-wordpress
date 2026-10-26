@@ -1972,7 +1972,7 @@ packages:
       preact: 10.x
 
   '@profotograaf/embed@file:embed-package/profotograaf-embed-0.2.0.tgz':
-    resolution: {integrity: sha512-iB1uRuHYuHf4BPpqcYV6fdmhoNSjA9aKC+tY6YJpRh7QUmKoWpctx3+3jb6CpTgG8GBj10AUefVD5G903iUmNQ==, tarball: file:embed-package/profotograaf-embed-0.2.0.tgz}
+    resolution: {integrity: sha512-qCh1bnb4aOx1oJ6lBNe3lKct9ig4XOSUNjokdimgazdFTcNaR+YGtOG368aEScnqIjsHMBN3QhEsdel4zS6qlQ==, tarball: file:embed-package/profotograaf-embed-0.2.0.tgz}
     version: 0.2.0
 
   '@puppeteer/browsers@3.2.3':

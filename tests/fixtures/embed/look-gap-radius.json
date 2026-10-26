@@ -1,5 +1,5 @@
 {
-  "note": "A gap for both axes, a different row gap, a column gap and a numeric radius.",
+  "note": "Six photos as a grid with a gap per axis and a numeric radius.",
   "attrs": {
     "data-layout": "grid",
     "data-gap": "12",
