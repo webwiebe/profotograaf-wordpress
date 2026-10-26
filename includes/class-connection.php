@@ -95,6 +95,7 @@ class Connection {
 	public function save_tokens( array $response, int $now ): void {
 		$previous = $this->data();
 		$ttl      = isset( $response['expires_in'] ) ? max( 1, (int) $response['expires_in'] ) : 900;
+		$scopes   = $this->scopes_from( $response );
 		$this->write(
 			array(
 				'access_token'   => (string) ( $response['access_token'] ?? '' ),
@@ -105,9 +106,10 @@ class Connection {
 				'last_error'     => '',
 				'scope_revision' => $previous['scope_revision'],
 				'embed_denied'   => $previous['embed_denied'],
-				'write_denied'   => $previous['write_denied'],
+				// A grant that includes the upload scope ends an earlier 403 from a write route.
+				'write_denied'   => $previous['write_denied'] && ! in_array( Config::UPLOAD_SCOPE, $scopes, true ),
 				'leads_denied'   => $previous['leads_denied'],
-				'scopes'         => $this->scopes_from( $response ),
+				'scopes'         => $scopes,
 			)
 		);
 	}
