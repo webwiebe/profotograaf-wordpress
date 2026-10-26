@@ -154,6 +154,29 @@ class Declarative_Renderer_Test extends TestCase {
 		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-layout' => 'parallax' ) ) );
 	}
 
+	public function test_a_look_value_the_script_rejects_is_drawn_as_the_default(): void {
+		$gallery = $this->fixture( 'one-photo' )['gallery'];
+		$html    = (string) Declarative_Renderer::render(
+			$gallery,
+			array(
+				'data-layout'  => 'grid',
+				'data-columns' => '99',
+				'data-gap'     => 'wide',
+				'data-hover'   => 'spin',
+				'data-shadow'  => 'huge',
+				'data-radius'  => '-4',
+			)
+		);
+		$this->assertStringContainsString( '<div class="gallery grid"><div class="photos">', $html );
+		$this->assertStringNotContainsString( 'style="', $html );
+	}
+
+	public function test_the_grow_hover_marks_the_tile_and_the_figure(): void {
+		$gallery = $this->fixture( 'one-photo' )['gallery'];
+		$this->assertStringContainsString( 'class="tile u"', (string) Declarative_Renderer::render( $gallery, array( 'data-hover' => 'grow' ) ) );
+		$this->assertStringContainsString( 'class="item u"', (string) Declarative_Renderer::render( $this->fixture( 'captions-html-unsafe' )['gallery'], array( 'data-hover' => 'grow', 'data-captions' => 'below' ) ) );
+	}
+
 	public function test_the_badge_follows_the_gallery_and_the_attribute(): void {
 		$gallery = $this->fixture( 'one-photo' )['gallery'];
 		$this->assertStringContainsString( 'class="badge"', (string) Declarative_Renderer::render( $gallery, array() ) );
