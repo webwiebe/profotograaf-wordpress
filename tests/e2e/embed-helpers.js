@@ -213,4 +213,4 @@ function withoutDeclarativeShadowDom( context ) {
 	} );
 }
 
-module.exports = { HOST, PAGE_URL, wp, publishPost, shortcode, block, openEmbed, expectTiles, measure, withoutDeclarativeShadowDom };
+module.exports = { PLUGIN_EMBED_SCRIPT, HOST, PAGE_URL, wp, publishPost, shortcode, block, openEmbed, expectTiles, measure, withoutDeclarativeShadowDom };

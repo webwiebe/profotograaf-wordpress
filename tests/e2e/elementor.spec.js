@@ -13,6 +13,7 @@ const { execFileSync } = require( 'node:child_process' );
 const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
 const { login, mock } = require( './helpers' );
+const { openEmbed } = require( './embed-helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 const PROJECT = process.env.E2E_COMPOSE_PROJECT ? [ '-p', process.env.E2E_COMPOSE_PROJECT ] : [];
@@ -122,9 +123,8 @@ test.describe( 'Elementor gallery widget', () => {
 	} );
 
 	test( 'a visitor gets the gallery block markup with the chosen options', async ( { browser } ) => {
-		const visitor = await browser.newContext();
-		const page = await visitor.newPage();
-		await page.goto( `/?page_id=${ pageId }` );
+		// The server leaves a gallery with the lightbox off to the script, which reaches the mock through this context.
+		const { context: visitor, page } = await openEmbed( browser, `${ test.info().project.use.baseURL }/?page_id=${ pageId }` );
 
 		const embed = page.locator( '.elementor-widget-profotograaf_gallery div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed ).toHaveAttribute( 'data-layout', 'masonry' );

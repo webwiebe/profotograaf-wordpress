@@ -8,13 +8,13 @@
 const { test, expect } = require( '@playwright/test' );
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { wp, publishPost, shortcode, openEmbed, withoutDeclarativeShadowDom } = require( './embed-helpers' );
+const { PLUGIN_EMBED_SCRIPT, wp, publishPost, shortcode, openEmbed, withoutDeclarativeShadowDom } = require( './embed-helpers' );
 
 // The embed.js from before the state contract (professionals#2338): it sets
-// data-pf-ready and nothing else.
+// data-pf-ready and nothing else. It replaces the copy the plugin serves.
 const LEGACY_EMBED = fs.readFileSync( path.join( __dirname, 'fixtures', 'embed-legacy.js' ) );
 const useLegacyEmbed = ( /** @type {import('@playwright/test').BrowserContext} */ ctx ) =>
-	ctx.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/, ( route ) =>
+	ctx.route( PLUGIN_EMBED_SCRIPT, ( route ) =>
 		route.fulfill( { status: 200, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' }, body: LEGACY_EMBED } )
 	);
 
@@ -100,7 +100,7 @@ test.describe( 'a gallery with nothing to show', () => {
 
 	test( 'a script that does not load leaves the gallery the server drew', async ( { browser } ) => {
 		const { context, page } = await openEmbed( browser, urls.failed, { width: 390, height: 800 }, ( ctx ) =>
-			ctx.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/, ( route ) => route.abort() )
+			ctx.route( PLUGIN_EMBED_SCRIPT, ( route ) => route.abort() )
 		);
 		const drawn = host( page, 'g-e2e' );
 
@@ -112,7 +112,7 @@ test.describe( 'a gallery with nothing to show', () => {
 	test( 'without declarative shadow DOM a script that does not load keeps the failed state with the fallback link inside the block', async ( { browser } ) => {
 		const { context, page } = await openEmbed( browser, urls.failed, { width: 390, height: 800 }, async ( ctx ) => {
 			await withoutDeclarativeShadowDom( ctx );
-			await ctx.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js$/, ( route ) => route.abort() );
+			await ctx.route( PLUGIN_EMBED_SCRIPT, ( route ) => route.abort() );
 		} );
 		const failed = host( page, 'g-e2e' );
 

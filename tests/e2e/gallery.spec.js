@@ -4,7 +4,7 @@ const path = require( 'node:path' );
 const { test, expect } = require( '@playwright/test' );
 const AxeBuilder = require( '@axe-core/playwright' ).default;
 const { login, mock } = require( './helpers' );
-const { withoutDeclarativeShadowDom } = require( './embed-helpers' );
+const { PLUGIN_EMBED_SCRIPT, withoutDeclarativeShadowDom } = require( './embed-helpers' );
 
 const COMPOSE = path.join( __dirname, 'docker-compose.yml' );
 
@@ -194,7 +194,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toHaveAttribute( 'href', 'http://mock-platform:8090/share/g/spring-wedding' );
 		const scripts = page.locator( 'script[src*="/embed/embed"]' );
 		await expect( scripts ).toHaveCount( 1 );
-		await expect( scripts.first() ).toHaveAttribute( 'src', /\/share\/embed\/embed\.[a-f0-9]{12}\.js$/ );
+		await expect( scripts.first() ).toHaveAttribute( 'src', /\/wp-content\/plugins\/[^/]+\/build\/embed\/embed\.js\?ver=/ );
 		await visitor.close();
 	} );
 
@@ -209,7 +209,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 				errors.push( message.text() );
 			}
 		} );
-		await page.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js/, ( route ) => route.abort() );
+		await page.route( PLUGIN_EMBED_SCRIPT, ( route ) => route.abort() );
 		await page.goto( url );
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
@@ -226,7 +226,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 		const visitor = await browser.newContext();
 		await withoutDeclarativeShadowDom( visitor );
 		const page = await visitor.newPage();
-		await page.route( /\/share\/embed\/embed(\.[a-f0-9]{12})?\.js/, ( route ) => route.abort() );
+		await page.route( PLUGIN_EMBED_SCRIPT, ( route ) => route.abort() );
 		await page.goto( url );
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
