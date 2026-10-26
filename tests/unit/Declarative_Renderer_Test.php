@@ -32,6 +32,20 @@ class Declarative_Renderer_Test extends TestCase {
 	}
 
 	/**
+	 * Fixtures with a client tree.
+	 *
+	 * @return array<string,array{0:string}>
+	 */
+	public static function with_client_tree(): array {
+		$out = array();
+		foreach ( (array) glob( self::FIXTURES . '*.expected.html' ) as $file ) {
+			$name         = basename( $file, '.expected.html' );
+			$out[ $name ] = array( $name );
+		}
+		return $out;
+	}
+
+	/**
 	 * Reads a fixture.
 	 *
 	 * @param string $name Fixture name.
@@ -112,6 +126,27 @@ class Declarative_Renderer_Test extends TestCase {
 		$html    = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] );
 		$this->assertNotNull( $html );
 		$this->assertSame( file_get_contents( self::FIXTURES . $name . '.server.html' ), $this->tree( (string) $html ) );
+	}
+
+	/**
+	 * The server draws what the script draws, or leaves the fixture to the script. Masonry is the one
+	 * difference: the server writes one ordered list and the script places the columns on adoption.
+	 *
+	 * @dataProvider with_client_tree
+	 * @param string $name Fixture name.
+	 */
+	public function test_the_server_tree_is_the_client_tree_or_the_fixture_is_left_to_the_script( string $name ): void {
+		$fixture  = $this->fixture( $name );
+		$expected = (string) file_get_contents( self::FIXTURES . $name . '.expected.html' );
+		$html     = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] );
+		if ( null === $html ) {
+			$this->assertFileDoesNotExist( self::FIXTURES . $name . '.server.html', $name . ' has a server file but the renderer draws nothing' );
+			return;
+		}
+		$this->assertFileExists( self::FIXTURES . $name . '.server.html', $name . ' is drawn on the server and has no server file' );
+		if ( false === strpos( $expected, 'class="mcol"' ) ) {
+			$this->assertSame( $expected, $this->tree( $html ) );
+		}
 	}
 
 	public function test_the_output_is_a_declarative_shadow_root_with_the_shared_stylesheet(): void {
