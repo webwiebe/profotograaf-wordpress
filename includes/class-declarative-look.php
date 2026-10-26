@@ -148,13 +148,23 @@ final class Declarative_Look {
 		if ( self::full_radius( $attrs, $layout ) ) {
 			return '--radius:50%';
 		}
-		$gap     = self::bounded_int( $attrs['data-gap'] ?? '', 0, self::MAX_GAP );
-		$row     = self::bounded_int( $attrs['data-gap-row'] ?? '', 0, self::MAX_GAP );
-		$column  = self::bounded_int( $attrs['data-gap-column'] ?? '', 0, self::MAX_GAP );
-		$any_gap = null !== $gap || null !== $row || null !== $column;
-		$flush   = $any_gap && 0 === ( $row ?? $gap ?? self::DEFAULT_GAP ) && 0 === ( $column ?? $gap ?? self::DEFAULT_GAP );
-		$radius  = self::bounded_int( $attrs['data-radius'] ?? '', 0, 64 ) ?? ( $flush ? 0 : null );
+		$radius = self::bounded_int( $attrs['data-radius'] ?? '', 0, 64 ) ?? ( self::flush( $attrs ) ? 0 : null );
 		return null === $radius ? '' : '--radius:' . $radius . 'px';
+	}
+
+	/**
+	 * Whether a gap was asked for and it is zero on both axes.
+	 *
+	 * @param array<string,string> $attrs Host attributes.
+	 */
+	private static function flush( array $attrs ): bool {
+		$gap    = self::bounded_int( $attrs['data-gap'] ?? '', 0, self::MAX_GAP );
+		$row    = self::bounded_int( $attrs['data-gap-row'] ?? '', 0, self::MAX_GAP );
+		$column = self::bounded_int( $attrs['data-gap-column'] ?? '', 0, self::MAX_GAP );
+		if ( null === $gap && null === $row && null === $column ) {
+			return false;
+		}
+		return 0 === ( $row ?? $gap ?? self::DEFAULT_GAP ) && 0 === ( $column ?? $gap ?? self::DEFAULT_GAP );
 	}
 
 	/**
@@ -176,12 +186,12 @@ final class Declarative_Look {
 	/**
 	 * The listed value that matches, else the fallback.
 	 *
-	 * @param string[] $list     Accepted values.
+	 * @param string[] $accepted Accepted values.
 	 * @param string   $value    Attribute value.
 	 * @param string   $fallback Value when none matches.
 	 */
-	private static function one_of( array $list, string $value, string $fallback ): string {
+	private static function one_of( array $accepted, string $value, string $fallback ): string {
 		$value = strtolower( trim( $value ) );
-		return in_array( $value, $list, true ) ? $value : $fallback;
+		return in_array( $value, $accepted, true ) ? $value : $fallback;
 	}
 }

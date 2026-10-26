@@ -159,7 +159,7 @@ class Declarative_Renderer_Test extends TestCase {
 		$html    = (string) Declarative_Renderer::render(
 			$gallery,
 			array(
-				'data-layout' => 'grid',
+				'data-layout'  => 'grid',
 				'data-columns' => '99',
 				'data-gap'     => 'wide',
 				'data-hover'   => 'spin',

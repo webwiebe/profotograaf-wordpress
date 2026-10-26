@@ -78,7 +78,7 @@ final class Declarative_Renderer {
 		$classes = implode( ' ', array_merge( array( 'gallery', $layout ), Declarative_Look::classes( $attrs, $layout ) ) );
 		$style   = Declarative_Look::style( $attrs, $layout, count( $photos ) );
 		$style   = '' === $style ? '' : ' style="' . self::esc( $style ) . '"';
-		$css = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
+		$css     = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
 		return '<template shadowrootmode="open"><style>' . ( false === $css ? '' : $css ) . '</style>'
 			. '<div class="pf"><div class="' . $classes . '"' . $style . '><div class="photos">' . $tiles . '</div></div></div>'
 			. self::badge( (array) ( $gallery['badge'] ?? array() ), $attrs, $badge )
@@ -161,10 +161,7 @@ final class Declarative_Renderer {
 	 * @param bool                $grow     The grow hover is on: the outermost element carries `u`.
 	 */
 	private static function tile( array $photo, string $title, int $i, string $layout, string $captions, bool $grow ): string {
-		$alt    = (string) ( $photo['alt'] ?? '' );
-		$alt    = '' !== $alt ? $alt : (string) ( $photo['title'] ?? '' );
-		$alt    = '' !== $alt ? $alt : (string) ( $photo['caption'] ?? '' );
-		$alt    = '' !== $alt ? $alt : $title . ' ' . ( $i + 1 );
+		$alt    = self::alt_text( $photo, $title, $i );
 		$text   = 'off' === $captions ? '' : implode( ' - ', array_filter( array( (string) ( $photo['title'] ?? '' ), (string) ( $photo['caption'] ?? '' ) ), static fn( string $part ): bool => '' !== $part ) );
 		$mark   = $grow ? ' u' : '';
 		$button = '<button class="tile' . ( '' === $text ? $mark : '' ) . '" type="button" aria-label="' . self::esc( $alt ) . '">' . self::image( $photo, $alt, 'grid' === $layout ) . '</button>';
@@ -175,6 +172,23 @@ final class Declarative_Renderer {
 			return '<figure class="item' . $mark . '">' . $button . '<figcaption class="below">' . self::esc( $text ) . '</figcaption></figure>';
 		}
 		return '<figure class="item ov' . $mark . '">' . $button . '<figcaption class="cap">' . self::esc( $text ) . '</figcaption></figure>';
+	}
+
+	/**
+	 * The alt text of a tile: the photo's alt, else its title, else its caption, else the gallery title and position.
+	 *
+	 * @param array<string,mixed> $photo Photo.
+	 * @param string              $title Gallery title.
+	 * @param int                 $i     Index.
+	 */
+	private static function alt_text( array $photo, string $title, int $i ): string {
+		foreach ( array( 'alt', 'title', 'caption' ) as $key ) {
+			$text = (string) ( $photo[ $key ] ?? '' );
+			if ( '' !== $text ) {
+				return $text;
+			}
+		}
+		return $title . ' ' . ( $i + 1 );
 	}
 
 	/**
