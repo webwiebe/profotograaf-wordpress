@@ -40,13 +40,14 @@ final class Reconcile_Input {
 	 * Feed entries by id.
 	 *
 	 * @param mixed $feed Feed input, or null.
-	 * @return array{deleted:array<string,array{gallery_id:string}>,changed:array<string,bool>,galleries_deleted:array<string,bool>}
+	 * @return array{deleted:array<string,array{gallery_id:string}>,changed:array<string,bool>,galleries_deleted:array<string,bool>,galleries_unavailable:array<string,bool>}
 	 */
 	public static function feed_index( $feed ): array {
 		$index = array(
-			'deleted'           => array(),
-			'changed'           => array(),
-			'galleries_deleted' => array(),
+			'deleted'               => array(),
+			'changed'               => array(),
+			'galleries_deleted'     => array(),
+			'galleries_unavailable' => array(),
 		);
 		if ( ! is_array( $feed ) ) {
 			return $index;
@@ -61,11 +62,24 @@ final class Reconcile_Input {
 				$index['changed'][ (string) $id ] = true;
 			}
 		}
-		foreach ( (array) ( $feed['galleries_deleted'] ?? array() ) as $id ) {
+		$index['galleries_deleted']     = self::id_set( $feed['galleries_deleted'] ?? array() );
+		$index['galleries_unavailable'] = self::id_set( $feed['galleries_unavailable'] ?? array() );
+		return $index;
+	}
+
+	/**
+	 * A set of ids from a feed list.
+	 *
+	 * @param mixed $ids Raw list.
+	 * @return array<string,bool>
+	 */
+	private static function id_set( $ids ): array {
+		$set = array();
+		foreach ( (array) $ids as $id ) {
 			if ( is_scalar( $id ) && '' !== (string) $id ) {
-				$index['galleries_deleted'][ (string) $id ] = true;
+				$set[ (string) $id ] = true;
 			}
 		}
-		return $index;
+		return $set;
 	}
 }
