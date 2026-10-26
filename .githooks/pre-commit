@@ -10,7 +10,7 @@
 
 files="${PF_HOOK_FILES:-$(git diff --cached --name-only --diff-filter=ACMR)}"
 
-guarded=$(printf '%s\n' "$files" | grep -E '^(includes/(class-declarative-renderer|class-gallery-renderer|class-full-page-renderer|class-embed-script)\.php|tests/fixtures/embed/|embed-package/|package\.json$|pnpm-lock\.yaml$)' || true)
+guarded=$(printf '%s\n' "$files" | grep -E '^(includes/(class-declarative-[a-z-]+|class-gallery-renderer|class-full-page-renderer|class-embed-script)\.php|tests/fixtures/embed/|scripts/(embed-drift\.mjs|embed-package\.test\.mjs)|embed-package/|package\.json$|pnpm-lock\.yaml$)' || true)
 
 if [ -z "$guarded" ]; then
 	exit 0

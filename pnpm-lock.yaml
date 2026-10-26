@@ -178,8 +178,8 @@ importers:
   .:
     dependencies:
       '@profotograaf/embed':
-        specifier: file:embed-package/profotograaf-embed-0.2.0.tgz
-        version: file:embed-package/profotograaf-embed-0.2.0.tgz
+        specifier: file:embed-package/profotograaf-embed-0.3.0.tgz
+        version: file:embed-package/profotograaf-embed-0.3.0.tgz
       qrcode-generator:
         specifier: 2.0.4
         version: 2.0.4
@@ -1971,9 +1971,9 @@ packages:
     peerDependencies:
       preact: 10.x
 
-  '@profotograaf/embed@file:embed-package/profotograaf-embed-0.2.0.tgz':
-    resolution: {integrity: sha512-qCh1bnb4aOx1oJ6lBNe3lKct9ig4XOSUNjokdimgazdFTcNaR+YGtOG368aEScnqIjsHMBN3QhEsdel4zS6qlQ==, tarball: file:embed-package/profotograaf-embed-0.2.0.tgz}
-    version: 0.2.0
+  '@profotograaf/embed@file:embed-package/profotograaf-embed-0.3.0.tgz':
+    resolution: {integrity: sha512-6wE1wkggvxDZvXevYRpVPh6xjOgtCBtpaAJg3yYTb6hNRPMEgCjB4TOIh4VKBN8ZMIWT/hQpAzXgyA0EeXwUNA==, tarball: file:embed-package/profotograaf-embed-0.3.0.tgz}
+    version: 0.3.0
 
   '@puppeteer/browsers@3.2.3':
     resolution: {integrity: sha512-2Bt3m6dDAJqmZehn0wiXSYyQmuhyiHHZ7FjvrVaS1W2RoFGV6eCK71UvKYkNJjkwC1Q9nobjhvTMhLQztFVINA==}
@@ -9934,7 +9934,7 @@ snapshots:
       '@preact/signals-core': 1.14.4
       preact: 10.29.8
 
-  '@profotograaf/embed@file:embed-package/profotograaf-embed-0.2.0.tgz': {}
+  '@profotograaf/embed@file:embed-package/profotograaf-embed-0.3.0.tgz': {}
 
   '@puppeteer/browsers@3.2.3(yauzl@2.10.0)':
     dependencies:

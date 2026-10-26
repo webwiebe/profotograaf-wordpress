@@ -47,6 +47,15 @@ final class Declarative_Renderer {
 		'data-shadow',
 		'data-hover',
 		'data-hover-strength',
+		'data-frame',
+		'data-ratio',
+		'data-gutter',
+		'data-link-to',
+		'data-link-new-tab',
+		'data-sort',
+		'data-exclude',
+		'data-image-text',
+		'data-duotone',
 	);
 
 	/**
@@ -64,23 +73,33 @@ final class Declarative_Renderer {
 	 * @param string               $badge   Badge text, in the page language.
 	 */
 	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf' ): ?string {
-		$photos = array_values( (array) ( $gallery['photos'] ?? array() ) );
+		if ( Declarative_Selection::needs_client( $attrs ) ) {
+			return null;
+		}
+		$photos = Declarative_Selection::select( array_values( (array) ( $gallery['photos'] ?? array() ) ), $attrs );
 		$layout = self::layout( $attrs, (string) ( $gallery['layout'] ?? '' ) );
 		if ( ! $photos || ! in_array( $layout, self::SERVED_LAYOUTS, true ) || ! self::servable( $attrs ) ) {
 			return null;
 		}
 		$captions = self::captions( $attrs );
 		$grow     = Declarative_Look::grow( $attrs );
+		$duotone  = Declarative_Duotone::colours( $attrs );
+		$options  = array(
+			'lightbox' => self::flag( $attrs['data-lightbox'] ?? '', true ),
+			'target'   => Declarative_Links::target( $attrs ),
+			'new_tab'  => Declarative_Links::new_tab( $attrs ),
+		);
 		$tiles    = '';
 		foreach ( $photos as $i => $photo ) {
-			$tiles .= self::tile( (array) $photo, (string) ( $gallery['title'] ?? '' ), (int) $i, $layout, $captions, $grow );
+			$tiles .= self::tile( (array) $photo, $gallery, (int) $i, $layout, $captions, $grow, $options );
 		}
-		$classes = implode( ' ', array_merge( array( 'gallery', $layout ), Declarative_Look::classes( $attrs, $layout ) ) );
+		$classes = implode( ' ', array_merge( array( 'gallery', $layout ), $duotone ? array( 'duo' ) : array(), Declarative_Look::classes( $attrs, $layout ) ) );
 		$style   = Declarative_Look::style( $attrs, $layout, count( $photos ) );
 		$style   = '' === $style ? '' : ' style="' . self::esc( $style ) . '"';
 		$css     = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
 		return '<template shadowrootmode="open"><style>' . ( false === $css ? '' : $css ) . '</style>'
 			. '<div class="pf"><div class="' . $classes . '"' . $style . '><div class="photos">' . $tiles . '</div></div></div>'
+			. ( $duotone ? Declarative_Duotone::svg( $duotone ) : '' )
 			. self::badge( (array) ( $gallery['badge'] ?? array() ), $attrs, $badge )
 			. '</template>';
 	}
@@ -104,7 +123,7 @@ final class Declarative_Renderer {
 	}
 
 	/**
-	 * Whether every attribute with a value is one the server draws, and the lightbox is on.
+	 * Whether every attribute with a value is one the server draws.
 	 *
 	 * @param array<string,string> $attrs Host attributes.
 	 */
@@ -114,7 +133,7 @@ final class Declarative_Renderer {
 				return false;
 			}
 		}
-		return self::flag( $attrs['data-lightbox'] ?? '', true );
+		return ! Declarative_Look::needs_client( $attrs ) && ! Declarative_Selection::needs_client( $attrs );
 	}
 
 	/**
@@ -154,17 +173,18 @@ final class Declarative_Renderer {
 	 * One photo: the tile, with its caption when there is one.
 	 *
 	 * @param array<string,mixed> $photo    Photo.
-	 * @param string              $title    Gallery title.
+	 * @param array<string,mixed> $gallery  The embed API payload.
 	 * @param int                 $i        Index.
 	 * @param string              $layout   grid or masonry.
 	 * @param string              $captions off, below or overlay.
 	 * @param bool                $grow     The grow hover is on: the outermost element carries `u`.
+	 * @param array<string,mixed> $options  lightbox (bool), target (link target) and new_tab (bool).
 	 */
-	private static function tile( array $photo, string $title, int $i, string $layout, string $captions, bool $grow ): string {
-		$alt    = self::alt_text( $photo, $title, $i );
-		$text   = 'off' === $captions ? '' : implode( ' - ', array_filter( array( (string) ( $photo['title'] ?? '' ), (string) ( $photo['caption'] ?? '' ) ), static fn( string $part ): bool => '' !== $part ) );
+	private static function tile( array $photo, array $gallery, int $i, string $layout, string $captions, bool $grow, array $options ): string {
+		$alt    = self::alt( $photo, (string) ( $gallery['title'] ?? '' ), $i );
+		$text   = self::caption( $photo, $captions );
 		$mark   = $grow ? ' u' : '';
-		$button = '<button class="tile' . ( '' === $text ? $mark : '' ) . '" type="button" aria-label="' . self::esc( $alt ) . '">' . self::image( $photo, $alt, 'grid' === $layout ) . '</button>';
+		$button = self::shell( $photo, $gallery, $alt, '' === $text ? $mark : '', $options, self::image( $photo, $alt, 'grid' === $layout ) );
 		if ( '' === $text ) {
 			return $button;
 		}
@@ -175,20 +195,60 @@ final class Declarative_Renderer {
 	}
 
 	/**
-	 * The alt text of a tile: the photo's alt, else its title, else its caption, else the gallery title and position.
+	 * The alt text: the photo's alt, else its title, else its caption, else the gallery title and position.
 	 *
 	 * @param array<string,mixed> $photo Photo.
 	 * @param string              $title Gallery title.
-	 * @param int                 $i     Index.
+	 * @param int                 $i     Position, from 0.
 	 */
-	private static function alt_text( array $photo, string $title, int $i ): string {
+	private static function alt( array $photo, string $title, int $i ): string {
 		foreach ( array( 'alt', 'title', 'caption' ) as $key ) {
-			$text = (string) ( $photo[ $key ] ?? '' );
-			if ( '' !== $text ) {
-				return $text;
+			$value = (string) ( $photo[ $key ] ?? '' );
+			if ( '' !== $value ) {
+				return $value;
 			}
 		}
 		return $title . ' ' . ( $i + 1 );
+	}
+
+	/**
+	 * The visible caption: title and caption joined, empty when captions are off.
+	 *
+	 * @param array<string,mixed> $photo    Photo.
+	 * @param string              $captions off, below or overlay.
+	 */
+	private static function caption( array $photo, string $captions ): string {
+		if ( 'off' === $captions ) {
+			return '';
+		}
+		return implode( ' - ', array_filter( array( (string) ( $photo['title'] ?? '' ), (string) ( $photo['caption'] ?? '' ) ), static fn( string $part ): bool => '' !== $part ) );
+	}
+
+	/**
+	 * The element a tile is drawn in: the lightbox button, a link, or an inert box.
+	 *
+	 * @param array<string,mixed> $photo   Photo.
+	 * @param array<string,mixed> $gallery The embed API payload.
+	 * @param string              $alt     Alt text, the accessible name.
+	 * @param string              $mark    ' u' when the tile itself carries the grow marker.
+	 * @param array<string,mixed> $options lightbox (bool), target (link target) and new_tab (bool).
+	 * @param string              $image   The img element.
+	 */
+	private static function shell( array $photo, array $gallery, string $alt, string $mark, array $options, string $image ): string {
+		$label = ' aria-label="' . self::esc( $alt ) . '"';
+		if ( $options['lightbox'] ) {
+			return '<button class="tile' . $mark . '" type="button"' . $label . '>' . $image . '</button>';
+		}
+		$href = Declarative_Links::href( $photo, $gallery, (string) $options['target'] );
+		if ( '' !== $href ) {
+			$blank = $options['new_tab'] ? ' target="_blank" rel="noopener noreferrer"' : '';
+			// Not esc_url(): Declarative_Links::href() already allowed only http(s) and relative URLs, and esc_url() would change the bytes the golden files fix.
+			return '<a class="tile' . $mark . '" href="' . self::esc( $href ) . '"' . $blank . $label . '>' . $image . '</a>';
+		}
+		if ( '' !== $options['target'] ) {
+			return '<div class="tile static' . $mark . '">' . $image . '</div>';
+		}
+		return '<button class="tile static' . $mark . '" type="button"' . $label . '>' . $image . '</button>';
 	}
 
 	/**
