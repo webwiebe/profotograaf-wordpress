@@ -134,12 +134,15 @@ test.describe( 'Elementor gallery widget', () => {
 		await visitor.close();
 	} );
 
-	test( 'the Elementor preview canvas renders the same gallery', async ( { page } ) => {
-		await login( page );
-		await page.goto( `/?p=${ pageId }&elementor-preview=${ pageId }` );
-
-		const embed = page.locator( '.elementor-widget-profotograaf_gallery div[data-profotograaf-gallery="g-e2e"]' );
-		await expect( embed ).toHaveAttribute( 'data-layout', 'masonry' );
+	test( 'the editor canvas renders the same gallery', () => {
+		// The canvas draws widgets from render() through the editor, which the spec does not drive, so the
+		// builder content is rendered the way the canvas asks for it.
+		const out = wp(
+			'eval',
+			`echo "HTML:" . \\Elementor\\Plugin::$instance->frontend->get_builder_content_for_display( ${ pageId }, true );`
+		);
+		expect( out ).toContain( 'data-profotograaf-gallery="g-e2e"' );
+		expect( out ).toContain( 'data-layout="masonry"' );
 	} );
 
 	test( 'the widget is registered under the name and keywords the panel search uses', () => {

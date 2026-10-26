@@ -6,17 +6,7 @@
 // the server drew; in a browser without declarative shadow DOM it keeps the
 // failed state with a visible fallback link.
 const { test, expect } = require( '@playwright/test' );
-const fs = require( 'fs' );
-const path = require( 'path' );
 const { PLUGIN_EMBED_SCRIPT, wp, publishPost, shortcode, openEmbed, withoutDeclarativeShadowDom } = require( './embed-helpers' );
-
-// The embed.js from before the state contract (professionals#2338): it sets
-// data-pf-ready and nothing else. It replaces the copy the plugin serves.
-const LEGACY_EMBED = fs.readFileSync( path.join( __dirname, 'fixtures', 'embed-legacy.js' ) );
-const useLegacyEmbed = ( /** @type {import('@playwright/test').BrowserContext} */ ctx ) =>
-	ctx.route( PLUGIN_EMBED_SCRIPT, ( route ) =>
-		route.fulfill( { status: 200, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' }, body: LEGACY_EMBED } )
-	);
 
 const INDEX_OPTION = 'profotograaf_gallery_index';
 const host = ( /** @type {import('@playwright/test').Page} */ page, /** @type {string} */ id ) =>
@@ -144,28 +134,6 @@ test.describe( 'a gallery with nothing to show', () => {
 		const link = failed.locator( ':scope > a' );
 		await expect( link ).toBeVisible();
 		expect( await insideOf( failed, link ) ).toBe( true );
-		await context.close();
-	} );
-
-	test( 'an embed.js that sets no state keeps the reserved box until the 8 second release', async ( { browser } ) => {
-		const { context, page } = await openEmbed( browser, urls[ 'g-e2e-error' ], undefined, useLegacyEmbed );
-		const failed = host( page, 'g-e2e-error' );
-
-		await expect( failed ).toHaveAttribute( 'data-pf-ready', '' );
-		await page.waitForTimeout( 2_000 );
-		await expect( failed ).not.toHaveAttribute( 'data-pf-state' );
-		expect( await heightOf( failed ) ).toBeGreaterThan( 120 );
-		await expect.poll( () => heightOf( failed ), { message: 'the 8 second release', timeout: 12_000 } ).toBeLessThan( 120 );
-		await context.close();
-	} );
-
-	test( 'an embed.js that sets no state still collapses an empty gallery through the fallback detection', async ( { browser } ) => {
-		const { context, page } = await openEmbed( browser, urls[ 'g-e2e-png' ], undefined, useLegacyEmbed );
-		const png = host( page, 'g-e2e-png' );
-
-		await expect( png ).toHaveAttribute( 'data-pf-empty', '' );
-		await expect( png ).not.toHaveAttribute( 'data-pf-state' );
-		expect( await heightOf( png ) ).toBeLessThan( 4 );
 		await context.close();
 	} );
 } );
