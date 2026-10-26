@@ -123,7 +123,7 @@ jobs:
         run: >
           node scripts/diff-coverage.mjs
           --base "${{ github.event.pull_request.base.sha || github.event.before }}"
-          --format clover --coverage coverage/php/clover.xml
+          --format clover --coverage coverage/php/clover.xml --strip /app
           --include '^(includes/.*|profotograaf|uninstall)\.php$'
           --label PHP
       # Warns and exits 0 by design: a cliff guard, not a gate.
