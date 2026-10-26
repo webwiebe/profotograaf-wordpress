@@ -442,6 +442,38 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertFalse( $this->options['profotograaf_connection']['write_denied'] );
 	}
 
+	public function test_a_token_refresh_that_grants_galleries_write_clears_the_write_denied_flag(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read' );
+		$connection = new Connection();
+		$connection->flag_write_denied();
+		$this->assertTrue( ( new Connection() )->needs_write_reconnect( true ) );
+
+		$connection->save_tokens( array( 'access_token' => 'access-2', 'refresh_token' => 'refresh-2', 'scope' => 'galleries:read galleries:write' ), $this->now );
+
+		$this->assertFalse( $this->options['profotograaf_connection']['write_denied'] );
+		$this->assertFalse( ( new Connection() )->needs_write_reconnect( true ) );
+	}
+
+	public function test_a_token_refresh_without_galleries_write_keeps_the_write_denied_flag(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read' );
+		$connection = new Connection();
+		$connection->flag_write_denied();
+
+		$connection->save_tokens( array( 'access_token' => 'access-2', 'refresh_token' => 'refresh-2', 'scope' => 'galleries:read' ), $this->now );
+
+		$this->assertTrue( $this->options['profotograaf_connection']['write_denied'] );
+	}
+
+	public function test_a_refresh_that_omits_the_scope_decides_from_the_stored_grant(): void {
+		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
+		$connection = new Connection();
+		$connection->flag_write_denied();
+
+		$connection->save_tokens( array( 'access_token' => 'access-2', 'refresh_token' => 'refresh-2' ), $this->now );
+
+		$this->assertFalse( $this->options['profotograaf_connection']['write_denied'] );
+	}
+
 	private function write_connect(): void {
 		$this->connect( 900, 'access-1', 'refresh-1', 'galleries:read galleries:write' );
 		$this->options['profotograaf_connection']['scope_revision'] = \Profotograaf\Config::SCOPE_REVISION;
