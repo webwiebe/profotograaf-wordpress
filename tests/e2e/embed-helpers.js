@@ -162,6 +162,11 @@ async function openEmbed( browser, url, viewport = { width: 1440, height: 900 },
 	return { context, page, problems, host: page.locator( HOST ).first() };
 }
 
+// The tiles appear after the mock platform answers the gallery request. One
+// nightly answer took 5.0 s (run 40470513721), as long as the default expect
+// timeout, so the wait covers a slow mock and still fails when nothing is drawn.
+const TILES_TIMEOUT = 20_000;
+
 /**
  * Waits until embed.js drew `count` tiles.
  *
@@ -169,7 +174,7 @@ async function openEmbed( browser, url, viewport = { width: 1440, height: 900 },
  * @param {number} count
  */
 async function expectTiles( host, count ) {
-	await expect( host.locator( '.photos .tile' ) ).toHaveCount( count );
+	await expect( host.locator( '.photos .tile' ) ).toHaveCount( count, { timeout: TILES_TIMEOUT } );
 }
 
 /**
