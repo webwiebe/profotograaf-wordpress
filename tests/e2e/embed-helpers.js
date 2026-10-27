@@ -186,7 +186,7 @@ function measure( host ) {
 			hostBottom: el.getBoundingClientRect().bottom,
 			lastTileBottom: Math.max( ...tiles.map( ( box ) => box.bottom ) ),
 			footerTop: footer ? footer.getBoundingClientRect().top : Infinity,
-			moreBottom: more && ! more.hidden ? more.getBoundingClientRect().bottom : 0,
+			moreBottom: more && more.getClientRects().length > 0 ? more.getBoundingClientRect().bottom : -Infinity,
 			tiles: tiles.map( ( { left, top, width, height } ) => ( { left, top, width, height } ) ),
 			scrollWidth: document.documentElement.scrollWidth,
 			innerWidth: window.innerWidth,
