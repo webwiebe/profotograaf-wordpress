@@ -25,6 +25,12 @@ test( 'every plugin fixture equals the package fixture of the same name', () => 
 	}
 } );
 
+test( 'every package fixture is in the plugin, so a new case cannot go unchecked', () => {
+	const held = new Set( readdirSync( fixtures ) );
+	const missing = readdirSync( new URL( 'fixtures/', pkg ) ).filter( ( name ) => name !== 'README.md' && ! held.has( name ) );
+	assert.deepEqual( missing, [], 'copy these from node_modules/@profotograaf/embed/fixtures to tests/fixtures/embed' );
+} );
+
 test( 'the renderer writes only data attributes the contract lists', () => {
 	const source = readFileSync( new URL( '../includes/class-declarative-renderer.php', import.meta.url ), 'utf8' );
 	const listed = new Set( Object.keys( contract.host.attributes ) );
