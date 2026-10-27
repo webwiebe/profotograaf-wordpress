@@ -24,6 +24,10 @@ test( 'a commit that touches no guarded file runs nothing', () => {
 
 for ( const file of [
 	'includes/class-declarative-renderer.php',
+	'includes/class-declarative-duotone.php',
+	'includes/class-declarative-look.php',
+	'scripts/embed-drift.mjs',
+	'scripts/embed-package.test.mjs',
 	'includes/class-gallery-renderer.php',
 	'tests/fixtures/embed/one-photo.json',
 	'package.json',

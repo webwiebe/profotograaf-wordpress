@@ -1,0 +1,152 @@
+{
+  "note": "Duotone on a grid: the gallery gets the duo class and the filter follows the tree.",
+  "attrs": {
+    "data-layout": "grid",
+    "data-duotone": "#000000 #ffffff"
+  },
+  "gallery": {
+    "id": "g1",
+    "title": "Spring wedding",
+    "layout": "masonry",
+    "url": "https://profotograaf.test/share/g/spring",
+    "badge": {
+      "show": true,
+      "prominent": false,
+      "url": "https://profotograaf.test/made-with?ref=embed-badge"
+    },
+    "photos": [
+      {
+        "id": "p1",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 1",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a1/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a1/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 2",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a2/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a2/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 3",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a3/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a3/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p4",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 4",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a4/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a4/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p5",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 5",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a5/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a5/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p6",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 6",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a6/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a6/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      }
+    ]
+  }
+}

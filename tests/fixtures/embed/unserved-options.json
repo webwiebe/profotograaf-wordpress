@@ -1,15 +1,6 @@
 {
-  "note": "Options embed.js reads that the PHP renderer does not draw. A gallery that sets one with a value goes back to embed.js (Declarative_Renderer::servable). A new option in embed.js fails Declarative_Capability_Test until it is served or listed here.",
+  "note": "Options embed.js reads that the PHP renderer does not draw. A gallery that sets one with a value goes back to embed.js (Declarative_Renderer::servable). A new option in embed.js fails Declarative_Capability_Test until it is served or listed here. data-ratio is served except for the value original, which Declarative_Look::needs_client sends back. data-sort is served except for random, and for title (alias name) on a host without the intl extension, which Declarative_Selection::needs_client sends back.",
   "options": {
-    "data-gutter": "spacing",
-    "data-frame": "tile styling",
-    "data-duotone": "tile styling",
-    "data-ratio": "tile shape",
-    "data-image-text": "text over image",
-    "data-link-to": "tile link target",
-    "data-link-new-tab": "tile link target",
-    "data-sort": "photo order",
-    "data-exclude": "photo filter",
     "data-per-page": "paging (#280)",
     "data-load-more": "paging (#280)"
   }
