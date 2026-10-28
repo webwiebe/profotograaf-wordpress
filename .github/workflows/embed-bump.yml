@@ -9,10 +9,13 @@ name: Embed bump
 # checks) decides the merge. There is no registry: the tarball stays committed
 # (professionals#2530).
 #
-# Needs the secret EMBED_BUMP_TOKEN: a fine-grained token with Contents (read)
-# on wiebe-xyz/professionals, to read its releases, and Contents plus Pull
-# requests (read and write) on this repository. The default token cannot read
-# the private platform repository, and a PR it opens does not start CI.
+# Needs two secrets, because a fine-grained token belongs to one owner:
+#   EMBED_READ_TOKEN  owner wiebe-xyz, Contents (read) on wiebe-xyz/professionals,
+#                     to read its releases. The default token cannot read the
+#                     private platform repository.
+#   EMBED_BUMP_TOKEN  owner webwiebe, Contents and Pull requests (read and write)
+#                     on this repository. A PR opened with the default token
+#                     does not start CI.
 #
 # By hand: run the workflow with a version. With dry_run on (the default) it
 # downloads, verifies and pins in the runner's checkout, and prints the diff
@@ -51,12 +54,13 @@ jobs:
     timeout-minutes: 10
     env:
       GH_TOKEN: ${{ secrets.EMBED_BUMP_TOKEN }}
+      READ_TOKEN: ${{ secrets.EMBED_READ_TOKEN }}
     steps:
       - name: Check the version and the token
         run: |
           set -euo pipefail
-          if [ -z "$GH_TOKEN" ]; then
-            echo "EMBED_BUMP_TOKEN is not set" >&2
+          if [ -z "$GH_TOKEN" ] || [ -z "$READ_TOKEN" ]; then
+            echo "EMBED_BUMP_TOKEN and EMBED_READ_TOKEN must both be set" >&2
             exit 1
           fi
           if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
@@ -69,6 +73,8 @@ jobs:
           token: ${{ secrets.EMBED_BUMP_TOKEN }}
 
       - name: Download the release tarball and verify it
+        env:
+          GH_TOKEN: ${{ secrets.EMBED_READ_TOKEN }}
         run: |
           set -euo pipefail
           dir="$RUNNER_TEMP/embed-release"
