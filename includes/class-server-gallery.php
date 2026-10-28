@@ -58,6 +58,15 @@ final class Server_Gallery {
 		$dutch = 0 === strpos( strtolower( get_locale() ), 'nl' );
 		$badge = $dutch ? 'Gemaakt met Profotograaf' : 'Made with Profotograaf';
 		$more  = $dutch ? 'Toon meer' : 'Show more';
-		return (string) Declarative_Renderer::render( $payload, array( 'data-layout' => $layout ) + $data, $badge, $more );
+		$arrow = $dutch
+			? array(
+				'prev' => 'Vorige foto',
+				'next' => 'Volgende foto',
+			)
+			: array(
+				'prev' => 'Previous photo',
+				'next' => 'Next photo',
+			);
+		return (string) Declarative_Renderer::render( $payload, array( 'data-layout' => $layout ) + $data, $badge, $more, $arrow );
 	}
 }

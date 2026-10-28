@@ -196,7 +196,8 @@ class Declarative_Renderer_Test extends TestCase {
 
 	public function test_the_client_draws_what_the_server_does_not(): void {
 		$gallery = $this->fixture( 'one-photo' )['gallery'];
-		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-layout' => 'slideshow' ) ) );
+		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-sort' => 'random' ) ) );
+		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-layout' => 'slideshow', 'data-ratio' => 'original' ) ) );
 		$this->assertNull( Declarative_Renderer::render( $this->fixture( 'empty-gallery' )['gallery'], array() ) );
 	}
 
@@ -302,15 +303,25 @@ class Declarative_Renderer_Test extends TestCase {
 		$this->assertStringNotContainsString( '"onmouseover', (string) Declarative_Renderer::render( $gallery, $attrs ) );
 	}
 
-	public function test_the_slideshow_fixture_is_not_served(): void {
-		$fixture = $this->fixture( 'slideshow' );
-		$this->assertNull( Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] ) );
+	public function test_a_slideshow_draws_its_first_slide_and_ignores_the_page_size(): void {
+		$gallery = $this->fixture( 'many-photos' )['gallery'];
+		$html    = (string) Declarative_Renderer::render( $gallery, array( 'data-layout' => 'slideshow', 'data-per-page' => '2' ) );
+		$this->assertSame( 1, substr_count( $html, 'class="tile' ) );
+		$this->assertStringNotContainsString( 'class="more"', $html );
+		$this->assertStringContainsString( 'loading="eager"', $html );
+	}
+
+	public function test_a_slideshow_names_its_arrows_in_the_page_language(): void {
+		$gallery = $this->fixture( 'one-photo' )['gallery'];
+		$html    = (string) Declarative_Renderer::render( $gallery, array( 'data-layout' => 'slideshow' ), 'Badge', 'Meer', array( 'prev' => 'Vorige foto', 'next' => 'Volgende foto' ) );
+		$this->assertStringContainsString( 'aria-label="Vorige foto"', $html );
+		$this->assertStringContainsString( 'aria-label="Volgende foto"', $html );
 	}
 
 	public function test_a_platform_layout_name_maps_to_the_drawn_layout(): void {
 		$gallery = $this->fixture( 'one-photo' )['gallery'];
 		$this->assertStringContainsString( 'gallery grid', (string) Declarative_Renderer::render( $gallery, array( 'data-layout' => 'instagram' ) ) );
-		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-layout' => 'parallax' ) ) );
+		$this->assertStringContainsString( 'gallery slideshow', (string) Declarative_Renderer::render( $gallery, array( 'data-layout' => 'parallax' ) ) );
 	}
 
 	public function test_a_look_value_the_script_rejects_is_drawn_as_the_default(): void {

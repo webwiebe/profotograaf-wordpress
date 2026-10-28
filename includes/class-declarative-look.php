@@ -134,6 +134,15 @@ final class Declarative_Look {
 	}
 
 	/**
+	 * Whether a fixed crop ratio is set, which a slideshow draws without its blurred backdrop.
+	 *
+	 * @param array<string,string> $attrs Host attributes.
+	 */
+	public static function has_ratio( array $attrs ): bool {
+		return null !== self::ratio( $attrs['data-ratio'] ?? '' );
+	}
+
+	/**
 	 * Whether the grow hover is on, which marks each tile for the script's stylesheet.
 	 *
 	 * @param array<string,string> $attrs Host attributes.

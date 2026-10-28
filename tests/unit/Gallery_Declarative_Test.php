@@ -86,7 +86,7 @@ class Gallery_Declarative_Test extends Gallery_Test_Case {
 	public function test_a_gallery_the_server_cannot_draw_still_reserves_its_space(): void {
 		$this->http->reply( 200, $this->payload() );
 
-		$html = $this->server->render( array( 'id' => 'g-1', 'layout' => 'slideshow' ) );
+		$html = $this->server->render( array( 'id' => 'g-1', 'layout' => 'masonry', 'sort' => 'random' ) );
 
 		$this->assertStringContainsString( 'style="--pf-ar:', $html );
 	}
@@ -101,7 +101,7 @@ class Gallery_Declarative_Test extends Gallery_Test_Case {
 	public function test_a_gallery_the_server_cannot_draw_keeps_only_the_host_div(): void {
 		$this->http->reply( 200, $this->payload() );
 
-		$html = $this->server->render( array( 'id' => 'g-1', 'layout' => 'slideshow' ) );
+		$html = $this->server->render( array( 'id' => 'g-1', 'layout' => 'masonry', 'sort' => 'random' ) );
 
 		$this->assertStringNotContainsString( '<template', $html );
 		$this->assertStringContainsString( 'This gallery needs JavaScript', $html );

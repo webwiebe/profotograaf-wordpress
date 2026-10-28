@@ -1,0 +1,65 @@
+{
+  "note": "A slideshow whose slide links to the photo file.",
+  "attrs": {
+    "data-layout": "slideshow",
+    "data-lightbox": "off",
+    "data-link-to": "file"
+  },
+  "gallery": {
+    "id": "g1",
+    "title": "Spring wedding",
+    "layout": "masonry",
+    "url": "https://profotograaf.test/share/g/spring",
+    "badge": {
+      "show": true,
+      "prominent": false,
+      "url": "https://profotograaf.test/made-with?ref=embed-badge"
+    },
+    "photos": [
+      {
+        "id": "p1",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 1",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a1/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a1/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 2",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a2/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a2/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      }
+    ]
+  }
+}

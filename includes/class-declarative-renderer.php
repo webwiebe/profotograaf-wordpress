@@ -17,9 +17,9 @@ defined( 'ABSPATH' ) || exit;
  * golden files (tests/fixtures/embed). embed.js adopts the result when it loads.
  *
  * It draws what a server can draw without measuring anything: grid and masonry
- * (one ordered list, no columns), captions off, below or overlay, the lightbox
- * tile and the badge. Every other option, a slideshow or an empty gallery gives
- * null, and the page keeps the host div for embed.js to draw.
+ * (one ordered list, no columns), a slideshow at its first slide, captions off,
+ * below or overlay, the lightbox tile and the badge. Every other option or an
+ * empty gallery gives null, and the page keeps the host div for embed.js to draw.
  *
  * Every value from the payload is escaped where it is written.
  */
@@ -65,7 +65,7 @@ final class Declarative_Renderer {
 	 *
 	 * @var string[]
 	 */
-	private const SERVED_LAYOUTS = array( 'grid', 'masonry' );
+	private const SERVED_LAYOUTS = array( 'grid', 'masonry', 'slideshow' );
 
 	/**
 	 * The declarative shadow root for a gallery, or null when embed.js has to draw it.
@@ -74,8 +74,9 @@ final class Declarative_Renderer {
 	 * @param array<string,string> $attrs   The host div's attributes, by name.
 	 * @param string               $badge   Badge text, in the page language.
 	 * @param string               $more    Show more button text, in the page language.
+	 * @param array<string,string> $labels  Slideshow arrow labels, `prev` and `next`, in the page language.
 	 */
-	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf', string $more = 'Show more' ): ?string {
+	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf', string $more = 'Show more', array $labels = array() ): ?string {
 		if ( Declarative_Selection::needs_client( $attrs ) ) {
 			return null;
 		}
@@ -92,19 +93,56 @@ final class Declarative_Renderer {
 			'target'   => Declarative_Links::target( $attrs ),
 			'new_tab'  => Declarative_Links::new_tab( $attrs ),
 		);
-		$tiles    = '';
-		foreach ( Declarative_Paging::first_page( $photos, $attrs ) as $i => $photo ) {
-			$tiles .= self::tile( (array) $photo, $gallery, (int) $i, $layout, $captions, $grow, $options );
-		}
-		$classes = implode( ' ', array_merge( array( 'gallery', $layout ), $duotone ? array( 'duo' ) : array(), Declarative_Look::classes( $attrs, $layout ) ) );
-		$style   = Declarative_Look::style( $attrs, $layout, Declarative_Paging::column_count( $attrs, count( $photos ) ) );
-		$style   = '' === $style ? '' : ' style="' . self::esc( $style ) . '"';
-		$css     = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
+		$body     = self::body( $photos, $gallery, $layout, $captions, $grow, $options, $attrs, array( $more, $labels ) );
+		$classes  = implode( ' ', array_merge( array( 'gallery', $layout ), $duotone ? array( 'duo' ) : array(), Declarative_Look::classes( $attrs, $layout ) ) );
+		$style    = Declarative_Look::style( $attrs, $layout, Declarative_Paging::column_count( $attrs, count( $photos ) ) );
+		$style    = '' === $style ? '' : ' style="' . self::esc( $style ) . '"';
+		$css      = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
 		return '<template shadowrootmode="open"><style>' . ( false === $css ? '' : $css ) . '</style>'
-			. '<div class="pf"><div class="' . $classes . '"' . $style . '><div class="photos">' . $tiles . '</div>' . Declarative_Paging::more( $attrs, count( $photos ), $more ) . '</div></div>'
+			. '<div class="pf"><div class="' . $classes . '"' . $style . '>' . $body . '</div></div>'
 			. ( $duotone ? Declarative_Duotone::svg( $duotone ) : '' )
 			. self::badge( (array) ( $gallery['badge'] ?? array() ), $attrs, $badge )
 			. '</template>';
+	}
+
+	/**
+	 * The gallery's content: the first slide of a slideshow, else the grid or masonry list.
+	 *
+	 * @param array<int,mixed>        $photos   The selected photos.
+	 * @param array<string,mixed>     $gallery  The embed API payload.
+	 * @param string                  $layout   grid, masonry or slideshow.
+	 * @param string                  $captions off, below or overlay.
+	 * @param bool                    $grow     The grow hover is on.
+	 * @param array<string,mixed>     $options  lightbox, target and new_tab.
+	 * @param array<string,string>    $attrs    Host attributes.
+	 * @param array<int|string,mixed> $texts    The Show more text, then the slideshow arrow labels.
+	 */
+	private static function body( array $photos, array $gallery, string $layout, string $captions, bool $grow, array $options, array $attrs, array $texts ): string {
+		if ( 'slideshow' !== $layout ) {
+			return self::list( $photos, $gallery, $layout, $captions, $grow, $options, $attrs, (string) $texts[0] );
+		}
+		$first = self::tile( (array) $photos[0], $gallery, 0, $layout, $captions, $grow, $options );
+		return Declarative_Slides::html( $first, (array) $photos[0], count( $photos ), (string) ( $gallery['title'] ?? '' ), Declarative_Look::has_ratio( $attrs ), (array) $texts[1] );
+	}
+
+	/**
+	 * The grid or masonry list: the first page of tiles and the Show more button.
+	 *
+	 * @param array<int,mixed>     $photos   The selected photos.
+	 * @param array<string,mixed>  $gallery  The embed API payload.
+	 * @param string               $layout   grid or masonry.
+	 * @param string               $captions off, below or overlay.
+	 * @param bool                 $grow     The grow hover is on.
+	 * @param array<string,mixed>  $options  lightbox, target and new_tab.
+	 * @param array<string,string> $attrs    Host attributes.
+	 * @param string               $more     Show more button text.
+	 */
+	private static function list( array $photos, array $gallery, string $layout, string $captions, bool $grow, array $options, array $attrs, string $more ): string {
+		$tiles = '';
+		foreach ( Declarative_Paging::first_page( $photos, $attrs ) as $i => $photo ) {
+			$tiles .= self::tile( (array) $photo, $gallery, (int) $i, $layout, $captions, $grow, $options );
+		}
+		return '<div class="photos">' . $tiles . '</div>' . Declarative_Paging::more( $attrs, count( $photos ), $more );
 	}
 
 	/**
@@ -184,10 +222,15 @@ final class Declarative_Renderer {
 	 * @param array<string,mixed> $options  lightbox (bool), target (link target) and new_tab (bool).
 	 */
 	private static function tile( array $photo, array $gallery, int $i, string $layout, string $captions, bool $grow, array $options ): string {
-		$alt    = self::alt( $photo, (string) ( $gallery['title'] ?? '' ), $i );
-		$text   = self::caption( $photo, $captions );
-		$mark   = $grow ? ' u' : '';
-		$button = self::shell( $photo, $gallery, $alt, '' === $text ? $mark : '', $options, self::image( $photo, $alt, 'grid' === $layout ) );
+		$alt   = self::alt( $photo, (string) ( $gallery['title'] ?? '' ), $i );
+		$text  = self::caption( $photo, $captions );
+		$mark  = $grow ? ' u' : '';
+		$image = self::image( $photo, $alt, 'grid' === $layout, 0 === $i && 'slideshow' === $layout );
+		if ( '' !== $text && 'overlay' === $captions && 'slideshow' === $layout ) {
+			// A slideshow lays an overlay caption inside the tile, over the photo.
+			return self::shell( $photo, $gallery, $alt, $mark, $options, $image . '<span class="cap">' . self::esc( $text ) . '</span>' );
+		}
+		$button = self::shell( $photo, $gallery, $alt, '' === $text ? $mark : '', $options, $image );
 		if ( '' === $text ) {
 			return $button;
 		}
@@ -260,8 +303,9 @@ final class Declarative_Renderer {
 	 * @param array<string,mixed> $photo  Photo.
 	 * @param string              $alt    Alt text.
 	 * @param bool                $square Grid layout: the square thumbs stay in the srcset.
+	 * @param bool                $eager  The first slide of a slideshow loads at once.
 	 */
-	private static function image( array $photo, string $alt, bool $square ): string {
+	private static function image( array $photo, string $alt, bool $square, bool $eager = false ): string {
 		$images = array_values( (array) ( $photo['images'] ?? array() ) );
 		$width  = (int) ( $photo['width'] ?? 0 );
 		$height = (int) ( $photo['height'] ?? 0 );
@@ -274,7 +318,7 @@ final class Declarative_Renderer {
 		if ( $width && $height ) {
 			$out .= ' width="' . $width . '" height="' . $height . '"';
 		}
-		return $out . ' loading="lazy" decoding="async" draggable="false">';
+		return $out . ' loading="' . ( $eager ? 'eager' : 'lazy' ) . '" decoding="async" draggable="false">';
 	}
 
 	/**
