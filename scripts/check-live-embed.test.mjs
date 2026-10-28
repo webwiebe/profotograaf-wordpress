@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { adoptionMarkers, missingMarkers } from './check-live-embed.mjs';
 
 const MORE = '.pf > .gallery > .more';
@@ -21,6 +23,13 @@ test( 'a live script that lacks a selector of the pinned one is reported', () =>
 test( 'a live script with every selector, or one that has more, passes', () => {
 	const pinned = `"${ MORE }"`;
 	assert.deepEqual( missingMarkers( pinned, `"${ MORE }","${ SLIDES }"` ), [] );
+} );
+
+test( 'a live script that cannot be read exits 2, apart from the exit 1 of an old one', () => {
+	const script = fileURLToPath( new URL( './check-live-embed.mjs', import.meta.url ) );
+	const run = spawnSync( process.execPath, [ script, 'http://127.0.0.1:1/embed.js' ], { encoding: 'utf8' } );
+	assert.equal( run.status, 2 );
+	assert.match( run.stderr, /could not be read/ );
 } );
 
 test( 'the pinned package carries the selectors the check depends on', () => {
