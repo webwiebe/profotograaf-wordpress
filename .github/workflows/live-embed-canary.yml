@@ -38,10 +38,18 @@ jobs:
       - run: pnpm build
       - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
+      # An old live script fails the layout spec in confusing ways (a Show more
+      # that never adds tiles). Name that cause and skip the spec.
       - name: The live script is not older than the pinned one
+        id: gate
+        continue-on-error: true
         run: node scripts/check-live-embed.mjs
       - name: Layout spec against the live script
+        if: steps.gate.outcome == 'success'
         run: pnpm exec playwright test tests/e2e/embed-layout.spec.js
+      - name: Fail while the live script is older than the pinned one
+        if: steps.gate.outcome == 'failure'
+        run: exit 1
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
@@ -54,7 +62,12 @@ jobs:
         run: |
           number="$(gh issue list --state open --limit 100 --json number,title \
             --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
-          body="The layout spec failed against ${EMBED_SCRIPT_URL}. Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          run="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          if [ "${{ steps.gate.outcome }}" = "failure" ]; then
+            body="Not a flaky test: ${EMBED_SCRIPT_URL} is older than the embed the plugin pins and lacks the adoption code for markup the plugin draws on the server. Deploy the embed package to the platform. Run: ${run}"
+          else
+            body="The layout spec failed against ${EMBED_SCRIPT_URL}. Run: ${run}"
+          fi
           if [ -n "$number" ]; then
             gh issue comment "$number" --body "$body"
           else
