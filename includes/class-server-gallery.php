@@ -55,7 +55,9 @@ final class Server_Gallery {
 			set_transient( self::FAILED_PREFIX . $id, 1, MINUTE_IN_SECONDS );
 			return '';
 		}
-		$badge = 0 === strpos( strtolower( get_locale() ), 'nl' ) ? 'Gemaakt met Profotograaf' : 'Made with Profotograaf';
-		return (string) Declarative_Renderer::render( $payload, array( 'data-layout' => $layout ) + $data, $badge );
+		$dutch = 0 === strpos( strtolower( get_locale() ), 'nl' );
+		$badge = $dutch ? 'Gemaakt met Profotograaf' : 'Made with Profotograaf';
+		$more  = $dutch ? 'Toon meer' : 'Show more';
+		return (string) Declarative_Renderer::render( $payload, array( 'data-layout' => $layout ) + $data, $badge, $more );
 	}
 }
