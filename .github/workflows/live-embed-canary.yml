@@ -38,6 +38,8 @@ jobs:
       - run: pnpm build
       - run: tests/e2e/ci-env.sh
       - run: tests/e2e/up.sh
+      - name: The live script is not older than the pinned one
+        run: node scripts/check-live-embed.mjs
       - name: Layout spec against the live script
         run: pnpm exec playwright test tests/e2e/embed-layout.spec.js
       - uses: actions/upload-artifact@v7
