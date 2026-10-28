@@ -1998,7 +1998,7 @@ packages:
 
   '@profotograaf/embed@file:embed-package/profotograaf-embed-0.5.0.tgz':
     resolution: {integrity: sha512-Aamnwv6uTN+gQkh07GKFbZo8ShQc2cEtQwNcqgqGneFWZnXdCuL0buEmIbvlW3bWplw6gubKaq7aJo2i8Culnw==, tarball: file:embed-package/profotograaf-embed-0.5.0.tgz}
-    version: 0.4.0
+    version: 0.5.0
 
   '@puppeteer/browsers@3.2.3':
     resolution: {integrity: sha512-2Bt3m6dDAJqmZehn0wiXSYyQmuhyiHHZ7FjvrVaS1W2RoFGV6eCK71UvKYkNJjkwC1Q9nobjhvTMhLQztFVINA==}
