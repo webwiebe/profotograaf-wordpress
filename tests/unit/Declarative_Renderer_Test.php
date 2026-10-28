@@ -128,6 +128,17 @@ class Declarative_Renderer_Test extends TestCase {
 	}
 
 	/**
+	 * Skips a fixture with a title order on a host without intl: the server cannot collate there and leaves it to the script.
+	 *
+	 * @param array{attrs:array<string,string>,gallery:array<string,mixed>} $fixture Fixture.
+	 */
+	private function skip_without_intl( array $fixture ): void {
+		if ( in_array( strtolower( trim( $fixture['attrs']['data-sort'] ?? '' ) ), array( 'title', 'name' ), true ) && ! class_exists( '\Collator' ) ) {
+			$this->markTestSkipped( 'The title order needs the intl extension.' );
+		}
+	}
+
+	/**
 	 * Every served fixture draws the golden tree.
 	 *
 	 * @dataProvider served
@@ -135,9 +146,7 @@ class Declarative_Renderer_Test extends TestCase {
 	 */
 	public function test_a_served_fixture_draws_the_golden_tree( string $name ): void {
 		$fixture = $this->fixture( $name );
-		if ( in_array( strtolower( trim( $fixture['attrs']['data-sort'] ?? '' ) ), array( 'title', 'name' ), true ) && ! class_exists( '\Collator' ) ) {
-			$this->markTestSkipped( 'The title order needs the intl extension.' );
-		}
+		$this->skip_without_intl( $fixture );
 		$html = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] );
 		$this->assertNotNull( $html );
 		$this->assertSame( file_get_contents( self::FIXTURES . $name . '.server.html' ), $this->tree( (string) $html ) );
@@ -151,7 +160,8 @@ class Declarative_Renderer_Test extends TestCase {
 	 * @param string $name Fixture name.
 	 */
 	public function test_the_server_tree_is_the_client_tree_or_the_fixture_is_left_to_the_script( string $name ): void {
-		$fixture  = $this->fixture( $name );
+		$fixture = $this->fixture( $name );
+		$this->skip_without_intl( $fixture );
 		$expected = (string) file_get_contents( self::FIXTURES . $name . '.expected.html' );
 		$html     = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] );
 		if ( null === $html ) {
