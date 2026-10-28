@@ -29,7 +29,7 @@ test( 'the lockfile moves every tarball line and the integrity', () => {
 		'    version: 0.3.0',
 	].join( '\n' );
 	const after = repinLockfile( lock, NEW, 'sha512-NEW==' );
-	assert.match( after, /tarball: [^\n]*\n\s+version: 0\.4\.0$/, 'the version line is left on the old release' );
+	assert.match( after, /tarball: [^\n]*\n\s+version: 0\.4\.0$/, 'the version line did not move to the new release' );
 	assert.ok( ! after.includes( OLD ), 'an old tarball name is left' );
 	assert.match( after, /integrity: sha512-NEW==, tarball: file:embed-package\/profotograaf-embed-0\.4\.0\.tgz/ );
 	assert.throws( () => repinLockfile( 'nothing', NEW, 'sha512-x' ) );
