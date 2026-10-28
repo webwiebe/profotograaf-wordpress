@@ -17,13 +17,14 @@ class Declarative_Capability_Test extends TestCase {
 	private const FIXTURES = __DIR__ . '/../fixtures/embed/';
 
 	/**
-	 * The `data-*` names embed.js reads as options, without its own state attributes.
+	 * The `data-*` names embed.js reads as options, without its own state attributes
+	 * and without `data-platform`, which the script reads from its own tag.
 	 *
 	 * @return string[]
 	 */
 	private function script_options(): array {
 		preg_match_all( '/data-[a-z-]+/', (string) file_get_contents( self::EMBED ), $found );
-		$names = array_diff( array_unique( $found[0] ), array( 'data-profotograaf-gallery' ) );
+		$names = array_diff( array_unique( $found[0] ), array( 'data-profotograaf-gallery', 'data-platform' ) );
 		$names = array_filter( $names, static fn( $name ) => 0 !== strpos( $name, 'data-pf-' ) );
 		sort( $names );
 		return array_values( $names );
