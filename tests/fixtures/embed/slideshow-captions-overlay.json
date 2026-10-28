@@ -1,0 +1,87 @@
+{
+  "note": "A slideshow with overlay captions and a fixed ratio: no blurred backdrop.",
+  "attrs": {
+    "data-layout": "slideshow",
+    "data-captions": "overlay",
+    "data-ratio": "4/3"
+  },
+  "gallery": {
+    "id": "g1",
+    "title": "Spring wedding",
+    "layout": "masonry",
+    "url": "https://profotograaf.test/share/g/spring",
+    "badge": {
+      "show": true,
+      "prominent": false,
+      "url": "https://profotograaf.test/made-with?ref=embed-badge"
+    },
+    "photos": [
+      {
+        "id": "p1",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 1",
+        "title": "Title 1",
+        "caption": "Caption 1",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a1/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a1/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 2",
+        "title": "",
+        "caption": "Caption 2",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a2/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a2/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 3",
+        "title": "Title 3",
+        "caption": "Caption 3",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a3/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a3/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      }
+    ]
+  }
+}

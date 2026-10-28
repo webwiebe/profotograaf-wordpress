@@ -58,7 +58,8 @@ export function repinLockfile( lock, name, integrity ) {
 	}
 	return lock
 		.replace( file, `embed-package/${ name }` )
-		.replace( /(@profotograaf\/embed@file:[^\n]*\n\s+resolution: \{integrity: )sha512-[^,]+/, `$1${ integrity }` );
+		.replace( /(@profotograaf\/embed@file:[^\n]*\n\s+resolution: \{integrity: )sha512-[^,]+/, `$1${ integrity }` )
+		.replace( /(@profotograaf\/embed@file:[^\n]*\n[^\n]*\n\s+version: )[^\n]+/, `$1${ versionOf( name ) }` );
 }
 
 /**
