@@ -43,16 +43,22 @@ jobs:
       - name: The live script is not older than the pinned one
         id: gate
         run: |
-          if node scripts/check-live-embed.mjs; then
-            echo "older=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "older=true" >> "$GITHUB_OUTPUT"
-          fi
+          # Exit 0 current, 1 older than the pin, 2 could not be read.
+          code=0
+          node scripts/check-live-embed.mjs || code=$?
+          case "$code" in
+            0) echo "older=false" >> "$GITHUB_OUTPUT" ;;
+            1) echo "older=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "older=unreadable" >> "$GITHUB_OUTPUT" ;;
+          esac
       - name: Layout spec against the live script
         if: steps.gate.outputs.older == 'false'
         run: pnpm exec playwright test tests/e2e/embed-layout.spec.js
       - name: Fail while the live script is older than the pinned one
         if: steps.gate.outputs.older == 'true'
+        run: exit 1
+      - name: Fail when the live script could not be read
+        if: steps.gate.outputs.older == 'unreadable'
         run: exit 1
       - uses: actions/upload-artifact@v7
         if: failure()
@@ -68,7 +74,9 @@ jobs:
             --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
           run="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           if [ "${{ steps.gate.outputs.older }}" = "true" ]; then
-            body="Not a flaky test: ${EMBED_SCRIPT_URL} is older than the embed the plugin pins and lacks the adoption code for markup the plugin draws on the server. Deploy the embed package to the platform. Run: ${run}"
+            body="${EMBED_SCRIPT_URL} is older than the embed the plugin pins and lacks the adoption code for markup the plugin draws on the server. Deploy the embed package to the platform. Run: ${run}"
+          elif [ "${{ steps.gate.outputs.older }}" = "unreadable" ]; then
+            body="${EMBED_SCRIPT_URL} could not be read, so the version check did not run. A network or hosting problem stopped it. Run: ${run}"
           else
             body="The layout spec failed against ${EMBED_SCRIPT_URL}. Run: ${run}"
           fi

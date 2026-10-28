@@ -12,6 +12,8 @@
  *
  * Usage: node scripts/check-live-embed.mjs [url]
  *        url defaults to EMBED_SCRIPT_URL, then the platform's embed.js.
+ * Exit code: 0 the live script is current, 1 it is older than the pin, 2 it
+ *        could not be read (network error, bad status, or no pinned selectors).
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -46,12 +48,19 @@ if ( process.argv[ 1 ] && resolve( process.argv[ 1 ] ) === fileURLToPath( import
 		console.error( 'The pinned embed.js has no adoption selectors: the check would pass for any script.' );
 		process.exit( 2 );
 	}
-	const response = await fetch( url );
-	if ( ! response.ok ) {
-		console.error( `${ url } answered ${ response.status }` );
+	let live;
+	try {
+		const response = await fetch( url );
+		if ( ! response.ok ) {
+			console.error( `${ url } answered ${ response.status }` );
+			process.exit( 2 );
+		}
+		live = await response.text();
+	} catch ( error ) {
+		console.error( `${ url } could not be read: ${ error.message }` );
 		process.exit( 2 );
 	}
-	const missing = missingMarkers( pinned, await response.text() );
+	const missing = missingMarkers( pinned, live );
 	if ( missing.length ) {
 		console.error( `${ url } is older than the pinned embed: it lacks ${ missing.join( ', ' ) }.` );
 		console.error( 'Deploy the embed package to the platform before a plugin release draws this markup on the server.' );
