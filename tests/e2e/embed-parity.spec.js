@@ -12,8 +12,8 @@
 // It fails when the fixture embed.js predates adoption (professionals#2572) or
 // when the plugin's markup or stylesheet drifts from what the script expects.
 // Boxes are compared with each other, never against a pixel value. The pages
-// set no display option: the server draws a gallery only when every option it
-// sets is one the PHP renderer serves, and per_page is not (embed.js draws it).
+// set no display option, except the paged one at the end: the server draws a
+// gallery only when every option it sets is one the PHP renderer serves.
 const { test, expect } = require( '@playwright/test' );
 const { publishPost, shortcode, openEmbed } = require( './embed-helpers' );
 
@@ -128,4 +128,36 @@ test.describe( 'server markup and the adopted gallery', () => {
 			} );
 		}
 	}
+} );
+
+test.describe( 'a paged gallery', () => {
+	const PAGE = 4;
+
+	test( 'the server draws the first page and the button, and embed.js adds the later pages (#280)', async ( { browser } ) => {
+		const url = publishPost( 'Parity paged', shortcode( { per_page: String( PAGE ) } ) );
+
+		const server = await openServerOnly( browser, url, 820 );
+		const before = await readTiles( server.host );
+		expect( before, 'the server wrote no shadow root: the plugin sent no gallery markup' ).not.toBeNull();
+		expect( before.tiles ).toHaveLength( PAGE );
+		await expect( server.host.getByRole( 'button', { name: 'Show more' } ) ).toBeVisible();
+		await server.context.close();
+
+		const adopted = await openEmbed( browser, url, { width: 820, height: 900 } );
+		const galleryRequests = [];
+		adopted.page.on( 'request', ( request ) => {
+			if ( GALLERY_API.test( request.url() ) ) {
+				galleryRequests.push( request.url() );
+			}
+		} );
+		await adopted.page.reload();
+		await expect( adopted.host ).toHaveAttribute( 'data-pf-state', 'drawn' );
+		await expect( adopted.host.locator( '.photos .tile' ) ).toHaveCount( PAGE );
+		await expect.poll( () => galleryRequests.length, { message: 'embed.js fetches the later pages once' } ).toBe( 1 );
+
+		await adopted.host.getByRole( 'button', { name: 'Show more' } ).click();
+		await expect.poll( () => adopted.host.locator( '.photos .tile' ).count() ).toBeGreaterThan( PAGE );
+		expect( adopted.problems ).toEqual( [] );
+		await adopted.context.close();
+	} );
 } );

@@ -56,6 +56,8 @@ final class Declarative_Renderer {
 		'data-exclude',
 		'data-image-text',
 		'data-duotone',
+		'data-per-page',
+		'data-load-more',
 	);
 
 	/**
@@ -71,8 +73,9 @@ final class Declarative_Renderer {
 	 * @param array<string,mixed>  $gallery The embed API payload.
 	 * @param array<string,string> $attrs   The host div's attributes, by name.
 	 * @param string               $badge   Badge text, in the page language.
+	 * @param string               $more    Show more button text, in the page language.
 	 */
-	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf' ): ?string {
+	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf', string $more = 'Show more' ): ?string {
 		if ( Declarative_Selection::needs_client( $attrs ) ) {
 			return null;
 		}
@@ -90,15 +93,15 @@ final class Declarative_Renderer {
 			'new_tab'  => Declarative_Links::new_tab( $attrs ),
 		);
 		$tiles    = '';
-		foreach ( $photos as $i => $photo ) {
+		foreach ( Declarative_Paging::first_page( $photos, $attrs ) as $i => $photo ) {
 			$tiles .= self::tile( (array) $photo, $gallery, (int) $i, $layout, $captions, $grow, $options );
 		}
 		$classes = implode( ' ', array_merge( array( 'gallery', $layout ), $duotone ? array( 'duo' ) : array(), Declarative_Look::classes( $attrs, $layout ) ) );
-		$style   = Declarative_Look::style( $attrs, $layout, count( $photos ) );
+		$style   = Declarative_Look::style( $attrs, $layout, Declarative_Paging::column_count( $attrs, count( $photos ) ) );
 		$style   = '' === $style ? '' : ' style="' . self::esc( $style ) . '"';
 		$css     = file_get_contents( __DIR__ . '/embed-shadow.css' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reads a file shipped with the plugin.
 		return '<template shadowrootmode="open"><style>' . ( false === $css ? '' : $css ) . '</style>'
-			. '<div class="pf"><div class="' . $classes . '"' . $style . '><div class="photos">' . $tiles . '</div></div></div>'
+			. '<div class="pf"><div class="' . $classes . '"' . $style . '><div class="photos">' . $tiles . '</div>' . Declarative_Paging::more( $attrs, count( $photos ), $more ) . '</div></div>'
 			. ( $duotone ? Declarative_Duotone::svg( $duotone ) : '' )
 			. self::badge( (array) ( $gallery['badge'] ?? array() ), $attrs, $badge )
 			. '</template>';

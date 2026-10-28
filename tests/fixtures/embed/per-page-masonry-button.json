@@ -1,0 +1,549 @@
+{
+  "note": "The first page in columns, with the button.",
+  "attrs": {
+    "data-layout": "masonry",
+    "data-per-page": "2",
+    "data-load-more": "true"
+  },
+  "gallery": {
+    "id": "g1",
+    "title": "Spring wedding",
+    "layout": "masonry",
+    "url": "https://profotograaf.test/share/g/spring",
+    "badge": {
+      "show": true,
+      "prominent": false,
+      "url": "https://profotograaf.test/made-with?ref=embed-badge"
+    },
+    "photos": [
+      {
+        "id": "p1",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 1",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a1/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a1/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 2",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a2/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a2/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 3",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a3/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a3/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p4",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 4",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a4/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a4/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p5",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 5",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a5/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a5/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p6",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 6",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a6/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a6/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p7",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 7",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a7/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a7/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p8",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 8",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a8/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a8/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p9",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 9",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a9/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a9/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p10",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 10",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a10/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a10/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p11",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 11",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a11/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a11/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p12",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 12",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a12/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a12/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p13",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 13",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a13/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a13/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p14",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 14",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a14/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a14/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p15",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 15",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a15/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a15/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p16",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 16",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a16/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a16/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p17",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 17",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a17/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a17/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p18",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 18",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a18/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a18/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p19",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 19",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a19/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a19/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p20",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 20",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a20/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a20/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p21",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 21",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a21/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a21/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      },
+      {
+        "id": "p22",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 22",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a22/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a22/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p23",
+        "width": 3000,
+        "height": 2000,
+        "alt": "Photo 23",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a23/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a23/web-v1.jpg",
+            "width": 1600,
+            "height": 1067
+          }
+        ]
+      },
+      {
+        "id": "p24",
+        "width": 2000,
+        "height": 3000,
+        "alt": "Photo 24",
+        "title": "",
+        "caption": "",
+        "images": [
+          {
+            "variant": "thumb",
+            "url": "https://profotograaf.test/share/img/a24/thumb-v1.jpg",
+            "width": 400,
+            "height": 400
+          },
+          {
+            "variant": "web",
+            "url": "https://profotograaf.test/share/img/a24/web-v1.jpg",
+            "width": 1067,
+            "height": 1600
+          }
+        ]
+      }
+    ]
+  }
+}

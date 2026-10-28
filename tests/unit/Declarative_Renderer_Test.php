@@ -198,8 +198,38 @@ class Declarative_Renderer_Test extends TestCase {
 		$gallery = $this->fixture( 'one-photo' )['gallery'];
 		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-layout' => 'slideshow' ) ) );
 		$this->assertNull( Declarative_Renderer::render( $this->fixture( 'empty-gallery' )['gallery'], array() ) );
-		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-load-more' => 'on' ) ) );
-		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-per-page' => '2' ) ) );
+	}
+
+	public function test_a_paged_gallery_draws_the_first_page_and_the_show_more_button(): void {
+		$gallery = $this->fixture( 'many-photos' )['gallery'];
+		$html    = (string) Declarative_Renderer::render( $gallery, array( 'data-per-page' => '2' ) );
+		$this->assertSame( 2, substr_count( $html, 'class="tile"' ) );
+		$this->assertStringContainsString( '<button class="more" type="button">Show more</button></div></div>', $html );
+		$dutch = (string) Declarative_Renderer::render( $gallery, array( 'data-per-page' => '2' ), 'Gemaakt met Profotograaf', 'Toon meer' );
+		$this->assertStringContainsString( '>Toon meer</button>', $dutch );
+	}
+
+	public function test_the_show_more_button_is_hidden_when_the_first_page_holds_every_photo(): void {
+		$gallery = $this->fixture( 'many-photos' )['gallery'];
+		$html    = (string) Declarative_Renderer::render( $gallery, array( 'data-per-page' => '500' ) );
+		$this->assertStringContainsString( '<button class="more" type="button" hidden>', $html );
+		$this->assertSame( count( $gallery['photos'] ), substr_count( $html, 'class="tile"' ) );
+	}
+
+	public function test_a_paged_gallery_without_the_button_draws_only_the_first_page(): void {
+		$gallery = $this->fixture( 'many-photos' )['gallery'];
+		$html    = (string) Declarative_Renderer::render( $gallery, array( 'data-per-page' => '2', 'data-load-more' => 'off' ) );
+		$this->assertSame( 2, substr_count( $html, 'class="tile"' ) );
+		$this->assertStringNotContainsString( 'class="more"', $html );
+	}
+
+	public function test_a_page_size_the_script_rejects_draws_every_photo(): void {
+		$gallery = $this->fixture( 'many-photos' )['gallery'];
+		foreach ( array( '0', '501', 'abc', '2.5' ) as $size ) {
+			$html = (string) Declarative_Renderer::render( $gallery, array( 'data-per-page' => $size ) );
+			$this->assertSame( count( $gallery['photos'] ), substr_count( $html, 'class="tile"' ), $size );
+			$this->assertStringNotContainsString( 'class="more"', $html, $size );
+		}
 	}
 
 	public function test_the_random_sort_is_left_to_the_client(): void {
