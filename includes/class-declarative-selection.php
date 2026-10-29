@@ -16,8 +16,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * The title sort compares with the ICU collation `localeCompare` uses, through
  * PHP's intl Collator (the server's English order, as the golden files pin it).
- * A host without intl, and the random sort, go to embed.js: needs_client()
- * sends those galleries there.
+ * A host without intl goes to embed.js: needs_client()
+ * sends that gallery there.
+ *
+ * The random sort is a shuffle from a seed (Declarative_Shuffle). A page the
+ * server draws holds one seeded order, and a cached page keeps it; embed.js
+ * draws a fresh shuffle once it adopts the page.
  */
 final class Declarative_Selection {
 
@@ -43,13 +47,12 @@ final class Declarative_Selection {
 	);
 
 	/**
-	 * Whether the sort needs the browser: a fresh shuffle, or a title order on a host without intl.
+	 * Whether the sort needs the browser: a title order on a host without intl.
 	 *
 	 * @param array<string,string> $attrs Host attributes.
 	 */
 	public static function needs_client( array $attrs ): bool {
-		$sort = self::sort( $attrs );
-		return 'random' === $sort || ( 'title' === $sort && ! class_exists( '\Collator' ) );
+		return 'title' === self::sort( $attrs ) && ! class_exists( '\Collator' );
 	}
 
 	/**
@@ -57,9 +60,10 @@ final class Declarative_Selection {
 	 *
 	 * @param array<int,mixed>     $photos Payload photos.
 	 * @param array<string,string> $attrs  Host attributes.
+	 * @param int|null             $seed   Seed of the random sort; a fresh one when null.
 	 * @return array<int,array<string,mixed>>
 	 */
-	public static function select( array $photos, array $attrs ): array {
+	public static function select( array $photos, array $attrs, ?int $seed = null ): array {
 		$exclude = self::exclude( $attrs );
 		$text    = self::image_text( $attrs );
 		$out     = array();
@@ -73,6 +77,9 @@ final class Declarative_Selection {
 		$sort = self::sort( $attrs );
 		if ( 'reverse' === $sort ) {
 			return array_reverse( $out );
+		}
+		if ( 'random' === $sort ) {
+			return Declarative_Shuffle::order( $out, $seed ?? random_int( 1, 0x7FFFFFFF ) );
 		}
 		return 'title' === $sort ? self::by_title( $out ) : $out;
 	}

@@ -75,12 +75,13 @@ final class Declarative_Renderer {
 	 * @param string               $badge   Badge text, in the page language.
 	 * @param string               $more    Show more button text, in the page language.
 	 * @param array<string,string> $labels  Slideshow arrow labels, `prev` and `next`, in the page language.
+	 * @param int|null             $seed    Seed of the random sort; a fresh one when null.
 	 */
-	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf', string $more = 'Show more', array $labels = array() ): ?string {
+	public static function render( array $gallery, array $attrs, string $badge = 'Made with Profotograaf', string $more = 'Show more', array $labels = array(), ?int $seed = null ): ?string {
 		if ( Declarative_Selection::needs_client( $attrs ) ) {
 			return null;
 		}
-		$photos = Declarative_Selection::select( array_values( (array) ( $gallery['photos'] ?? array() ) ), $attrs );
+		$photos = Declarative_Selection::select( array_values( (array) ( $gallery['photos'] ?? array() ) ), $attrs, $seed );
 		$layout = self::layout( $attrs, (string) ( $gallery['layout'] ?? '' ) );
 		if ( ! $photos || ! in_array( $layout, self::SERVED_LAYOUTS, true ) || ! self::servable( $attrs ) ) {
 			return null;
