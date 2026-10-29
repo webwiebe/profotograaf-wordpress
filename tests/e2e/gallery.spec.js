@@ -121,7 +121,9 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		const embed = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
 		await expect( embed ).toHaveAttribute( 'data-layout', 'slideshow' );
-		await expect( embed.getByRole( 'link', { name: 'Spring wedding' } ) ).toBeVisible();
+		// The server drew the first slide, so the light-DOM fallback link is not rendered; it stays in the markup.
+		await expect( embed.locator( '.slides .tile' ).first() ).toBeVisible();
+		await expect( embed.locator( ':scope > a' ) ).toHaveAttribute( 'href', /\/share\/g\/spring-wedding$/ );
 		await expect( page.locator( 'script[src*="/embed/embed"]' ) ).toHaveCount( 1 );
 		await visitor.close();
 	} );
