@@ -41,7 +41,10 @@ module.exports = defineConfig( {
 	fullyParallel: false,
 	workers: 1,
 	retries: process.env.CI ? 1 : 0,
-	reporter: process.env.CI ? [ [ 'list' ], [ 'html', { open: 'never' } ] ] : 'list',
+	// The JSON result names the failed spec files for the BugBarn report.
+	reporter: process.env.CI
+		? [ [ 'list' ], [ 'html', { open: 'never' } ], [ 'json', { outputFile: 'test-results/results.json' } ] ]
+		: 'list',
 	expect: {
 		toHaveScreenshot: { animations: 'disabled', caret: 'hide', maxDiffPixelRatio: 0.02 },
 	},

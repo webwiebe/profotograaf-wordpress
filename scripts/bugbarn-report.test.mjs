@@ -2,7 +2,9 @@
 // The tests run the script against a local server that records the requests.
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import http from "node:http";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -95,6 +97,60 @@ describe("bugbarn-report.sh", () => {
   it("fails on an unknown command", async () => {
     const { code } = await run(["nope"], configured());
     assert.notEqual(code, 0);
+  });
+
+  describe("e2e", () => {
+    const spec = (ok) => ({ title: "a spec", ok, tests: [] });
+    const results = {
+      suites: [
+        { title: "gallery.spec.js", file: "gallery.spec.js", specs: [], suites: [{ title: "block", specs: [spec(true), spec(false)] }] },
+        { title: "embed-visual.spec.js", file: "embed-visual.spec.js", specs: [spec(false)], suites: [] },
+        { title: "backup-status.spec.js", file: "backup-status.spec.js", specs: [spec(true)], suites: [] },
+      ],
+    };
+    const withResults = async (data, fn) => {
+      const dir = await mkdtemp(path.join(tmpdir(), "bb-e2e-"));
+      const file = path.join(dir, "results.json");
+      if (data) await writeFile(file, JSON.stringify(data));
+      try {
+        return await fn(file);
+      } finally {
+        await rm(dir, { recursive: true });
+      }
+    };
+
+    it("names the WordPress version and every failed spec file, and only those", async () => {
+      await withResults(results, async (file) => {
+        const { code } = await run(["e2e", "7.1", file], configured());
+        assert.equal(code, 0);
+        const [request] = requests;
+        assert.equal(request.body.body, "E2E failed on WordPress 7.1 (wp71): embed-visual.spec.js, gallery.spec.js");
+        assert.equal(request.body.exception.message, request.body.body);
+        assert.equal(request.body.severityText, "ERROR");
+      });
+    });
+
+    it("keeps two WordPress versions apart once BugBarn has collapsed the numbers", async () => {
+      await withResults(results, async (file) => {
+        await run(["e2e", "6.9", file], configured());
+        assert.match(requests[0].body.body, /\(wp69\)/);
+      });
+    });
+
+    it("sends a leg that gates no release at the severity it is given", async () => {
+      await withResults(results, async (file) => {
+        await run(["e2e", "7.0", file, "WARNING"], configured());
+        assert.equal(requests[0].body.severityText, "WARNING");
+      });
+    });
+
+    it("still reports a run that left no result", async () => {
+      await withResults(null, async (file) => {
+        const { code } = await run(["e2e", "7.1", file], configured());
+        assert.equal(code, 0);
+        assert.equal(requests[0].body.body, "E2E failed on WordPress 7.1 (wp71): the run stopped before any spec result");
+      });
+    });
   });
 
   it("fails when BugBarn refuses the post, so a broken marker is seen", async () => {
