@@ -196,7 +196,6 @@ class Declarative_Renderer_Test extends TestCase {
 
 	public function test_the_client_draws_what_the_server_does_not(): void {
 		$gallery = $this->fixture( 'one-photo' )['gallery'];
-		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-sort' => 'random' ) ) );
 		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-layout' => 'slideshow', 'data-ratio' => 'original' ) ) );
 		$this->assertNull( Declarative_Renderer::render( $this->fixture( 'empty-gallery' )['gallery'], array() ) );
 	}
@@ -233,9 +232,22 @@ class Declarative_Renderer_Test extends TestCase {
 		}
 	}
 
-	public function test_the_random_sort_is_left_to_the_client(): void {
+	public function test_the_random_sort_is_drawn_in_the_order_of_a_seed(): void {
+		$gallery = $this->fixture( 'many-photos' )['gallery'];
+		$attrs   = array( 'data-sort' => ' random ' );
+		$first   = (string) Declarative_Renderer::render( $gallery, $attrs, 'Made with Profotograaf', 'Show more', array(), 7 );
+		$again   = (string) Declarative_Renderer::render( $gallery, $attrs, 'Made with Profotograaf', 'Show more', array(), 7 );
+		$other   = (string) Declarative_Renderer::render( $gallery, $attrs, 'Made with Profotograaf', 'Show more', array(), 8 );
+		$plain   = (string) Declarative_Renderer::render( $gallery, array() );
+		$this->assertSame( $first, $again );
+		$this->assertNotSame( $first, $other );
+		$this->assertNotSame( $first, $plain );
+		$this->assertSame( substr_count( $plain, 'class="tile"' ), substr_count( $first, 'class="tile"' ) );
+		$this->assertNotNull( Declarative_Renderer::render( $gallery, $attrs ), 'without a seed the renderer picks one' );
+	}
+
+	public function test_the_sorts_the_server_cannot_order_are_left_to_the_client(): void {
 		$gallery = $this->fixture( 'sort-reverse' )['gallery'];
-		$this->assertNull( Declarative_Renderer::render( $gallery, array( 'data-sort' => ' random ' ) ) );
 		foreach ( array( 'title', 'Name' ) as $sort ) {
 			// A host without intl cannot order by the locale's collation, so the script draws it.
 			$drawn = Declarative_Renderer::render( $gallery, array( 'data-sort' => $sort ) );
