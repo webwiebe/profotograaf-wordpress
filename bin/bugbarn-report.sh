@@ -5,6 +5,13 @@
 #
 #   bin/bugbarn-report.sh release <tag>       release marker for a v* tag
 #   bin/bugbarn-report.sh event <message>     one ERROR event with the run link
+#   bin/bugbarn-report.sh e2e <wp> <results.json> [severity]
+#                                             one event for a failed E2E leg, with the
+#                                             WordPress version and the failed spec
+#                                             files in the message, so a new cause
+#                                             opens its own issue; severity defaults
+#                                             to ERROR, a leg that gates no release
+#                                             sends WARNING
 #   bin/bugbarn-report.sh debug-log < log     one event per distinct PHP fatal or
 #                                             warning line of a WordPress debug.log
 #
@@ -40,10 +47,10 @@ run_url() {
 }
 
 event() {
-	local message="$1" body
-	body="$(jq -n --arg message "$message" --arg run "$(run_url)" --arg sha "${GITHUB_SHA:-}" --arg when "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '{
+	local message="$1" severity="${2:-ERROR}" body
+	body="$(jq -n --arg message "$message" --arg severity "$severity" --arg run "$(run_url)" --arg sha "${GITHUB_SHA:-}" --arg when "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '{
 		timestamp: $when,
-		severityText: "ERROR",
+		severityText: $severity,
 		body: $message,
 		exception: { type: "CIError", message: $message },
 		attributes: { environment: "ci", run: $run, commit: $sha },
@@ -63,6 +70,18 @@ event)
 	event "${1:?usage: bugbarn-report.sh event <message>}"
 	echo "Posted the event to BugBarn."
 	;;
+e2e)
+	wp="${1:?usage: bugbarn-report.sh e2e <wp> <results.json> [severity]}"
+	results="${2:?usage: bugbarn-report.sh e2e <wp> <results.json> [severity]}"
+	files=""
+	if [[ -f "$results" ]]; then
+		files="$(jq -r '[.suites[] | select(any(.. | objects | select(has("ok")); .ok == false)) | .file] | unique | join(", ")' "$results")"
+	fi
+	# BugBarn collapses every number in a message, so the version also goes in as a
+	# token without digit boundaries ("wp71"); 7.1 and 6.9 then stay apart.
+	event "E2E failed on WordPress ${wp} (wp${wp//./}): ${files:-the run stopped before any spec result}" "${3:-ERROR}"
+	echo "Posted the event to BugBarn."
+	;;
 debug-log)
 	count=0
 	while IFS= read -r line; do
@@ -75,7 +94,7 @@ debug-log)
 	echo "Posted ${count} PHP error(s) from the debug log to BugBarn."
 	;;
 *)
-	echo "usage: bugbarn-report.sh release <tag> | event <message> | debug-log" >&2
+	echo "usage: bugbarn-report.sh release <tag> | event <message> | e2e <wp> <results.json> [severity] | debug-log" >&2
 	exit 2
 	;;
 esac

@@ -118,7 +118,9 @@ jobs:
         env:
           BUGBARN_ENDPOINT: ${{ vars.BUGBARN_ENDPOINT }}
           BUGBARN_API_KEY: ${{ secrets.BUGBARN_API_KEY }}
-        run: bin/bugbarn-report.sh event "E2E failed on WordPress ${{ matrix.wp }}"
+        # Only the 7.1 leg gates a release (the pre-release run uses it). The older
+        # majors report at warning level, and each cause opens its own issue.
+        run: bin/bugbarn-report.sh e2e "${{ matrix.wp }}" test-results/results.json "${{ matrix.wp == '7.1' && 'ERROR' || 'WARNING' }}"
       - name: Report PHP errors of the test site to BugBarn
         if: always()
         env:
