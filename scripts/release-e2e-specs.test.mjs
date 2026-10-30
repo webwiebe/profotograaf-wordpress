@@ -14,6 +14,14 @@ test("a gallery renderer change selects the gallery and embed specs", () => {
   assert.ok(!specs.includes("tests/e2e/backup.spec.js"));
 });
 
+test("server-drawn markup and the embed pin select the parity specs", () => {
+  for (const file of ["includes/class-declarative-renderer.php", "embed-package/profotograaf-embed-0.6.0.tgz"]) {
+    const specs = specsFor([file]);
+    assert.ok(specs.includes("tests/e2e/embed-parity.spec.js"), file);
+    assert.ok(specs.includes("tests/e2e/no-remote-code.spec.js"), file);
+  }
+});
+
 test("the full-page block and the backup code select their own specs", () => {
   assert.deepEqual(specsFor(["includes/class-full-page-renderer.php"]), ["tests/e2e/full-page.spec.js"]);
   assert.deepEqual(specsFor(["includes/class-backup-worker.php"]), ["tests/e2e/backup-status.spec.js", "tests/e2e/backup.spec.js"]);
