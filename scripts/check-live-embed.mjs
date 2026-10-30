@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * Fails when the embed.js the platform serves cannot drive the markup the
- * plugin draws on the server.
+ * Reports when the embed.js the platform serves is older than the plugin's pin.
  *
- * The plugin draws galleries as declarative shadow DOM and the script adopts
- * that markup. Each server-drawn feature is adopted through selectors of the
- * form `.pf > .gallery > .more` (Show more) or `.pf > .gallery > .slides` (the
+ * Plugin pages load the bundled script (build/embed/embed.js), so this does not
+ * affect them and does not stop a release. live-embed-canary.yml runs it first
+ * because the layout spec fails in confusing ways against an older script.
+ *
+ * Each server-drawn feature is adopted through selectors of the form
+ * `.pf > .gallery > .more` (Show more) or `.pf > .gallery > .slides` (the
  * slideshow). The pinned package (embed-package/*.tgz, installed in
- * node_modules) holds every selector the plugin relies on; a live script that
- * lacks one is older than the plugin and leaves that feature inert.
+ * node_modules) holds every selector; a live script that lacks one is older
+ * than the pin.
  *
  * Usage: node scripts/check-live-embed.mjs [url]
  *        url defaults to EMBED_SCRIPT_URL, then the platform's embed.js.
@@ -63,7 +65,7 @@ if ( process.argv[ 1 ] && resolve( process.argv[ 1 ] ) === fileURLToPath( import
 	const missing = missingMarkers( pinned, live );
 	if ( missing.length ) {
 		console.error( `${ url } is older than the pinned embed: it lacks ${ missing.join( ', ' ) }.` );
-		console.error( 'Deploy the embed package to the platform before a plugin release draws this markup on the server.' );
+		console.error( 'Plugin pages load the bundled script and are not affected. Ship a platform release that carries the pinned embed.' );
 		process.exit( 1 );
 	}
 	console.log( `${ url } carries every adoption selector of the pinned embed.` );
