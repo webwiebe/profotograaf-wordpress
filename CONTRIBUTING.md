@@ -154,7 +154,7 @@ A plain `make e2e` runs chromium. Set `E2E_BROWSER_MATRIX=1` to add Firefox, Web
 
 #### Live canary
 
-`.github/workflows/live-embed-canary.yml` runs `embed-layout.spec.js` every day against the `embed.js` that `https://profotograaf.nl/share/embed/embed.js` serves, instead of the pinned fixture. `EMBED_SCRIPT_URL` does this: `openEmbed` fetches the script request from that URL while the API stays the mock. To try it locally, run `EMBED_SCRIPT_URL=https://profotograaf.nl/share/embed/embed.js pnpm exec playwright test tests/e2e/embed-layout.spec.js`. A failure opens the issue "Live embed.js canary failed", or comments on the open one, and the next pass closes it. A red canary with a green fixture run means the platform changed `embed.js`: refresh the fixture and fix the plugin or report the gap.
+`.github/workflows/live-embed-canary.yml` runs `embed-layout.spec.js` every day against the `embed.js` that `https://profotograaf.nl/share/embed/embed.js` serves, instead of the pinned fixture. `EMBED_SCRIPT_URL` does this: `openEmbed` fetches the script request from that URL while the API stays the mock. To try it locally, run `EMBED_SCRIPT_URL=https://profotograaf.nl/share/embed/embed.js pnpm exec playwright test tests/e2e/embed-layout.spec.js`. A failure opens the issue "Live embed.js canary failed", or comments on the open one, and the next pass closes it. A red canary with a green fixture run means the platform changed `embed.js`: refresh the fixture and fix the plugin or report the gap. A failure that says the live script is older than the pin means the platform has not shipped the pinned embed yet. Plugin pages load the bundled script, so that failure reports platform lag and does not stop a plugin release.
 
 #### Refreshing the fixture
 

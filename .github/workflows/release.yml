@@ -53,9 +53,9 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-node-pnpm
       - run: bin/check-version.sh "${GITHUB_REF_NAME}"
-      # The release draws markup on the server that the platform's script has
-      # to adopt: stop here while the script it serves is older than the pin.
-      - run: node scripts/check-live-embed.mjs
+      # The zip carries its own embed.js (build/embed), so a release does not
+      # depend on the script the platform serves. live-embed-canary.yml reports
+      # when that script lags behind the pin.
       - run: pnpm build
       - run: bin/build-release.sh --zip
       - run: bin/check-release-zip.sh

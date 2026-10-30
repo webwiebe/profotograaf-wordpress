@@ -3,7 +3,8 @@ name: Live embed.js canary
 # Runs the layout spec against the embed.js the platform serves today instead
 # of the pinned copy in tests/e2e/fixtures. The API stays the mock platform. A
 # failure opens one issue, or comments on the one that is already open. A pass
-# closes it.
+# closes it. Plugin pages load the bundled script, so a failure reports platform
+# lag and does not stop a plugin release.
 
 on:
   schedule:
@@ -74,7 +75,7 @@ jobs:
             --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
           run="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           if [ "${{ steps.gate.outputs.older }}" = "true" ]; then
-            body="${EMBED_SCRIPT_URL} is older than the embed the plugin pins and lacks the adoption code for markup the plugin draws on the server. Deploy the embed package to the platform. Run: ${run}"
+            body="${EMBED_SCRIPT_URL} is older than the embed the plugin pins. Plugin pages load the bundled script and are not affected. Ship a platform release that carries the pinned embed. Run: ${run}"
           elif [ "${{ steps.gate.outputs.older }}" = "unreadable" ]; then
             body="${EMBED_SCRIPT_URL} could not be read, so the version check did not run. A network or hosting problem stopped it. Run: ${run}"
           else
