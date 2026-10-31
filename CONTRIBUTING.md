@@ -128,7 +128,7 @@ Do not run `phpcbf` and commit the result unread. It rewrites string values it c
 
 `WP_VERSION` and `PHP_VERSION` pick the WordPress and PHP image for `make e2e`.
 
-`WP_PORT` (default 8080) and `MOCK_PORT` (default 8090) are the ports the stack publishes on the host. In CI, `tests/e2e/ci-env.sh` gives each job a free pair and its own `COMPOSE_PROJECT_NAME`, so two jobs can run on one host. The mock platform builds its public URLs from `MOCK_PUBLIC_ORIGIN`, which the compose file sets from `MOCK_PORT`. The `mock-platform:8090` name inside the compose network stays the same.
+`WP_PORT` (default 8080) and `MOCK_PORT` (default 8090) are the ports the stack publishes on the host. In CI, `tests/e2e/ci-env.sh` gives each job a free pair and its own `COMPOSE_PROJECT_NAME`, so two jobs can run on one host. Outside CI, `pnpm install` writes a gitignored `tests/e2e/.env` with a `COMPOSE_PROJECT_NAME` for that checkout, so stacks from two worktrees keep their own containers and volumes. The default ports stay shared, so a second local stack needs its own `WP_PORT` and `MOCK_PORT`. Run `make e2e-down` before removing a worktree: the stack keeps its name after the folder is gone. The mock platform builds its public URLs from `MOCK_PUBLIC_ORIGIN`, which the compose file sets from `MOCK_PORT`. The `mock-platform:8090` name inside the compose network stays the same.
 
 ### The embed.js fixture
 
