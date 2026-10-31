@@ -64,7 +64,7 @@ node scripts/diff-coverage.mjs --base origin/main --format clover \
 
 ## Dependencies
 
-`.github/dependabot.yml` opens weekly, grouped pull requests for GitHub Actions, npm (pnpm) and Composer: TypeScript with oxlint and knip, `@wordpress/*`, the test tooling, and PHPCS/WPCS and PHPStan each have a group, and remaining dev dependencies share one. Dependabot waits three days after a release before proposing it.
+`.github/dependabot.yml` is paused for now with `open-pull-requests-limit: 0`. When active it opens weekly, grouped pull requests for GitHub Actions, npm (pnpm) and Composer: TypeScript with oxlint and knip, `@wordpress/*`, the test tooling, and PHPCS/WPCS and PHPStan each have a group, and remaining dev dependencies share one. Dependabot waits three days after a release before proposing it.
 
 Three settings live outside the manifests, all in `pnpm-workspace.yaml`: an override of `serialize-javascript` to a patched release (a high advisory in a transitive dependency of `@wordpress/scripts`), `allowBuilds`, which lists the packages whose install scripts stay off, and `auditConfig.ignoreGhsas`, which skips GHSA-vfj7-8cjw-p6xm.
 

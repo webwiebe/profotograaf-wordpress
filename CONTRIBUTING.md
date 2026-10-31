@@ -176,7 +176,7 @@ GitHub Actions on the self-hosted macOS arm64 runners (`runs-on: [self-hosted, b
 - `live-embed-canary.yml`: daily, runs the layout spec against the live `embed.js` and keeps one issue for failures.
 - `update-e2e-snapshots.yml`: manual or by label, regenerates the snapshot baselines of the runner's platform and uploads them as an artifact.
 - `wp-tested-up-to.yml`: weekly, installs a newer WordPress release, runs the tests and opens a pull request that raises "Tested up to".
-- `dependabot.yml`: weekly, grouped updates for actions, npm and composer.
+- `dependabot.yml`: weekly, grouped updates for actions, npm and composer. Paused for now with `open-pull-requests-limit: 0`.
 
 ## Releasing
 
