@@ -18,3 +18,4 @@ composer.phar
 /coverage/
 /.tools/
 /.pnpm-store/
+/tests/e2e/.env

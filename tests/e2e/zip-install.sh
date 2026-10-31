@@ -11,6 +11,8 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 if [[ -n "${GITHUB_RUN_ID:-}" ]]; then
 	export COMPOSE_PROJECT_NAME="profotograaf-zip-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}-$$"
 fi
+# Compose reads tests/e2e/.env for this file too, and its COMPOSE_PROJECT_NAME is the main stack.
+export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-profotograaf-zip}"
 compose=(docker compose -f "$root/tests/e2e/docker-compose.zip.yml")
 version="$(sed -n 's/^ \* Version: *//p' "$root/profotograaf.php" | head -1 | tr -d '[:space:]')"
 zip="/zips/profotograaf-$version.zip"
