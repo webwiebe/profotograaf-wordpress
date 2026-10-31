@@ -1,4 +1,7 @@
 // @ts-check
+const { mkdirSync } = require( 'node:fs' );
+const { tmpdir } = require( 'node:os' );
+const { join } = require( 'node:path' );
 const { defineConfig, devices } = require( '@playwright/test' );
 
 // Chromium runs every spec. Firefox, WebKit and a phone profile run only the
@@ -13,12 +16,21 @@ const CHROMIUM_LAUNCH = {
 	args: [ '--disable-features=LocalNetworkAccessChecks,LocalNetworkAccessChecksWebSockets,PrivateNetworkAccessSendPreflights' ],
 };
 const LAYOUT_SPECS = /embed-(layout|options)\.spec\.js$/;
-// Playwright's Firefox build exits with "Could not find profile folder" on the
-// macOS runner for any profile path (#338), so Firefox runs on Linux only.
-const FIREFOX = process.platform === 'darwin' ? [] : [ { name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ] } } ];
+// macOS can deny access to ~/Library/Application Support/Firefox (EPERM), and
+// Playwright's Firefox build then exits with "Could not find profile folder" for
+// any profile path (#338). On macOS it gets a home of its own through
+// CFFIXED_USER_HOME.
+const firefoxLaunch = () => {
+	if ( process.platform !== 'darwin' ) {
+		return {};
+	}
+	const home = join( tmpdir(), 'profotograaf-e2e-firefox-home' );
+	mkdirSync( home, { recursive: true } );
+	return { env: { ...process.env, CFFIXED_USER_HOME: home } };
+};
 const matrix = process.env.E2E_BROWSER_MATRIX
 	? [
-			...FIREFOX,
+			{ name: 'firefox', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Firefox' ], launchOptions: firefoxLaunch() } },
 			{ name: 'webkit', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Desktop Safari' ] } },
 			{ name: 'mobile-chrome', testMatch: LAYOUT_SPECS, use: { ...devices[ 'Pixel 7' ], launchOptions: CHROMIUM_LAUNCH } },
 	  ]
