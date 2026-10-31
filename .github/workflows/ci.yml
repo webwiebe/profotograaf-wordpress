@@ -18,9 +18,11 @@ concurrency:
 permissions:
   contents: read
 
+# Every job runs for pull requests from branches in this repository only.
 jobs:
   js-quality:
     name: JS quality (gate tests, oxlint, tsc, knip, file length, workflows, vitest, audit)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
@@ -52,6 +54,7 @@ jobs:
 
   php-quality:
     name: PHP quality (PHPCS, PHPStan, composer audit)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
@@ -78,6 +81,7 @@ jobs:
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }})
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     strategy:
       fail-fast: false
@@ -96,6 +100,7 @@ jobs:
   coverage:
     name: Coverage (diff gate, cliff guard)
     needs: js-quality
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
@@ -132,6 +137,7 @@ jobs:
 
   i18n:
     name: Translations (stale .pot, hardcoded strings, untranslated locales)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
@@ -145,6 +151,7 @@ jobs:
 
   blocks:
     name: Block build
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
@@ -153,6 +160,7 @@ jobs:
 
   plugin-check:
     name: Plugin Check
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
@@ -167,6 +175,7 @@ jobs:
 
   zip-install:
     name: Release zip (structure, install on a clean WordPress)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, build]
     steps:
       - uses: actions/checkout@v7
