@@ -99,6 +99,42 @@ function block( attributes = {} ) {
 	return `<!-- wp:profotograaf/gallery ${ JSON.stringify( all ) } /-->`;
 }
 
+// The cancel messages of Firefox, Chromium and WebKit for a request the page
+// itself dropped.
+const ABORTED = /NS_BINDING_ABORTED|net::ERR_ABORTED|cancelled/i;
+
+/**
+ * Records failed requests in `problems`. A request the page cancelled counts
+ * only while no request for the same URL has finished: embed.js sets an
+ * image's src before its srcset and loading attributes, and Firefox then
+ * cancels the first load and starts the same URL again (nightly runs
+ * 41422216442 and 41807629987). A cancelled load that never comes back stays
+ * a problem.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string[]} problems
+ */
+function trackFailedRequests( page, problems ) {
+	/** @type {Set<string>} */
+	const finished = new Set();
+	page.on( 'requestfinished', ( request ) => {
+		const url = request.url();
+		finished.add( url );
+		const text = 'aborted: ' + url;
+		for ( let i = problems.indexOf( text ); i !== -1; i = problems.indexOf( text ) ) {
+			problems.splice( i, 1 );
+		}
+	} );
+	page.on( 'requestfailed', ( request ) => {
+		const url = request.url();
+		if ( ! ABORTED.test( request.failure()?.errorText ?? '' ) ) {
+			problems.push( 'failed: ' + url );
+		} else if ( ! finished.has( url ) ) {
+			problems.push( 'aborted: ' + url );
+		}
+	} );
+}
+
 /**
  * Opens a page in a fresh context with the platform host mapped to the mock and
  * every console error and failed request recorded.
@@ -152,7 +188,7 @@ async function openEmbed( browser, url, viewport = { width: 1440, height: 900 },
 		}
 	} );
 	page.on( 'pageerror', ( error ) => problems.push( 'pageerror: ' + error.message ) );
-	page.on( 'requestfailed', ( request ) => problems.push( 'failed: ' + request.url() ) );
+	trackFailedRequests( page, problems );
 	page.on( 'response', ( response ) => {
 		if ( response.status() >= 400 ) {
 			problems.push( `${ response.status() }: ${ response.url() }` );
