@@ -6,7 +6,7 @@ WP_CLI_IMAGE ?= wordpress:cli-php8.3
 PHP_COV_IMAGE ?= profotograaf-php-cov
 PNPM = . scripts/use-pnpm.sh &&
 
-.PHONY: install lint test build e2e e2e-up e2e-down wporg-screenshots plugin-check pot po mo json i18n i18n-check zip quality quality-js quality-php phpstan coverage-php php-cov-image composer-audit
+.PHONY: install lint test build e2e e2e-up e2e-down wporg-screenshots docs-screenshots plugin-check pot po mo json i18n i18n-check zip quality quality-js quality-php phpstan coverage-php php-cov-image composer-audit
 
 install:
 	$(DOCKER_RUN) -e COMPOSER_CACHE_DIR=/tmp/cc composer:2 install --no-interaction --no-progress
@@ -76,6 +76,13 @@ e2e: e2e-up
 wporg-screenshots: build e2e-up
 	$(PNPM) WPORG_SCREENSHOTS=1 pnpm exec playwright test; status=$$?; \
 		if [ $$status -eq 0 ]; then python3 assets/wporg/optimise.py; status=$$?; fi; \
+		$(MAKE) e2e-down; exit $$status
+
+# Takes the WordPress admin screenshots of the ProFotograaf public docs in four
+# languages into test-results/docs-shots/<locale>/: starts the E2E stack,
+# captures them and stops the stack.
+docs-screenshots: build e2e-up
+	$(PNPM) DOCS_SCREENSHOTS=1 pnpm exec playwright test; status=$$?; \
 		$(MAKE) e2e-down; exit $$status
 
 plugin-check: e2e-up
