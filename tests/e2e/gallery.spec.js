@@ -314,9 +314,9 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 	} );
 
 	test( 'a gallery page announces the platform host early and holds space for the photos', async ( { browser } ) => {
-		const url = publishPost( 'Performance E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9" sort="random"] [profotograaf_gallery id="g-e2e"]' );
-		// sort="random" keeps the host client-drawn: a gallery the server draws holds its own height and reserves no space.
-		const shaped = 'div[data-profotograaf-gallery="g-e2e"][data-ratio="16:9"]';
+		const url = publishPost( 'Performance E2E', '[profotograaf_gallery id="g-e2e-error" ratio="16-9"] [profotograaf_gallery id="g-e2e"]' );
+		// The mock platform answers g-e2e-error with a 503, so the server cannot draw that host and the script has to: a gallery the server draws holds its own height and reserves no space.
+		const shaped = 'div[data-profotograaf-gallery="g-e2e-error"][data-ratio="16:9"]';
 
 		// A visitor whose script has not drawn the gallery yet: the host holds the
 		// ratio of the gallery. With the script blocked the gallery never draws.
@@ -341,7 +341,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 	} );
 
 	test( 'the host box is at least as tall as the gallery drawn inside it', async ( { browser } ) => {
-		const url = publishPost( 'Overflow E2E', '[profotograaf_gallery id="g-e2e" ratio="16-9" sort="random" layout="grid"]' );
+		const url = publishPost( 'Overflow E2E', '[profotograaf_gallery id="g-e2e-error" ratio="16-9" layout="grid"]' );
 
 		const visitor = await browser.newContext();
 		const page = await visitor.newPage();
@@ -350,7 +350,7 @@ test.describe( 'Gallery block, shortcode and oEmbed', () => {
 
 		// Stand in for embed.js: draw content taller than the reserved space into
 		// a shadow root. The box keeps its ratio and grows with the content.
-		const host = page.locator( 'div[data-profotograaf-gallery="g-e2e"]' );
+		const host = page.locator( 'div[data-profotograaf-gallery="g-e2e-error"]' );
 		await host.evaluate( ( el ) => {
 			const root = el.shadowRoot || el.attachShadow( { mode: 'open' } );
 			const tall = document.createElement( 'div' );
