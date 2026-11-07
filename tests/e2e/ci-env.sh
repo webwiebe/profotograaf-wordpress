@@ -10,6 +10,9 @@ free_port() {
 
 : "${GITHUB_ENV:?runs only inside a GitHub Actions job}"
 
+# Stacks an earlier job could not tear down because the daemon died under it.
+"$(dirname "${BASH_SOURCE[0]}")/sweep-orphans.sh"
+
 {
 	# The random suffix keeps matrix legs of one job apart.
 	echo "COMPOSE_PROJECT_NAME=profotograaf-e2e-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}-${GITHUB_JOB}-${RANDOM}"
