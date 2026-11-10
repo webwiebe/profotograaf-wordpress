@@ -41,17 +41,33 @@ final class Option_Job_Store implements Job_Store {
 	public function all(): array {
 		global $wpdb;
 
-		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the queue is a set of options found by prefix.
-			$wpdb->prepare(
-				"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s ORDER BY option_id ASC LIMIT %d",
-				$wpdb->esc_like( self::PREFIX ) . '%',
-				self::LIMIT
+		// Every pending job is read (the queue caps them), so a long run of failed
+		// jobs cannot push the newest enquiries out of view. Failed jobs are
+		// kept for 90 days, so only the newest LIMIT of them are read.
+		$like    = $wpdb->esc_like( self::PREFIX ) . '%';
+		$pending = '%' . $wpdb->esc_like( '"status":"pending"' ) . '%';
+		$rows    = array_merge(
+			(array) $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the queue is a set of options found by prefix.
+				$wpdb->prepare(
+					"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value LIKE %s ORDER BY option_id ASC",
+					$like,
+					$pending
+				),
+				ARRAY_A
 			),
-			ARRAY_A
+			(array) $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the queue is a set of options found by prefix.
+				$wpdb->prepare(
+					"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value NOT LIKE %s ORDER BY option_id DESC LIMIT %d",
+					$like,
+					$pending,
+					self::LIMIT
+				),
+				ARRAY_A
+			)
 		);
 
 		$jobs = array();
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+		foreach ( $rows as $row ) {
 			$job = json_decode( (string) $row['option_value'], true );
 			if ( is_array( $job ) ) {
 				$jobs[ substr( (string) $row['option_name'], strlen( self::PREFIX ) ) ] = $job;
