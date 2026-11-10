@@ -68,6 +68,10 @@ jobs:
         run: |
           gh release create "${GITHUB_REF_NAME}" dist/profotograaf.zip "dist/profotograaf-${GITHUB_REF_NAME#v}.zip" \
             --title "${GITHUB_REF_NAME}" --generate-notes
+      # The wordpress.org flavour (no update source) replaces dist/profotograaf;
+      # the GitHub release above is already created from the default build.
+      - run: bin/build-release.sh --wporg
+      - run: bin/check-release-zip.sh --wporg
       - name: Deploy to wordpress.org
         if: env.SVN_USERNAME != '' && env.SVN_PASSWORD != ''
         uses: 10up/action-wordpress-plugin-deploy@2.3.0

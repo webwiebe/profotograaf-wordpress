@@ -8,7 +8,8 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 compose=(docker compose -f "$root/tests/e2e/docker-compose.yml")
 port="${WP_PORT:-8080}"
 
-"$root/bin/build-release.sh"
+# WPORG_BUILD=1 builds the wordpress.org flavour, which Plugin Check reviews.
+"$root/bin/build-release.sh" ${WPORG_BUILD:+--wporg}
 
 "${compose[@]}" up -d --wait db wordpress mock-platform
 

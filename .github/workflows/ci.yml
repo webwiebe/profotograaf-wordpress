@@ -168,7 +168,10 @@ jobs:
       # The release copy holds the built blocks, so Plugin Check reviews them too.
       - run: pnpm build
       - run: tests/e2e/ci-env.sh
+      # The wordpress.org flavour: Plugin Check rejects the GitHub update source.
       - run: tests/e2e/up.sh
+        env:
+          WPORG_BUILD: '1'
       - run: tests/e2e/plugin-check.sh
       - if: always()
         run: docker compose -f tests/e2e/docker-compose.yml down -v
@@ -188,3 +191,6 @@ jobs:
       - run: tests/e2e/zip-install.sh
       # An older install updates itself through the GitHub release update source.
       - run: tests/e2e/update-install.sh
+      # The wordpress.org flavour has no update source, and the release deploys that build.
+      - run: bin/build-release.sh --wporg
+      - run: bin/check-release-zip.sh --wporg
