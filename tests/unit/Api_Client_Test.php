@@ -9,6 +9,7 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;
+use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
 
@@ -233,6 +234,17 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertTrue( ( new Connection() )->is_connected() );
 	}
 
+	public function test_a_rejected_refresh_request_keeps_the_connection(): void {
+		$this->connect( 10 );
+		Actions\expectDone( 'profotograaf_disconnected' )->never();
+		$this->http->reply( 400, array( 'error' => 'bad request' ) );
+
+		$result = $this->api->list_galleries();
+
+		$this->assertWPError( $result, 'profotograaf_http' );
+		$this->assertTrue( ( new Connection() )->is_connected() );
+	}
+
 	public function test_a_refresh_in_flight_elsewhere_is_not_repeated(): void {
 		$this->connect( 10 );
 		$this->options['profotograaf_refresh_lock'] = $this->now - 5;
@@ -251,6 +263,48 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->http->reply( 200, array() );
 
 		$this->assertSame( array(), $this->api->list_galleries() );
+	}
+
+	public function test_only_one_of_two_requests_that_saw_a_stale_lock_takes_it(): void {
+		$this->options['profotograaf_refresh_lock'] = ( $this->now - 600 ) . ':old';
+		$late                                       = new Connection();
+		$GLOBALS['wpdb']->on_read                   = function (): void {
+			// Another request takes the stale lock between this one's read and its write.
+			$this->options['profotograaf_refresh_lock'] = $this->now . ':other';
+		};
+
+		$this->assertFalse( $late->acquire_lock( $this->now ) );
+		$this->assertSame( $this->now . ':other', $this->options['profotograaf_refresh_lock'] );
+	}
+
+	public function test_a_run_that_outlived_the_lock_does_not_release_the_next_holders(): void {
+		$slow = new Connection();
+		$this->assertTrue( $slow->acquire_lock( $this->now ) );
+		// The lock expired and another request took it over.
+		Functions\when( 'wp_generate_uuid4' )->justReturn( 'next-holder' );
+		$next = new Connection();
+		$this->assertTrue( $next->acquire_lock( $this->now + 120 ) );
+
+		$slow->release_lock();
+
+		$this->assertStringEndsWith( ':next-holder', $this->options['profotograaf_refresh_lock'] );
+		$this->assertFalse( ( new Connection() )->acquire_lock( $this->now + 121 ) );
+	}
+
+	public function test_a_flag_does_not_write_back_a_token_pair_a_refresh_just_replaced(): void {
+		$this->connect( 10, 'old-access', 'old-refresh' );
+		$connection               = new Connection();
+		$GLOBALS['wpdb']->on_read = function (): void {
+			// A refresh stores a rotated pair between the flag's read and its write.
+			$this->options['profotograaf_connection']['access_token']  = 'new-access';
+			$this->options['profotograaf_connection']['refresh_token'] = 'new-refresh';
+		};
+
+		$connection->flag_write_denied();
+
+		$this->assertSame( 'new-refresh', $this->options['profotograaf_connection']['refresh_token'] );
+		$this->assertSame( 'new-access', $this->options['profotograaf_connection']['access_token'] );
+		$this->assertTrue( $this->options['profotograaf_connection']['write_denied'] );
 	}
 
 	public function test_a_transport_error_becomes_a_retryable_wp_error(): void {

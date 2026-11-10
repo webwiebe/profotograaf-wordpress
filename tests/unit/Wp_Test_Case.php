@@ -97,6 +97,10 @@ abstract class Wp_Test_Case extends TestCase {
 			}
 		);
 		Functions\when( 'wp_cache_delete' )->justReturn( true );
+		Functions\when( 'maybe_serialize' )->alias( fn( $value ) => is_array( $value ) ? serialize( $value ) : $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- stub of the WordPress helper.
+		Functions\when( 'maybe_unserialize' )->alias( fn( $value ) => is_string( $value ) && 0 === strpos( $value, 'a:' ) ? unserialize( $value ) : $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- stub of the WordPress helper.
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- a fake database over $this->options.
+		$GLOBALS['wpdb'] = $this->options_db();
 		Functions\when( 'wp_json_encode' )->alias( fn( $value ) => json_encode( $value ) );
 		Functions\when( 'wp_parse_url' )->alias( fn( $url, $component = -1 ) => parse_url( $url, $component ) );
 		Functions\when( 'home_url' )->justReturn( 'https://photos.example.com' );
@@ -105,6 +109,68 @@ abstract class Wp_Test_Case extends TestCase {
 		Functions\when( 'is_email' )->alias( fn( $email ) => false !== filter_var( $email, FILTER_VALIDATE_EMAIL ) ? $email : false );
 		Functions\when( 'wp_generate_uuid4' )->justReturn( '11111111-2222-4333-8444-555555555555' );
 		Functions\when( 'sanitize_key' )->alias( fn( $key ) => strtolower( preg_replace( '/[^a-z0-9_\-]/i', '', (string) $key ) ) );
+	}
+
+	/**
+	 * A $wpdb whose options table is $this->options: get_var, update and delete
+	 * with an old-value condition, which is what the compare-and-swap code uses.
+	 */
+	private function options_db(): object {
+		$options = &$this->options;
+		return new class( $options ) {
+			public $options = 'wp_options';
+
+			/**
+			 * Called once after the next get_var, to change the table between a read and a write.
+			 *
+			 * @var callable|null
+			 */
+			public $on_read = null;
+
+			private $rows;
+
+			public function __construct( array &$rows ) {
+				$this->rows = &$rows;
+			}
+
+			public function prepare( $sql, ...$args ) {
+				return array( $sql, $args );
+			}
+
+			private static function raw( $value ) {
+				return is_array( $value ) ? serialize( $value ) : (string) $value; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- compares the stored text the way the database holds it.
+			}
+
+			public function get_var( $query ) {
+				$name   = $query[1][0] ?? '';
+				$result = array_key_exists( $name, $this->rows ) ? self::raw( $this->rows[ $name ] ) : null;
+				if ( null !== $this->on_read ) {
+					$hook          = $this->on_read;
+					$this->on_read = null;
+					$hook();
+				}
+				return $result;
+			}
+
+			public function update( $table, $data, $where ) {
+				$name = $where['option_name'];
+				if ( ! array_key_exists( $name, $this->rows ) || self::raw( $this->rows[ $name ] ) !== (string) $where['option_value'] ) {
+					return 0;
+				}
+				$new                 = $data['option_value'];
+				$this->rows[ $name ] = is_string( $new ) && 0 === strpos( $new, 'a:' ) ? unserialize( $new ) : $new; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- the fake options table stores arrays as PHP values.
+				return 1;
+			}
+
+			public function delete( $table, $where ) {
+				$name = $where['option_name'];
+				if ( ! array_key_exists( $name, $this->rows ) || self::raw( $this->rows[ $name ] ) !== (string) $where['option_value'] ) {
+					return 0;
+				}
+				unset( $this->rows[ $name ] );
+				return 1;
+			}
+		};
 	}
 
 	/**

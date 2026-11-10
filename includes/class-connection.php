@@ -17,6 +17,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Connection {
 
+	use Connection_Refresh_Lock;
+
 	public const OPTION         = 'profotograaf_connection';
 	public const PAIRING_OPTION = 'profotograaf_pairing';
 	public const INSTALL_ID     = 'profotograaf_install_id';
@@ -120,12 +122,15 @@ class Connection {
 	 * @param int $revision Config::SCOPE_REVISION at the time of pairing.
 	 */
 	public function record_grant( int $revision ): void {
-		$data                   = $this->data();
-		$data['scope_revision'] = $revision;
-		$data['embed_denied']   = false;
-		$data['write_denied']   = false;
-		$data['leads_denied']   = false;
-		$this->write( $data );
+		$this->mutate(
+			static function ( array $data ) use ( $revision ): array {
+				$data['scope_revision'] = $revision;
+				$data['embed_denied']   = false;
+				$data['write_denied']   = false;
+				$data['leads_denied']   = false;
+				return $data;
+			}
+		);
 	}
 
 	/**
@@ -133,24 +138,30 @@ class Connection {
 	 * the leads:write scope (a 403).
 	 */
 	public function flag_leads_denied(): void {
-		$data = $this->data();
-		if ( $data['leads_denied'] ) {
-			return;
-		}
-		$data['leads_denied'] = true;
-		$this->write( $data );
+		$this->mutate(
+			static function ( array $data ): ?array {
+				if ( $data['leads_denied'] ) {
+					return null;
+				}
+				$data['leads_denied'] = true;
+				return $data;
+			}
+		);
 	}
 
 	/**
 	 * Forgets a refused enquiry after the platform accepted one.
 	 */
 	public function clear_leads_denied(): void {
-		$data = $this->data();
-		if ( ! $data['leads_denied'] ) {
-			return;
-		}
-		$data['leads_denied'] = false;
-		$this->write( $data );
+		$this->mutate(
+			static function ( array $data ): ?array {
+				if ( ! $data['leads_denied'] ) {
+					return null;
+				}
+				$data['leads_denied'] = false;
+				return $data;
+			}
+		);
 	}
 
 	/**
@@ -171,12 +182,15 @@ class Connection {
 	 * Remembers that the platform refused a write route (a 403).
 	 */
 	public function flag_write_denied(): void {
-		$data = $this->data();
-		if ( $data['write_denied'] ) {
-			return;
-		}
-		$data['write_denied'] = true;
-		$this->write( $data );
+		$this->mutate(
+			static function ( array $data ): ?array {
+				if ( $data['write_denied'] ) {
+					return null;
+				}
+				$data['write_denied'] = true;
+				return $data;
+			}
+		);
 	}
 
 	/**
@@ -201,12 +215,15 @@ class Connection {
 	 * Remembers that the platform refused the embed permission (a 403).
 	 */
 	public function flag_embed_denied(): void {
-		$data = $this->data();
-		if ( $data['embed_denied'] ) {
-			return;
-		}
-		$data['embed_denied'] = true;
-		$this->write( $data );
+		$this->mutate(
+			static function ( array $data ): ?array {
+				if ( $data['embed_denied'] ) {
+					return null;
+				}
+				$data['embed_denied'] = true;
+				return $data;
+			}
+		);
 	}
 
 	/**
@@ -288,31 +305,6 @@ class Connection {
 	}
 
 	/**
-	 * Takes the refresh lock. Refresh tokens rotate on every use, so two
-	 * requests refreshing at once would make the second present a dead token.
-	 *
-	 * @param int $now Current unix time.
-	 */
-	public function acquire_lock( int $now ): bool {
-		if ( add_option( self::LOCK_OPTION, $now, '', false ) ) {
-			return true;
-		}
-		$held = (int) get_option( self::LOCK_OPTION, 0 );
-		if ( $held > 0 && $now - $held < self::LOCK_TTL ) {
-			return false;
-		}
-		delete_option( self::LOCK_OPTION );
-		return (bool) add_option( self::LOCK_OPTION, $now, '', false );
-	}
-
-	/**
-	 * Releases the refresh lock.
-	 */
-	public function release_lock(): void {
-		delete_option( self::LOCK_OPTION );
-	}
-
-	/**
 	 * Drops object-cache copies so a read sees what another request stored.
 	 */
 	public function flush_cache(): void {
@@ -347,8 +339,17 @@ class Connection {
 	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,leads_denied:bool,scopes:list<string>|null}
 	 */
 	private function data(): array {
-		$stored = get_option( self::OPTION, array() );
-		$data   = $this->defaults();
+		return $this->normalise( get_option( self::OPTION, array() ) );
+	}
+
+	/**
+	 * Stored data merged over the defaults.
+	 *
+	 * @param mixed $stored The stored option value.
+	 * @return array{access_token:string,refresh_token:string,expires_at:int,device_id:string,connected_at:int,last_error:string,scope_revision:int,embed_denied:bool,write_denied:bool,leads_denied:bool,scopes:list<string>|null}
+	 */
+	private function normalise( $stored ): array {
+		$data = $this->defaults();
 		if ( ! is_array( $stored ) ) {
 			return $data;
 		}
@@ -396,5 +397,30 @@ class Connection {
 	 */
 	private function write( array $data ): void {
 		update_option( self::OPTION, $data, false );
+	}
+
+	/**
+	 * Changes one or more keys of the stored connection without writing back an
+	 * older token pair: the change is applied to what is stored right now and
+	 * stored only while that is still what was read; otherwise it is read and
+	 * applied again.
+	 *
+	 * @param callable $change Receives the data and returns the changed data, or null for no change.
+	 */
+	private function mutate( callable $change ): void {
+		for ( $attempt = 0; $attempt < 5; ++$attempt ) {
+			$raw = $this->raw_option( self::OPTION );
+			if ( null === $raw ) {
+				break;
+			}
+			$data = $change( $this->normalise( maybe_unserialize( $raw ) ) );
+			if ( null === $data || $this->swap_option( self::OPTION, $raw, $data ) ) {
+				return;
+			}
+		}
+		$data = $change( $this->data() );
+		if ( null !== $data ) {
+			$this->write( $data );
+		}
 	}
 }

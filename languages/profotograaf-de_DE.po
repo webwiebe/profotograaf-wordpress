@@ -76,7 +76,7 @@ msgstr "Anfrageformulare"
 #: includes/admin/class-leads-settings.php:207
 #: includes/admin/class-leads-settings.php:481
 #: includes/admin/class-upload-panel.php:303
-#: includes/modules/class-admin-notices.php:322
+#: includes/modules/class-admin-notices.php:339
 #: includes/modules/class-backup.php:202
 #: includes/modules/class-link-consent-prompt.php:90
 #: includes/modules/class-media-upload.php:351
@@ -100,7 +100,7 @@ msgstr "Diese Website ist nicht mit Profotograaf verbunden, deshalb warten Anfra
 
 #: includes/admin/class-backup-panel.php:84
 #: includes/admin/class-leads-settings.php:222
-#: includes/modules/class-admin-notices.php:180
+#: includes/modules/class-admin-notices.php:197
 msgid "Connect this site"
 msgstr "Diese Website verbinden"
 
@@ -259,8 +259,8 @@ msgid "That page is not on the Profotograaf platform."
 msgstr "Diese Seite gehört nicht zur Profotograaf-Plattform."
 
 #: includes/class-api-client.php:303
-#: includes/class-api-client.php:453
-#: includes/class-api-client.php:458
+#: includes/class-api-client.php:455
+#: includes/class-api-client.php:460
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf konnte nicht erreicht werden."
 
@@ -272,11 +272,11 @@ msgstr "Die öffentliche Seite konnte nicht geladen werden."
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "Die Verbindung wird erneuert. Versuche es gleich noch einmal."
 
-#: includes/class-api-client.php:363
+#: includes/class-api-client.php:365
 msgid "The connection was ended in your Profotograaf account."
 msgstr "Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/class-api-client.php:438
+#: includes/class-api-client.php:440
 msgid "The request could not be encoded."
 msgstr "Die Anfrage konnte nicht kodiert werden."
 
@@ -853,31 +853,31 @@ msgstr[1] "%s Galerien synchronisiert."
 msgid "The gallery index was cleared. It fills again when a gallery is shown or synced."
 msgstr "Der Galerieindex wurde geleert. Er füllt sich wieder, wenn eine Galerie angezeigt oder synchronisiert wird."
 
-#: includes/modules/class-admin-notices.php:142
+#: includes/modules/class-admin-notices.php:159
 msgid "Profotograaf is no longer connected. The connection was ended in your Profotograaf account."
 msgstr "Profotograaf ist nicht mehr verbunden. Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
 #: includes/admin/class-backup-panel.php:93
-#: includes/modules/class-admin-notices.php:144
-#: includes/modules/class-admin-notices.php:166
+#: includes/modules/class-admin-notices.php:161
+#: includes/modules/class-admin-notices.php:183
 #: includes/modules/class-settings-page.php:188
 msgid "Connect this site again"
 msgstr "Diese Website erneut verbinden"
 
-#: includes/modules/class-admin-notices.php:152
+#: includes/modules/class-admin-notices.php:169
 msgid "Profotograaf could not renew the connection. Galleries and enquiries stop working when it runs out."
 msgstr "Profotograaf konnte die Verbindung nicht erneuern. Galerien und Anfragen funktionieren nicht mehr, wenn sie abläuft."
 
-#: includes/modules/class-admin-notices.php:154
+#: includes/modules/class-admin-notices.php:171
 msgid "Check the connection"
 msgstr "Verbindung prüfen"
 
-#: includes/modules/class-admin-notices.php:164
+#: includes/modules/class-admin-notices.php:181
 msgid "Profotograaf cannot send your enquiries yet. This connection lacks the permission to receive enquiries."
 msgstr "Profotograaf kann Ihre Anfragen noch nicht senden. Dieser Verbindung fehlt die Berechtigung, Anfragen zu empfangen."
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:176
+#: includes/modules/class-admin-notices.php:193
 #, php-format
 msgid "%d enquiry is waiting to be sent because this site is not connected to Profotograaf."
 msgid_plural "%d enquiries are waiting to be sent because this site is not connected to Profotograaf."
@@ -885,30 +885,30 @@ msgstr[0] "%d Anfrage wartet auf den Versand, weil diese Website nicht mit Profo
 msgstr[1] "%d Anfragen warten auf den Versand, weil diese Website nicht mit Profotograaf verbunden ist."
 
 #. translators: %s: names of the forms, separated by commas.
-#: includes/modules/class-admin-notices.php:190
+#: includes/modules/class-admin-notices.php:207
 #, php-format
 msgid "%s now sends its enquiries to Profotograaf. Check its fields and switch."
 msgid_plural "%s now send their enquiries to Profotograaf. Check their fields and switches."
 msgstr[0] "%s sendet Anfragen jetzt an Profotograaf. Prüfen Sie die Felder und den Schalter."
 msgstr[1] "%s senden Anfragen jetzt an Profotograaf. Prüfen Sie die Felder und die Schalter."
 
-#: includes/modules/class-admin-notices.php:194
+#: includes/modules/class-admin-notices.php:211
 msgid "Review the forms"
 msgstr "Formulare prüfen"
 
 #. translators: %d: number of enquiries.
-#: includes/modules/class-admin-notices.php:206
+#: includes/modules/class-admin-notices.php:223
 #, php-format
 msgid "%d enquiry could not be delivered to Profotograaf."
 msgid_plural "%d enquiries could not be delivered to Profotograaf."
 msgstr[0] "%d Anfrage konnte nicht an Profotograaf zugestellt werden."
 msgstr[1] "%d Anfragen konnten nicht an Profotograaf zugestellt werden."
 
-#: includes/modules/class-admin-notices.php:210
+#: includes/modules/class-admin-notices.php:227
 msgid "Retry or export the enquiries"
 msgstr "Anfragen erneut versuchen oder exportieren"
 
-#: includes/modules/class-admin-notices.php:311
+#: includes/modules/class-admin-notices.php:328
 msgid "Dismiss"
 msgstr "Schließen"
 
@@ -3563,7 +3563,7 @@ msgstr "Profotograaf hat mit Fehler %d geantwortet."
 msgid "The upload failed (%s)."
 msgstr "Der Upload ist fehlgeschlagen (%s)."
 
-#: includes/modules/class-admin-notices.php:273
+#: includes/modules/class-admin-notices.php:290
 msgid "See why and retry"
 msgstr "Grund ansehen und erneut versuchen"
 
@@ -3947,7 +3947,7 @@ msgid "The Profotograaf copy queue moves"
 msgstr "Die Warteschlange der Profotograaf-Kopie läuft"
 
 #: includes/class-backup-health.php:198
-#: includes/modules/class-admin-notices.php:259
+#: includes/modules/class-admin-notices.php:276
 msgid "Open the copy settings"
 msgstr "Kopiereinstellungen öffnen"
 
@@ -4016,12 +4016,12 @@ msgstr "Es läuft bereits ein anderer Kopiervorgang."
 msgid "Copying stopped early. Run the command again to send the rest."
 msgstr "Das Kopieren wurde vorzeitig beendet. Führe den Befehl erneut aus, um den Rest zu senden."
 
-#: includes/modules/class-admin-notices.php:257
+#: includes/modules/class-admin-notices.php:274
 msgid "Your Profotograaf storage is full, so copying is paused. Free up space or upgrade your plan, then press Copy now."
 msgstr "Dein Profotograaf-Speicher ist voll, deshalb ist das Kopieren pausiert. Gib Speicherplatz frei oder wechsle zu einem größeren Tarif und klicke dann auf Jetzt kopieren."
 
 #. translators: %d: number of files.
-#: includes/modules/class-admin-notices.php:269
+#: includes/modules/class-admin-notices.php:286
 #, php-format
 msgid "%d file could not be copied to Profotograaf."
 msgid_plural "%d files could not be copied to Profotograaf."
@@ -4261,7 +4261,7 @@ msgstr "Kein importiertes Foto wurde auf Profotograaf entfernt oder geändert."
 msgid "Photos removed or changed on Profotograaf stay on this site until you decide. Nothing is deleted for you."
 msgstr "Auf Profotograaf entfernte oder geänderte Fotos bleiben auf dieser Website, bis du entscheidest. Es wird nichts für dich gelöscht."
 
-#: includes/modules/class-admin-notices.php:235
+#: includes/modules/class-admin-notices.php:252
 msgid "Show them"
 msgstr "Anzeigen"
 

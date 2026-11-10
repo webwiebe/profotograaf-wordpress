@@ -91,6 +91,8 @@ class Backup_Module_Test extends Wp_Test_Case {
 
 			public string $posts = 'wp_posts';
 
+			public string $options = 'wp_options';
+
 			private Backup_Module_Test $test;
 
 			public function __construct( Backup_Module_Test $test ) {
@@ -108,6 +110,15 @@ class Backup_Module_Test extends Wp_Test_Case {
 			/**
 			 * @return array<int,string>
 			 */
+			/**
+			 * The options table is not part of this fake: Connection falls back to a plain write.
+			 *
+			 * @param mixed $query Query.
+			 */
+			public function get_var( $query ) {
+				return null;
+			}
+
 			public function get_col( string $sql ): array {
 				$this->test->sql[] = $sql;
 				preg_match( '/ID > (\d+) ORDER BY ID ASC LIMIT (\d+)/', $sql, $match );

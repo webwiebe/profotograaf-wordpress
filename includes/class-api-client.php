@@ -358,7 +358,9 @@ class Api_Client {
 				do_action( 'profotograaf_refresh_succeeded' );
 				return true;
 			}
-			if ( 400 === $response['status'] || 401 === $response['status'] ) {
+			// Only 401 means the device or its refresh token is gone. A 400 is a request
+			// the platform rejected, and the stored pair may still be valid.
+			if ( 401 === $response['status'] ) {
 				Logger::warning( 'Token refresh refused, the connection was ended on the platform.', array( 'status' => $response['status'] ) );
 				$this->connection->clear( __( 'The connection was ended in your Profotograaf account.', 'profotograaf' ) );
 				/**
