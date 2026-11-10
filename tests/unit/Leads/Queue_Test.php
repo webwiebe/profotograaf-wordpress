@@ -330,6 +330,17 @@ class Queue_Test extends Leads_Test_Case {
 		$this->assertCount( 2, $this->mails );
 	}
 
+	public function test_a_retried_job_that_fails_again_sends_the_fallback_mail_again(): void {
+		$this->options['profotograaf_settings']['leads_fallback_email'] = 'studio@example.com';
+		$this->queue->enqueue( 'a', self::PAYLOAD );
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+		$this->queue->retry_failed();
+		$this->queue->fail( $this->store->jobs['a'], 'bad input', 400 );
+
+		$to = array_column( $this->mails, 0 );
+		$this->assertSame( 2, count( array_keys( $to, 'studio@example.com', true ) ) );
+	}
+
 	public function test_failed_jobs_can_be_exported_and_the_exported_ones_dismissed(): void {
 		$this->queue->enqueue( 'a', self::PAYLOAD );
 		$this->queue->enqueue( 'b', self::PAYLOAD );
