@@ -58,6 +58,23 @@ class Admin_Notices implements Module {
 	public const BACKUP_STORAGE = 'backup_storage';
 	public const BACKUP_FAILED  = 'backup_failed';
 
+	/**
+	 * Every kind that render() offers a Dismiss link for.
+	 *
+	 * @var list<string>
+	 */
+	private const KINDS = array(
+		self::REVOKED,
+		self::REFRESH,
+		self::LEADS,
+		self::SYNC,
+		self::LEADS_RECONNECT,
+		self::LEADS_WAITING,
+		self::LEADS_NEW_FORMS,
+		self::BACKUP_STORAGE,
+		self::BACKUP_FAILED,
+	);
+
 	public const EPISODES_OPTION = 'profotograaf_notice_episodes';
 	public const DISMISS_META    = 'profotograaf_dismissed_notices';
 	public const DISMISS_ACTION  = 'profotograaf_dismiss_notice';
@@ -325,7 +342,7 @@ class Admin_Notices implements Module {
 
 		$kind      = isset( $_GET['kind'] ) ? sanitize_key( wp_unslash( $_GET['kind'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked above.
 		$signature = isset( $_GET['signature'] ) ? sanitize_text_field( wp_unslash( $_GET['signature'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked above.
-		if ( in_array( $kind, array( self::REVOKED, self::REFRESH, self::LEADS, self::SYNC, self::BACKUP_STORAGE, self::BACKUP_FAILED ), true ) && '' !== $signature ) {
+		if ( in_array( $kind, self::KINDS, true ) && '' !== $signature ) {
 			$this->dismiss( $kind, $signature );
 		}
 		$this->finish();
