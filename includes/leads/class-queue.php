@@ -240,7 +240,7 @@ final class Queue {
 			$job['attempts']   = 0;
 			$job['next_at']    = $now;
 			$job['created_at'] = $now;
-			unset( $job['failed_at'], $job['alerted_at'], $job['exported_at'] );
+			unset( $job['failed_at'], $job['alerted_at'], $job['fallback_at'], $job['exported_at'] );
 			$this->store->put( (string) $id, $job );
 			++$count;
 		}
