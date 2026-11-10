@@ -14,6 +14,7 @@ x-wordpress-env: &wordpress-env
     define( 'WP_DEBUG_DISPLAY', false );
     define( 'WP_HTTP_BLOCK_EXTERNAL', true );
     define( 'AUTOMATIC_UPDATER_DISABLED', true );
+    define( 'WP_ACCESSIBLE_HOSTS', 'releases' );
 
 services:
   db:
@@ -37,6 +38,14 @@ services:
     environment: *wordpress-env
     volumes:
       - wordpress:/var/www/html
+
+  # Stands in for GitHub in tests/e2e/update-install.sh: serves a release JSON
+  # and the release zip from dist/e2e-release.
+  releases:
+    image: busybox:stable
+    command: ["httpd", "-f", "-p", "80", "-h", "/srv"]
+    volumes:
+      - ../../dist/e2e-release:/srv:ro
 
   cli:
     image: wordpress:cli-php${PHP_VERSION:-8.3}

@@ -186,3 +186,5 @@ jobs:
       - run: bin/check-release-zip.sh
       # `wp plugin install` of the versioned zip and activation, as a site owner does it.
       - run: tests/e2e/zip-install.sh
+      # An older install updates itself through the GitHub release update source.
+      - run: tests/e2e/update-install.sh

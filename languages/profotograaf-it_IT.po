@@ -4524,3 +4524,7 @@ msgstr "Automatico"
 #: build/gallery/index.js:3
 msgid "Open the share page"
 msgstr "Apri la pagina di condivisione"
+
+#: includes/class-github-updates.php:151
+msgid "Release notes on GitHub"
+msgstr "Note di rilascio su GitHub"
