@@ -9,6 +9,7 @@ namespace Profotograaf\Tests;
 
 use Brain\Monkey\Actions;
 use Brain\Monkey\Filters;
+use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
 
@@ -262,6 +263,32 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->http->reply( 200, array() );
 
 		$this->assertSame( array(), $this->api->list_galleries() );
+	}
+
+	public function test_only_one_of_two_requests_that_saw_a_stale_lock_takes_it(): void {
+		$this->options['profotograaf_refresh_lock'] = ( $this->now - 600 ) . ':old';
+		$late                                       = new Connection();
+		$GLOBALS['wpdb']->on_read                   = function (): void {
+			// Another request takes the stale lock between this one's read and its write.
+			$this->options['profotograaf_refresh_lock'] = $this->now . ':other';
+		};
+
+		$this->assertFalse( $late->acquire_lock( $this->now ) );
+		$this->assertSame( $this->now . ':other', $this->options['profotograaf_refresh_lock'] );
+	}
+
+	public function test_a_run_that_outlived_the_lock_does_not_release_the_next_holders(): void {
+		$slow = new Connection();
+		$this->assertTrue( $slow->acquire_lock( $this->now ) );
+		// The lock expired and another request took it over.
+		Functions\when( 'wp_generate_uuid4' )->justReturn( 'next-holder' );
+		$next = new Connection();
+		$this->assertTrue( $next->acquire_lock( $this->now + 120 ) );
+
+		$slow->release_lock();
+
+		$this->assertStringEndsWith( ':next-holder', $this->options['profotograaf_refresh_lock'] );
+		$this->assertFalse( ( new Connection() )->acquire_lock( $this->now + 121 ) );
 	}
 
 	public function test_a_transport_error_becomes_a_retryable_wp_error(): void {
