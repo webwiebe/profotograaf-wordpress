@@ -364,6 +364,33 @@ class Admin_Notices_Test extends Wp_Test_Case {
 		$_GET = array();
 	}
 
+	/**
+	 * @dataProvider lead_kinds
+	 */
+	public function test_the_dismiss_handler_stores_a_dismissal_for_the_lead_notices( string $kind ): void {
+		Functions\when( 'check_admin_referer' )->justReturn( 1 );
+		$_GET = array(
+			'kind'      => $kind,
+			'signature' => $kind . ':1',
+		);
+
+		$this->notices->handle_dismiss();
+
+		$this->assertSame( array( $kind => $kind . ':1' ), $this->meta[7][ Admin_Notices::DISMISS_META ] );
+		$_GET = array();
+	}
+
+	/**
+	 * @return array<string,array{string}>
+	 */
+	public static function lead_kinds(): array {
+		return array(
+			'reconnect' => array( Admin_Notices::LEADS_RECONNECT ),
+			'waiting'   => array( Admin_Notices::LEADS_WAITING ),
+			'new forms' => array( Admin_Notices::LEADS_NEW_FORMS ),
+		);
+	}
+
 	public function test_the_dismiss_handler_ignores_an_unknown_kind(): void {
 		Functions\when( 'check_admin_referer' )->justReturn( 1 );
 		$_GET = array(
