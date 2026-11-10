@@ -4,7 +4,7 @@ Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.2.3
+Stable tag: 0.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -282,6 +282,12 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 == Changelog ==
 
+= 0.2.4 =
+* Fix: enquiries waiting to be sent are all retried, also when many failed enquiries are stored (job store in includes/leads).
+* Fix: a rejected refresh request (HTTP 400) keeps the connection. Only a 401 answer disconnects.
+* Fix: the token refresh lock has an owner and an expired lock is taken over by one request only. A run releases only its own lock.
+* Fix: changing a connection flag no longer writes back an older token pair.
+
 = 0.2.3 =
 * Fix: the browser tests expect the server-drawn gallery after a failed platform call, so the release build completes. Same plugin code as 0.2.0, 0.2.1 and 0.2.2, which were never published.
 
@@ -356,6 +362,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the gallery script ships with the plugin.
 
 == Upgrade Notice ==
+
+= 0.2.4 =
+Fixes in enquiry sending and in keeping the connection after a token refresh.
 
 = 0.2.3 =
 Same plugin as 0.2.0, which was never published.
