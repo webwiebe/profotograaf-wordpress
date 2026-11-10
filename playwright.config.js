@@ -36,10 +36,12 @@ const matrix = process.env.E2E_BROWSER_MATRIX
 	  ]
 	: [];
 
-// The wordpress.org screenshot capture is no test. `make wporg-screenshots` sets
-// WPORG_SCREENSHOTS and runs only that spec; a plain run skips it.
-const SCREENSHOTS = /wporg-screenshots\.spec\.js$/;
-const capture = Boolean( process.env.WPORG_SCREENSHOTS );
+// The screenshot captures are no tests. `make wporg-screenshots` sets
+// WPORG_SCREENSHOTS and `make docs-screenshots` sets DOCS_SCREENSHOTS; each runs
+// only its own spec, and a plain run skips both.
+const SCREENSHOTS = /(wporg|docs)-screenshots\.spec\.js$/;
+const captureOnly = process.env.WPORG_SCREENSHOTS ? /wporg-screenshots\.spec\.js$/ : /docs-screenshots\.spec\.js$/;
+const capture = Boolean( process.env.WPORG_SCREENSHOTS || process.env.DOCS_SCREENSHOTS );
 
 // E2E_BASE_URL points the run at another WordPress, such as the local dev site
 // on https://localhost:8443 with its self-signed certificate. The default is
@@ -48,7 +50,7 @@ const baseURL = process.env.E2E_BASE_URL || `http://localhost:${ process.env.WP_
 
 module.exports = defineConfig( {
 	testDir: 'tests/e2e',
-	testMatch: capture ? SCREENSHOTS : '**/*.spec.js',
+	testMatch: capture ? captureOnly : '**/*.spec.js',
 	testIgnore: capture ? [] : [ SCREENSHOTS ],
 	fullyParallel: false,
 	workers: 1,
