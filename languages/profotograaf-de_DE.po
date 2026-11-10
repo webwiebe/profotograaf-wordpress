@@ -259,8 +259,8 @@ msgid "That page is not on the Profotograaf platform."
 msgstr "Diese Seite gehört nicht zur Profotograaf-Plattform."
 
 #: includes/class-api-client.php:303
-#: includes/class-api-client.php:453
-#: includes/class-api-client.php:458
+#: includes/class-api-client.php:455
+#: includes/class-api-client.php:460
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf konnte nicht erreicht werden."
 
@@ -272,11 +272,11 @@ msgstr "Die öffentliche Seite konnte nicht geladen werden."
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "Die Verbindung wird erneuert. Versuche es gleich noch einmal."
 
-#: includes/class-api-client.php:363
+#: includes/class-api-client.php:365
 msgid "The connection was ended in your Profotograaf account."
 msgstr "Die Verbindung wurde in deinem Profotograaf-Konto beendet."
 
-#: includes/class-api-client.php:438
+#: includes/class-api-client.php:440
 msgid "The request could not be encoded."
 msgstr "Die Anfrage konnte nicht kodiert werden."
 

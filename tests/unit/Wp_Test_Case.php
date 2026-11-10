@@ -97,8 +97,8 @@ abstract class Wp_Test_Case extends TestCase {
 			}
 		);
 		Functions\when( 'wp_cache_delete' )->justReturn( true );
-		Functions\when( 'maybe_serialize' )->alias( fn( $value ) => is_array( $value ) ? serialize( $value ) : $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- stub of the WordPress helper.
-		Functions\when( 'maybe_unserialize' )->alias( fn( $value ) => is_string( $value ) && 0 === strpos( $value, 'a:' ) ? unserialize( $value ) : $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- stub of the WordPress helper.
+		Functions\when( 'maybe_serialize' )->alias( fn( $value ) => is_array( $value ) ? serialize( $value ) : $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- stub of the WordPress helper.
+		Functions\when( 'maybe_unserialize' )->alias( fn( $value ) => is_string( $value ) && 0 === strpos( $value, 'a:' ) ? unserialize( $value ) : $value ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- stub of the WordPress helper.
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- a fake database over $this->options.
 		$GLOBALS['wpdb'] = $this->options_db();
 		Functions\when( 'wp_json_encode' )->alias( fn( $value ) => json_encode( $value ) );
@@ -138,7 +138,7 @@ abstract class Wp_Test_Case extends TestCase {
 			}
 
 			private static function raw( $value ) {
-				return is_array( $value ) ? serialize( $value ) : (string) $value; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- compares the stored text the way the database holds it.
+				return is_array( $value ) ? serialize( $value ) : (string) $value; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- compares the stored text the way the database holds it.
 			}
 
 			public function get_var( $query ) {

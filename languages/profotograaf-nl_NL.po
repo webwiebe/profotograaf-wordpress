@@ -218,17 +218,17 @@ msgstr "Een aanvraag heeft een naam en een e-mailadres nodig."
 msgid "The connection is being refreshed. Try again in a moment."
 msgstr "De verbinding wordt vernieuwd. Probeer het zo opnieuw."
 
-#: includes/class-api-client.php:363
+#: includes/class-api-client.php:365
 msgid "The connection was ended in your Profotograaf account."
 msgstr "De verbinding is beëindigd in je Profotograaf-account."
 
-#: includes/class-api-client.php:438
+#: includes/class-api-client.php:440
 msgid "The request could not be encoded."
 msgstr "Het verzoek kon niet worden gecodeerd."
 
 #: includes/class-api-client.php:303
-#: includes/class-api-client.php:453
-#: includes/class-api-client.php:458
+#: includes/class-api-client.php:455
+#: includes/class-api-client.php:460
 msgid "Profotograaf could not be reached."
 msgstr "Profotograaf is niet bereikbaar."
 
