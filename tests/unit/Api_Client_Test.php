@@ -291,6 +291,22 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertFalse( ( new Connection() )->acquire_lock( $this->now + 121 ) );
 	}
 
+	public function test_a_flag_does_not_write_back_a_token_pair_a_refresh_just_replaced(): void {
+		$this->connect( 10, 'old-access', 'old-refresh' );
+		$connection               = new Connection();
+		$GLOBALS['wpdb']->on_read = function (): void {
+			// A refresh stores a rotated pair between the flag's read and its write.
+			$this->options['profotograaf_connection']['access_token']  = 'new-access';
+			$this->options['profotograaf_connection']['refresh_token'] = 'new-refresh';
+		};
+
+		$connection->flag_write_denied();
+
+		$this->assertSame( 'new-refresh', $this->options['profotograaf_connection']['refresh_token'] );
+		$this->assertSame( 'new-access', $this->options['profotograaf_connection']['access_token'] );
+		$this->assertTrue( $this->options['profotograaf_connection']['write_denied'] );
+	}
+
 	public function test_a_transport_error_becomes_a_retryable_wp_error(): void {
 		$this->connect();
 		$this->http->fail( new \WP_Error( 'http_request_failed', 'cURL error 28: timed out' ) );
