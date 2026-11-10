@@ -75,6 +75,10 @@ Optional. Settings > Profotograaf > Copy to Profotograaf > "Copy the Media Libra
 
 The "Find your gallery" block is a plain link to your client portal on your Profotograaf address, subdomain or own domain. It makes no request while a page loads.
 
+## Installing and updating
+
+Two builds exist. The zip on the [GitHub releases](https://github.com/webwiebe/profotograaf-wordpress/releases) page carries an update source: WordPress shows "update available" on the Plugins screen for a newer release and installs its zip in one click, keeping your settings and the connection. The plugin asks GitHub for the latest release at most once every 12 hours. The build for the wordpress.org directory leaves that update source out, because wordpress.org does not allow it; that copy updates through wordpress.org. `bin/build-release.sh --wporg` builds it.
+
 ## License
 
 GPL-2.0-or-later. See [LICENSE](LICENSE).
