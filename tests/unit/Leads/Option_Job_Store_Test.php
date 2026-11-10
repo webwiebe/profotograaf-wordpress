@@ -37,17 +37,28 @@ class Option_Job_Store_Test extends Wp_Test_Case {
 			}
 
 			public function get_results( $query, $output ) {
-				$prefix = stripslashes( rtrim( $query[1][0], '%' ) );
-				$found  = array();
+				list( $sql, $args ) = $query;
+				$prefix             = stripslashes( rtrim( $args[0], '%' ) );
+				$marker             = isset( $args[1] ) && is_string( $args[1] ) ? stripslashes( trim( $args[1], '%' ) ) : null;
+				$not                = false !== strpos( $sql, 'NOT LIKE' );
+				$found              = array();
 				foreach ( $this->rows as $name => $value ) {
-					if ( 0 === strpos( $name, $prefix ) ) {
-						$found[] = array(
-							'option_name'  => $name,
-							'option_value' => $value,
-						);
+					if ( 0 !== strpos( $name, $prefix ) ) {
+						continue;
 					}
+					if ( null !== $marker && ( false !== strpos( (string) $value, $marker ) ) === $not ) {
+						continue;
+					}
+					$found[] = array(
+						'option_name'  => $name,
+						'option_value' => $value,
+					);
 				}
-				return $found;
+				if ( false !== strpos( $sql, 'DESC' ) ) {
+					$found = array_reverse( $found );
+				}
+				$limit = end( $args );
+				return false !== strpos( $sql, 'LIMIT' ) ? array_slice( $found, 0, (int) $limit ) : $found;
 			}
 		};
 		if ( ! defined( 'ARRAY_A' ) ) {
@@ -86,6 +97,19 @@ class Option_Job_Store_Test extends Wp_Test_Case {
 
 		$store->delete( 'abc' );
 		$this->assertSame( array(), $store->all() );
+	}
+
+	public function test_every_pending_job_is_returned_however_many_failed_ones_exist(): void {
+		$store = new Option_Job_Store();
+		for ( $i = 0; $i < 1100; ++$i ) {
+			$store->add( 'failed' . $i, array( 'status' => 'failed' ) );
+		}
+		$store->add( 'newest', array( 'status' => 'pending' ) );
+
+		$all = $store->all();
+
+		$this->assertArrayHasKey( 'newest', $all );
+		$this->assertLessThanOrEqual( 1001, count( $all ), 'Failed jobs stay bounded.' );
 	}
 
 	public function test_the_lock_is_exclusive_and_expires(): void {
