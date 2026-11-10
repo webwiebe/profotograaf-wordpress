@@ -233,6 +233,17 @@ class Api_Client_Test extends Wp_Test_Case {
 		$this->assertTrue( ( new Connection() )->is_connected() );
 	}
 
+	public function test_a_rejected_refresh_request_keeps_the_connection(): void {
+		$this->connect( 10 );
+		Actions\expectDone( 'profotograaf_disconnected' )->never();
+		$this->http->reply( 400, array( 'error' => 'bad request' ) );
+
+		$result = $this->api->list_galleries();
+
+		$this->assertWPError( $result, 'profotograaf_http' );
+		$this->assertTrue( ( new Connection() )->is_connected() );
+	}
+
 	public function test_a_refresh_in_flight_elsewhere_is_not_repeated(): void {
 		$this->connect( 10 );
 		$this->options['profotograaf_refresh_lock'] = $this->now - 5;
