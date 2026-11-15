@@ -142,7 +142,7 @@ class Backup_Settings_Test extends Wp_Test_Case {
 	public function test_the_intro_says_what_is_sent_and_what_stays(): void {
 		$text = implode( ' ', Backup_Intro::paragraphs() );
 
-		foreach ( array( 'private galleries', 'title of this site', 'file name', 'GPS position', 'RAW files and videos', 'storage', 'copies stay in your Profotograaf account', 'personal data', 'other users uploaded', 'Sharing anonymous usage data' ) as $needle ) {
+		foreach ( array( 'private galleries', 'title of this site', 'file name', 'GPS position, which is removed first', 'JPEG, PNG, WebP and GIF images are copied', 'RAW files, videos and other image types are left out', 'storage', 'copies stay in your Profotograaf account', 'personal data', 'other users uploaded', 'Sharing anonymous usage data' ) as $needle ) {
 			$this->assertStringContainsString( $needle, $text );
 		}
 	}

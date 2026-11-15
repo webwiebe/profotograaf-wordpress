@@ -83,6 +83,7 @@ class Backup_Worker {
 	public const REASON_NO_ANSWER   = 'no_answer';
 	public const REASON_INTERRUPTED = 'interrupted';
 	public const REASON_HOST_MEMORY = 'too_large_for_host';
+	public const REASON_NO_STRIP    = 'location_not_removable';
 
 	/**
 	 * Settings.
@@ -317,7 +318,20 @@ class Backup_Worker {
 			$this->eligibility->apply( $id );
 			return 'next';
 		}
-		$file  = $check['file'];
+		$file = $check['file'];
+		$mime = (string) get_post_mime_type( $id );
+		if ( ! Location_Stripper::supports( $mime ) ) {
+			// The GPS position cannot be removed from this type, so it is never sent.
+			$this->state->skip( $id, self::REASON_NO_STRIP );
+			Logger::warning(
+				'A backup file was left out because its location data cannot be removed.',
+				array(
+					'attachment' => $id,
+					'mime'       => $mime,
+				)
+			);
+			return 'next';
+		}
 		$bytes = (int) filesize( $file );
 		if ( $bytes * self::MEMORY_FACTOR + self::MEMORY_RESERVE > (int) ( $this->memory )() ) {
 			if ( ! $first ) {
@@ -350,7 +364,7 @@ class Backup_Worker {
 		}
 
 		$this->state->uploading( $id );
-		$result = $this->api->upload_photo( $gallery, $file, wp_basename( $file ), (string) get_post_mime_type( $id ) );
+		$result = $this->send_stripped( $gallery, $file, $mime );
 		if ( is_wp_error( $result ) ) {
 			return $this->upload_failed( $id, $gallery, $result );
 		}
@@ -358,6 +372,34 @@ class Backup_Worker {
 		$this->state->record_copy( $id, $sha256, $result['id'], $gallery );
 		$this->clear_wait();
 		return 'sent';
+	}
+
+	/**
+	 * Uploads a copy of the file with the GPS position removed.
+	 *
+	 * @param string $gallery_id Gallery id.
+	 * @param string $file       Path of the original.
+	 * @param string $mime       Media type.
+	 * @return array{id:string,gallery_id:string,filename:string}|\WP_Error
+	 */
+	private function send_stripped( string $gallery_id, string $file, string $mime ) {
+		$contents = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local file.
+		if ( false === $contents ) {
+			return Api_Errors::make( 'profotograaf_invalid', __( 'The file could not be read.', 'profotograaf' ), 0, false );
+		}
+		if ( ! function_exists( 'wp_tempnam' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		$temp = wp_tempnam( 'profotograaf-backup' );
+		if ( '' === $temp || false === file_put_contents( $temp, Location_Stripper::strip( $contents ) ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Temp file.
+			return Api_Errors::make( 'profotograaf_invalid', __( 'The file could not be prepared for sending.', 'profotograaf' ), 0, false );
+		}
+		unset( $contents );
+		try {
+			return $this->api->upload_photo( $gallery_id, $temp, wp_basename( $file ), $mime );
+		} finally {
+			wp_delete_file( $temp );
+		}
 	}
 
 	/**

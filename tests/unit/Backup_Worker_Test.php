@@ -162,6 +162,40 @@ class Backup_Worker_Test extends Wp_Test_Case {
 		$this->assertArrayNotHasKey( Backup_Worker::LOCK, $this->options, 'The lock is released.' );
 	}
 
+	public function test_a_copy_never_carries_the_gps_position(): void {
+		$this->queued( 11, Location_Stripper_Test::jpeg( Location_Stripper_Test::tiff() ) );
+		$this->gallery_created();
+		$this->uploaded( 'p-11' );
+
+		$result = $this->worker()->run();
+
+		$this->assertSame( 1, $result['sent'] );
+		$sent = (string) $this->http->requests[1]['body'];
+		$this->assertStringNotContainsString( Location_Stripper_Test::LATITUDE, $sent, 'The GPS position is removed before upload.' );
+		$this->assertStringContainsString( "Canon\0", $sent, 'The other tags stay.' );
+		$this->assertSame( hash( 'sha256', Location_Stripper_Test::jpeg( Location_Stripper_Test::tiff() ) ), $this->meta[11][ Backup_State::META_SHA256 ], 'The checksum identifies the original.' );
+	}
+
+	public function test_a_type_whose_location_cannot_be_removed_is_skipped_and_never_sent(): void {
+		$this->attachment( 11, 'video bytes', '2026-10-03 09:00:00', 'video/mp4' );
+		$this->attachment( 12, 'raw bytes', '2026-10-03 09:00:00', 'image/x-canon-cr2' );
+		$this->queued( 13 );
+		$this->meta[11][ Backup_State::META_STATE ] = 'queued';
+		$this->meta[12][ Backup_State::META_STATE ] = 'queued';
+		$this->gallery_created();
+		$this->uploaded( 'p-13' );
+
+		$result = $this->worker()->run();
+
+		$this->assertSame( 1, $result['sent'] );
+		foreach ( array( 11, 12 ) as $id ) {
+			$this->assertSame( 'skipped', $this->state_of( $id ) );
+			$this->assertSame( Backup_Worker::REASON_NO_STRIP, $this->meta[ $id ][ Backup_State::META_REASON ] );
+		}
+		$this->assertCount( 2, $this->http->requests, 'One gallery and one photo; the skipped types send nothing.' );
+		$this->assertContains( 'A backup file was left out because its location data cannot be removed.', $this->logged( 'warning' ) );
+	}
+
 	public function test_backup_galleries_are_never_made_embeddable(): void {
 		$this->queued( 11 );
 		$this->gallery_created();

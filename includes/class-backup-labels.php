@@ -55,6 +55,7 @@ final class Backup_Labels {
 			Backup_Worker::REASON_REJECTED          => __( 'Profotograaf did not accept the file.', 'profotograaf' ),
 			Backup_Worker::REASON_NO_ANSWER         => __( 'The file was sent but Profotograaf did not answer. It may be there already.', 'profotograaf' ),
 			Backup_Worker::REASON_INTERRUPTED       => __( 'The upload was interrupted. The file may be on Profotograaf already.', 'profotograaf' ),
+			Backup_Worker::REASON_NO_STRIP          => __( 'Its location data cannot be removed, so it is not copied.', 'profotograaf' ),
 			Backup_Worker::REASON_HOST_MEMORY       => __( 'The file is too large for the memory of this site.', 'profotograaf' ),
 		);
 		if ( isset( $known[ $reason ] ) ) {

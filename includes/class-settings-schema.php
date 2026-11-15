@@ -179,7 +179,7 @@ final class Settings_Schema {
 				'type'        => 'enum',
 				'default'     => Settings::BACKUP_SCOPE_DEFAULT,
 				'label'       => __( 'What to copy', 'profotograaf' ),
-				'description' => __( 'Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. Images, RAW files and videos are copied. Photos imported from Profotograaf are skipped.', 'profotograaf' ),
+				'description' => __( 'Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. JPEG, PNG, WebP and GIF images are copied, without their GPS position. Other types are left out. Photos imported from Profotograaf are skipped.', 'profotograaf' ),
 				'choices'     => array(
 					'used'   => __( 'Files used on the site (recommended)', 'profotograaf' ),
 					'all'    => __( 'Every file in the Media Library', 'profotograaf' ),
