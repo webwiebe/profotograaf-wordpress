@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Generates the placeholder artwork for the wordpress.org plugin page.
-
-Everything here is original, simple geometry made for this plugin. Replace the
-PNG files with final artwork whenever you like; keep the file names and sizes
-(see assets/wporg/README.md). Run: python3 assets/wporg/generate.py (needs Pillow).
+"""Generates the icons and banners for the wordpress.org plugin page from the
+Profotograaf brand files in assets/wporg/source, and the placeholder screenshots
+1 to 4. Keep the file names and sizes (see assets/wporg/README.md). Run: python3 assets/wporg/generate.py (needs Pillow).
 """
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 OUT = Path(__file__).resolve().parent
+SOURCE = OUT / "source"
+PAPER = (246, 246, 243)
 INK = (29, 35, 39)
 CREAM = (250, 246, 238)
 ACCENT = (201, 106, 63)
@@ -20,46 +20,26 @@ def font(size):
     return ImageFont.load_default(size=size)
 
 
-def gradient(width, height, top, bottom):
-    image = Image.new("RGB", (width, height), top)
-    draw = ImageDraw.Draw(image)
-    for y in range(height):
-        t = y / max(1, height - 1)
-        colour = tuple(round(top[i] + (bottom[i] - top[i]) * t) for i in range(3))
-        draw.line([(0, y), (width, y)], fill=colour)
-    return image
-
-
-def aperture(draw, cx, cy, radius, fill, hole):
-    """A lens: a ring, an inner disc and a highlight."""
-    draw.ellipse([cx - radius, cy - radius, cx + radius, cy + radius], fill=fill)
-    inner = radius * 0.72
-    draw.ellipse([cx - inner, cy - inner, cx + inner, cy + inner], fill=hole)
-    core = radius * 0.34
-    draw.ellipse([cx - core, cy - core, cx + core, cy + core], fill=fill)
-    glint = radius * 0.11
-    gx, gy = cx - radius * 0.14, cy - radius * 0.14
-    draw.ellipse([gx - glint, gy - glint, gx + glint, gy + glint], fill=hole)
-
-
 def icon(size):
-    scale = 4
-    big = size * scale
-    image = Image.new("RGB", (big, big), CREAM)
-    draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle([0, 0, big, big], radius=big // 5, fill=INK)
-    aperture(draw, big / 2, big / 2, big * 0.34, ACCENT, INK)
-    return image.resize((size, size), Image.LANCZOS)
+    """The site's camera icon (source/brand-icon-512.png), scaled down."""
+    source = Image.open(SOURCE / "brand-icon-512.png").convert("RGB")
+    return source.resize((size, size), Image.LANCZOS)
 
 
 def banner(width, height):
+    """The ProFotograaf wordmark and the camera icon on the site's light background."""
     scale = width / 772
-    image = gradient(width, height, INK, (52, 60, 66))
-    draw = ImageDraw.Draw(image)
-    aperture(draw, width * 0.80, height * 0.52, height * 0.36, ACCENT, INK)
-    draw.text((width * 0.06, height * 0.30), "Profotograaf", font=font(round(46 * scale)), fill=CREAM)
-    draw.text((width * 0.06, height * 0.56), "Galleries, client access and enquiries", font=font(round(19 * scale)), fill=SAND)
-    draw.text((width * 0.06, height * 0.84), "Placeholder artwork, replace before release", font=font(round(11 * scale)), fill=(150, 158, 165))
+    image = Image.new("RGB", (width, height), PAPER)
+    mark = Image.open(SOURCE / "brand-wordmark.png").convert("RGBA")
+    mark = mark.crop(mark.getchannel("A").getbbox())
+    mark_width = round(430 * scale)
+    mark = mark.resize((mark_width, round(mark.height * mark_width / mark.width)), Image.LANCZOS)
+    image.paste(mark, (round(60 * scale), (height - mark.height) // 2), mark)
+    size = round(height * 0.62)
+    camera = icon(size)
+    mask = Image.new("L", (size, size), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, size - 1, size - 1], radius=size // 5, fill=255)
+    image.paste(camera, (width - size - round(60 * scale), (height - size) // 2), mask)
     return image
 
 

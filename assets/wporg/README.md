@@ -1,8 +1,8 @@
-# Directory artwork (placeholders)
+# Directory artwork
 
-These images are shown on the wordpress.org plugin page. The ones in this folder
-are simple original placeholders drawn by `generate.py`. Replace them with final
-artwork before the first public release. Keep the file names and sizes: the
+These images are shown on the wordpress.org plugin page. The icons and banners are
+the Profotograaf brand: the site's camera icon and wordmark, kept in `source/` and
+composed by `generate.py`. Screenshots 1 to 4 are still placeholders. Keep the file names and sizes: the
 wordpress.org SVN deploy reads them from here (`ASSETS_DIR: assets/wporg` in
 `.github/workflows/release.yml`) and `.distignore` keeps them out of the plugin zip.
 
@@ -26,6 +26,6 @@ The target builds the blocks, starts the E2E stack (Docker), captures the three 
 
 The site title in the captures is a made-up studio name and the administrator is the E2E account, so nothing personal shows. Commit the PNGs after you check them.
 
-To regenerate the placeholders: `python3 assets/wporg/generate.py` (needs Pillow).
+To regenerate the icons, banners and placeholder screenshots: `python3 assets/wporg/generate.py` (needs Pillow).
 To replace one, overwrite the PNG. When you change the number of screenshots, change
 the captions in `readme.txt` to match.
