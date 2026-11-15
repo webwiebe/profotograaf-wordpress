@@ -27,7 +27,7 @@ final class Backup_Intro {
 		return array(
 			__( 'Copies your Media Library images to your Profotograaf account.', 'profotograaf' ),
 			__( 'Copying has its own switch below and is off until you turn it on. Nothing is sent before that. Sharing anonymous usage data, using Profotograaf photos in the editor and sending Media Library files do not switch it on.', 'profotograaf' ),
-			__( 'Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage.', 'profotograaf' ),
+			__( 'Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent with its file name and its metadata, except the GPS position, which is removed first. JPEG, PNG, WebP and GIF images are copied. RAW files, videos and other image types are left out, because their GPS position cannot be removed. The copies count towards your Profotograaf storage.', 'profotograaf' ),
 			__( 'Each file is copied once. Editing or deleting it here later changes nothing on Profotograaf. When you switch copying off or delete the plugin, the copies stay in your Profotograaf account until you delete them there.', 'profotograaf' ),
 			__( 'Photos of people are personal data. Check that your privacy policy and your agreements with clients allow a copy on Profotograaf. On a site with several authors, copying also includes files that other users uploaded.', 'profotograaf' ),
 		);

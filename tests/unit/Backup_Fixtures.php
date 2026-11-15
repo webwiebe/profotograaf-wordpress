@@ -78,6 +78,12 @@ trait Backup_Fixtures {
 		);
 		Functions\when( 'get_posts' )->alias( fn( $args ) => $this->find_posts( $args ) );
 		Functions\when( 'wp_basename' )->alias( fn( $path ) => basename( (string) $path ) );
+		Functions\when( 'wp_tempnam' )->alias( fn() => (string) tempnam( sys_get_temp_dir(), 'pfbk-out' ) );
+		Functions\when( 'wp_delete_file' )->alias(
+			function ( $path ) {
+				return @unlink( (string) $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Test cleanup.
+			}
+		);
 		Functions\when( 'wp_specialchars_decode' )->returnArg();
 		Functions\when( 'wp_next_scheduled' )->alias(
 			function ( $hook, $args = array() ) {

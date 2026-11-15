@@ -2359,6 +2359,7 @@ msgstr "Una galería necesita un título."
 msgid "Profotograaf did not return the new gallery."
 msgstr "Profotograaf no devolvió la nueva galería."
 
+#: includes/class-backup-worker.php:388
 #: includes/trait-api-client-writes.php:75
 #: includes/trait-api-client-writes.php:79
 msgid "The file could not be read."
@@ -2553,6 +2554,7 @@ msgstr "No se pudo leer el archivo desde este sitio."
 msgid "The file is too large for this site to send. Resize it and send it again."
 msgstr "El archivo es demasiado grande para que este sitio lo envíe. Redimensiónalo y vuelve a enviarlo."
 
+#: includes/class-backup-worker.php:395
 #: includes/class-upload-queue.php:481
 msgid "The file could not be prepared for sending."
 msgstr "No se pudo preparar el archivo para su envío."
@@ -3250,17 +3252,9 @@ msgstr[1] "%d fotos mantenidas en Profotograaf."
 msgid "Copies your Media Library images to your Profotograaf account."
 msgstr "Copia las imágenes de tu Biblioteca de medios a tu cuenta de Profotograaf."
 
-#: includes/admin/class-backup-intro.php:30
-msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent as stored, with its file name and its metadata, which can include the GPS position. Images, RAW files and videos are copied. The copies count towards your Profotograaf storage."
-msgstr "Los archivos van a galerías privadas de tu cuenta de Profotograaf, una por mes, con el nombre del título de este sitio. Cada archivo se envía tal como está guardado, con su nombre de archivo y sus metadatos, que pueden incluir la posición GPS. Se copian imágenes, archivos RAW y vídeos. Las copias cuentan para tu almacenamiento en Profotograaf."
-
 #: includes/class-settings-schema.php:175
 msgid "Copies your Media Library images to your Profotograaf account. Off by default. Nothing is sent before you switch it on."
 msgstr "Copia las imágenes de tu Biblioteca de medios a tu cuenta de Profotograaf. Desactivado por defecto. No se envía nada antes de que lo actives."
-
-#: includes/class-settings-schema.php:182
-msgid "Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. Images, RAW files and videos are copied. Photos imported from Profotograaf are skipped."
-msgstr "Los archivos usados en el sitio son los de una entrada o página publicada, como imagen destacada o en un bloque de imagen o de galería, más los archivos que marques. Se copian imágenes, archivos RAW y vídeos. Las fotos importadas de Profotograaf se omiten."
 
 #: includes/class-settings-schema.php:184
 msgid "Files used on the site (recommended)"
@@ -3547,18 +3541,18 @@ msgstr "El archivo se envió pero Profotograaf no respondió. Puede que ya esté
 msgid "The upload was interrupted. The file may be on Profotograaf already."
 msgstr "La subida se interrumpió. Puede que el archivo ya esté en Profotograaf."
 
-#: includes/class-backup-labels.php:58
+#: includes/class-backup-labels.php:59
 msgid "The file is too large for the memory of this site."
 msgstr "El archivo es demasiado grande para la memoria de este sitio."
 
 #. translators: %d: HTTP status code, for example 500.
-#: includes/class-backup-labels.php:65
+#: includes/class-backup-labels.php:66
 #, php-format
 msgid "Profotograaf answered with error %d."
 msgstr "Profotograaf respondió con el error %d."
 
 #. translators: %s: error code.
-#: includes/class-backup-labels.php:71
+#: includes/class-backup-labels.php:72
 #, php-format
 msgid "The upload failed (%s)."
 msgstr "La subida falló (%s)."
@@ -4528,3 +4522,15 @@ msgstr "Abrir la página para compartir"
 #: includes/class-github-updates.php:151
 msgid "Release notes on GitHub"
 msgstr "Notas de la versión en GitHub"
+
+#: includes/admin/class-backup-intro.php:30
+msgid "Files go to private galleries in your Profotograaf account, one per month, named after the title of this site. Each file is sent with its file name and its metadata, except the GPS position, which is removed first. JPEG, PNG, WebP and GIF images are copied. RAW files, videos and other image types are left out, because their GPS position cannot be removed. The copies count towards your Profotograaf storage."
+msgstr "Los archivos van a galerías privadas de tu cuenta de Profotograaf, una por mes, con el título de este sitio en el nombre. Cada archivo se envía con su nombre y sus metadatos, salvo la posición GPS, que se elimina antes. Se copian las imágenes JPEG, PNG, WebP y GIF. Los archivos RAW, los vídeos y otros tipos de imagen se dejan fuera, porque no se puede eliminar su posición GPS. Las copias cuentan para tu almacenamiento de Profotograaf."
+
+#: includes/class-backup-labels.php:58
+msgid "Its location data cannot be removed, so it is not copied."
+msgstr "No se pueden eliminar sus datos de ubicación, por lo que no se copia."
+
+#: includes/class-settings-schema.php:182
+msgid "Files used on the site are the ones in a published post or page, as featured image or in an image or gallery block, plus the files you mark. JPEG, PNG, WebP and GIF images are copied, without their GPS position. Other types are left out. Photos imported from Profotograaf are skipped."
+msgstr "Los archivos usados en el sitio son los de una entrada o página publicada, como imagen destacada o en un bloque de imagen o de galería, más los archivos que marques. Se copian las imágenes JPEG, PNG, WebP y GIF, sin su posición GPS. Los demás tipos se dejan fuera. Las fotos importadas de Profotograaf se omiten."
