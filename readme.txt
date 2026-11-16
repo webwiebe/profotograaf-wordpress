@@ -4,7 +4,7 @@ Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.2.6
+Stable tag: 0.2.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -282,6 +282,11 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 == Changelog ==
 
+= 0.2.7 =
+* Fix: a gallery with random order is drawn on the server from a seed, so the page no longer holds an empty space until the script runs. A cached page keeps its order.
+* Fix: the suggested privacy policy text for Copy to Profotograaf says the GPS position is removed from each copy and that only JPEG, PNG, WebP and GIF images are copied.
+* Change: anonymous usage events, when you share them, are sent with a new ingest key. The old key keeps working.
+
 = 0.2.6 =
 * Fix: Copy to Profotograaf removes the GPS position from every copy before it leaves your site, as sending Media Library files already did. Earlier versions sent the file as stored. Only JPEG, PNG, WebP and GIF images are copied now. RAW files, videos, HEIC, AVIF and TIFF are skipped with the reason "Its location data cannot be removed, so it is not copied." The setting stays off until you switch it on.
 
@@ -370,6 +375,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the gallery script ships with the plugin.
 
 == Upgrade Notice ==
+
+= 0.2.7 =
+Random galleries render in order on the server, and the privacy policy text for copying matches what the plugin sends.
 
 = 0.2.6 =
 Copy to Profotograaf now removes the GPS position from copied images and skips file types it cannot clean. Update before you switch copying on.
