@@ -24,7 +24,7 @@ final class Telemetry_Delivery {
 	public const USAGE_ENDPOINT = 'https://f.profotograaf.nl';
 	public const EVENTS_PATH    = '/api/v1/events';
 	public const PROJECT        = 'profotograaf-wordpress';
-	public const FUNNELBARN_KEY = '87e9507246186dde1a354a5e333d42b445c2a267';
+	public const FUNNELBARN_KEY = '60af4b90d81f174cdf32500b170402c8d9f5bb3feac494ec54d955ea593d4b68';
 	public const PAUSE_OPTION   = 'profotograaf_telemetry_queued_pause';
 	public const DEFAULT_PAUSE  = 300;
 	public const MAX_PAUSE      = 86400;
