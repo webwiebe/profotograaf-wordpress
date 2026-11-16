@@ -184,6 +184,9 @@ class Privacy_Test extends Leads_Test_Case {
 		$this->assertStringContainsString( 'GPS position', $captured );
 		$this->assertStringContainsString( 'client gallery', $captured );
 		$this->assertStringContainsString( 'personal data', $captured );
+		$this->assertStringContainsString( 'removes the GPS position from the copy first', $captured );
+		$this->assertStringNotContainsString( 'which can include the GPS position', $captured );
+		$this->assertStringNotContainsString( 'RAW and video files', $captured );
 		// Whether the platform strips other metadata is unknown, so the text must not promise it.
 		$this->assertStringNotContainsString( 'removes all metadata', $captured );
 		$this->assertStringNotContainsString( 'strips all', $captured );
