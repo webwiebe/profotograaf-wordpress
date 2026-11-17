@@ -198,7 +198,7 @@ Result observed in the browser and WP-CLI tests, run on WordPress 6.9.4, 7.0.4 a
 | WordPress below 6.9 | Untested | Untested | Untested | The plugin requires 6.9. |
 | Multisite | Untested | Untested | Untested | |
 | Browsers other than Chromium | Untested | Untested | Untested | |
-| Watermarked galleries | Untested | Untested | Untested | No watermarked gallery could be made or found for issue #157, see "Real platform run". The platform doc states `thumb` is not served for them. The prototype falls back to `web` when a row has no `thumb` URL, covered by a unit test only. |
+| Watermarked galleries | Untested | Works | Untested | Run on the real testing platform for issue #157, see "Watermarked gallery on the real platform". The platform lists `web` only, the prototype falls back to it for every size, and Convert to local keeps the watermark. |
 | Real platform (not the mock) | Not run | Works | Not run | Run on WordPress 7.1 against profotograaf.nl for issue #157, see "Real platform run". The other rows above still come from the mock platform in `tests/e2e/mock-platform.mjs`. |
 
 ### Third-party plugins
@@ -290,8 +290,8 @@ Run on 2026-10-11 on a local WordPress 7.1.2 site (PHP 8.3) connected to profoto
 | Mark cleared on republish | After the republish a feed run cleared the gone mark on the remaining kept attachments. |
 | Convert to local | Worked while the gallery was unpublished, because the `web` image was still in the edge cache and the download got that copy (129034 bytes, the same as the cached file). It also worked on a published gallery. Both runs gave an upload file with the usual sizes, the virtual mark removed and the front end reading the local URL. A conversion of a photo whose `web` URL is not in the edge cache while unpublished was not run on the real platform (the mock covers that failure). |
 | REST image edit | Not run again on the real platform. |
-| Watermarked gallery | Not tested, see below. |
-| Watermark visible on kept images, and kept after Convert to local | Not tested. |
+| Watermarked gallery | Run later, see "Watermarked gallery on the real platform". |
+| Watermark visible on kept images, and kept after Convert to local | Run later, see "Watermarked gallery on the real platform". Visible, and kept. |
 
 ### Edge cache after unpublish
 
@@ -304,8 +304,25 @@ The image measured is the `web` variant of "Test 157 photo 1". It was requested 
 
 ### What could not be done
 
-- Watermarked gallery. The watermark is the `watermark_enabled` field of `PUT /api/v1/galleries/{id}`. That route needs a logged-in session. With the plugin's device token it answers 403 "this app is not allowed to use this endpoint". The embed routes can read, create, upload to and switch embeddable on a gallery, and nothing in them sets a watermark. No existing gallery on the account listed `web` only, which is how the embed list shows a watermark. Testing it needs a person to switch the watermark on for a test gallery in the Profotograaf app (and a studio watermark has to be set for the account).
+- Watermarked gallery (run later, see "Watermarked gallery on the real platform"). The watermark is the `watermark_enabled` field of `PUT /api/v1/galleries/{id}`. That route needs a logged-in session. With the plugin's device token it answers 403 "this app is not allowed to use this endpoint". The embed routes can read, create, upload to and switch embeddable on a gallery, and nothing in them sets a watermark. No existing gallery on the account listed `web` only, which is how the embed list shows a watermark. Testing it needs a person to switch the watermark on for a test gallery in the Profotograaf app (and a studio watermark has to be set for the account).
 - The platform now lists a `large` variant next to `thumb` and `web` for galleries that are not watermarked. The plugin ignores it, so a kept photo still serves at most the `web` size.
+
+## Watermarked gallery on the real platform (issue #157)
+
+Run on 2026-11-17 at about 03:53 Amsterdam time against the testing platform (`https://profotograaf.test.wiebe.xyz`, not profotograaf.nl), with a fresh test account, a WordPress site from `tests/e2e/up.sh` and the plugin built from this repository at 0.2.7. The site is torn down. The test account stays on the testing platform.
+
+Setup. The plugin's device token cannot switch a watermark on, so a signed-in session did it: `PUT /api/v1/portfolios/me/watermark` set the studio watermark and `PUT /api/v1/galleries/{id}` with `watermark_enabled: true` answered 200. The gallery held 2 photos, 800 x 1200 and 1200 x 800 pixels. The kept photos were made with `Virtual_Attachments::create()` from the catalogue row, run through `wp eval`, not through the "Keep on Profotograaf" button.
+
+| Cell | Observed |
+| --- | --- |
+| Photo list before the watermark | Variants `thumb` (400 x 400) and `web` (800 x 1200). |
+| Photo list after the watermark | Variant `web` only. `thumbnail_url` is empty and `full_url` is the `web` URL. The version part of the URL changed (`web-9b1823179f9b.jpg` to `web-82d0c3a7f574.jpg`). No `large` variant was listed for these 800 x 1200 photos. |
+| Watermark on the image | Visible. `web-82d0c3a7f574.jpg` is 29872 bytes, answers 200 `image/jpeg` with `cache-control: public, max-age=31536000, immutable`, and shows the watermark. |
+| Old URLs after the switch | The old `web` URL answers 302 with `cache-control: no-store` to the new `web` URL on a GET (a HEAD request answered 404). The old `thumb` URL answers 404 with `no-store`. |
+| Keep on a watermarked gallery | The catalogue row has `thumb_url` equal to `web_url`, because the platform lists no `thumb`. The attachment is virtual and `full`, `large`, `medium` and `thumbnail` all give the watermarked `web` URL at 800 x 1200. A thumbnail therefore loads the full web image. |
+| Convert to local | Worked. The upload file is 29872 bytes with the same MD5 as the watermarked `web` image, so the watermark is kept. The virtual mark is gone and the URL is the upload URL. |
+
+Not run: a photo kept before the watermark was switched on (its stored `thumb` URL now answers 404, so the sync after the change should replace it, which this run did not check), the "Keep on Profotograaf" button and a front-end page, the production platform, and a photo large enough to get the `large` variant.
 
 ## Proposed child issues (not created)
 
@@ -316,7 +333,7 @@ Open these only if the recommendation is accepted.
 3. Sync on the change feed instead of the full catalogue: use `GET /api/v1/embed/changes` with the cursor, fall back to the full list on `resync`. Also listen for `available` per gallery. Done in issue #153.
 4. Editor-side URL refresh: update the `url` attribute of Image blocks and Gallery items in the editor when the attachment URL changes (JavaScript), and rewrite saved URLs in Gallery blocks. Done in issue #154.
 5. Block the REST image edit and the "Edit image" button for virtual attachments with a clear message, instead of the generic error. Done in issue #155, see "Image editing".
-7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving. Done for the unpublish and the cache (see "Real platform run"). The watermarked gallery is still open.
+7. Test against the real platform, including a watermarked gallery and an actual unpublish, and measure how long an edge-cached image keeps serving. Done for the unpublish and the cache (see "Real platform run") and for the watermarked gallery (see "Watermarked gallery on the real platform").
 6. Compatibility tests against real offload and image-optimisation plugins (the untested cells above), on WordPress 6.9, 7.0 and 7.1. Done in issue #156, see "Third-party plugins".
 8. Uninstall and deactivation behaviour: what happens to virtual attachments when the plugin is removed (the files do not exist locally, so every image would break). Offer a bulk conversion before removal. Done in issue #158, see "Deactivation and uninstall".
 9. Platform request: a webhook or a feed entry when a gallery stops being available, and an optional purge call. Both are absent from the platform documentation read.
