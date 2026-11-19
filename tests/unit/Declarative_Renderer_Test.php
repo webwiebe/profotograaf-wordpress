@@ -147,7 +147,7 @@ class Declarative_Renderer_Test extends TestCase {
 	public function test_a_served_fixture_draws_the_golden_tree( string $name ): void {
 		$fixture = $this->fixture( $name );
 		$this->skip_without_intl( $fixture );
-		$html = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] );
+		$html = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'], 'Made with Profotograaf', 'Show more', array(), isset( $fixture['seed'] ) ? (int) $fixture['seed'] : null );
 		$this->assertNotNull( $html );
 		$this->assertSame( file_get_contents( self::FIXTURES . $name . '.server.html' ), $this->tree( (string) $html ) );
 	}
@@ -163,7 +163,7 @@ class Declarative_Renderer_Test extends TestCase {
 		$fixture = $this->fixture( $name );
 		$this->skip_without_intl( $fixture );
 		$expected = (string) file_get_contents( self::FIXTURES . $name . '.expected.html' );
-		$html     = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'] );
+		$html     = Declarative_Renderer::render( $fixture['gallery'], $fixture['attrs'], 'Made with Profotograaf', 'Show more', array(), isset( $fixture['seed'] ) ? (int) $fixture['seed'] : null );
 		if ( null === $html ) {
 			$this->assertFileDoesNotExist( self::FIXTURES . $name . '.server.html', $name . ' has a server file but the renderer draws nothing' );
 			return;
