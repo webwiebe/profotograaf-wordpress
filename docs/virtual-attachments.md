@@ -309,7 +309,7 @@ The image measured is the `web` variant of "Test 157 photo 1". It was requested 
 
 ## Watermarked gallery on the real platform (issue #157)
 
-Run on 2026-11-17 at about 03:53 Amsterdam time against the testing platform (`https://profotograaf.test.wiebe.xyz`, not profotograaf.nl), with a fresh test account, a WordPress site from `tests/e2e/up.sh` and the plugin built from this repository at 0.2.7. The site is torn down. The test account stays on the testing platform.
+Run on 2026-11-17 at about 03:53 Amsterdam time against the testing platform (a separate deployment from profotograaf.nl), with a fresh test account, a WordPress site from `tests/e2e/up.sh` and the plugin built from this repository at 0.2.7. The site is torn down. The test account stays on the testing platform.
 
 Setup. The plugin's device token cannot switch a watermark on, so a signed-in session did it: `PUT /api/v1/portfolios/me/watermark` set the studio watermark and `PUT /api/v1/galleries/{id}` with `watermark_enabled: true` answered 200. The gallery held 2 photos, 800 x 1200 and 1200 x 800 pixels. The kept photos were made with `Virtual_Attachments::create()` from the catalogue row, run through `wp eval`, not through the "Keep on Profotograaf" button.
 
