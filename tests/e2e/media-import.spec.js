@@ -121,10 +121,22 @@ test.describe( 'Media > Import from Profotograaf', () => {
 		await page.reload();
 		await expect( page.locator( '.profotograaf-import__badge' ) ).toHaveCount( 2 );
 
+		// The grid fills from an admin-ajax query-attachments call. Wait for that
+		// response (registered before the action that fires it) instead of the
+		// count's 5 s default, which a loaded host overruns.
+		const gridLoaded = () =>
+			page.waitForResponse(
+				( r ) => r.url().includes( 'admin-ajax.php' ) && ( r.request().postData() || '' ).includes( 'query-attachments' ),
+				{ timeout: 90_000 }
+			);
+		let loaded = gridLoaded();
 		await page.goto( '/wp-admin/upload.php' );
+		await loaded;
 		const attachments = page.locator( '.attachments .attachment' );
 		await expect( attachments ).toHaveCount( 3 );
+		loaded = gridLoaded();
 		await page.locator( '#profotograaf-source-filter' ).selectOption( 'profotograaf' );
+		await loaded;
 		await expect( attachments ).toHaveCount( 2 );
 	} );
 	test( 'shows the origin of an imported photo and re-imports it in place', async ( { page } ) => {
