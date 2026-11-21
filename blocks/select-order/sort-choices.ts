@@ -14,7 +14,7 @@ export interface Choice< V extends string = string > {
 }
 
 /** Values of the entries that stay first. */
-export const PINNED_VALUES: readonly string[] = [ '', 'all', 'any', 'none' ];
+const PINNED_VALUES: readonly string[] = [ '', 'all', 'any', 'none' ];
 
 /** The language of the editor, for the collator. */
 function editorLocale(): string | undefined {
