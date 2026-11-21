@@ -1120,7 +1120,7 @@ msgstr ""
 
 #: includes/class-divi-gallery-module.php:81
 #: includes/class-elementor-gallery-widget.php:138
-#: includes/class-settings-schema.php:327
+#: includes/class-settings-schema.php:325
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Lightbox"
@@ -1640,159 +1640,159 @@ msgstr ""
 msgid "Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo's own shape."
 msgstr ""
 
-#: includes/class-settings-schema.php:271
+#: includes/class-settings-schema.php:270
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Original"
 msgstr ""
 
-#: includes/class-settings-schema.php:272
+#: includes/class-settings-schema.php:271
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Square (1:1)"
 msgstr ""
 
-#: includes/class-settings-schema.php:284
+#: includes/class-settings-schema.php:283
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Captions"
 msgstr ""
 
-#: includes/class-settings-schema.php:285
+#: includes/class-settings-schema.php:284
 msgid "Whether photo captions show and where."
 msgstr ""
 
-#: includes/class-settings-schema.php:287
+#: includes/class-settings-schema.php:286
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Hidden"
 msgstr ""
 
-#: includes/class-settings-schema.php:288
+#: includes/class-settings-schema.php:287
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "Below the photo"
 msgstr ""
 
-#: includes/class-settings-schema.php:289
+#: includes/class-settings-schema.php:288
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:3
 msgid "On top of the photo"
 msgstr ""
 
-#: includes/class-settings-schema.php:296
+#: includes/class-settings-schema.php:295
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Sort order"
 msgstr ""
 
-#: includes/class-settings-schema.php:297
+#: includes/class-settings-schema.php:296
 msgid "The order of the photos."
 msgstr ""
 
-#: includes/class-settings-schema.php:299
+#: includes/class-settings-schema.php:298
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Newest first"
 msgstr ""
 
-#: includes/class-settings-schema.php:300
+#: includes/class-settings-schema.php:299
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Oldest first"
 msgstr ""
 
-#: includes/class-settings-schema.php:301
+#: includes/class-settings-schema.php:300
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "By file name"
 msgstr ""
 
-#: includes/class-settings-schema.php:302
+#: includes/class-settings-schema.php:301
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Random"
 msgstr ""
 
-#: includes/class-settings-schema.php:311
+#: includes/class-settings-schema.php:310
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Photos per page"
 msgstr ""
 
-#: includes/class-settings-schema.php:312
+#: includes/class-settings-schema.php:311
 msgid "Show this many photos at first, from 1 to 200. Leave empty to show all of them."
 msgstr ""
 
-#: includes/class-settings-schema.php:318
+#: includes/class-settings-schema.php:317
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Load more button"
 msgstr ""
 
-#: includes/class-settings-schema.php:319
+#: includes/class-settings-schema.php:318
 msgid "Add a button that shows the next photos when \"Photos per page\" is set."
 msgstr ""
 
-#: includes/class-settings-schema.php:328
+#: includes/class-settings-schema.php:326
 msgid "Open a photo in a larger view when a visitor clicks it."
 msgstr ""
 
-#: includes/class-settings-schema.php:336
+#: includes/class-settings-schema.php:333
 msgid "Duotone colours"
 msgstr ""
 
-#: includes/class-settings-schema.php:337
+#: includes/class-settings-schema.php:334
 msgid "Tint every photo with two colours, the shadow and the highlight, as two hex codes separated by a comma, for example #1a1a2e,#f5c542. A block can choose its own duotone. Leave empty for the original colours."
 msgstr ""
 
-#: includes/class-settings-schema.php:344
+#: includes/class-settings-schema.php:341
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Link photos to"
 msgstr ""
 
-#: includes/class-settings-schema.php:345
+#: includes/class-settings-schema.php:342
 msgid "What a click on a photo does. This applies only when the lightbox is off, because an open lightbox handles the click itself."
 msgstr ""
 
-#: includes/class-settings-schema.php:347
+#: includes/class-settings-schema.php:344
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Nothing"
 msgstr ""
 
-#: includes/class-settings-schema.php:348
+#: includes/class-settings-schema.php:345
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The photo page on Profotograaf"
 msgstr ""
 
-#: includes/class-settings-schema.php:349
+#: includes/class-settings-schema.php:346
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Your photographer site"
 msgstr ""
 
-#: includes/class-settings-schema.php:350
+#: includes/class-settings-schema.php:347
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "The original photo file"
 msgstr ""
 
-#: includes/class-settings-schema.php:357
+#: includes/class-settings-schema.php:354
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
 msgid "Open photo links in a new tab"
 msgstr ""
 
-#: includes/class-settings-schema.php:358
+#: includes/class-settings-schema.php:355
 msgid "Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere."
 msgstr ""
 

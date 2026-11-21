@@ -20,6 +20,17 @@ defined( 'ABSPATH' ) || exit;
 final class Settings_Fields {
 
 	/**
+	 * Selects that keep a natural order instead of the alphabetical one, by
+	 * schema key, with the order they keep.
+	 */
+	private const NATURAL_ORDER = array(
+		'gallery_ratio'        => 'aspect ratios, original first, then wide to tall',
+		'gallery_load_more'    => 'switch, On before Off',
+		'gallery_lightbox'     => 'switch, On before Off',
+		'gallery_link_new_tab' => 'switch, On before Off',
+	);
+
+	/**
 	 * Settings.
 	 *
 	 * @var Settings
@@ -97,7 +108,7 @@ final class Settings_Fields {
 
 		if ( 'enum' === $entry['type'] ) {
 			$choices = (array) ( $entry['choices'] ?? array() );
-			$choices = isset( $entry['order'] ) ? Select_Options::natural( $choices, (string) $entry['order'] ) : Select_Options::sorted( $choices );
+			$choices = isset( self::NATURAL_ORDER[ $key ] ) ? Select_Options::natural( $choices, self::NATURAL_ORDER[ $key ] ) : Select_Options::sorted( $choices );
 			?>
 			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>">
 				<?php foreach ( $choices as $choice => $label ) : ?>
