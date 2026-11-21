@@ -2,7 +2,6 @@ import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	Placeholder,
-	SelectControl,
 	TextControl,
 	TextareaControl,
 	ToggleControl,
@@ -11,6 +10,7 @@ import { createElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import './style.css';
+import { SortedSelect } from '../select-order/sorted-select';
 import { registerServerRenderedBlock } from '../register';
 import metadata from './block.json';
 import { GalleryChooser, GalleryPanel } from './gallery-panel';
@@ -91,7 +91,8 @@ function TextPanel( { attributes, setAttributes }: EditProps ) {
 				placeholder={ defaults.heading }
 				onChange={ ( value ) => setAttributes( { heading: value } ) }
 			/>
-			<SelectControl
+			<SortedSelect
+				naturalOrder="heading levels, 2 to 6, then Paragraph"
 				__nextHasNoMarginBottom
 				__next40pxDefaultSize
 				label={ __( 'Heading level', 'profotograaf' ) }

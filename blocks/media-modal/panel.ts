@@ -1,3 +1,4 @@
+import { sortChoices } from '../select-order/sort-choices';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import type { PhotoItem } from '../import-screen/types';
 import type { Session } from './session';
@@ -188,7 +189,7 @@ export class Panel {
 		this.galleryKey = key;
 		this.gallery.replaceChildren(
 			new Option( __( 'All galleries', 'profotograaf' ), '' ),
-			...galleries.map( ( item ) => new Option( `${ item.title } (${ item.count })`, item.id ) )
+			...sortChoices( galleries.map( ( item ) => ( { label: `${ item.title } (${ item.count })`, value: item.id } ) ) ).map( ( item ) => new Option( item.label, item.value ) )
 		);
 		this.gallery.value = gallery;
 	}

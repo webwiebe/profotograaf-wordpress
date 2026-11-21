@@ -1,5 +1,6 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
-import { Button, SelectControl, TextControl } from '@wordpress/components';
+import { Button, TextControl } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import { useState } from '@wordpress/element';
 import type { GalleryFacet } from './types';
 
@@ -41,7 +42,7 @@ export function Filters( { galleries, gallery, onSearch, onGallery }: FiltersPro
 			<Button type="submit" variant="secondary">
 				{ __( 'Search', 'profotograaf' ) }
 			</Button>
-			<SelectControl
+			<SortedSelect
 				label={ __( 'Gallery', 'profotograaf' ) }
 				value={ gallery }
 				options={ options }

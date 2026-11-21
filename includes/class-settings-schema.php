@@ -266,6 +266,7 @@ final class Settings_Schema {
 				'default'     => '',
 				'label'       => __( 'Photo shape', 'profotograaf' ),
 				'description' => __( 'Crop every photo in a grid or slideshow to one aspect ratio, or keep each photo as shot. Masonry always keeps each photo\'s own shape.', 'profotograaf' ) . ' ' . $note,
+				'order'       => 'aspect ratios, original first, then wide to tall',
 				'choices'     => $platform + array(
 					'original' => __( 'Original', 'profotograaf' ),
 					'1-1'      => __( 'Square (1:1)', 'profotograaf' ),
@@ -316,6 +317,7 @@ final class Settings_Schema {
 				'default'     => '',
 				'label'       => __( 'Load more button', 'profotograaf' ),
 				'description' => __( 'Add a button that shows the next photos when "Photos per page" is set.', 'profotograaf' ) . ' ' . $note,
+				'order'       => 'switch, On before Off',
 				'choices'     => $on_off,
 			),
 			'gallery_lightbox'       => array(
@@ -324,6 +326,7 @@ final class Settings_Schema {
 				'default'     => '',
 				'label'       => __( 'Lightbox', 'profotograaf' ),
 				'description' => __( 'Open a photo in a larger view when a visitor clicks it.', 'profotograaf' ) . ' ' . $note,
+				'order'       => 'switch, On before Off',
 				'choices'     => $on_off,
 			),
 			'gallery_duotone'        => array(
@@ -353,6 +356,7 @@ final class Settings_Schema {
 				'default'     => '',
 				'label'       => __( 'Open photo links in a new tab', 'profotograaf' ),
 				'description' => __( 'Whether a photo link opens in a new browser tab. This applies only when the lightbox is off and photos link somewhere.', 'profotograaf' ) . ' ' . $note,
+				'order'       => 'switch, On before Off',
 				'choices'     => $on_off,
 			),
 		);

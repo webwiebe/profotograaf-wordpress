@@ -5,11 +5,11 @@ import {
 	Notice,
 	PanelBody,
 	Placeholder,
-	SelectControl,
 } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Picker } from './picker';
+import { SortedSelect } from '../select-order/sorted-select';
 import {
 	LIST_PATH,
 	clearedAttributes,
@@ -101,7 +101,7 @@ function InspectorPanel( {
 	return (
 		<InspectorControls>
 			<PanelBody title={ __( 'Gallery', 'profotograaf' ) }>
-				<SelectControl
+				<SortedSelect
 					label={ __( 'Layout', 'profotograaf' ) }
 					value={ layout }
 					options={ layoutOptions() }

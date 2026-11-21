@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { BaseControl, ColorPalette, SelectControl, TextControl } from '@wordpress/components';
+import { BaseControl, ColorPalette, TextControl } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import { cleanNumber } from '../gallery/display-options';
 import { GAP_CUSTOM, cleanColor, gapPreset } from '../gallery/look-options';
 import { fieldLabel } from './labels';
@@ -58,7 +59,8 @@ function GapField( props: FieldProps & { field: 'gap' | 'gapRow' | 'gapColumn' }
 	const preset = custom ? GAP_CUSTOM : gapPreset( stored );
 	return (
 		<>
-			<SelectControl
+			<SortedSelect
+				naturalOrder="sizes, none to large, then Custom"
 				label={ fieldLabel( field ) }
 				value={ preset }
 				options={ gapChoices( section, field ) }
@@ -75,10 +77,18 @@ function GapField( props: FieldProps & { field: 'gap' | 'gapRow' | 'gapColumn' }
 	);
 }
 
+/** The look fields whose choices are a ladder; hover sorts alphabetically. */
+const LOOK_ORDER: Partial< Record< 'radius' | 'hover' | 'hoverStrength' | 'shadow', string > > = {
+	radius: 'corner ladder, square to circle',
+	hoverStrength: 'strength ladder, subtle to strong',
+	shadow: 'shadow ladder, none to strong',
+};
+
 function ChoiceField( { section, field, onChange }: FieldProps & { field: 'radius' | 'hover' | 'hoverStrength' | 'shadow' } ) {
 	const value = section[ field ];
 	return (
-		<SelectControl
+		<SortedSelect
+			naturalOrder={ LOOK_ORDER[ field ] }
 			label={ fieldLabel( field ) }
 			value={ typeof value === 'string' ? value : '' }
 			options={ lookChoices( section, field ) }

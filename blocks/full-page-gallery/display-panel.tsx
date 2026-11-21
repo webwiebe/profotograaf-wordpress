@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import { displayControls } from '../gallery/display-options';
 import type { FullPageAttributes } from './types';
 
@@ -31,8 +32,9 @@ export function DisplayPanel( {
 				{ displayControls( attributes ).map( ( control ) => {
 					const attribute = control.attribute;
 					return isShared( attribute ) ? (
-						<SelectControl
+						<SortedSelect
 							key={ attribute }
+							naturalOrder={ control.order }
 							label={ control.label }
 							help={ control.help }
 							value={ attributes[ attribute ] }

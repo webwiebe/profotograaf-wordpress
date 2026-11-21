@@ -1,7 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
-import { BaseControl, ColorPalette, PanelBody, SelectControl, TextControl } from '@wordpress/components';
+import { BaseControl, ColorPalette, PanelBody, TextControl } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import { cleanNumber, type DisplayAttributes, type SiteDefaults } from './display-options';
 import {
 	GAP_CUSTOM,
@@ -65,7 +66,8 @@ function GapControl( { gap, setGap }: { gap: string; setGap: ( gap: string ) => 
 	const preset = custom ? GAP_CUSTOM : gapPreset( gap );
 	return (
 		<>
-			<SelectControl
+			<SortedSelect
+				naturalOrder="sizes, none to large, then Custom"
 				label={ __( 'Gap between photos', 'profotograaf' ) }
 				value={ preset }
 				options={ gapOptions() }
@@ -116,8 +118,9 @@ function FrameControls( { attributes, setAttributes }: Omit< PanelProps, 'defaul
 /** Inspector panel with the spacing and shape options (#198). */
 export function LookPanel( { attributes, setAttributes, defaults }: PanelProps ) {
 	const { slideshow, square } = lookScope( attributes, defaults );
-	const select = ( key: keyof LookAttributes, label: string, options: Array< { label: string; value: string } > ) => (
-		<SelectControl
+	const select = ( key: keyof LookAttributes, label: string, options: Array< { label: string; value: string } >, naturalOrder?: string ) => (
+		<SortedSelect
+			naturalOrder={ naturalOrder }
 			label={ label }
 			value={ attributes[ key ] }
 			options={ options }
@@ -136,11 +139,11 @@ export function LookPanel( { attributes, setAttributes, defaults }: PanelProps )
 						<NumberField label={ __( 'Space between columns (pixels)', 'profotograaf' ) } help={ gapHelp } value={ attributes.gapColumn } max={ 96 } onChange={ ( gapColumn ) => setAttributes( { gapColumn } ) } />
 					</>
 				) }
-				{ select( 'radius', __( 'Corners', 'profotograaf' ), radiusOptions( square, attributes.radius ) ) }
+				{ select( 'radius', __( 'Corners', 'profotograaf' ), radiusOptions( square, attributes.radius ), 'corner ladder, square to circle' ) }
 				{ select( 'hover', __( 'Hover effect', 'profotograaf' ), hoverOptions( slideshow ) ) }
-				{ attributes.hover !== 'none' && select( 'hoverStrength', __( 'Hover strength', 'profotograaf' ), strengthOptions() ) }
+				{ attributes.hover !== 'none' && select( 'hoverStrength', __( 'Hover strength', 'profotograaf' ), strengthOptions(), 'strength ladder, subtle to strong' ) }
 				{ ! slideshow && <FrameControls attributes={ attributes } setAttributes={ setAttributes } /> }
-				{ ! slideshow && select( 'shadow', __( 'Shadow', 'profotograaf' ), shadowOptions() ) }
+				{ ! slideshow && select( 'shadow', __( 'Shadow', 'profotograaf' ), shadowOptions(), 'shadow ladder, none to strong' ) }
 			</PanelBody>
 		</InspectorControls>
 	);

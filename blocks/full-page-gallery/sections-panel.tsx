@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { InspectorControls } from '@wordpress/block-editor';
-import { Button, PanelBody, SelectControl } from '@wordpress/components';
+import { Button, PanelBody } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import type { PhotoRow } from '../gallery/types';
 import { presetOptions, typeLabel } from './labels';
 import { isCustom } from './picks';
@@ -36,7 +37,7 @@ function SectionCard( { section, index, count, onChange }: CardProps ) {
 					typeLabel( section.type )
 				) }
 			</p>
-			<SelectControl
+			<SortedSelect
 				label={ __( 'Type', 'profotograaf' ) }
 				value={ section.type }
 				options={ SECTION_TYPES.map( ( type ) => ( { label: typeLabel( type ), value: type } ) ) }
@@ -111,7 +112,7 @@ export function SectionsPanel( { attributes, setAttributes, answer, photos }: Pa
 	return (
 		<InspectorControls>
 			<PanelBody title={ __( 'Layout', 'profotograaf' ) }>
-				<SelectControl
+				<SortedSelect
 					label={ __( 'Preset', 'profotograaf' ) }
 					help={ __( 'The pattern of sections repeats until every photo is shown.', 'profotograaf' ) }
 					value={ attributes.preset }
