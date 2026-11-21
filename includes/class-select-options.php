@@ -29,10 +29,11 @@ final class Select_Options {
 	/**
 	 * A `value => label` map in alphabetical order by label, the pinned values first.
 	 *
-	 * @param array<int|string,string> $choices Choices by value.
-	 * @param array<int,string>        $pinned  Extra values that stay first, for example the value of "Do not send".
-	 * @param string|null              $locale  Language tag. The site language when omitted.
-	 * @return array<int|string,string>
+	 * @template K of array-key
+	 * @param array<K,string>   $choices Choices by value.
+	 * @param array<int,string> $pinned  Extra values that stay first, for example the value of "Do not send".
+	 * @param string|null       $locale  Language tag. The site language when omitted.
+	 * @return array<K,string>
 	 */
 	public static function sorted( array $choices, array $pinned = array(), ?string $locale = null ): array {
 		$keep  = array_merge( self::PINNED, $pinned );
@@ -79,9 +80,10 @@ final class Select_Options {
 	/**
 	 * Marks a list that keeps a natural order. The choices come back unchanged.
 	 *
-	 * @param array<int|string,string> $choices Choices by value.
-	 * @param string                   $order   The order they keep, in a few words ("sizes, small to large").
-	 * @return array<int|string,string>
+	 * @template K of array-key
+	 * @param array<K,string> $choices Choices by value.
+	 * @param string          $order   The order they keep, in a few words ("sizes, small to large").
+	 * @return array<K,string>
 	 */
 	public static function natural( array $choices, string $order ): array {
 		unset( $order );
@@ -115,7 +117,7 @@ final class Select_Options {
 		if ( function_exists( 'remove_accents' ) ) {
 			$text = (string) remove_accents( $text );
 		} else {
-			$from = (array) preg_split( '//u', 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', -1, PREG_SPLIT_NO_EMPTY );
+			$from = array_map( 'strval', (array) preg_split( '//u', 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', -1, PREG_SPLIT_NO_EMPTY ) );
 			$to   = str_split( 'AAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy' );
 			$text = strtr( $text, array_combine( $from, $to ) );
 		}
