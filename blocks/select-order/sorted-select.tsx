@@ -1,16 +1,18 @@
 import { SelectControl } from '@wordpress/components';
-import type { ComponentProps } from 'react';
 import { sortChoices, type Choice } from './sort-choices';
 
-type SelectProps = Omit< ComponentProps< typeof SelectControl >, 'options' >;
-
-type Props = SelectProps & {
+type Props = {
+	label: string;
+	value: string;
 	options: readonly Choice[];
+	onChange: ( value: string ) => void;
+	help?: string | undefined;
+	__nextHasNoMarginBottom?: boolean | undefined;
 	/**
 	 * Set for a list with a natural order, and name that order in a few words
 	 * ("sizes, small to large"). The options then keep the order given.
 	 */
-	naturalOrder?: string;
+	naturalOrder?: string | undefined;
 };
 
 /**
@@ -18,7 +20,7 @@ type Props = SelectProps & {
  * `naturalOrder` names the order they keep; scripts/selects-sorted.test.mjs
  * fails when another file imports SelectControl.
  */
-export function SortedSelect( { options, naturalOrder, ...rest }: Props ) {
+export function SortedSelect( { options, naturalOrder, label, value, onChange, help, __nextHasNoMarginBottom }: Props ) {
 	const shown = naturalOrder ? [ ...options ] : sortChoices( options );
-	return <SelectControl { ...rest } options={ shown } />;
+	return <SelectControl label={ label } value={ value } help={ help } options={ shown } onChange={ onChange } __nextHasNoMarginBottom={ __nextHasNoMarginBottom } />;
 }
