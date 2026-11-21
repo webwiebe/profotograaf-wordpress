@@ -70,7 +70,7 @@ class Divi_Gallery_Module extends \ET_Builder_Module {
 		$fields = array(
 			'gallery_id' => $this->select(
 				esc_html__( 'Gallery', 'profotograaf' ),
-				array( '' => esc_html__( 'Choose a gallery', 'profotograaf' ) ) + $choices,
+				Select_Options::sorted( array( '' => esc_html__( 'Choose a gallery', 'profotograaf' ) ) + $choices ),
 				array() === $choices ? esc_html__( 'No galleries yet. Connect your Profotograaf account under Settings, Profotograaf.', 'profotograaf' ) : ''
 			),
 			'layout'     => $this->select( esc_html__( 'Layout', 'profotograaf' ), Builder_Gallery::layout_choices() ),

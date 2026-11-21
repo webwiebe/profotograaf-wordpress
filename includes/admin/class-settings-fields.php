@@ -7,6 +7,7 @@
 
 namespace Profotograaf\Admin;
 
+use Profotograaf\Select_Options;
 use Profotograaf\Settings;
 use Profotograaf\Settings_Schema;
 
@@ -17,6 +18,17 @@ defined( 'ABSPATH' ) || exit;
  * Settings_Schema entry, so a new option appears here without code.
  */
 final class Settings_Fields {
+
+	/**
+	 * Selects that keep a natural order instead of the alphabetical one, by
+	 * schema key, with the order they keep.
+	 */
+	private const NATURAL_ORDER = array(
+		'gallery_ratio'        => 'aspect ratios, original first, then wide to tall',
+		'gallery_load_more'    => 'switch, On before Off',
+		'gallery_lightbox'     => 'switch, On before Off',
+		'gallery_link_new_tab' => 'switch, On before Off',
+	);
 
 	/**
 	 * Settings.
@@ -95,9 +107,11 @@ final class Settings_Fields {
 		$value = $this->settings->get( $key );
 
 		if ( 'enum' === $entry['type'] ) {
+			$choices = (array) ( $entry['choices'] ?? array() );
+			$choices = isset( self::NATURAL_ORDER[ $key ] ) ? Select_Options::natural( $choices, self::NATURAL_ORDER[ $key ] ) : Select_Options::sorted( $choices );
 			?>
 			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>">
-				<?php foreach ( (array) ( $entry['choices'] ?? array() ) as $choice => $label ) : ?>
+				<?php foreach ( $choices as $choice => $label ) : ?>
 					<option value="<?php echo esc_attr( (string) $choice ); ?>" <?php selected( $value, $choice ); ?>><?php echo esc_html( (string) $label ); ?></option>
 				<?php endforeach; ?>
 			</select>

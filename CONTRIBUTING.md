@@ -119,6 +119,7 @@ Standards a change has to meet:
 - oxlint: complexity 12, at most 60 lines per function, depth 4, 4 parameters. A ratchet baseline holds the existing count at zero, so any new finding fails.
 - Files stay under 500 lines (TS and PHP).
 - New and changed lines need 80% test coverage (diffs under 10 changed lines are exempt), for both TypeScript (vitest) and PHP (PHPUnit with pcov). Write real tests: they must fail when the code is wrong.
+- Every select sorts alphabetically by default, case-insensitive and by the site language, with "All", "Any", "None" and the site default first. In the editor use `SortedSelect` (`blocks/select-order/`), in PHP `Select_Options::sorted()`. A list with a natural order (sizes, a ladder, aspect ratios, numbers, On before Off) goes through `naturalOrder="..."` or `Select_Options::natural()`, and the string names that order. `scripts/check-selects-sorted.mjs` runs in `pnpm test:gates` and fails on a select built without them.
 - No dead code (knip), no high or critical advisories (`pnpm audit`, `composer audit`).
 - No `continue-on-error`, every action pinned to a version tag, and every release job needs the quality and test jobs.
 

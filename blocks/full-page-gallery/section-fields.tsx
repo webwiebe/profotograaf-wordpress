@@ -1,5 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { SelectControl, TextControl, TextareaControl } from '@wordpress/components';
+import { TextControl, TextareaControl } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import { cleanNumber } from '../gallery/display-options';
 import { defaultLabel, fieldLabel, valueLabel, type FieldName } from './labels';
 import { isLookField } from './look';
@@ -13,12 +14,20 @@ interface FieldProps {
 	onChange: ( section: Section ) => void;
 }
 
+/** The choice fields that keep a natural order; the others sort alphabetically. */
+const NATURAL_FIELDS: Partial< Record< string, string > > = {
+	ratio: 'aspect ratios, landscape to portrait',
+	align: 'positions, left to right',
+	side: 'positions, left to right',
+};
+
 /** A field with a list of allowed values, such as the photo shape. */
 function ChoiceField( { section, field, onChange }: FieldProps ) {
 	const rule = fieldRule( section.type, field );
 	const value = section[ field ];
 	return (
-		<SelectControl
+		<SortedSelect
+			naturalOrder={ NATURAL_FIELDS[ field ] }
 			label={ fieldLabel( field ) }
 			value={ typeof value === 'string' ? value : '' }
 			options={ [
@@ -37,7 +46,8 @@ function SwitchField( { section, field, onChange }: FieldProps ) {
 	const on = __( 'On', 'profotograaf' );
 	const off = __( 'Off', 'profotograaf' );
 	return (
-		<SelectControl
+		<SortedSelect
+			naturalOrder="a switch, On then Off"
 			label={ fieldLabel( field ) }
 			value={ typeof value === 'boolean' ? ( value ? 'on' : 'off' ) : '' }
 			options={ [

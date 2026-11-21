@@ -64,8 +64,8 @@ describe( 'Spacing and shape of a section', () => {
 		fields( { type: 'filmstrip' } );
 		expect( options( 'Hover effect' ) ).toEqual( [
 			[ '', 'Default (Zoom inside the frame)' ],
-			[ 'zoom', 'Zoom inside the frame' ],
 			[ 'none', 'None' ],
+			[ 'zoom', 'Zoom inside the frame' ],
 		] );
 		expect( screen.queryByLabelText( 'Shadow' ) ).toBeNull();
 		expect( screen.queryByLabelText( 'Space between rows (pixels)' ) ).toBeNull();

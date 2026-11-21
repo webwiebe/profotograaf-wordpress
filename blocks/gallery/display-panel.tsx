@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls } from '@wordpress/block-editor';
-import { CheckboxControl, PanelBody, SelectControl, TextControl } from '@wordpress/components';
+import { CheckboxControl, PanelBody, TextControl } from '@wordpress/components';
+import { SortedSelect } from '../select-order/sorted-select';
 import {
 	AUTO,
 	blockDefaults,
@@ -79,8 +80,9 @@ export function DisplayPanel( { attributes, setAttributes, row = null }: PanelPr
 							{ control.help }
 						</p>
 					) : control.kind === 'select' ? (
-						<SelectControl
+						<SortedSelect
 							key={ control.attribute }
+							naturalOrder={ control.order }
 							label={ control.label }
 							help={ control.help }
 							value={ attributes[ control.attribute ] }

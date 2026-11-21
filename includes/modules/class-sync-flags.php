@@ -11,6 +11,7 @@ use Profotograaf\Module;
 use Profotograaf\Photo_Importer;
 use Profotograaf\Plugin;
 use Profotograaf\Reconcile;
+use Profotograaf\Select_Options;
 use Profotograaf\Sync_Attention as Attention;
 
 defined( 'ABSPATH' ) || exit;
@@ -125,15 +126,21 @@ class Sync_Flags implements Module {
 		if ( 'attachment' !== $post_type || ! $this->active() ) {
 			return;
 		}
-		$on = isset( $_GET[ Media_Import_Screen::FILTER_ARG ] ) && Attention::FILTER_VAL === sanitize_key( wp_unslash( $_GET[ Media_Import_Screen::FILTER_ARG ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only.
+		$on      = isset( $_GET[ Media_Import_Screen::FILTER_ARG ] ) && Attention::FILTER_VAL === sanitize_key( wp_unslash( $_GET[ Media_Import_Screen::FILTER_ARG ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only.
+		$options = '';
+		foreach ( Select_Options::sorted(
+			array(
+				''                    => __( 'All sources', 'profotograaf' ),
+				Attention::FILTER_VAL => __( 'Profotograaf: needs attention', 'profotograaf' ),
+			)
+		) as $value => $label ) {
+			$options .= sprintf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( (string) $value ), selected( $on, Attention::FILTER_VAL === (string) $value, false ), esc_html( $label ) );
+		}
 		printf(
-			'<label class="screen-reader-text" for="profotograaf-source-list">%1$s</label><select name="%2$s" id="profotograaf-source-list"><option value="">%3$s</option><option value="%4$s"%5$s>%6$s</option></select>',
+			'<label class="screen-reader-text" for="profotograaf-source-list">%1$s</label><select name="%2$s" id="profotograaf-source-list">%3$s</select>',
 			esc_html__( 'Filter by Profotograaf state', 'profotograaf' ),
 			esc_attr( Media_Import_Screen::FILTER_ARG ),
-			esc_html__( 'All sources', 'profotograaf' ),
-			esc_attr( Attention::FILTER_VAL ),
-			selected( $on, true, false ),
-			esc_html__( 'Profotograaf: needs attention', 'profotograaf' )
+			$options // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from escaped parts above.
 		);
 	}
 

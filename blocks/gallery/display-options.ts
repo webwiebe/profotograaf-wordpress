@@ -83,6 +83,8 @@ export interface DisplayControl {
 	/** The label of the checkbox that stores `auto` in a number control. */
 	automatic?: string;
 	options?: ChoiceOption[];
+	/** Set on a select whose options keep a natural order: names that order. Other selects sort alphabetically. */
+	order?: string;
 	min?: number;
 	max?: number;
 }
@@ -224,7 +226,7 @@ export function displayControls(
 					kind: 'note',
 					help: __( "Masonry keeps each photo's own shape.", 'profotograaf' ),
 			  }
-			: { attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions( layout, attributes.ratio ?? '' ) };
+			: { attribute: 'ratio', label: __( 'Photo shape', 'profotograaf' ), kind: 'select', options: ratioOptions( layout, attributes.ratio ?? '' ), order: 'aspect ratios, landscape to portrait' };
 	return [
 		{ attribute: 'columns', label: __( 'Columns', 'profotograaf' ), kind: 'number', min: 1, max: 8, automatic: automaticColumns() },
 		{ attribute: 'columnsTablet', label: __( 'Columns on tablets', 'profotograaf' ), kind: 'number', min: 1, max: 8, placeholder: shown.tablet, automatic: automaticColumns() },
@@ -233,8 +235,8 @@ export function displayControls(
 		{ attribute: 'captions', label: __( 'Captions', 'profotograaf' ), kind: 'select', options: captionOptions() },
 		{ attribute: 'sort', label: __( 'Sort order', 'profotograaf' ), kind: 'select', options: sortOptions() },
 		{ attribute: 'perPage', label: __( 'Photos per page', 'profotograaf' ), kind: 'number', min: 1, max: 200, automatic: __( 'All photos', 'profotograaf' ) },
-		{ attribute: 'loadMore', label: __( 'Load more button', 'profotograaf' ), kind: 'select', options: onOff() },
-		{ attribute: 'lightbox', label: __( 'Lightbox', 'profotograaf' ), kind: 'select', options: onOff() },
+		{ attribute: 'loadMore', label: __( 'Load more button', 'profotograaf' ), kind: 'select', options: onOff(), order: 'a switch, On then Off' },
+		{ attribute: 'lightbox', label: __( 'Lightbox', 'profotograaf' ), kind: 'select', options: onOff(), order: 'a switch, On then Off' },
 		{
 			attribute: 'linkTo',
 			label: __( 'Link photos to', 'profotograaf' ),
@@ -247,6 +249,7 @@ export function displayControls(
 			label: __( 'Open photo links in a new tab', 'profotograaf' ),
 			kind: 'select',
 			options: onOff(),
+			order: 'a switch, On then Off',
 			help: __( 'Applies only when the lightbox is off and photos link somewhere.', 'profotograaf' ),
 		},
 	];

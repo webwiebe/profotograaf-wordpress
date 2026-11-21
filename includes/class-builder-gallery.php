@@ -52,7 +52,7 @@ final class Builder_Gallery {
 		foreach ( $index->all() as $row ) {
 			$choices[ $row['id'] ] = '' !== $row['title'] ? $row['title'] : $row['id'];
 		}
-		return $choices;
+		return Select_Options::sorted( $choices );
 	}
 
 	/**
@@ -61,12 +61,14 @@ final class Builder_Gallery {
 	 * @return array<string,string>
 	 */
 	public static function layout_choices(): array {
-		return array(
-			''          => __( 'Site default', 'profotograaf' ),
-			'auto'      => __( 'Automatic', 'profotograaf' ),
-			'grid'      => __( 'Grid', 'profotograaf' ),
-			'masonry'   => __( 'Masonry', 'profotograaf' ),
-			'slideshow' => __( 'Slideshow', 'profotograaf' ),
+		return Select_Options::sorted(
+			array(
+				''          => __( 'Site default', 'profotograaf' ),
+				'auto'      => __( 'Automatic', 'profotograaf' ),
+				'grid'      => __( 'Grid', 'profotograaf' ),
+				'masonry'   => __( 'Masonry', 'profotograaf' ),
+				'slideshow' => __( 'Slideshow', 'profotograaf' ),
+			)
 		);
 	}
 
@@ -76,10 +78,13 @@ final class Builder_Gallery {
 	 * @return array<string,string>
 	 */
 	public static function lightbox_choices(): array {
-		return array(
-			''    => __( 'Site default', 'profotograaf' ),
-			'on'  => __( 'On', 'profotograaf' ),
-			'off' => __( 'Off', 'profotograaf' ),
+		return Select_Options::natural(
+			array(
+				''    => __( 'Site default', 'profotograaf' ),
+				'on'  => __( 'On', 'profotograaf' ),
+				'off' => __( 'Off', 'profotograaf' ),
+			),
+			'switch, On before Off'
 		);
 	}
 
@@ -95,7 +100,7 @@ final class Builder_Gallery {
 		for ( $count = 1; $count <= ( self::MAX_COLUMNS[ $field ] ?? 0 ); $count++ ) {
 			$choices[ (string) $count ] = (string) $count;
 		}
-		return $choices;
+		return Select_Options::natural( $choices, 'numbers, 1 up to the limit' );
 	}
 
 	/**

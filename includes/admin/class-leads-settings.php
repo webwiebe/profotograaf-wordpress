@@ -19,6 +19,7 @@ use Profotograaf\Leads\Skip_Counter;
 use Profotograaf\Leads\Site_Tools;
 use Profotograaf\Modules\Settings_Page;
 use Profotograaf\Plugin;
+use Profotograaf\Select_Options;
 use Profotograaf\Settings_Schema;
 
 defined( 'ABSPATH' ) || exit;
@@ -325,7 +326,7 @@ class Leads_Settings {
 									?>
 								</option>
 								<option value="<?php echo esc_attr( Mapping::NONE ); ?>" <?php selected( $choice, Mapping::NONE ); ?>><?php esc_html_e( 'Do not send', 'profotograaf' ); ?></option>
-								<?php foreach ( $form['fields'] as $option ) : ?>
+								<?php foreach ( Select_Options::sorted_rows( $form['fields'], 'label' ) as $option ) : ?>
 									<option value="<?php echo esc_attr( $option['id'] ); ?>" <?php selected( $choice, $option['id'] ); ?>><?php echo esc_html( $option['label'] ); ?></option>
 								<?php endforeach; ?>
 							</select>

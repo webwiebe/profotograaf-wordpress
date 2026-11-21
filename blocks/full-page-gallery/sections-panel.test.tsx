@@ -24,9 +24,9 @@ describe( 'SectionsPanel preset', () => {
 		expect( options ).toEqual( [
 			[ '', 'Default (Editorial)' ],
 			[ 'calm', 'Calm' ],
+			[ 'custom', 'Custom' ],
 			[ 'editorial', 'Editorial' ],
 			[ 'playful', 'Playful' ],
-			[ 'custom', 'Custom' ],
 		] );
 		expect( screen.queryByText( 'Add a section' ) ).toBeNull();
 	} );
