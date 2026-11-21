@@ -126,7 +126,7 @@ class Sync_Flags implements Module {
 		if ( 'attachment' !== $post_type || ! $this->active() ) {
 			return;
 		}
-		$on = isset( $_GET[ Media_Import_Screen::FILTER_ARG ] ) && Attention::FILTER_VAL === sanitize_key( wp_unslash( $_GET[ Media_Import_Screen::FILTER_ARG ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only.
+		$on      = isset( $_GET[ Media_Import_Screen::FILTER_ARG ] ) && Attention::FILTER_VAL === sanitize_key( wp_unslash( $_GET[ Media_Import_Screen::FILTER_ARG ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only.
 		$options = '';
 		foreach ( Select_Options::sorted(
 			array(

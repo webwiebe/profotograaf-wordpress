@@ -103,7 +103,29 @@ final class Select_Options {
 			$collator->setAttribute( \Collator::NUMERIC_COLLATION, \Collator::ON );
 			return static fn( string $a, string $b ): int => (int) $collator->compare( $a, $b );
 		}
-		$fold = static fn( string $text ): string => strtolower( function_exists( 'remove_accents' ) ? remove_accents( $text ) : $text );
-		return static fn( string $a, string $b ): int => strnatcmp( $fold( $a ), $fold( $b ) );
+		return static fn( string $a, string $b ): int => strnatcmp( self::fold( $a ), self::fold( $b ) );
+	}
+
+	/**
+	 * Lower case without accents, for the sort without the intl extension.
+	 *
+	 * @param string $text Label.
+	 */
+	private static function fold( string $text ): string {
+		if ( function_exists( 'remove_accents' ) ) {
+			$text = (string) remove_accents( $text );
+		} else {
+			$text = strtr(
+				$text,
+				array(
+					'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+					'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O',
+					'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a',
+					'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ñ' => 'n', 'ò' => 'o',
+					'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'ÿ' => 'y',
+				)
+			);
+		}
+		return strtolower( $text );
 	}
 }
