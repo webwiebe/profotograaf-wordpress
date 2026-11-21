@@ -187,10 +187,15 @@ export class Panel {
 			return;
 		}
 		this.galleryKey = key;
+		const choices = galleries.map( ( item ) => ( { label: galleryOption( item ), value: item.id } ) );
 		this.gallery.replaceChildren(
 			new Option( __( 'All galleries', 'profotograaf' ), '' ),
-			...sortChoices( galleries.map( ( item ) => ( { label: `${ item.title } (${ item.count })`, value: item.id } ) ) ).map( ( item ) => new Option( item.label, item.value ) )
+			...sortChoices( choices ).map( ( item ) => new Option( item.label, item.value ) )
 		);
 		this.gallery.value = gallery;
 	}
+}
+
+function galleryOption( item: { title: string; count: number } ): string {
+	return `${ item.title } (${ item.count })`;
 }
