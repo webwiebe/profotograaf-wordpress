@@ -8,9 +8,9 @@
  * `SortedSelect`'s `naturalOrder`, which names that order.
  */
 
-export interface Choice {
+export interface Choice< V extends string = string > {
 	label: string;
-	value: string;
+	value: V;
 }
 
 /** Values of the entries that stay first. */
