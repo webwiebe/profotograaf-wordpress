@@ -10,9 +10,9 @@ describe( 'sortChoices', () => {
 	} );
 
 	it( 'sorts accented letters with their base letter in nl, de and fr', () => {
-		const input = [ choice( 'Zebra' ), choice( 'Ötzi' ), choice( 'Eden' ), choice( 'école' ), choice( 'Oslo' ) ];
+		const input = [ choice( 'Zebra' ), choice( 'Ötzi' ), choice( 'Eden' ), choice( 'Élan' ), choice( 'Oslo' ) ];
 		for ( const locale of [ 'nl', 'de', 'fr' ] ) {
-			expect( labels( sortChoices( input, locale ) ), locale ).toEqual( [ 'Eden', 'école', 'Oslo', 'Ötzi', 'Zebra' ] );
+			expect( labels( sortChoices( input, locale ) ), locale ).toEqual( [ 'Eden', 'Élan', 'Oslo', 'Ötzi', 'Zebra' ] );
 		}
 	} );
 
