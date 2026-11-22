@@ -9,6 +9,7 @@ namespace Profotograaf\Admin;
 
 use Profotograaf\Modules\Settings_Page;
 use Profotograaf\Plugin;
+use Profotograaf\Select_Options;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -236,7 +237,7 @@ class Upload_Panel {
 			<?php wp_nonce_field( 'profotograaf_upload_link' ); ?>
 			<label for="profotograaf-upload-gallery"><?php esc_html_e( 'Gallery', 'profotograaf' ); ?></label>
 			<select id="profotograaf-upload-gallery" name="gallery_id">
-				<?php foreach ( $choices as $choice ) : ?>
+				<?php foreach ( Select_Options::sorted_rows( $choices, 'title' ) as $choice ) : ?>
 					<option value="<?php echo esc_attr( $choice['id'] ); ?>"><?php echo esc_html( $choice['title'] ); ?></option>
 				<?php endforeach; ?>
 			</select>

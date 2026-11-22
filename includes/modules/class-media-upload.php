@@ -12,6 +12,7 @@ use Profotograaf\Media_Baseline;
 use Profotograaf\Module;
 use Profotograaf\Photo_Importer;
 use Profotograaf\Plugin;
+use Profotograaf\Select_Options;
 use Profotograaf\Upload_Queue;
 
 defined( 'ABSPATH' ) || exit;
@@ -169,6 +170,13 @@ class Media_Upload implements Module {
 		}
 		$html  = sprintf( '<select name="attachments[%1$d][%2$s]" id="attachments-%1$d-%2$s">', $id, esc_attr( self::FIELD ) );
 		$html .= '<option value="">' . esc_html__( 'Do not send', 'profotograaf' ) . '</option>';
+		$links = Select_Options::sorted_rows(
+			array_map(
+				static fn( $link ) => $link + array( 'name' => '' !== $link['title'] ? $link['title'] : $link['gallery_id'] ),
+				$links
+			),
+			'name'
+		);
 		foreach ( $links as $link ) {
 			$html .= sprintf( '<option value="%1$s">%2$s</option>', esc_attr( $link['gallery_id'] ), esc_html( '' !== $link['title'] ? $link['title'] : $link['gallery_id'] ) );
 		}

@@ -104,7 +104,7 @@ class Elementor_Gallery_Widget extends Widget_Base {
 			array(
 				'label'       => esc_html__( 'Gallery', 'profotograaf' ),
 				'type'        => Controls_Manager::SELECT,
-				'options'     => array( '' => esc_html__( 'Choose a gallery', 'profotograaf' ) ) + $choices,
+				'options'     => Select_Options::sorted( array( '' => esc_html__( 'Choose a gallery', 'profotograaf' ) ) + $choices ),
 				'default'     => '',
 				'description' => array() === $choices ? esc_html__( 'No galleries yet. Connect your Profotograaf account under Settings, Profotograaf.', 'profotograaf' ) : '',
 			)
