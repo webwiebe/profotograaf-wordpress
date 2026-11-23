@@ -50,6 +50,12 @@ class Platform_Status_Test extends Gallery_Test_Case {
 				'key'         => 'ingest-key',
 				'environment' => 'production',
 			),
+			'usage_reporting' => array(
+				'endpoint'    => 'https://f.profotograaf.nl',
+				'project'     => 'wordpress-plugin-usage',
+				'key'         => 'usage-ingest-key',
+				'environment' => 'production',
+			),
 		);
 	}
 
@@ -127,8 +133,38 @@ class Platform_Status_Test extends Gallery_Test_Case {
 		$this->assertSame( 'wordpress-plugin', $stored['error_reporting']['project'] );
 		$this->assertSame( 'ingest-key', $stored['error_reporting']['key'] );
 		$this->assertSame( 'production', $stored['error_reporting']['environment'] );
+		$this->assertSame( 'https://f.profotograaf.nl', $stored['usage_reporting']['endpoint'] );
+		$this->assertSame( 'wordpress-plugin-usage', $stored['usage_reporting']['project'] );
+		$this->assertSame( 'usage-ingest-key', $stored['usage_reporting']['key'] );
+		$this->assertSame( 'production', $stored['usage_reporting']['environment'] );
+		$this->assertSame( $stored['usage_reporting'], Platform_Status::stored_usage_reporting() );
 		$this->assertSame( $this->now, $stored['fetched_at'] );
 		$this->assertFalse( $this->autoload[ Platform_Status::OPTION ] );
+	}
+
+	public function test_a_response_without_usage_reporting_drops_the_stored_block(): void {
+		$this->http->reply( 200, $this->answer() );
+		$this->status->refresh();
+		$answer = $this->answer();
+		unset( $answer['usage_reporting'] );
+		$this->http->reply( 200, $answer );
+
+		$this->status->refresh();
+
+		$this->assertNull( $this->status->stored()['usage_reporting'] );
+		$this->assertNull( Platform_Status::stored_usage_reporting() );
+	}
+
+	public function test_a_rotated_usage_key_replaces_the_stored_one(): void {
+		$this->http->reply( 200, $this->answer() );
+		$this->status->refresh();
+		$answer                           = $this->answer();
+		$answer['usage_reporting']['key'] = 'rotated-key';
+		$this->http->reply( 200, $answer );
+
+		$this->status->refresh();
+
+		$this->assertSame( 'rotated-key', $this->status->stored()['usage_reporting']['key'] );
 	}
 
 	public function test_a_response_without_error_reporting_stores_none(): void {
@@ -190,6 +226,7 @@ class Platform_Status_Test extends Gallery_Test_Case {
 			array(
 				'review_prompt'   => 'yes',
 				'error_reporting' => array( 'endpoint' => 'ftp://x' ),
+				'usage_reporting' => array( 'endpoint' => 'https://f.profotograaf.nl' ),
 			)
 		);
 
@@ -198,6 +235,7 @@ class Platform_Status_Test extends Gallery_Test_Case {
 		$stored = $this->status->stored();
 		$this->assertFalse( $stored['review_prompt']['eligible'] );
 		$this->assertNull( $stored['error_reporting'] );
+		$this->assertNull( $stored['usage_reporting'] );
 	}
 
 	public function test_stored_is_empty_before_the_first_call(): void {

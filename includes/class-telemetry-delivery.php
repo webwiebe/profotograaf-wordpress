@@ -14,20 +14,26 @@ defined( 'ABSPATH' ) || exit;
  * counters go to FunnelBarn. Both hosts take `POST <base>/api/v1/events` with
  * their own key and project headers.
  *
- * The error destination (endpoint, project, key, environment) comes from the
- * `error_reporting` block the platform hands out in the status call. Without
- * that block no error is sent. The FunnelBarn key is an ingest-only collector
- * key that ships in the plugin source. Keys are never logged.
+ * Both destinations (endpoint, project, key, environment) come from the
+ * `error_reporting` and `usage_reporting` blocks the platform hands out in the
+ * status call. Without its block nothing of that kind is sent. The plugin
+ * source holds no key. Keys are never logged.
  */
 final class Telemetry_Delivery {
 
-	public const USAGE_ENDPOINT = 'https://f.profotograaf.nl';
-	public const EVENTS_PATH    = '/api/v1/events';
-	public const PROJECT        = 'profotograaf-wordpress';
-	public const FUNNELBARN_KEY = '60af4b90d81f174cdf32500b170402c8d9f5bb3feac494ec54d955ea593d4b68';
-	public const PAUSE_OPTION   = 'profotograaf_telemetry_queued_pause';
-	public const DEFAULT_PAUSE  = 300;
-	public const MAX_PAUSE      = 86400;
+	public const EVENTS_PATH   = '/api/v1/events';
+	public const PAUSE_OPTION  = 'profotograaf_telemetry_queued_pause';
+	public const DEFAULT_PAUSE = 300;
+	public const MAX_PAUSE     = 86400;
+
+	/**
+	 * The usage destination the platform handed out, or null without one.
+	 *
+	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
+	 */
+	public static function usage_destination(): ?array {
+		return Platform_Status::stored_usage_reporting();
+	}
 
 	/**
 	 * The error destination the platform handed out, or null without one.
@@ -58,16 +64,22 @@ final class Telemetry_Delivery {
 	}
 
 	/**
-	 * Base URL for usage events, or an empty string when sending is disabled.
+	 * Base URL for usage events, or an empty string when there is no usage
+	 * destination or sending is disabled.
 	 */
 	public static function usage_endpoint(): string {
+		$destination = self::usage_destination();
+		if ( null === $destination ) {
+			return '';
+		}
 		/**
-		 * Filters the base URL of the usage destination (FunnelBarn). The plugin
-		 * appends /api/v1/events. An empty string disables sending usage.
+		 * Filters the base URL of the usage destination (FunnelBarn). It starts
+		 * as the endpoint from the platform. The plugin appends /api/v1/events.
+		 * An empty string disables sending usage.
 		 *
 		 * @param string $url Base URL.
 		 */
-		return self::clean_base( apply_filters( 'profotograaf_telemetry_usage_endpoint', self::USAGE_ENDPOINT ) );
+		return self::clean_base( apply_filters( 'profotograaf_telemetry_usage_endpoint', $destination['endpoint'] ) );
 	}
 
 	/**
@@ -87,17 +99,17 @@ final class Telemetry_Delivery {
 	public static function deliver( array $item ): bool {
 		$is_error = 'error' === ( $item['type'] ?? '' );
 		$base     = $is_error ? self::errors_endpoint() : self::usage_endpoint();
-		// An error needs the platform block for its key and project, besides the endpoint.
-		$destination = $is_error ? self::error_destination() : null;
-		if ( '' === $base || ( $is_error && null === $destination ) ) {
+		// Both kinds need the platform block for their key and project, besides the endpoint.
+		$destination = $is_error ? self::error_destination() : self::usage_destination();
+		if ( '' === $base || null === $destination ) {
 			return true;
 		}
 		if ( self::paused_until() > 0 ) {
 			return false;
 		}
 
-		$event = $is_error ? Telemetry_Payload::bugbarn_event( $item ) : Telemetry_Payload::funnelbarn_event( $item, self::environment() );
-		if ( null !== $destination && '' !== $destination['environment'] ) {
+		$event = $is_error ? Telemetry_Payload::bugbarn_event( $item ) : Telemetry_Payload::funnelbarn_event( $item, '' !== $destination['environment'] ? $destination['environment'] : self::environment() );
+		if ( $is_error && '' !== $destination['environment'] ) {
 			// BugBarn groups issues by `environment` and fills its environment
 			// facet from `deployment.environment`, so the event carries both.
 			$event['attributes']['environment']            = $destination['environment'];
@@ -108,7 +120,7 @@ final class Telemetry_Delivery {
 			array(
 				'timeout'     => Config::http_timeout(),
 				'redirection' => 0,
-				'headers'     => self::headers( $destination ),
+				'headers'     => self::headers( $destination, $is_error ),
 				'body'        => (string) wp_json_encode( $event ),
 			)
 		);
@@ -132,11 +144,12 @@ final class Telemetry_Delivery {
 	 * Request headers. No Authorization or x-api-key header is sent, both
 	 * services answer 401 to them.
 	 *
-	 * @param array{endpoint:string,project:string,key:string,environment:string}|null $destination Error destination, or null for a usage request.
+	 * @param array{endpoint:string,project:string,key:string,environment:string} $destination Destination block of the item.
+	 * @param bool                                                                $is_error    Whether the item is an error event.
 	 * @return array<string,string>
 	 */
-	private static function headers( ?array $destination ): array {
-		if ( null !== $destination ) {
+	private static function headers( array $destination, bool $is_error ): array {
+		if ( $is_error ) {
 			return array(
 				'Content-Type'      => 'application/json',
 				'X-BugBarn-Api-Key' => $destination['key'],
@@ -145,8 +158,8 @@ final class Telemetry_Delivery {
 		}
 		return array(
 			'Content-Type'         => 'application/json',
-			'X-FunnelBarn-Api-Key' => self::FUNNELBARN_KEY,
-			'X-FunnelBarn-Project' => self::PROJECT,
+			'X-FunnelBarn-Api-Key' => $destination['key'],
+			'X-FunnelBarn-Project' => $destination['project'],
 		);
 	}
 
