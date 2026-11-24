@@ -1,0 +1,61 @@
+name: Embed bump merge
+
+# The bump PR that embed-bump.yml opens (branch embed-bump/<version>) merges
+# without a person when the parity checks are green, and stays open when they
+# are red. On such a PR this workflow runs:
+#   - ci.yml: the PHP renderer against the new fixtures (Declarative_Renderer_Test),
+#     the contract lint (scripts/embed-package.test.mjs) and every other gate;
+#   - the embed-parity E2E spec on the new package, with the browser;
+# and then merges with `--match-head-commit`, so a commit pushed after the checks
+# started is not merged. A failing parity test prints its diff in the job log,
+# and the PR stays open for a person.
+# The merge needs no auto-merge setting: this job merges after the checks, not
+# before them. It touches only PRs from this repository on embed-bump/ branches
+# whose files are all part of a bump (scripts/embed-bump-guard.mjs).
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: embed-bump-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: CI on the bump
+    if: github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'embed-bump/')
+    uses: ./.github/workflows/ci.yml
+
+  parity:
+    name: Parity E2E on the bump
+    if: github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'embed-bump/')
+    uses: ./.github/workflows/e2e.yml
+    with:
+      specs: tests/e2e/embed-parity.spec.js
+
+  merge:
+    name: Merge the bump on green
+    needs: [ci, parity]
+    if: github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'embed-bump/')
+    runs-on: [self-hosted, build]
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      # The guard comes from main, never from the PR it judges.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Check that the PR holds only the bump
+        run: gh pr diff "$PR" --name-only | node scripts/embed-bump-guard.mjs
+      - name: Merge
+        run: gh pr merge "$PR" --squash --match-head-commit "$HEAD_SHA"
