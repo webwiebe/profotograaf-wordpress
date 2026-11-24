@@ -108,13 +108,7 @@ final class Telemetry_Delivery {
 			return false;
 		}
 
-		$event = $is_error ? Telemetry_Payload::bugbarn_event( $item ) : Telemetry_Payload::funnelbarn_event( $item, '' !== $destination['environment'] ? $destination['environment'] : self::environment() );
-		if ( $is_error && '' !== $destination['environment'] ) {
-			// BugBarn groups issues by `environment` and fills its environment
-			// facet from `deployment.environment`, so the event carries both.
-			$event['attributes']['environment']            = $destination['environment'];
-			$event['attributes']['deployment.environment'] = $destination['environment'];
-		}
+		$event    = self::event( $item, $is_error, $destination );
 		$response = wp_remote_post(
 			$base . self::EVENTS_PATH,
 			array(
@@ -138,6 +132,30 @@ final class Telemetry_Delivery {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * The event body of one queued item. Both kinds carry the environment of
+	 * their destination block. A usage event falls back to the WordPress
+	 * environment type when the block leaves it empty.
+	 *
+	 * @param array<string,mixed>                                                 $item        Queue item.
+	 * @param bool                                                                $is_error    Whether the item is an error event.
+	 * @param array{endpoint:string,project:string,key:string,environment:string} $destination Destination block of the item.
+	 * @return array<string,mixed>
+	 */
+	private static function event( array $item, bool $is_error, array $destination ): array {
+		if ( ! $is_error ) {
+			return Telemetry_Payload::funnelbarn_event( $item, '' !== $destination['environment'] ? $destination['environment'] : self::environment() );
+		}
+		$event = Telemetry_Payload::bugbarn_event( $item );
+		if ( '' !== $destination['environment'] ) {
+			// BugBarn groups issues by `environment` and fills its environment
+			// facet from `deployment.environment`, so the event carries both.
+			$event['attributes']['environment']            = $destination['environment'];
+			$event['attributes']['deployment.environment'] = $destination['environment'];
+		}
+		return $event;
 	}
 
 	/**
