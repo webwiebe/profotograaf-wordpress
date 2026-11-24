@@ -4,7 +4,7 @@ Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.2.8
+Stable tag: 0.2.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -282,6 +282,10 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 == Changelog ==
 
+= 0.2.9 =
+* Change: every drop-down of the plugin lists its options alphabetically in the site language, with the default choice first. Options with a natural order, such as aspect ratios, column counts and On before Off, keep it.
+* Fix: the daily usage event takes its destination and key from the platform status answer instead of a key built into the plugin, so connected sites no longer get a 401 for it. Without that destination no usage event is sent.
+
 = 0.2.8 =
 * Change: galleries drawn by the embed script use embed 0.6.1. Masonry columns come out more even, and the last row of the original-ratio grid fills the width.
 * Docs: the virtual attachment notes record a run against the real platform, including a watermarked gallery and how long an image stays served after a gallery is unpublished.
@@ -379,6 +383,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the gallery script ships with the plugin.
 
 == Upgrade Notice ==
+
+= 0.2.9 =
+Drop-downs list their options alphabetically, and the daily usage event no longer fails with a 401.
 
 = 0.2.8 =
 Galleries use embed 0.6.1 with more even masonry columns and a filled last row in the original-ratio grid.
