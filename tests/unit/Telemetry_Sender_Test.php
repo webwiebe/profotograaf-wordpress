@@ -87,6 +87,12 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 				'key'         => 'ingest-key',
 				'environment' => 'production',
 			),
+			'usage_reporting' => array(
+				'endpoint'    => 'https://f.profotograaf.nl',
+				'project'     => 'wordpress-plugin-usage',
+				'key'         => 'usage-ingest-key',
+				'environment' => 'staging',
+			),
 		);
 
 		$this->connection = new Connection();
@@ -322,15 +328,15 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertSame( 'https://f.profotograaf.nl/api/v1/events', $this->posts[0]['url'] );
 		$headers = $this->posts[0]['args']['headers'];
 		$this->assertSame( 'application/json', $headers['Content-Type'] );
-		$this->assertSame( Telemetry_Delivery::FUNNELBARN_KEY, $headers['X-FunnelBarn-Api-Key'] );
-		$this->assertSame( 'profotograaf-wordpress', $headers['X-FunnelBarn-Project'] );
+		$this->assertSame( 'usage-ingest-key', $headers['X-FunnelBarn-Api-Key'] );
+		$this->assertSame( 'wordpress-plugin-usage', $headers['X-FunnelBarn-Project'] );
 		$this->assertArrayNotHasKey( 'Authorization', $headers );
 		$this->assertArrayNotHasKey( 'x-api-key', $headers );
 
 		$body = json_decode( (string) $this->posts[0]['args']['body'], true );
 		$this->assertSame( 'daily_usage', $body['name'] );
 		$this->assertSame( '11111111-2222-4333-8444-555555555555', $body['session_id'] );
-		$this->assertSame( 'production', $body['environment'] );
+		$this->assertSame( 'staging', $body['environment'] );
 		$this->assertSame( 1, $body['properties']['delivery_success'] );
 		$this->assertSame( 1, $body['properties']['delivery_failed'] );
 		$this->assertSame( 1, $body['properties']['error_code_lead_delivery_timeout'] );
@@ -359,7 +365,7 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 	}
 
 	public function test_without_an_error_reporting_block_no_error_is_sent(): void {
-		unset( $this->options[ Platform_Status::OPTION ] );
+		unset( $this->options[ Platform_Status::OPTION ]['error_reporting'] );
 		$sender = $this->opt_in();
 		$sender->add_error( array( 'error_code' => 'a_code' ) );
 
@@ -370,13 +376,53 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 	}
 
 	public function test_an_incomplete_error_reporting_block_sends_no_error(): void {
-		$this->options[ Platform_Status::OPTION ] = array( 'error_reporting' => array( 'endpoint' => 'https://bb.profotograaf.nl' ) );
-		$sender                                   = $this->opt_in();
+		$this->options[ Platform_Status::OPTION ]['error_reporting'] = array( 'endpoint' => 'https://bb.profotograaf.nl' );
+		$sender = $this->opt_in();
 		$sender->add_error( array( 'error_code' => 'a_code' ) );
 
 		$sender->run();
 
 		$this->assertSame( array( 'https://f.profotograaf.nl/api/v1/events' ), array_column( $this->posts, 'url' ) );
+	}
+
+	public function test_without_a_usage_reporting_block_no_usage_event_is_sent(): void {
+		unset( $this->options[ Platform_Status::OPTION ]['usage_reporting'] );
+		$sender = $this->opt_in();
+		$sender->add_error( array( 'error_code' => 'a_code' ) );
+
+		$sender->run();
+
+		$this->assertSame( array( 'https://bb.profotograaf.nl/api/v1/events' ), array_column( $this->posts, 'url' ) );
+		$this->assertSame( '', $sender->usage_endpoint() );
+		$this->assertSame( array(), $sender->queue() );
+	}
+
+	public function test_an_incomplete_usage_reporting_block_sends_no_usage_event(): void {
+		$this->options[ Platform_Status::OPTION ]['usage_reporting'] = array(
+			'endpoint' => 'https://f.profotograaf.nl',
+			'project'  => 'wordpress-plugin-usage',
+		);
+		$sender = $this->opt_in();
+
+		$sender->run();
+
+		$this->assertSame( array(), $this->posts );
+	}
+
+	public function test_the_usage_block_endpoint_is_used_and_an_empty_environment_falls_back(): void {
+		$this->options[ Platform_Status::OPTION ]['usage_reporting']['endpoint']    = 'https://usage.example.org/';
+		$this->options[ Platform_Status::OPTION ]['usage_reporting']['environment'] = '';
+		$sender = $this->opt_in();
+
+		$sender->run();
+
+		$this->assertSame( array( 'https://usage.example.org/api/v1/events' ), array_column( $this->posts, 'url' ) );
+		$this->assertSame( 'production', json_decode( (string) $this->posts[0]['args']['body'], true )['environment'] );
+	}
+
+	public function test_the_plugin_holds_no_usage_key_or_default_usage_endpoint(): void {
+		$this->assertFalse( defined( Telemetry_Delivery::class . '::FUNNELBARN_KEY' ) );
+		$this->assertFalse( defined( Telemetry_Delivery::class . '::USAGE_ENDPOINT' ) );
 	}
 
 	public function test_the_block_endpoint_and_headers_are_used(): void {

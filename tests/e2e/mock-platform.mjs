@@ -336,6 +336,7 @@ const routes = {
 			site_url: typeof body.site_url === 'string' ? body.site_url : '',
 			review_prompt: state.reviewPrompt,
 			error_reporting: { endpoint: ORIGIN, project: 'wordpress-plugin', key: 'e2e-key', environment: 'e2e' },
+			usage_reporting: { endpoint: ORIGIN, project: 'wordpress-plugin-usage', key: 'e2e-usage-key', environment: 'e2e' },
 		} );
 	} ),
 	'POST /api/v1/auth/devices/signout': authed( ( { res } ) => {

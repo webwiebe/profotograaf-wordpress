@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Tells the platform which plugin, WordPress and PHP version this site runs
  * and keeps what the platform answers: whether to ask for a review
- * (`review_prompt`) and where to send error reports (`error_reporting`).
+ * (`review_prompt`), where to send error reports (`error_reporting`) and where to send the daily usage event (`usage_reporting`).
  *
  * A failed call, including the 404 a token gets when it does not belong to a
  * WordPress device, leaves the last stored answer in place.
@@ -90,6 +90,7 @@ class Platform_Status {
 			'fetched_at'      => $this->now(),
 			'review_prompt'   => $this->review_prompt( $answer['review_prompt'] ?? null ),
 			'error_reporting' => self::error_reporting( $answer['error_reporting'] ?? null ),
+			'usage_reporting' => self::usage_reporting( $answer['usage_reporting'] ?? null ),
 		);
 		// An answer without a plan block (the platform could not resolve it)
 		// keeps the plan the site already knew.
@@ -104,7 +105,7 @@ class Platform_Status {
 	/**
 	 * The stored answer, with defaults before the first successful call.
 	 *
-	 * @return array{fetched_at:int,attempted_at:int,review_prompt:array{eligible:bool,reason:string,at:string},error_reporting:array{endpoint:string,project:string,key:string,environment:string}|null,plan:array{slug:string,name:string,badge:bool,prominent:bool}|null}
+	 * @return array{fetched_at:int,attempted_at:int,review_prompt:array{eligible:bool,reason:string,at:string},error_reporting:array{endpoint:string,project:string,key:string,environment:string}|null,usage_reporting:array{endpoint:string,project:string,key:string,environment:string}|null,plan:array{slug:string,name:string,badge:bool,prominent:bool}|null}
 	 */
 	public function stored(): array {
 		$stored = get_option( self::OPTION, array() );
@@ -115,6 +116,7 @@ class Platform_Status {
 			'attempted_at'    => (int) ( $stored['attempted_at'] ?? 0 ),
 			'review_prompt'   => $this->review_prompt( $stored['review_prompt'] ?? null ),
 			'error_reporting' => self::error_reporting( $stored['error_reporting'] ?? null ),
+			'usage_reporting' => self::usage_reporting( $stored['usage_reporting'] ?? null ),
 			'plan'            => self::plan( $stored['plan'] ?? null ),
 		);
 	}
@@ -180,6 +182,28 @@ class Platform_Status {
 	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
 	 */
 	public static function error_reporting( $block ): ?array {
+		return self::destination( $block );
+	}
+
+	/**
+	 * Reads the usage reporting block, the FunnelBarn destination of the daily
+	 * usage event. It has the shape of the error reporting block. Null when it
+	 * is missing or incomplete, which means no usage is reported.
+	 *
+	 * @param mixed $block Block from the platform or the option.
+	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
+	 */
+	public static function usage_reporting( $block ): ?array {
+		return self::destination( $block );
+	}
+
+	/**
+	 * Reads a destination block: endpoint, project, key and environment.
+	 *
+	 * @param mixed $block Block from the platform or the option.
+	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
+	 */
+	private static function destination( $block ): ?array {
 		if ( ! is_array( $block ) ) {
 			return null;
 		}
@@ -227,6 +251,16 @@ class Platform_Status {
 	public static function stored_error_reporting(): ?array {
 		$stored = get_option( self::OPTION, array() );
 		return is_array( $stored ) ? self::error_reporting( $stored['error_reporting'] ?? null ) : null;
+	}
+
+	/**
+	 * The stored usage reporting block without a Platform_Status instance.
+	 *
+	 * @return array{endpoint:string,project:string,key:string,environment:string}|null
+	 */
+	public static function stored_usage_reporting(): ?array {
+		$stored = get_option( self::OPTION, array() );
+		return is_array( $stored ) ? self::usage_reporting( $stored['usage_reporting'] ?? null ) : null;
 	}
 
 	/**

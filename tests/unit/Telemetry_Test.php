@@ -13,6 +13,7 @@ use Brain\Monkey\Functions;
 use Profotograaf\Api_Client;
 use Profotograaf\Connection;
 use Profotograaf\Modules\Telemetry_Consent;
+use Profotograaf\Platform_Status;
 use Profotograaf\Plugin;
 use Profotograaf\Settings;
 use Profotograaf\Settings_Schema;
@@ -128,6 +129,14 @@ class Telemetry_Test extends Wp_Test_Case {
 	}
 
 	public function test_after_opt_in_batches_are_queued_and_dispatch_is_attempted(): void {
+		$this->options[ Platform_Status::OPTION ] = array(
+			'usage_reporting' => array(
+				'endpoint'    => 'https://f.profotograaf.nl',
+				'project'     => 'wordpress-plugin-usage',
+				'key'         => 'usage-ingest-key',
+				'environment' => 'production',
+			),
+		);
 		$this->opt_in();
 		$sender = $this->sender();
 
