@@ -244,6 +244,19 @@ class Telemetry_Sender_Test extends Wp_Test_Case {
 		$this->assertArrayNotHasKey( 'release', Telemetry_Payload::bugbarn_event( $item )['attributes'] );
 	}
 
+	public function test_an_error_without_a_usable_code_still_names_itself(): void {
+		// BugBarn takes `{}` as an event and opens an issue with a blank title (PRO2-200).
+		// An error event from the plugin always carries a body, an exception type and the surface.
+		foreach ( array( array(), array( 'error_code' => '%%%' ) ) as $item ) {
+			$event = Telemetry_Payload::bugbarn_event( $item );
+			$this->assertSame( 'unknown', $event['body'] );
+			$this->assertSame( 'unknown', $event['exception']['type'] );
+			$this->assertSame( 'unknown', $event['exception']['message'] );
+			$this->assertSame( 'wordpress', $event['attributes']['surface'] );
+			$this->assertSame( 'unknown', $event['attributes']['error_location'] );
+		}
+	}
+
 	public function test_free_text_in_module_and_error_fields_is_stripped(): void {
 		$payload = Telemetry_Payload::build(
 			array(
