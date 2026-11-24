@@ -6,6 +6,8 @@ import { parse } from 'yaml';
 const dir = new URL( '../.github/workflows/', import.meta.url );
 const SAME_REPO = "github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository";
 
+const FORK_GUARD = 'github.event.pull_request.head.repo.full_name == github.repository';
+
 function onPullRequests() {
 	return readdirSync( dir )
 		.filter( ( file ) => /\.ya?ml$/.test( file ) )
@@ -20,7 +22,8 @@ test( 'at least one workflow runs on pull requests', () => {
 test( 'a job in a pull request workflow runs for branches in this repository only', () => {
 	for ( const { file, workflow } of onPullRequests() ) {
 		for ( const [ name, job ] of Object.entries( workflow.jobs ) ) {
-			assert.equal( job.if, SAME_REPO, `${ file }: ${ name }` );
+			// A job may narrow the condition further (embed-bump-merge.yml runs on embed-bump/ branches only).
+			assert.ok( job.if === SAME_REPO || job.if.startsWith( `${ FORK_GUARD } && ` ), `${ file }: ${ name }` );
 		}
 	}
 } );
