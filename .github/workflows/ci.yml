@@ -176,6 +176,24 @@ jobs:
       - if: always()
         run: docker compose -f tests/e2e/docker-compose.yml down -v
 
+  block-directory:
+    name: Block Directory plugin (build, zip checks, Plugin Check)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, build]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node-pnpm
+      - run: node --test scripts/check-block-directory-zip.test.mjs
+      - name: Build and pack the single-block plugin
+        run: bin/build-block-directory.sh
+      - run: tests/e2e/ci-env.sh
+      - run: tests/e2e/up.sh
+        env:
+          WPORG_BUILD: '1'
+      - run: tests/e2e/block-directory-check.sh
+      - if: always()
+        run: docker compose -f tests/e2e/docker-compose.yml down -v
+
   zip-install:
     name: Release zip (structure, install on a clean WordPress)
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository

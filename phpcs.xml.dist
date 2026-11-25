@@ -6,6 +6,7 @@
 	<file>uninstall.php</file>
 	<file>includes</file>
 	<file>blocks</file>
+	<file>block-directory</file>
 	<file>tests</file>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
@@ -41,6 +42,7 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="profotograaf"/>
+				<element value="profotograaf-gallery-block"/>
 			</property>
 		</properties>
 	</rule>

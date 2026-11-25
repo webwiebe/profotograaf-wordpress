@@ -1,0 +1,13 @@
+{
+  "name": "profotograaf-gallery-block",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Single-block plugin for the WordPress Block Directory.",
+  "license": "GPL-2.0-or-later",
+  "files": [
+    "profotograaf-gallery-block.php",
+    "readme.txt",
+    "includes",
+    "build"
+  ]
+}
