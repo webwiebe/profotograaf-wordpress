@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "profotograaf-gallery-block/gallery",
+	"version": "0.1.0",
+	"title": "Client gallery",
+	"category": "media",
+	"icon": "format-gallery",
+	"description": "Show a Profotograaf client gallery. Paste the gallery link and choose a grid, masonry or slideshow layout.",
+	"keywords": [
+		"gallery",
+		"client gallery",
+		"proofing",
+		"photographer",
+		"portfolio",
+		"photos"
+	],
+	"textdomain": "profotograaf-gallery-block",
+	"attributes": {
+		"source": {
+			"type": "string",
+			"default": ""
+		},
+		"layout": {
+			"type": "string",
+			"enum": [ "auto", "grid", "masonry", "slideshow" ],
+			"default": "auto"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css"
+}

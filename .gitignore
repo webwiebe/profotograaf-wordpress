@@ -19,3 +19,4 @@ composer.phar
 /.tools/
 /.pnpm-store/
 /tests/e2e/.env
+/block-directory/build/
