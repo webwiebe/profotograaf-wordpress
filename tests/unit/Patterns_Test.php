@@ -81,15 +81,29 @@ class Patterns_Test extends Wp_Test_Case {
 		$this->assertSame( 'Profotograaf', $this->categories['profotograaf']['label'] );
 	}
 
-	public function test_it_registers_the_four_patterns_in_the_category(): void {
+	public function test_it_registers_the_photography_category(): void {
+		$this->register();
+
+		$this->assertSame( 'Photography', $this->categories['photography']['label'] );
+	}
+
+	public function test_it_registers_the_seven_patterns_in_both_categories(): void {
 		$this->register();
 
 		$this->assertSame(
-			array( 'profotograaf/client-portal-cta', 'profotograaf/contact-page', 'profotograaf/masonry-showcase', 'profotograaf/portfolio-grid' ),
+			array(
+				'profotograaf/client-portal-cta',
+				'profotograaf/contact-page',
+				'profotograaf/masonry-showcase',
+				'profotograaf/portfolio-grid',
+				'profotograaf/services-with-gallery',
+				'profotograaf/testimonials-with-photos',
+				'profotograaf/wedding-story',
+			),
 			array_keys( $this->patterns )
 		);
 		foreach ( $this->patterns as $name => $pattern ) {
-			$this->assertSame( array( 'profotograaf' ), $pattern['categories'], $name );
+			$this->assertSame( array( 'profotograaf', 'photography' ), $pattern['categories'], $name );
 			$this->assertNotSame( '', $pattern['title'], $name );
 			$this->assertNotSame( '', $pattern['description'], $name );
 		}

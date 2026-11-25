@@ -28,15 +28,15 @@ msgstr ""
 #: includes/class-sync-attention.php:189
 #: includes/modules/class-media-import-screen.php:249
 #: includes/modules/class-media-import-screen.php:262
-#: includes/modules/class-media-upload.php:285
-#: includes/modules/class-patterns.php:53
+#: includes/modules/class-media-upload.php:293
+#: includes/modules/class-patterns.php:55
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:79
 #: includes/modules/class-settings-page.php:80
 #: includes/modules/class-settings-page.php:280
 #: includes/modules/class-site-health.php:331
 #: includes/modules/class-site-health.php:401
-#: includes/modules/class-sync-flags.php:66
+#: includes/modules/class-sync-flags.php:67
 #: assets/admin/media-source.js:29
 #: assets/admin/sync-actions.js:170
 #: assets/admin/sync-actions.js:234
@@ -60,26 +60,26 @@ msgstr "Zeige deine Profotograaf-Galerien auf deiner eigenen Website, biete dein
 msgid "https://profotograaf.nl"
 msgstr "https://profotograaf.nl"
 
-#: includes/admin/class-leads-settings.php:115
-#: includes/admin/class-leads-settings.php:213
+#: includes/admin/class-leads-settings.php:116
+#: includes/admin/class-leads-settings.php:214
 #: includes/modules/class-privacy.php:79
 #: includes/modules/class-privacy.php:96
 #: includes/modules/class-privacy.php:117
 msgid "Profotograaf enquiries"
 msgstr "Profotograaf-Anfragen"
 
-#: includes/admin/class-leads-settings.php:116
+#: includes/admin/class-leads-settings.php:117
 #: includes/class-settings-schema.php:63
 msgid "Enquiry forms"
 msgstr "Anfrageformulare"
 
-#: includes/admin/class-leads-settings.php:207
-#: includes/admin/class-leads-settings.php:481
-#: includes/admin/class-upload-panel.php:303
+#: includes/admin/class-leads-settings.php:208
+#: includes/admin/class-leads-settings.php:482
+#: includes/admin/class-upload-panel.php:304
 #: includes/modules/class-admin-notices.php:339
 #: includes/modules/class-backup.php:202
 #: includes/modules/class-link-consent-prompt.php:90
-#: includes/modules/class-media-upload.php:351
+#: includes/modules/class-media-upload.php:359
 #: includes/modules/class-review-notice.php:89
 #: includes/modules/class-settings-page.php:245
 #: includes/modules/class-settings-page.php:272
@@ -90,120 +90,120 @@ msgstr "Anfrageformulare"
 msgid "You do not have permission to do this."
 msgstr "Du hast keine Berechtigung dafür."
 
-#: includes/admin/class-leads-settings.php:216
+#: includes/admin/class-leads-settings.php:217
 msgid "Send the enquiries from your contact forms to your Profotograaf inbox. Switch a form on and check which field feeds which part of the enquiry. Nothing is sent for a form you leave off."
 msgstr "Sende die Anfragen deiner Kontaktformulare an deinen Profotograaf-Posteingang. Schalte ein Formular ein und prüfe, welches Feld welchen Teil der Anfrage befüllt. Für ein ausgeschaltetes Formular wird nichts gesendet."
 
-#: includes/admin/class-leads-settings.php:221
+#: includes/admin/class-leads-settings.php:222
 msgid "This site is not connected to Profotograaf, so enquiries wait in a queue."
 msgstr "Diese Website ist nicht mit Profotograaf verbunden, deshalb warten Anfragen in einer Warteschlange."
 
 #: includes/admin/class-backup-panel.php:84
-#: includes/admin/class-leads-settings.php:222
+#: includes/admin/class-leads-settings.php:223
 #: includes/modules/class-admin-notices.php:197
 msgid "Connect this site"
 msgstr "Diese Website verbinden"
 
-#: includes/admin/class-leads-settings.php:227
+#: includes/admin/class-leads-settings.php:228
 msgid "Site defaults"
 msgstr "Standardwerte der Website"
 
-#: includes/admin/class-leads-settings.php:228
+#: includes/admin/class-leads-settings.php:229
 msgid "Save defaults"
 msgstr "Standardwerte speichern"
 
-#: includes/admin/class-leads-settings.php:230
+#: includes/admin/class-leads-settings.php:231
 msgid "Forms"
 msgstr "Formulare"
 
-#: includes/admin/class-leads-settings.php:239
+#: includes/admin/class-leads-settings.php:240
 msgid "No supported form plugin was found. Install Contact Form 7, WPForms or Gravity Forms and create a form."
 msgstr "Es wurde kein unterstütztes Formular-Plugin gefunden. Installiere Contact Form 7, WPForms oder Gravity Forms und erstelle ein Formular."
 
-#: includes/admin/class-leads-settings.php:241
+#: includes/admin/class-leads-settings.php:242
 msgid "Save changes"
 msgstr "Änderungen speichern"
 
-#: includes/admin/class-leads-settings.php:244
+#: includes/admin/class-leads-settings.php:245
 msgid "Delivery"
 msgstr "Zustellung"
 
 #. translators: 1: number of enquiries waiting to be sent, 2: number that could not be sent.
-#: includes/admin/class-leads-settings.php:250
+#: includes/admin/class-leads-settings.php:251
 #, php-format
 msgid "Waiting to be sent: %1$d. Could not be sent: %2$d."
 msgstr "Warten auf Versand: %1$d. Nicht gesendet: %2$d."
 
-#: includes/admin/class-leads-settings.php:262
+#: includes/admin/class-leads-settings.php:263
 msgid "Sync galleries now"
 msgstr "Galerien jetzt synchronisieren"
 
-#: includes/admin/class-leads-settings.php:263
+#: includes/admin/class-leads-settings.php:264
 msgid "Clear the gallery index"
 msgstr "Galerieindex leeren"
 
-#: includes/admin/class-leads-settings.php:283
+#: includes/admin/class-leads-settings.php:284
 #: includes/modules/class-privacy.php:187
 msgid "Name"
 msgstr "Name"
 
-#: includes/admin/class-leads-settings.php:284
+#: includes/admin/class-leads-settings.php:285
 #: includes/leads/class-enquiry-form.php:161
 msgid "Email address"
 msgstr "E-Mail-Adresse"
 
-#: includes/admin/class-leads-settings.php:285
+#: includes/admin/class-leads-settings.php:286
 #: includes/modules/class-privacy.php:189
 msgid "Phone"
 msgstr "Telefon"
 
-#: includes/admin/class-leads-settings.php:286
+#: includes/admin/class-leads-settings.php:287
 msgid "Event date"
 msgstr "Veranstaltungsdatum"
 
-#: includes/admin/class-leads-settings.php:287
+#: includes/admin/class-leads-settings.php:288
 #: includes/modules/class-privacy.php:191
 msgid "Message"
 msgstr "Nachricht"
 
-#: includes/admin/class-leads-settings.php:297
+#: includes/admin/class-leads-settings.php:298
 msgid "Send submissions of this form to Profotograaf"
 msgstr "Einsendungen dieses Formulars an Profotograaf senden"
 
-#: includes/admin/class-leads-settings.php:305
+#: includes/admin/class-leads-settings.php:306
 msgid "Shown as the source of the enquiry in your Profotograaf inbox. Leave empty to use the form plugin and form name."
 msgstr "Wird in deinem Profotograaf-Posteingang als Quelle der Anfrage angezeigt. Leer lassen, um das Formular-Plugin und den Formularnamen zu verwenden."
 
 #. translators: %s: name of the form field that is picked automatically.
-#: includes/admin/class-leads-settings.php:322
+#: includes/admin/class-leads-settings.php:323
 #, php-format
 msgid "Automatic (%s)"
 msgstr "Automatisch (%s)"
 
-#: includes/admin/class-leads-settings.php:323
+#: includes/admin/class-leads-settings.php:324
 msgid "Automatic (no field found)"
 msgstr "Automatisch (kein Feld gefunden)"
 
-#: includes/admin/class-leads-settings.php:327
-#: includes/modules/class-media-upload.php:171
+#: includes/admin/class-leads-settings.php:328
+#: includes/modules/class-media-upload.php:172
 msgid "Do not send"
 msgstr "Nicht senden"
 
-#: includes/admin/class-leads-settings.php:336
+#: includes/admin/class-leads-settings.php:337
 msgid "Every other field is sent along as a label and value."
 msgstr "Jedes andere Feld wird als Bezeichnung und Wert mitgesendet."
 
 #. translators: 1: form name, 2: error message.
-#: includes/admin/class-leads-settings.php:358
+#: includes/admin/class-leads-settings.php:359
 #, php-format
 msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
-#: includes/admin/class-leads-settings.php:367
+#: includes/admin/class-leads-settings.php:368
 msgid "Enquiries that could not be sent are kept on this site until you export and remove them or the retention period in the settings has passed."
 msgstr "Anfragen, die nicht gesendet werden konnten, bleiben auf dieser Website gespeichert, bis du sie exportierst und entfernst oder die Aufbewahrungsfrist in den Einstellungen abgelaufen ist."
 
-#: includes/admin/class-leads-settings.php:370
+#: includes/admin/class-leads-settings.php:371
 #: build/client-galleries/index.js:3
 #: build/full-page-gallery/index.js:3
 #: build/gallery/index.js:3
@@ -211,23 +211,23 @@ msgstr "Anfragen, die nicht gesendet werden konnten, bleiben auf dieser Website 
 msgid "Try again"
 msgstr "Erneut versuchen"
 
-#: includes/admin/class-leads-settings.php:371
+#: includes/admin/class-leads-settings.php:372
 msgid "Download as CSV"
 msgstr "Als CSV herunterladen"
 
-#: includes/admin/class-leads-settings.php:373
+#: includes/admin/class-leads-settings.php:374
 msgid "Remove exported enquiries"
 msgstr "Exportierte Anfragen entfernen"
 
-#: includes/admin/class-leads-settings.php:416
+#: includes/admin/class-leads-settings.php:417
 msgid "Changes saved."
 msgstr "Änderungen gespeichert."
 
-#: includes/admin/class-leads-settings.php:418
+#: includes/admin/class-leads-settings.php:419
 msgid "The enquiries are queued again."
 msgstr "Die Anfragen wurden erneut in die Warteschlange gestellt."
 
-#: includes/admin/class-leads-settings.php:420
+#: includes/admin/class-leads-settings.php:421
 msgid "The exported enquiries were removed."
 msgstr "Die exportierten Anfragen wurden entfernt."
 
@@ -399,7 +399,7 @@ msgstr "Profotograaf hat die Verbindung genehmigt, aber keine Token gesendet. St
 msgid "General"
 msgstr "Allgemein"
 
-#: includes/admin/class-leads-settings.php:259
+#: includes/admin/class-leads-settings.php:260
 #: includes/class-settings-schema.php:62
 #: includes/modules/class-privacy.php:229
 msgid "Galleries"
@@ -414,7 +414,7 @@ msgid "Send enquiries from the enquiry block to Profotograaf"
 msgstr "Anfragen aus dem Anfrageblock an Profotograaf senden"
 
 #: includes/admin/class-leads-block-form.php:63
-#: includes/admin/class-leads-settings.php:301
+#: includes/admin/class-leads-settings.php:302
 msgid "Source tag"
 msgstr "Quellen-Tag"
 
@@ -454,7 +454,7 @@ msgstr "Der Pfad des Kundenportals unter deiner Profotograaf-Adresse, verwendet 
 msgid "Default gallery layout"
 msgstr "Standard-Galerielayout"
 
-#: includes/class-builder-gallery.php:67
+#: includes/class-builder-gallery.php:68
 #: includes/class-settings-schema.php:133
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
@@ -462,7 +462,7 @@ msgstr "Standard-Galerielayout"
 msgid "Grid"
 msgstr "Raster"
 
-#: includes/class-builder-gallery.php:68
+#: includes/class-builder-gallery.php:69
 #: includes/class-settings-schema.php:134
 #: build/full-page-gallery/index.js:5
 #: build/gallery/index.js:1
@@ -470,7 +470,7 @@ msgstr "Raster"
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/class-builder-gallery.php:69
+#: includes/class-builder-gallery.php:70
 #: includes/class-settings-schema.php:135
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
@@ -536,7 +536,7 @@ msgstr "Lass die Einstellungen und die Verbindung in der Datenbank, wenn du das 
 msgid "Profotograaf default"
 msgstr "Profotograaf-Standard"
 
-#: includes/class-builder-gallery.php:81
+#: includes/class-builder-gallery.php:84
 #: includes/class-settings-schema.php:221
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:8
@@ -544,7 +544,7 @@ msgstr "Profotograaf-Standard"
 msgid "On"
 msgstr "An"
 
-#: includes/class-builder-gallery.php:82
+#: includes/class-builder-gallery.php:85
 #: includes/class-settings-schema.php:222
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:8
@@ -557,7 +557,7 @@ msgstr "Aus"
 msgid "A block or shortcode can set its own. Leave empty for the Profotograaf default."
 msgstr "Ein Block oder Shortcode kann einen eigenen Wert festlegen. Leer lassen für den Profotograaf-Standard."
 
-#: includes/class-builder-gallery.php:113
+#: includes/class-builder-gallery.php:118
 #: includes/class-settings-schema.php:233
 #: build/full-page-gallery/index.js:4
 #: build/full-page-gallery/index.js:5
@@ -569,7 +569,7 @@ msgstr "Spalten"
 msgid "Columns on wide screens, from 1 to 8."
 msgstr "Spalten auf breiten Bildschirmen, von 1 bis 8."
 
-#: includes/class-builder-gallery.php:108
+#: includes/class-builder-gallery.php:113
 #: includes/class-settings-schema.php:242
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -580,7 +580,7 @@ msgstr "Spalten auf Tablets"
 msgid "Columns on medium screens, from 1 to 8."
 msgstr "Spalten auf mittleren Bildschirmen, von 1 bis 8."
 
-#: includes/class-builder-gallery.php:111
+#: includes/class-builder-gallery.php:116
 #: includes/class-settings-schema.php:251
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:3
@@ -1411,9 +1411,9 @@ msgid_plural "%d photos"
 msgstr[0] "%d Foto"
 msgstr[1] "%d Fotos"
 
-#: includes/class-builder-gallery.php:65
-#: includes/class-builder-gallery.php:80
-#: includes/class-builder-gallery.php:94
+#: includes/class-builder-gallery.php:66
+#: includes/class-builder-gallery.php:83
+#: includes/class-builder-gallery.php:99
 #: build/full-page-gallery/index.js:4
 #: build/gallery/index.js:1
 #: build/gallery/index.js:3
@@ -1521,8 +1521,8 @@ msgid "layout: %s"
 msgstr "Layout: %s"
 
 #: includes/admin/class-client-links-panel.php:93
-#: includes/admin/class-upload-panel.php:166
-#: includes/admin/class-upload-panel.php:237
+#: includes/admin/class-upload-panel.php:167
+#: includes/admin/class-upload-panel.php:238
 #: includes/class-divi-gallery-module.php:52
 #: includes/class-divi-gallery-module.php:72
 #: includes/class-elementor-gallery-widget.php:99
@@ -1668,7 +1668,7 @@ msgstr "Nichts"
 msgid "The photo page on Profotograaf"
 msgstr "Die Fotoseite auf Profotograaf"
 
-#: includes/modules/class-patterns.php:54
+#: includes/modules/class-patterns.php:56
 msgid "Sections for galleries, the client portal and enquiries."
 msgstr "Abschnitte für Galerien, das Kundenportal und Anfragen."
 
@@ -1705,6 +1705,7 @@ msgid "contact"
 msgstr "Kontakt"
 
 #: patterns/contact-page.php:29
+#: patterns/services-with-gallery.php:15
 msgid "enquiry"
 msgstr "Anfrage"
 
@@ -1743,6 +1744,7 @@ msgstr "Präsentation"
 #: includes/class-elementor-gallery-widget.php:82
 #: patterns/masonry-showcase.php:15
 #: patterns/portfolio-grid.php:15
+#: patterns/services-with-gallery.php:15
 msgid "gallery"
 msgstr "Galerie"
 
@@ -2085,7 +2087,7 @@ msgstr "Alle auf dieser Seite auswählen"
 msgid "Clear selection"
 msgstr "Auswahl aufheben"
 
-#: includes/modules/class-media-upload.php:304
+#: includes/modules/class-media-upload.php:312
 #: build/import-screen/index.js:5
 msgid "Imported"
 msgstr "Importiert"
@@ -2406,113 +2408,113 @@ msgid "Ignores the site default."
 msgstr "Ignoriert den Website-Standard."
 
 #. translators: %s: gallery title.
-#: includes/admin/class-upload-panel.php:70
+#: includes/admin/class-upload-panel.php:71
 #, php-format
 msgid "Created the gallery \"%s\" on Profotograaf and linked it."
 msgstr "Die Galerie \"%s\" wurde auf Profotograaf erstellt und verknüpft."
 
-#: includes/admin/class-upload-panel.php:82
+#: includes/admin/class-upload-panel.php:83
 msgid "Tick the box to confirm that files you send land in this gallery."
 msgstr "Setze das Häkchen, um zu bestätigen, dass gesendete Dateien in dieser Galerie landen."
 
-#: includes/admin/class-upload-panel.php:93
+#: includes/admin/class-upload-panel.php:94
 msgid "Choose one of your Profotograaf galleries."
 msgstr "Wähle eine deiner Profotograaf-Galerien."
 
 #. translators: %s: gallery title.
-#: includes/admin/class-upload-panel.php:97
+#: includes/admin/class-upload-panel.php:98
 #, php-format
 msgid "Linked the gallery \"%s\"."
 msgstr "Die Galerie \"%s\" wurde verknüpft."
 
-#: includes/admin/class-upload-panel.php:109
+#: includes/admin/class-upload-panel.php:110
 msgid "Unlinked the gallery. It and its photos stay on Profotograaf."
 msgstr "Die Verknüpfung der Galerie wurde aufgehoben. Die Galerie und ihre Fotos bleiben auf Profotograaf."
 
-#: includes/admin/class-upload-panel.php:124
+#: includes/admin/class-upload-panel.php:125
 msgid "New image uploads now go to this gallery automatically."
 msgstr "Neue hochgeladene Bilder gehen jetzt automatisch in diese Galerie."
 
-#: includes/admin/class-upload-panel.php:125
+#: includes/admin/class-upload-panel.php:126
 msgid "New uploads are no longer sent automatically."
 msgstr "Neue Uploads werden nicht mehr automatisch gesendet."
 
-#: includes/admin/class-upload-panel.php:142
+#: includes/admin/class-upload-panel.php:143
 msgid "Send files to Profotograaf"
 msgstr "Dateien an Profotograaf senden"
 
-#: includes/admin/class-upload-panel.php:143
+#: includes/admin/class-upload-panel.php:144
 msgid "A file is sent only after a person chooses a linked gallery for it. Link the galleries here."
 msgstr "Eine Datei wird erst gesendet, nachdem eine Person eine verknüpfte Galerie dafür ausgewählt hat. Verknüpfe die Galerien hier."
 
-#: includes/admin/class-upload-panel.php:145
+#: includes/admin/class-upload-panel.php:146
 msgid "Sending files needs a new permission. Connect this site again to grant it. Files wait until then."
 msgstr "Das Senden von Dateien braucht eine neue Berechtigung. Verbinde diese Website erneut, um sie zu erteilen. Bis dahin warten die Dateien."
 
 #. translators: 1: number of files waiting to be sent, 2: number of files that failed.
-#: includes/admin/class-upload-panel.php:153
+#: includes/admin/class-upload-panel.php:154
 #, php-format
 msgid "%1$d waiting to be sent, %2$d failed."
 msgstr "%1$d warten auf Versand, %2$d fehlgeschlagen."
 
-#: includes/admin/class-upload-panel.php:167
+#: includes/admin/class-upload-panel.php:168
 msgid "New uploads"
 msgstr "Neue Uploads"
 
-#: includes/admin/class-upload-panel.php:168
+#: includes/admin/class-upload-panel.php:169
 msgid "Link"
 msgstr "Verknüpfung"
 
-#: includes/admin/class-upload-panel.php:177
+#: includes/admin/class-upload-panel.php:178
 msgid "Profotograaf no longer knows this gallery. Files cannot be sent to it."
 msgstr "Profotograaf kennt diese Galerie nicht mehr. Es können keine Dateien an sie gesendet werden."
 
-#: includes/admin/class-upload-panel.php:188
+#: includes/admin/class-upload-panel.php:189
 msgid "Sent automatically."
 msgstr "Wird automatisch gesendet."
 
-#: includes/admin/class-upload-panel.php:189
+#: includes/admin/class-upload-panel.php:190
 msgid "Stop sending automatically"
 msgstr "Automatisches Senden beenden"
 
-#: includes/admin/class-upload-panel.php:191
+#: includes/admin/class-upload-panel.php:192
 msgid "Send new image uploads automatically"
 msgstr "Neue hochgeladene Bilder automatisch senden"
 
-#: includes/admin/class-upload-panel.php:201
+#: includes/admin/class-upload-panel.php:202
 msgid "Unlink"
 msgstr "Verknüpfung aufheben"
 
-#: includes/admin/class-upload-panel.php:210
+#: includes/admin/class-upload-panel.php:211
 msgid "Create a gallery"
 msgstr "Eine Galerie erstellen"
 
-#: includes/admin/class-upload-panel.php:214
+#: includes/admin/class-upload-panel.php:215
 #: includes/class-sync-resolve.php:71
 msgid "Title"
 msgstr "Titel"
 
-#: includes/admin/class-upload-panel.php:216
+#: includes/admin/class-upload-panel.php:217
 msgid "Create and link"
 msgstr "Erstellen und verknüpfen"
 
-#: includes/admin/class-upload-panel.php:219
+#: includes/admin/class-upload-panel.php:220
 msgid "Use an existing gallery"
 msgstr "Eine vorhandene Galerie verwenden"
 
-#: includes/admin/class-upload-panel.php:230
+#: includes/admin/class-upload-panel.php:231
 msgid "No galleries were found in your Profotograaf account."
 msgstr "In deinem Profotograaf-Konto wurden keine Galerien gefunden."
 
-#: includes/admin/class-upload-panel.php:246
+#: includes/admin/class-upload-panel.php:247
 msgid "Files I send land in this gallery, including a client gallery."
 msgstr "Dateien, die ich sende, landen in dieser Galerie, auch wenn es eine Kundengalerie ist."
 
-#: includes/admin/class-upload-panel.php:249
+#: includes/admin/class-upload-panel.php:250
 msgid "Link this gallery"
 msgstr "Diese Galerie verknüpfen"
 
-#: includes/admin/class-upload-panel.php:307
+#: includes/admin/class-upload-panel.php:308
 #: includes/class-upload-queue.php:165
 msgid "Sending files to Profotograaf is switched off in the plugin settings."
 msgstr "Das Senden von Dateien an Profotograaf ist in den Plugin-Einstellungen ausgeschaltet."
@@ -2572,35 +2574,35 @@ msgid "Sent from this site. Changes to the title, caption and alt text are sent 
 msgstr "Von dieser Website gesendet. Änderungen an Titel, Bildunterschrift und Alternativtext werden ebenfalls an Profotograaf gesendet."
 
 #. translators: %s: date the file was sent.
-#: includes/modules/class-media-upload.php:132
+#: includes/modules/class-media-upload.php:133
 #, php-format
 msgid "Sent to Profotograaf on %s."
 msgstr "Am %s an Profotograaf gesendet."
 
-#: includes/modules/class-media-upload.php:138
+#: includes/modules/class-media-upload.php:139
 msgid "Waiting to be sent to Profotograaf."
 msgstr "Wartet auf den Versand an Profotograaf."
 
-#: includes/modules/class-media-upload.php:140
+#: includes/modules/class-media-upload.php:141
 msgid "Sending needs a new permission. Connect this site again under Settings > Profotograaf."
 msgstr "Das Senden braucht eine neue Berechtigung. Verbinde diese Website unter Einstellungen > Profotograaf erneut."
 
-#: includes/modules/class-media-upload.php:153
+#: includes/modules/class-media-upload.php:154
 msgid "Send to Profotograaf"
 msgstr "An Profotograaf senden"
 
-#: includes/modules/class-media-upload.php:168
+#: includes/modules/class-media-upload.php:169
 msgid "Link a gallery under Settings > Profotograaf to send files."
 msgstr "Verknüpfe unter Einstellungen > Profotograaf eine Galerie, um Dateien zu senden."
 
 #. translators: %s: gallery title.
-#: includes/modules/class-media-upload.php:212
+#: includes/modules/class-media-upload.php:220
 #, php-format
 msgid "Send to Profotograaf: %s"
 msgstr "An Profotograaf senden: %s"
 
 #. translators: %d: number of files queued.
-#: includes/modules/class-media-upload.php:263
+#: includes/modules/class-media-upload.php:271
 #, php-format
 msgid "%d file will be sent to Profotograaf in the background."
 msgid_plural "%d files will be sent to Profotograaf in the background."
@@ -2608,27 +2610,27 @@ msgstr[0] "%d Datei wird im Hintergrund an Profotograaf gesendet."
 msgstr[1] "%d Dateien werden im Hintergrund an Profotograaf gesendet."
 
 #. translators: %d: number of files skipped.
-#: includes/modules/class-media-upload.php:269
+#: includes/modules/class-media-upload.php:277
 #, php-format
 msgid "%d file was skipped: it is not a supported image, is on Profotograaf already, or you may not edit it."
 msgid_plural "%d files were skipped: they are not supported images, are on Profotograaf already, or you may not edit them."
 msgstr[0] "%d Datei wurde übersprungen: Sie ist kein unterstütztes Bild, ist bereits auf Profotograaf oder du darfst sie nicht bearbeiten."
 msgstr[1] "%d Dateien wurden übersprungen: Sie sind keine unterstützten Bilder, sind bereits auf Profotograaf oder du darfst sie nicht bearbeiten."
 
-#: includes/modules/class-media-upload.php:304
-#: includes/modules/class-media-upload.php:311
+#: includes/modules/class-media-upload.php:312
+#: includes/modules/class-media-upload.php:319
 msgid "Sent"
 msgstr "Gesendet"
 
-#: includes/modules/class-media-upload.php:309
+#: includes/modules/class-media-upload.php:317
 msgid "Waiting to be sent"
 msgstr "Wartet auf Versand"
 
-#: includes/modules/class-media-upload.php:310
+#: includes/modules/class-media-upload.php:318
 msgid "Sending"
 msgstr "Wird gesendet"
 
-#: includes/modules/class-media-upload.php:312
+#: includes/modules/class-media-upload.php:320
 msgid "Not sent"
 msgstr "Nicht gesendet"
 
@@ -3179,7 +3181,7 @@ msgstr "Diese Datei wartet nicht auf einen neuen Upload."
 msgid "The file may already exist on Profotograaf, because an earlier attempt did not get an answer and the gallery could not be checked. Look in the gallery, and choose Upload again if the photo is not there."
 msgstr "Die Datei existiert möglicherweise bereits auf Profotograaf, weil ein früherer Versuch keine Antwort erhalten hat und die Galerie nicht geprüft werden konnte. Sieh in der Galerie nach und wähle Erneut hochladen, wenn das Foto nicht dort ist."
 
-#: includes/modules/class-media-upload.php:341
+#: includes/modules/class-media-upload.php:349
 msgid "Upload again"
 msgstr "Erneut hochladen"
 
@@ -4255,16 +4257,16 @@ msgstr "Auf Profotograaf entfernte oder geänderte Fotos bleiben auf dieser Webs
 msgid "Show them"
 msgstr "Anzeigen"
 
-#: includes/modules/class-sync-flags.php:131
+#: includes/modules/class-sync-flags.php:141
 msgid "Filter by Profotograaf state"
 msgstr "Nach Profotograaf-Status filtern"
 
-#: includes/modules/class-sync-flags.php:136
+#: includes/modules/class-sync-flags.php:134
 #: assets/admin/media-source.js:34
 msgid "Profotograaf: needs attention"
 msgstr "Profotograaf: braucht Aufmerksamkeit"
 
-#: includes/modules/class-sync-flags.php:151
+#: includes/modules/class-sync-flags.php:158
 msgid "Imported Profotograaf photos"
 msgstr "Importierte Profotograaf-Fotos"
 
@@ -4505,7 +4507,7 @@ msgstr "kundengalerie"
 msgid "No galleries yet. Connect your Profotograaf account under Settings, Profotograaf."
 msgstr "Noch keine Galerien. Verbinde dein Profotograaf-Konto unter Einstellungen, Profotograaf."
 
-#: includes/class-builder-gallery.php:66
+#: includes/class-builder-gallery.php:67
 msgid "Automatic"
 msgstr "Automatisch"
 
@@ -4534,3 +4536,103 @@ msgstr "Auf der Website verwendete Dateien sind die in einem veröffentlichten B
 #: includes/modules/class-privacy.php:238
 msgid "Only when the site owner switches on copying: this site copies files from its Media Library to the connected Profotograaf account, in the background. It sends JPEG, PNG, WebP and GIF image files with their file names and the access token to https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. It first creates private galleries with https://profotograaf.nl/api/v1/embed/galleries, with the site title in the gallery name. Files are sent with their metadata, such as camera, lens and date, but the plugin removes the GPS position from the copy first. RAW, video and other image types are left out, because the GPS position cannot be removed from them. Photos of people are personal data, so the site owner needs a basis for sending them, and Profotograaf stores the copies for the site owner. The anonymous usage data and photo library choices do not switch copying on. Deleting a file here, switching copying off or deleting the plugin leaves the copies in the Profotograaf account until they are deleted there. The Media Library keeps a few hidden fields per file (the copy state, the photo and gallery identifiers and a checksum) until the plugin is deleted."
 msgstr "Nur wenn der Website-Betreiber das Kopieren einschaltet: Diese Website kopiert im Hintergrund Dateien aus ihrer Mediathek in das verbundene Profotograaf-Konto. Sie sendet JPEG-, PNG-, WebP- und GIF-Bilder mit ihren Dateinamen und dem Zugriffstoken an https://profotograaf.nl/api/v1/embed/galleries/<gallery id>/photos. Zuerst legt sie mit https://profotograaf.nl/api/v1/embed/galleries private Galerien an, mit dem Website-Titel im Namen der Galerie. Dateien werden mit ihren Metadaten gesendet, etwa Kamera, Objektiv und Datum, aber das Plugin entfernt zuvor die GPS-Position aus der Kopie. RAW-Dateien, Videos und andere Bildtypen bleiben außen vor, weil sich die GPS-Position daraus nicht entfernen lässt. Fotos von Personen sind personenbezogene Daten, daher braucht der Website-Betreiber eine Rechtsgrundlage für das Senden, und Profotograaf speichert die Kopien für den Website-Betreiber. Die Einstellungen für anonyme Nutzungsdaten und die Fotobibliothek schalten das Kopieren nicht ein. Eine Datei hier löschen, das Kopieren ausschalten oder das Plugin löschen lässt die Kopien im Profotograaf-Konto, bis sie dort gelöscht werden. Die Mediathek behält pro Datei einige versteckte Felder (den Kopierstatus, die Foto- und Galerie-IDs und eine Prüfsumme), bis das Plugin gelöscht wird."
+
+#: includes/modules/class-patterns.php:65
+msgid "Photography"
+msgstr "Fotografie"
+
+#: includes/modules/class-patterns.php:66
+msgid "Sections for photographer websites: portfolio, services, stories and reviews."
+msgstr "Bereiche für Fotografen-Websites: Portfolio, Leistungen, Geschichten und Bewertungen."
+
+#: patterns/services-with-gallery.php:13
+msgid "Services with gallery and enquiry form"
+msgstr "Leistungen mit Galerie und Anfrageformular"
+
+#: patterns/services-with-gallery.php:14
+msgid "What you offer, a gallery of recent work and a form for enquiries."
+msgstr "Was du anbietest, eine Galerie mit aktuellen Arbeiten und ein Formular für Anfragen."
+
+#: patterns/services-with-gallery.php:15
+msgid "services"
+msgstr "leistungen"
+
+#: patterns/services-with-gallery.php:17
+msgid "Services"
+msgstr "Leistungen"
+
+#: patterns/services-with-gallery.php:18
+msgid "Describe the sessions you offer, such as weddings, portraits and family shoots."
+msgstr "Beschreibe die Shootings, die du anbietest, etwa Hochzeiten, Porträts und Familienfotos."
+
+#: patterns/services-with-gallery.php:34
+msgid "Book a session"
+msgstr "Shooting buchen"
+
+#: patterns/testimonials-with-photos.php:13
+msgid "Testimonials with photos"
+msgstr "Kundenstimmen mit Fotos"
+
+#: patterns/testimonials-with-photos.php:14
+msgid "Two client quotes followed by a small gallery of their sessions."
+msgstr "Zwei Kundenzitate, gefolgt von einer kleinen Galerie ihrer Shootings."
+
+#: patterns/testimonials-with-photos.php:15
+msgid "testimonials"
+msgstr "kundenstimmen"
+
+#: patterns/testimonials-with-photos.php:15
+msgid "reviews"
+msgstr "bewertungen"
+
+#: patterns/testimonials-with-photos.php:15
+msgid "photos"
+msgstr "fotos"
+
+#: patterns/testimonials-with-photos.php:17
+msgid "Kind words"
+msgstr "Freundliche Worte"
+
+#: patterns/testimonials-with-photos.php:18
+msgid "Replace this with a quote from a happy client."
+msgstr "Ersetze dies durch ein Zitat eines zufriedenen Kunden."
+
+#: patterns/testimonials-with-photos.php:18
+msgid "Client name"
+msgstr "Name des Kunden"
+
+#: patterns/testimonials-with-photos.php:19
+msgid "Replace this with a second quote."
+msgstr "Ersetze dies durch ein zweites Zitat."
+
+#: patterns/testimonials-with-photos.php:19
+msgid "Another client"
+msgstr "Ein weiterer Kunde"
+
+#: patterns/wedding-story.php:13
+msgid "Wedding story with slideshow"
+msgstr "Hochzeitsgeschichte mit Diashow"
+
+#: patterns/wedding-story.php:14
+msgid "A heading, the story of one wedding and a slideshow of its photos."
+msgstr "Eine Überschrift, die Geschichte einer Hochzeit und eine Diashow der Fotos."
+
+#: patterns/wedding-story.php:15
+msgid "wedding"
+msgstr "hochzeit"
+
+#: patterns/wedding-story.php:15
+msgid "story"
+msgstr "geschichte"
+
+#: patterns/wedding-story.php:15
+msgid "slideshow"
+msgstr "diashow"
+
+#: patterns/wedding-story.php:17
+msgid "Anna and Tom, a day in June"
+msgstr "Anna und Tom, ein Tag im Juni"
+
+#: patterns/wedding-story.php:18
+msgid "Tell the story of the day in a few lines. Choose the wedding gallery in the block settings."
+msgstr "Erzähle die Geschichte des Tages in wenigen Zeilen. Wähle die Hochzeitsgalerie in den Blockeinstellungen."
