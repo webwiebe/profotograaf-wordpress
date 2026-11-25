@@ -14,8 +14,8 @@ const ADMIN_CALLS = /\b(add_menu_page|add_submenu_page|add_options_page|add_mana
 
 const run = (args) => execFileSync("unzip", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 
-/** Returns the list of problems with the files of a zip. `read(path)` returns a file's text. */
-export function problems(names, read) {
+/** Problems with where the files sit and which ones exist. */
+function layoutProblems(names) {
   const found = [];
   const bad = names.filter((n) => !n.startsWith(`${SLUG}/`));
   if (bad.length > 0) found.push(`files outside ${SLUG}/: ${bad.slice(0, 3).join(", ")}`);
@@ -25,11 +25,12 @@ export function problems(names, read) {
   }
   const blocks = files.filter((f) => f.endsWith("block.json"));
   if (blocks.length !== 1) found.push(`expected one block.json, found ${blocks.length}`);
-  if (found.length > 0) return found;
+  return found;
+}
 
-  for (const file of files.filter((f) => f.endsWith(".php"))) {
-    if (ADMIN_CALLS.test(read(`${SLUG}/${file}`))) found.push(`${file} adds an admin screen, setting or notice`);
-  }
+/** Problems with the version and naming of the three metadata files. */
+function metadataProblems(read) {
+  const found = [];
   const header = /^\s*\*\s*Version:\s*(\S+)/m.exec(read(`${SLUG}/${SLUG}.php`))?.[1];
   const stable = /^Stable tag:\s*(\S+)/m.exec(read(`${SLUG}/readme.txt`))?.[1];
   const block = JSON.parse(read(`${SLUG}/build/gallery/block.json`));
@@ -39,6 +40,17 @@ export function problems(names, read) {
   if (!block.name.startsWith(`${SLUG}/`)) found.push(`block name ${block.name} is outside the ${SLUG}/ namespace`);
   if (block.textdomain !== SLUG) found.push(`block text domain ${block.textdomain} is not ${SLUG}`);
   return found;
+}
+
+/** Returns the list of problems with the files of a zip. `read(path)` returns a file's text. */
+export function problems(names, read) {
+  const found = layoutProblems(names);
+  if (found.length > 0) return found;
+  const phpFiles = names.filter((n) => n.endsWith(".php"));
+  for (const file of phpFiles) {
+    if (ADMIN_CALLS.test(read(file))) found.push(`${file.slice(SLUG.length + 1)} adds an admin screen, setting or notice`);
+  }
+  return [...found, ...metadataProblems(read)];
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
