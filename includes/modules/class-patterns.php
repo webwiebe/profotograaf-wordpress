@@ -28,6 +28,8 @@ class Patterns implements Module {
 
 	public const CATEGORY = 'profotograaf';
 
+	public const PHOTOGRAPHY_CATEGORY = 'photography';
+
 	/**
 	 * Adds the hooks.
 	 *
@@ -56,12 +58,22 @@ class Patterns implements Module {
 			);
 		}
 
+		if ( function_exists( 'register_block_pattern_category' ) ) {
+			register_block_pattern_category(
+				self::PHOTOGRAPHY_CATEGORY,
+				array(
+					'label'       => __( 'Photography', 'profotograaf' ),
+					'description' => __( 'Sections for photographer websites: portfolio, services, stories and reviews.', 'profotograaf' ),
+				)
+			);
+		}
+
 		foreach ( $this->files() as $file ) {
 			$pattern = require $file;
 			if ( ! is_array( $pattern ) || empty( $pattern['title'] ) || empty( $pattern['content'] ) ) {
 				continue;
 			}
-			$pattern['categories'] = array( self::CATEGORY );
+			$pattern['categories'] = array( self::CATEGORY, self::PHOTOGRAPHY_CATEGORY );
 			register_block_pattern( 'profotograaf/' . basename( $file, '.php' ), $pattern );
 		}
 	}
@@ -98,6 +110,16 @@ class Patterns implements Module {
 	 */
 	public static function paragraph( string $text ): string {
 		return '<!-- wp:paragraph --><p>' . esc_html( $text ) . '</p><!-- /wp:paragraph -->';
+	}
+
+	/**
+	 * A core quote block with a citation.
+	 *
+	 * @param string $text Translated quote, not yet escaped.
+	 * @param string $cite Translated citation, not yet escaped.
+	 */
+	public static function quote( string $text, string $cite ): string {
+		return '<!-- wp:quote --><blockquote class="wp-block-quote"><!-- wp:paragraph --><p>' . esc_html( $text ) . '</p><!-- /wp:paragraph --><cite>' . esc_html( $cite ) . '</cite></blockquote><!-- /wp:quote -->';
 	}
 
 	/**

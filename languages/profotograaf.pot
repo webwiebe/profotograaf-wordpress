@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T19:12:02+00:00\n"
+"POT-Creation-Date: 2026-11-25T12:03:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: profotograaf\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: includes/modules/class-media-import-screen.php:249
 #: includes/modules/class-media-import-screen.php:262
 #: includes/modules/class-media-upload.php:293
-#: includes/modules/class-patterns.php:53
+#: includes/modules/class-patterns.php:55
 #: includes/modules/class-privacy.php:65
 #: includes/modules/class-settings-page.php:79
 #: includes/modules/class-settings-page.php:80
@@ -1129,6 +1129,7 @@ msgstr ""
 #: includes/class-elementor-gallery-widget.php:82
 #: patterns/masonry-showcase.php:15
 #: patterns/portfolio-grid.php:15
+#: patterns/services-with-gallery.php:15
 msgid "gallery"
 msgstr ""
 
@@ -2536,8 +2537,16 @@ msgstr ""
 msgid "Upload again"
 msgstr ""
 
-#: includes/modules/class-patterns.php:54
+#: includes/modules/class-patterns.php:56
 msgid "Sections for galleries, the client portal and enquiries."
+msgstr ""
+
+#: includes/modules/class-patterns.php:65
+msgid "Photography"
+msgstr ""
+
+#: includes/modules/class-patterns.php:66
+msgid "Sections for photographer websites: portfolio, services, stories and reviews."
 msgstr ""
 
 #: includes/modules/class-privacy.php:118
@@ -3229,6 +3238,7 @@ msgid "contact"
 msgstr ""
 
 #: patterns/contact-page.php:29
+#: patterns/services-with-gallery.php:15
 msgid "enquiry"
 msgstr ""
 
@@ -3286,6 +3296,98 @@ msgstr ""
 
 #: patterns/portfolio-grid.php:18
 msgid "A selection of recent sessions. Choose a gallery in the block settings."
+msgstr ""
+
+#: patterns/services-with-gallery.php:13
+msgid "Services with gallery and enquiry form"
+msgstr ""
+
+#: patterns/services-with-gallery.php:14
+msgid "What you offer, a gallery of recent work and a form for enquiries."
+msgstr ""
+
+#: patterns/services-with-gallery.php:15
+msgid "services"
+msgstr ""
+
+#: patterns/services-with-gallery.php:17
+msgid "Services"
+msgstr ""
+
+#: patterns/services-with-gallery.php:18
+msgid "Describe the sessions you offer, such as weddings, portraits and family shoots."
+msgstr ""
+
+#: patterns/services-with-gallery.php:34
+msgid "Book a session"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:13
+msgid "Testimonials with photos"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:14
+msgid "Two client quotes followed by a small gallery of their sessions."
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:15
+msgid "testimonials"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:15
+msgid "reviews"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:15
+msgid "photos"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:17
+msgid "Kind words"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:18
+msgid "Replace this with a quote from a happy client."
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:18
+msgid "Client name"
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:19
+msgid "Replace this with a second quote."
+msgstr ""
+
+#: patterns/testimonials-with-photos.php:19
+msgid "Another client"
+msgstr ""
+
+#: patterns/wedding-story.php:13
+msgid "Wedding story with slideshow"
+msgstr ""
+
+#: patterns/wedding-story.php:14
+msgid "A heading, the story of one wedding and a slideshow of its photos."
+msgstr ""
+
+#: patterns/wedding-story.php:15
+msgid "wedding"
+msgstr ""
+
+#: patterns/wedding-story.php:15
+msgid "story"
+msgstr ""
+
+#: patterns/wedding-story.php:15
+msgid "slideshow"
+msgstr ""
+
+#: patterns/wedding-story.php:17
+msgid "Anna and Tom, a day in June"
+msgstr ""
+
+#: patterns/wedding-story.php:18
+msgid "Tell the story of the day in a few lines. Choose the wedding gallery in the block settings."
 msgstr ""
 
 #: uninstall.php:47
