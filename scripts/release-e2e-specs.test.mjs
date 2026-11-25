@@ -32,6 +32,11 @@ test("the page builder code selects the Elementor spec", () => {
   assert.deepEqual(specsFor(["includes/class-elementor-gallery-widget.php", "includes/class-builder-gallery.php"]), ["tests/e2e/elementor.spec.js"]);
 });
 
+test("the patterns select the Twenty Twenty-Five spec", () => {
+  assert.deepEqual(specsFor(["patterns/wedding-story.php"]), ["tests/e2e/patterns-tt5.spec.js"]);
+  assert.deepEqual(specsFor(["includes/modules/class-patterns.php"]), ["tests/e2e/patterns-tt5.spec.js"]);
+});
+
 test("source that no entry names falls back to the smoke set", () => {
   assert.deepEqual(specsFor(["includes/class-logger.php"]), ["tests/e2e/gallery.spec.js", "tests/e2e/plugin-compat.spec.js", "tests/e2e/settings.spec.js"]);
 });
