@@ -4,7 +4,7 @@ Tags: photography, gallery, client gallery, portfolio, elementor
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.2.9
+Stable tag: 0.2.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -283,6 +283,11 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 
 == Changelog ==
 
+= 0.2.10 =
+* Add: three block patterns, Wedding story, Services with gallery and Testimonials with photos, and a Photography pattern category next to Profotograaf.
+* Add: a core-only version of each pattern, built from core blocks and a link to the gallery block plugin, for the WordPress.org pattern directory. A test renders the patterns on the Twenty Twenty-Five theme.
+* Change: the zip leaves out the folders for the separate Block Directory plugin and the pattern directory files.
+
 = 0.2.9 =
 * Change: every drop-down of the plugin lists its options alphabetically in the site language, with the default choice first. Options with a natural order, such as aspect ratios, column counts and On before Off, keep it.
 * Fix: the daily usage event takes its destination and key from the platform status answer instead of a key built into the plugin, so connected sites no longer get a 401 for it. Without that destination no usage event is sent.
@@ -384,6 +389,9 @@ Yes. Every site in the network connects to Profotograaf on its own, because each
 * Connect adds this site to the sites allowed to embed your pages, Disconnect removes the site from your account's devices, and the gallery script ships with the plugin.
 
 == Upgrade Notice ==
+
+= 0.2.10 =
+Three new block patterns and a Photography pattern category.
 
 = 0.2.9 =
 Drop-downs list their options alphabetically, and the daily usage event no longer fails with a 401.
