@@ -27,6 +27,7 @@ const MAP = [
   [/^includes\/class-settings|^includes\/admin\//, ["settings"]],
   [/^includes\/class-(upload-)/, ["upload-scope"]],
   [/^blocks\/inserter-category\//, ["inserter-category"]],
+  [/^patterns\/|^includes\/modules\/class-patterns/, ["patterns-tt5"]],
   [/^includes\/class-(connection|api-|pairing|platform-status|rest-errors)/, ["settings", "gallery"]],
 ];
 
